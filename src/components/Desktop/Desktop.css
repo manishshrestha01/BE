@@ -1,0 +1,58 @@
+.desktop {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: background 0.5s ease;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Desktop Content */
+.desktop-content {
+  height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .desktop-content {
+    height: calc(100vh - 75px);
+    padding: 16px;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .desktop-content {
+    height: calc(100vh - 70px);
+    padding: 12px;
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .desktop-content {
+    height: calc(100vh - 65px);
+    padding: 8px;
+    padding-top: 16px;
+  }
+}
+
+/* Landscape mode on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .desktop-content {
+    height: calc(100vh - 55px);
+    padding: 8px;
+  }
+}
