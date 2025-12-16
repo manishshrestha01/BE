@@ -938,3 +938,67 @@
     padding: 48px 16px 32px;
   }
 }
+
+/* ==================== MOBILE NAVIGATION ==================== */
+
+.mobile-nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 2000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.mobile-nav {
+  background: #fff;
+  width: 80vw;
+  max-width: 320px;
+  height: 100vh;
+  box-shadow: -2px 0 16px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 32px 24px 24px 24px;
+  position: relative;
+  animation: slideInRight 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.mobile-nav-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.mobile-nav a,
+.mobile-nav .nav-login,
+.mobile-nav .nav-cta {
+  margin-bottom: 18px;
+  font-size: 1.1rem;
+  color: #222;
+  text-decoration: none;
+  font-weight: 500;
+  display: block;
+}
+
+.mobile-nav .nav-cta {
+  background: var(--landing-accent);
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 0;
+  text-align: center;
+  margin-top: 12px;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}

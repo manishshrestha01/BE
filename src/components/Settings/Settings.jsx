@@ -51,7 +51,8 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   const sections = [
     { id: 'profile', icon: '👤', label: profile.full_name || 'Profile' },
     { id: 'wallpaper', icon: '🖼️', label: 'Wallpaper' },
-    { id: 'about', icon: 'ℹ️', label: 'About' }
+    { id: 'about', icon: 'ℹ️', label: 'About' },
+    { id: 'landing', icon: '🌐', label: 'Landing Page' }
   ]
 
   const handleMinimize = () => {
@@ -253,6 +254,20 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                   <p>Built with React + Vite</p>
                   <p>© 2025 PU Notes</p>
                 </div>
+              </div>
+            )}
+
+            {/* Landing Page Section */}
+            {activeSection === 'landing' && (
+              <div className="landing-preview-section" style={{height: '100%', width: '100%'}}>
+                <p className="section-description">Preview the public landing page below or open it in a new tab:</p>
+                <button
+                  className="btn-open-landing"
+                  style={{ marginBottom: 16, padding: '8px 16px', borderRadius: 8, border: 'none', background: '#007aff', color: '#fff', fontWeight: 500, cursor: 'pointer' }}
+                  onClick={() => window.open('/', '_blank')}
+                >
+                  Open Landing Page in New Tab
+                </button>
               </div>
             )}
           </div>

@@ -140,10 +140,6 @@ const Login = () => {
             </svg>
             Continue with Google
           </button>
-
-          <p className="auth-footer-link">
-            <Link to="/dashboard">Continue as guest →</Link>
-          </p>
         </div>
       </div>
     </div>

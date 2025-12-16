@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import './Landing.css'
@@ -6,13 +6,7 @@ import './Landing.css'
 const Landing = () => {
   const { isAuthenticated, loading } = useAuth()
   const navigate = useNavigate()
-
-  // Redirect to dashboard if already logged in
-  useEffect(() => {
-    if (!loading && isAuthenticated) {
-      navigate('/dashboard')
-    }
-  }, [isAuthenticated, loading, navigate])
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const features = [
     {
@@ -83,12 +77,24 @@ const Landing = () => {
             <Link to="/login" className="nav-login">Login</Link>
             <Link to="/dashboard" className="nav-cta">Open Dashboard</Link>
           </div>
-          <button className="mobile-menu-btn" aria-label="Menu">
+          <button className="mobile-menu-btn" aria-label="Menu" onClick={() => setMobileMenuOpen(true)}>
             <span></span>
             <span></span>
             <span></span>
           </button>
         </div>
+        {mobileMenuOpen && (
+          <div className="mobile-nav-overlay" onClick={() => setMobileMenuOpen(false)}>
+            <div className="mobile-nav" onClick={e => e.stopPropagation()}>
+              <button className="mobile-nav-close" onClick={() => setMobileMenuOpen(false)}>&times;</button>
+              <a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
+              <a href="#about" onClick={() => setMobileMenuOpen(false)}>About</a>
+              <a href="#testimonials" onClick={() => setMobileMenuOpen(false)}>Reviews</a>
+              <Link to="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+              <Link to="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
