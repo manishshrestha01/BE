@@ -126,56 +126,97 @@
 
 /* ==================== RESPONSIVE DESIGN ==================== */
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
+  .viewer-fullscreen {
+    height: 100%;
+    height: 100dvh; /* Dynamic viewport height */
+  }
+  
   .viewer-close {
-    top: 50px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
+    top: max(16px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+  }
+  
+  .viewer-close:active {
+    transform: scale(0.9);
   }
   
   .viewer-filename {
-    top: 50px;
-    left: 10px;
-    font-size: 12px;
-    padding: 5px 10px;
+    top: max(16px, env(safe-area-inset-top));
+    left: max(16px, env(safe-area-inset-left));
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    max-width: calc(100% - 80px);
+  }
+  
+  .viewer-content {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
   
   .info-icon {
-    font-size: 72px;
+    font-size: 48px;
+    margin-bottom: 16px;
   }
   
   .preview-info h2 {
-    font-size: 20px;
+    font-size: 18px;
+    margin-bottom: 8px;
+    max-width: 90vw;
   }
   
   .preview-info p {
-    font-size: 14px;
+    font-size: 13px;
+    max-width: 90vw;
+  }
+  
+  .preview-info a {
+    color: var(--accent-blue);
+    text-decoration: none;
   }
 }
 
-@media (max-width: 480px) {
+@media (min-width: 481px) and (max-width: 767px) {
+  .viewer-fullscreen {
+    height: 100%;
+    height: 100dvh;
+  }
+  
   .viewer-close {
-    top: 50px;
-    right: 8px;
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
+    top: max(20px, env(safe-area-inset-top));
+    right: max(16px, env(safe-area-inset-right));
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
   }
   
   .viewer-filename {
-    top: 50px;
-    left: 8px;
-    font-size: 11px;
-    padding: 4px 8px;
+    top: max(20px, env(safe-area-inset-top));
+    left: max(16px, env(safe-area-inset-left));
+    font-size: 14px;
+    padding: 8px 14px;
+  }
+  
+  .viewer-content {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
   
   .info-icon {
-    font-size: 56px;
+    font-size: 64px;
   }
   
   .preview-info h2 {
-    font-size: 16px;
+    font-size: 22px;
+  }
+  
+  .preview-info p {
+    font-size: 15px;
   }
 }

@@ -677,3 +677,448 @@
     padding: 6px 10px;
   }
 }
+
+/* Tablet devices (768px to 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .finder {
+    width: 95%;
+    max-width: 900px;
+  }
+  
+  .finder-layout {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+  }
+  
+  .finder-sidebar {
+    width: 180px;
+    padding: 12px;
+  }
+  
+  .finder-content {
+    padding: 16px;
+  }
+  
+  .finder-content.grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+  }
+  
+  .finder-item {
+    gap: 8px;
+  }
+  
+  .item-icon {
+    font-size: 28px;
+  }
+  
+  .item-name {
+    font-size: 12px;
+  }
+}
+
+/* Small mobile devices (320px to 480px) - iPhone App Style */
+@media (max-width: 480px) {
+  .finder {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    height: 100dvh; /* Use dynamic viewport height for mobile browsers */
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    flex-direction: column;
+    padding-bottom: 0;
+    background: #000;
+  }
+  
+  .finder:focus {
+    box-shadow: none;
+  }
+  
+  /* iPhone-style top bar */
+  .finder-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+    padding: max(8px, env(safe-area-inset-top)) 16px 8px 16px;
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+    flex-wrap: nowrap;
+  }
+  
+  .window-controls {
+    display: none;
+  }
+  
+  .finder-controls {
+    display: flex;
+    gap: 4px;
+    order: 1;
+  }
+  
+  .finder-controls .finder-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    padding: 0;
+  }
+  
+  .finder-breadcrumb {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    order: 0;
+  }
+  
+  .finder-actions {
+    order: 2;
+    display: flex;
+    gap: 8px;
+  }
+  
+  .finder-actions .finder-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+  
+  .finder-view-toggle {
+    display: none;
+  }
+  
+  /* iPhone-style layout - content takes up most space */
+  .finder-layout {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+  
+  /* Bottom tab bar (like iOS) */
+  .finder-sidebar {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    padding: 8px 0;
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+    border-right: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    order: 2;
+    flex-shrink: 0;
+  }
+  
+  .sidebar-section {
+    margin-bottom: 0;
+    padding: 0 16px;
+  }
+  
+  .sidebar-section h3 {
+    display: none;
+  }
+  
+  .sidebar-section ul {
+    display: flex;
+    gap: 0;
+    justify-content: space-around;
+    flex-wrap: nowrap;
+  }
+  
+  .sidebar-section li {
+    flex: 1;
+    padding: 4px 0;
+    font-size: 10px;
+    white-space: nowrap;
+    text-align: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .sidebar-section li:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .sidebar-section li.active {
+    background: rgba(0, 122, 255, 0.3);
+    color: var(--accent-blue);
+  }
+  
+  /* Main content - scrollable */
+  .finder-content {
+    flex: 1;
+    padding: 12px 8px;
+    padding-top: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    order: 1;
+    background: #000;
+  }
+  
+  /* Grid layout for files - iPhone style */
+  .finder-content.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    align-content: start;
+    padding: 8px 4px;
+  }
+  
+  /* iOS-style file item */
+  .finder-item {
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 4px;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+  }
+  
+  .finder-item:active {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(0.95);
+  }
+  
+  .finder-item.selected {
+    background: rgba(0, 122, 255, 0.2);
+  }
+  
+  .item-icon {
+    font-size: 28px;
+    line-height: 1;
+  }
+  
+  .item-name {
+    font-size: 9px;
+    text-align: center;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+  
+  /* Bottom status bar - hidden on iPhone */
+  .finder-statusbar {
+    display: none;
+  }
+  
+  .demo-badge {
+    display: none;
+  }
+}
+
+/* Medium mobile devices (481px to 767px) - iPad/Tablet App Style */
+@media (min-width: 481px) and (max-width: 767px) {
+  .finder {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: #000;
+  }
+  
+  .finder:focus {
+    box-shadow: none;
+  }
+  
+  /* iPad-style top bar */
+  .finder-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: max(12px, env(safe-area-inset-top)) 16px 12px 16px;
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+    flex-wrap: nowrap;
+  }
+  
+  .window-controls {
+    display: none;
+  }
+  
+  .finder-controls {
+    display: flex;
+    gap: 4px;
+    order: 1;
+    flex-shrink: 0;
+  }
+  
+  .finder-controls .finder-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+  
+  .finder-breadcrumb {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    order: 0;
+  }
+  
+  .finder-actions {
+    order: 2;
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  
+  .finder-actions .finder-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+  
+  .finder-view-toggle {
+    display: flex;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px;
+    border-radius: 6px;
+    gap: 2px;
+    order: 3;
+    flex-shrink: 0;
+  }
+  
+  .view-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+  
+  /* Two-column layout for tablet */
+  .finder-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    flex: 1;
+    overflow: hidden;
+  }
+  
+  /* iPad sidebar */
+  .finder-sidebar {
+    width: 220px;
+    padding: 12px;
+    padding-top: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  .sidebar-section {
+    margin-bottom: 20px;
+  }
+  
+  .sidebar-section h3 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  
+  .sidebar-section ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .sidebar-section li {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .sidebar-section li:active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
+  .sidebar-section li.active {
+    background: var(--accent-blue);
+    color: white;
+  }
+  
+  /* Main content - scrollable */
+  .finder-content {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #000;
+  }
+  
+  /* Grid layout for tablet */
+  .finder-content.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+    align-content: start;
+  }
+  
+  .finder-item {
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+    aspect-ratio: auto;
+  }
+  
+  .finder-item:active {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(0.95);
+  }
+  
+  .finder-item.selected {
+    background: rgba(0, 122, 255, 0.2);
+  }
+  
+  .item-icon {
+    font-size: 32px;
+  }
+  
+  .item-name {
+    font-size: 12px;
+    text-align: center;
+    line-height: 1.2;
+  }
+  
+  /* Status bar hidden on mobile */
+  .finder-statusbar {
+    display: none;
+  }
+  
+  .demo-badge {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
+

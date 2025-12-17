@@ -165,3 +165,77 @@ export const getItemsInFolder = async (folderId = null) => {
     error: foldersResult.error || filesResult.error
   }
 }
+
+// ============ USER FAVORITES & RECENTS ============
+
+// Fetch user favorites
+export const getUserFavorites = async (userId) => {
+  const { data, error } = await supabase
+    .from('user_favorites')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+  return { data, error }
+}
+
+// Add or remove favorite (upsert)
+export const toggleFavorite = async ({ userId, item }) => {
+  // Ensure item_data is included if provided
+  const favoriteData = {
+    user_id: userId,
+    item_id: item.item_id,
+    item_name: item.item_name,
+    item_path: item.item_path,
+    item_type: item.item_type,
+    item_data: item.item_data || null
+  }
+
+  const { data, error } = await supabase
+    .from('user_favorites')
+    .upsert([favoriteData], { onConflict: 'user_id,item_path' })
+    .select()
+  
+  if (error) console.error('Error saving favorite:', error, favoriteData)
+  return { data, error }
+}
+
+export const removeFavorite = async (userId, item_path) => {
+  const { error } = await supabase
+    .from('user_favorites')
+    .delete()
+    .eq('user_id', userId)
+    .eq('item_path', item_path)
+  return { error }
+}
+
+// Fetch user recents
+export const getUserRecents = async (userId, limit = 20) => {
+  const { data, error } = await supabase
+    .from('user_recent_tabs')
+    .select('*')
+    .eq('user_id', userId)
+    .order('last_opened_at', { ascending: false })
+    .limit(limit)
+  return { data, error }
+}
+
+// Add or update recent tab
+export const upsertRecentTab = async ({ userId, item }) => {
+  const recentData = {
+    user_id: userId,
+    item_id: item.item_id,
+    item_name: item.item_name,
+    item_path: item.item_path,
+    item_type: item.item_type,
+    item_data: item.item_data || null,
+    last_opened_at: new Date().toISOString()
+  }
+
+  const { data, error } = await supabase
+    .from('user_recent_tabs')
+    .upsert([recentData], { onConflict: 'user_id,item_path' })
+    .select()
+  
+  if (error) console.error('Error saving recent tab:', error, recentData)
+  return { data, error }
+}
