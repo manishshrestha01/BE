@@ -89,4 +89,4 @@ a {
     padding-right: env(safe-area-inset-right);
   }
 }
-
+@import "tailwindcss";
