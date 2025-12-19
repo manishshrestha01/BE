@@ -12,11 +12,11 @@ const TermsOfService = () => {
       <div className="legal-container">
         <div className="legal-content">
           <h1 className="terms-title">Terms of Service</h1>
-          <p className="terms-subtitle">These terms explain the rules and responsibilities when using PU Notes.</p>
+          <p className="terms-subtitle">These terms explain the rules and responsibilities when using StudyMate.</p>
           <p className="legal-meta">Last updated: December 2025</p>
 
           <p>
-            These terms govern your use of PU Notes. By using the service you agree to these terms.
+            These terms govern your use of StudyMate. By using the service you agree to these terms.
           </p>
 
           <h2>Use of the Service</h2>
@@ -34,7 +34,7 @@ const TermsOfService = () => {
 
           <h2>Limitation of Liability</h2>
           <p>
-            PU Notes is provided as-is. We make no warranties about the accuracy or availability
+            StudyMate is provided as-is. We make no warranties about the accuracy or availability
             of third-party content. We are not liable for damages from use of the service.
           </p>
 

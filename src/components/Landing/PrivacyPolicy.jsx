@@ -16,7 +16,7 @@ const PrivacyPolicy = () => {
           <p className="legal-meta">Last updated: December 2025</p>
 
           <p>
-            PU Notes is committed to protecting your privacy. This Privacy Policy explains how we
+            StudyMate is committed to protecting your privacy. This Privacy Policy explains how we
             collect, use, and share information when you use our website and services.
           </p>
 

@@ -67,8 +67,8 @@ const Landing = () => {
       <nav className="landing-nav">
         <div className="nav-container">
           <Link to="/" className="nav-logo">
-            <span className="logo-icon">📖</span>
-            <span className="logo-text">PU Notes</span>
+            <img src="/public/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />
+            <span className="logo-text">StudyMate</span>
           </Link>
           <div className="nav-links">
             <a href="#features">Features</a>
@@ -277,8 +277,8 @@ const Landing = () => {
           <div className="footer-grid">
             <div className="footer-brand">
               <Link to="/" className="nav-logo">
-                <span className="logo-icon">📖</span>
-                <span className="logo-text">PU Notes</span>
+                <img src="/public/white.svg" alt="StudyMate Logo" style={{ height: 32 }} />
+                <span className="logo-text">StudyMate</span>
               </Link>
               <p className="footer-tagline">
                 Your complete study resource for Pokhara University Computer Engineering.

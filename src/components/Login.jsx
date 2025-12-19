@@ -72,8 +72,8 @@ const Login = () => {
       <nav className="auth-nav">
         <div className="auth-nav-container">
           <Link to="/" className="auth-nav-logo">
-            <span className="auth-logo-icon">📖</span>
-            <span className="auth-logo-text">PU Notes</span>
+            <img src="/public/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />
+            <span className="auth-logo-text">StudyMate</span>
           </Link>
           <div className={`auth-nav-links ${mobileMenuOpen ? 'active' : ''}`}>
             <a href="/#features">Features</a>
