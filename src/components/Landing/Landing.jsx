@@ -67,7 +67,7 @@ const Landing = () => {
       <nav className="landing-nav">
         <div className="nav-container">
           <Link to="/" className="nav-logo">
-            <img src="/public/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />
+            <img src="/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />
             <span className="logo-text">StudyMate</span>
           </Link>
           <div className="nav-links">
@@ -277,7 +277,7 @@ const Landing = () => {
           <div className="footer-grid">
             <div className="footer-brand">
               <Link to="/" className="nav-logo">
-                <img src="/public/white.svg" alt="StudyMate Logo" style={{ height: 32 }} />
+                <img src="/white.svg" alt="StudyMate Logo" style={{ height: 32 }} />
                 <span className="logo-text">StudyMate</span>
               </Link>
               <p className="footer-tagline">

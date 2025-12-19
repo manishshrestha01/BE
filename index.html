@@ -23,14 +23,14 @@
     })(window.location);
   </script>
     <meta charset="UTF-8" />
-  <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="/public/white.svg" />
+  <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="/white.svg" />
   <script>
     function setFaviconByTheme(e) {
       const favicon = document.getElementById('dynamic-favicon');
       if (e.matches) {
-        favicon.href = '/public/white.svg'; // dark mode
+        favicon.href = '/white.svg'; // dark mode
       } else {
-        favicon.href = '/public/black.svg'; // light mode
+        favicon.href = '/black.svg'; // light mode
       }
     }
     const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
