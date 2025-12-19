@@ -419,7 +419,12 @@
   }
   
   .auth-logo-text {
-    display: none;
+    display: inline;
+    font-size: 16px;
+    font-weight: 700;
+    margin-left: 6px;
+    letter-spacing: -0.5px;
+    line-height: 1;
   }
   
   .auth-logo-icon {
