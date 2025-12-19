@@ -36,7 +36,7 @@ const PrivacyPolicy = () => {
           <h2>Local Storage</h2>
           <p>
             Some features (like the drawing canvas) store data locally in your browser (localStorage)
-            so it stays available to you. This data remains on your device unless you clear it.
+            so it stays available to you. This data remains on your device unless you clear it by using clear cache on your device.
           </p>
 
           <h2>Third-Party Services</h2>
