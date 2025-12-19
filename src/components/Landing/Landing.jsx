@@ -327,8 +327,8 @@ const Landing = () => {
           <div className="footer-bottom">
             <p>© 2025 PU Notes. Built with ❤️ for students.</p>
             <div className="footer-bottom-links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
+              <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+              <a href="/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a>
             </div>
           </div>
         </div>
