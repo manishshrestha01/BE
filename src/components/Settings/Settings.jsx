@@ -210,6 +210,15 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
             <h3>{sections.find(s => s.id === activeSection)?.label}</h3>
           </div>
 
+          {/* Global hidden file input - available for mobile and desktop uploads */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden-file-input"
+            onChange={handleFileChange}
+          />
+
           <div className="settings-main-content">
             {/* Mobile-first view (iOS-style) */}
             <div className="mobile-only">
@@ -525,14 +534,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                       <div className="custom-bg-placeholder">Drag & drop an image here or click to browse</div>
                     )}
                   </div>
-
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
-                  />
 
                   {uploadError && <div className="upload-error">{uploadError}</div>}
 

@@ -1169,3 +1169,13 @@
 .setting-row.signout .row-title { color: #ff3b30; }
 .setting-row.signout .row-icon { background: rgba(255,59,48,0.08); color: #ff3b30; }
 
+/* Hidden file input - keep in DOM but visually hidden for mobile compatibility */
+.hidden-file-input {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
