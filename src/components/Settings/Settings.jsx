@@ -12,7 +12,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   const { profile, updateProfile, getInitials, error: profileError } = useUserProfile()
   const { user, signOut, isAuthenticated } = useAuth()
   const [activeSection, setActiveSection] = useState(initialSection)
-  const [mobileView, setMobileView] = useState(null) // null | 'profile' | 'wallpaper' | 'about' | 'landing'
+  const [mobileView, setMobileView] = useState(null) // null | 'profile' | 'wallpaper' | 'about'
   const [windowState, setWindowState] = useState('normal') // 'normal', 'maximized', 'minimized'
   const [formData, setFormData] = useState({
     full_name: profile.full_name || '',
@@ -118,8 +118,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   const sections = [
     { id: 'profile', icon: '👤', label: profile.full_name || 'Profile' },
     { id: 'wallpaper', icon: '🖼️', label: 'Wallpaper' },
-    { id: 'about', icon: 'ℹ️', label: 'About' },
-    { id: 'landing', icon: '🌐', label: 'Landing Page' }
+    { id: 'about', icon: 'ℹ️', label: 'About' }
   ]
 
   const handleMinimize = () => {
@@ -154,11 +153,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     if (delta > 80) setMobileView(null)
     touchStartX.current = null
     touchDelta.current = 0
-  }
-
-  const navigateToSection = (section) => {
-    setActiveSection(section)
-    setMobileView(section)
   }
 
   if (windowState === 'minimized') {
@@ -253,11 +247,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                       onClick={() => setMobileView('about')}
                     />
                     <SettingRow
-                      icon={<span>🌐</span>}
-                      title="Landing Page"
-                      onClick={() => setMobileView('landing')}
-                    />
-                    <SettingRow
                       icon={<span>🚪</span>}
                       title="Sign Out"
                       onClick={handleSignOut}
@@ -273,7 +262,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                         <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </button>
-                    <h3 style={{ marginLeft: 8 }}>{mobileView === 'profile' ? 'Profile' : mobileView === 'wallpaper' ? 'Wallpaper' : mobileView === 'about' ? 'About' : 'Landing'}</h3>
+                    <h3 style={{ marginLeft: 8 }}>{mobileView === 'profile' ? 'Profile' : mobileView === 'wallpaper' ? 'Wallpaper' : 'About'}</h3>
                   </div>
                   <div style={{ paddingTop: 12 }}>
                     {mobileView === 'profile' && (
@@ -296,9 +285,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                                 <span className="profile-badge">{profile.semester}</span>
                               )}
                               <div className="profile-actions">
-                                <button className="btn-go-section" onClick={() => navigateToSection('wallpaper')}>
-                                  Wallpaper
-                                </button>
+                                {/* Removed Wallpaper button - accessible from main navigation */}
                               </div>
                             </div>
                           </div>
@@ -327,9 +314,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                           <button className="btn-save-profile" onClick={handleSaveProfile}>
                             Save
                           </button>
-                          <button className="btn-go-section" style={{ marginTop: 8 }} onClick={() => setMobileView('wallpaper')}>
-                            Change Wallpaper
-                          </button>
+                          {/* Removed Change Wallpaper button - accessible from main navigation */}
                         </div>
                       </div>
                     )}
@@ -593,25 +578,6 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                 </div>
               </div>
             )}
-
-            {/* Landing Page Section */}
-            {activeSection === 'landing' && (
-              <div className="landing-preview-section" style={{height: '100%', width: '100%'}}>
-                <p className="section-description">Preview the public landing page below or open it in a new tab:</p>
-                <button
-                  className="btn-open-landing"
-                  style={{ marginBottom: 16, padding: '8px 16px', borderRadius: 8, border: 'none', background: '#007aff', color: '#fff', fontWeight: 500, cursor: 'pointer' }}
-                  onClick={() => window.open('/', '_blank')}
-                >
-                  Open Landing Page in New Tab
-                </button>
-                <div style={{ marginTop: 16 }}>
-                  <button className="btn-signout" onClick={handleSignOut}>
-                    Sign Out
-                  </button>
-                </div>
-               </div>
-             )}
             </div> {/* end .desktop-only */}
           </div>
         </div>

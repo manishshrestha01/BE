@@ -81,7 +81,7 @@
 /* ==================== RESPONSIVE DESIGN ==================== */
 
 /* Tablets */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .dock-container {
     bottom: 8px;
   }

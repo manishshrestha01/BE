@@ -726,7 +726,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .settings-window {
     flex-direction: column;
     height: 90vh;
@@ -786,7 +786,7 @@
   .setting-row { padding: 16px 18px; }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .settings-window {
     width: 100%;
     max-width: 100vw;
@@ -1072,7 +1072,7 @@
   display: none;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .mobile-back-btn {
     display: inline-flex;
   }
@@ -1092,7 +1092,7 @@
 /* Mobile-specific settings UI (iOS-style) */
 .mobile-only { display: none; }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .mobile-only { display: block; }
   .desktop-only { display: none; }
 
@@ -1211,7 +1211,7 @@
   background: rgba(255,255,255,0.03);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .btn-go-section { font-size: 14px; padding: 8px 12px; }
 }
 

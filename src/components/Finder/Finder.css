@@ -522,7 +522,7 @@
 /* ==================== RESPONSIVE DESIGN ==================== */
 
 /* Tablets */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .finder {
     width: 95%;
     height: calc(100vh - 100px);
@@ -696,8 +696,8 @@
   }
 }
 
-/* Tablet devices (768px to 1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
+/* Tablet devices (768px to 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
   .finder {
     width: 95%;
     max-width: 900px;

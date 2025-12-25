@@ -55,17 +55,23 @@ export const AuthProvider = ({ children }) => {
     if (!isSupabaseConfigured()) {
       throw new Error('Supabase is not configured')
     }
-    
+
     setError(null)
-    const { data, error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`
-      }
-    })
-    
-    if (error) throw error
-    return data
+    try {
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/home` // Changed to /home
+        }
+      })
+
+      if (error) throw error
+      return data
+    } catch (err) {
+      console.error('Auth error:', err)
+      setError(err.message)
+      throw err
+    }
   }
 
   // Sign in with Google

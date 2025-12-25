@@ -332,7 +332,7 @@
 /* ==================== RESPONSIVE DESIGN ==================== */
 
 /* Tablets */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .notes-app {
     width: 95%;
     height: calc(100vh - 100px);

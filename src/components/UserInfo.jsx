@@ -9,10 +9,10 @@ const UserInfo = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    full_name: profile.full_name || '',
-    semester: profile.semester || '',
-    faculty: profile.faculty || 'Computer Engineering',
-    university: profile.university || 'Pokhara University',
+    full_name: '',
+    semester: '',
+    faculty: 'Computer Engineering',
+    university: 'Pokhara University',
   });
   const [error, setError] = useState('');
 
@@ -21,6 +21,18 @@ const UserInfo = () => {
       navigate('/login');
     }
   }, [user, navigate]);
+
+  // Update form data when profile loads
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        full_name: profile.full_name || '',
+        semester: profile.semester || '',
+        faculty: profile.faculty || 'Computer Engineering',
+        university: profile.university || 'Pokhara University',
+      });
+    }
+  }, [profile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,8 +45,15 @@ const UserInfo = () => {
       setError('Please fill all required fields.');
       return;
     }
-    await updateProfile({ ...formData, setupComplete: true });
-    navigate('/dashboard');
+    
+    try {
+      await updateProfile({ ...formData, setupComplete: true });
+      console.log('Profile updated successfully, navigating to home...');
+      navigate('/home', { state: { profileJustCompleted: true } });
+    } catch (err) {
+      setError('Failed to save profile. Please try again.');
+      console.error('Profile update error:', err);
+    }
   };
 
   return (

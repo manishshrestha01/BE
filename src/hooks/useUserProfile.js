@@ -22,8 +22,9 @@ const mapDbProfileToClient = (data) => ({
 export const useUserProfile = () => {
   const { user } = useAuth();
   const [profile, setProfile] = useState(defaultProfile);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Start as true to prevent premature checks
   const [error, setError] = useState(null);
+  const [profileInitialized, setProfileInitialized] = useState(false);
 
   // Fetch profile from Supabase on mount or when user changes
   useEffect(() => {
@@ -38,12 +39,42 @@ export const useUserProfile = () => {
         .select('*')
         .eq('id', user.id)
         .single();
+      
+      console.log('Profile fetch result:', { data, error, userId: user.id });
+      
       if (error && error.code !== 'PGRST116') { // ignore no row found
         setError(error.message);
       } else if (data) {
-        setProfile({ ...defaultProfile, ...mapDbProfileToClient(data) });
+        const mappedProfile = { ...defaultProfile, ...mapDbProfileToClient(data) };
+        setProfile(mappedProfile);
+        console.log('Profile loaded from database:', mappedProfile, 'isSetupComplete:', mappedProfile.setupComplete);
+      } else {
+        // No profile found, create one with default values
+        console.log('No profile found, creating default profile for user');
+        const defaultProfileData = {
+          id: user.id,
+          full_name: '',
+          semester: '',
+          faculty: defaultProfile.faculty,
+          university: defaultProfile.university,
+          setup_complete: false
+        };
+        
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert(defaultProfileData);
+        
+        if (insertError) {
+          console.error('Error creating default profile:', insertError);
+          setError('Failed to create profile');
+        } else {
+          console.log('Default profile created');
+        }
+        
+        setProfile(defaultProfile);
       }
       setLoading(false);
+      setProfileInitialized(true);
     };
     fetchProfile();
     // eslint-disable-next-line
@@ -68,7 +99,13 @@ export const useUserProfile = () => {
     }
 
     const { error } = await supabase.from('profiles').upsert(upsertData);
-    if (error) setError(error.message);
+    if (error) {
+      setError(error.message);
+      console.error('Database error during profile update:', error);
+      throw error; // Throw the error so calling code can handle it
+    } else {
+      console.log('Profile updated successfully in database, upsertData:', upsertData);
+    }
   };
 
   const completeSetup = () => {
@@ -95,8 +132,9 @@ export const useUserProfile = () => {
     completeSetup,
     resetProfile,
     getInitials,
-    isSetupComplete: profile.setupComplete && profile.full_name,
+    isSetupComplete: profile.setupComplete,
     loading,
+    profileInitialized,
     error
   };
 }

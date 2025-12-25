@@ -25,8 +25,8 @@
 
 /* ==================== RESPONSIVE DESIGN ==================== */
 
-/* Tablets (768px to 1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
+/* Tablets (768px to 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
   .desktop-content {
     height: calc(100dvh - 75px);
     padding: 16px;
