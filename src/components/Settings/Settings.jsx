@@ -8,7 +8,7 @@ import './Settings.css'
 const Settings = ({ onClose, initialSection = 'profile' }) => {
   const navigate = useNavigate()
   const { backgrounds, currentBg, changeBackground } = useBackground()
-  const { profile, updateProfile, completeSetup, getInitials, error: profileError } = useUserProfile()
+  const { profile, updateProfile, getInitials, error: profileError } = useUserProfile()
   const { user, signOut, isAuthenticated } = useAuth()
   const [activeSection, setActiveSection] = useState(initialSection)
   const [windowState, setWindowState] = useState('normal') // 'normal', 'maximized', 'minimized'
@@ -34,8 +34,8 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   }
 
   const handleSaveProfile = () => {
-    updateProfile(formData)
-    completeSetup()
+    // Persist profile and mark setup as complete
+    updateProfile({ ...formData, setupComplete: true })
   }
 
   const handleSignOut = async () => {

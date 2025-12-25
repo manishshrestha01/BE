@@ -10,6 +10,15 @@ const defaultProfile = {
   setupComplete: false
 }
 
+const mapDbProfileToClient = (data) => ({
+  id: data?.id,
+  full_name: data?.full_name ?? '',
+  semester: data?.semester ?? '',
+  faculty: data?.faculty ?? defaultProfile.faculty,
+  university: data?.university ?? defaultProfile.university,
+  setupComplete: Boolean(data?.setup_complete)
+})
+
 export const useUserProfile = () => {
   const { user } = useAuth();
   const [profile, setProfile] = useState(defaultProfile);
@@ -25,14 +34,14 @@ export const useUserProfile = () => {
       }
       setLoading(true);
       const { data, error } = await supabase
-        .from('user_profiles')
+        .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single();
       if (error && error.code !== 'PGRST116') { // ignore no row found
         setError(error.message);
       } else if (data) {
-        setProfile({ ...defaultProfile, ...data });
+        setProfile({ ...defaultProfile, ...mapDbProfileToClient(data) });
       }
       setLoading(false);
     };
@@ -45,13 +54,20 @@ export const useUserProfile = () => {
     if (!user) return;
     const newProfile = { ...profile, ...updates };
     setProfile(newProfile);
-    const { error } = await supabase.from('user_profiles').upsert({
+
+    const upsertData = {
       id: user.id,
       full_name: newProfile.full_name,
       semester: newProfile.semester,
       faculty: newProfile.faculty,
       university: newProfile.university
-    });
+    };
+
+    if (typeof newProfile.setupComplete !== 'undefined') {
+      upsertData.setup_complete = newProfile.setupComplete;
+    }
+
+    const { error } = await supabase.from('profiles').upsert(upsertData);
     if (error) setError(error.message);
   };
 

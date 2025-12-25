@@ -5,6 +5,7 @@ import About from './components/About'
 import Login from './components/Login'
 import PrivacyPolicy from './components/Landing/PrivacyPolicy'
 import TermsOfService from './components/Landing/TermsOfService'
+import UserInfo from './components/UserInfo'
 
 const AppRoutes = () => (
   <Routes>
@@ -13,6 +14,7 @@ const AppRoutes = () => (
     <Route path="/home" element={<Home />} />
     <Route path="/about" element={<About />} />
     <Route path="/login" element={<Login />} />
+    <Route path="/user-info" element={<UserInfo />} />
     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
     <Route path="/terms-of-service" element={<TermsOfService />} />
   </Routes>
