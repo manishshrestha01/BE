@@ -703,36 +703,14 @@
     max-width: 900px;
   }
   
-  .finder-layout {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-  }
-  
-  .finder-sidebar {
-    width: 180px;
-    padding: 12px;
-  }
-  
-  .finder-content {
-    padding: 16px;
-  }
-  
-  .finder-content.grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 12px;
-  }
-  
-  .finder-item {
-    gap: 8px;
-  }
-  
-  .item-icon {
-    font-size: 28px;
-  }
-  
-  .item-name {
-    font-size: 12px;
-  }
+  .finder-toolbar { flex-wrap: wrap; gap: 8px; padding: 10px; }
+  .finder-layout { flex-direction: column; }
+  .finder-sidebar { width: 100%; max-height: 120px; overflow-y: auto; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .sidebar-section ul { display: flex; flex-wrap: wrap; gap: 8px; }
+  .finder-content.grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 12px; }
+  .finder { z-index: 2000; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  .finder-view-toggle { display: none; }
+  .finder-statusbar { display: none; }
 }
 
 /* Small mobile devices (320px to 480px) - iPhone App Style */
@@ -1127,16 +1105,6 @@
     font-size: 12px;
     text-align: center;
     line-height: 1.2;
-  }
-  
-  /* Status bar hidden on mobile */
-  .finder-statusbar {
-    display: none;
-  }
-  
-  .demo-badge {
-    padding: 4px 8px;
-    font-size: 11px;
   }
 }
 

@@ -156,6 +156,11 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     touchDelta.current = 0
   }
 
+  const navigateToSection = (section) => {
+    setActiveSection(section)
+    setMobileView(section)
+  }
+
   if (windowState === 'minimized') {
     return (
       <div className="settings-minimized" onClick={() => setWindowState('normal')}>
@@ -290,6 +295,11 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                               {profile.semester && (
                                 <span className="profile-badge">{profile.semester}</span>
                               )}
+                              <div className="profile-actions">
+                                <button className="btn-go-section" onClick={() => navigateToSection('wallpaper')}>
+                                  Wallpaper
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -316,6 +326,9 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                           </div>
                           <button className="btn-save-profile" onClick={handleSaveProfile}>
                             Save
+                          </button>
+                          <button className="btn-go-section" style={{ marginTop: 8 }} onClick={() => setMobileView('wallpaper')}>
+                            Change Wallpaper
                           </button>
                         </div>
                       </div>
