@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useBackground } from '../../context/BackgroundContext'
 import { useUserProfile } from '../../hooks/useUserProfile'
@@ -19,14 +19,22 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     university: profile.university || 'Pokhara University'
   })
 
+  // Keep local form state in sync with profile when it loads/changes
+  useEffect(() => {
+    setFormData({
+      full_name: profile.full_name || '',
+      semester: profile.semester || '',
+      faculty: profile.faculty || 'Computer Engineering',
+      university: profile.university || 'Pokhara University'
+    })
+  }, [profile])
+
   const semesters = [
     '1st Semester', '2nd Semester', '3rd Semester', '4th Semester',
     '5th Semester', '6th Semester', '7th Semester', '8th Semester'
   ]
 
-  const faculties = [
-    'Computer Engineering',
-  ]
+  // Faculty is currently fixed; show as non-editable input (no dropdown)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -132,11 +140,13 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                     )}
                   </div>
                   <div className="profile-card-info">
-                    <h4>{profile.full_name || 'Set up your profile'}</h4>
-                    <p>{user?.email || profile.email || 'Add your academic details'}</p>
-                    {profile.semester && (
-                      <span className="profile-badge">{profile.semester}</span>
-                    )}
+                    <div className="profile-card-info-inner">
+                      <h4>{profile.full_name || 'Set up your profile'}</h4>
+                      <p>{user?.email || profile.email || 'Add your academic details'}</p>
+                      {profile.semester && (
+                        <span className="profile-badge">{profile.semester}</span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -147,6 +157,16 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                       {profileError}
                     </div>
                   )}
+
+                  {/* Edit header so users know this section is editable */}
+                  <div className="profile-edit-header">
+                    <span className="profile-edit-icon" aria-hidden>✏️</span>
+                    <div className="profile-edit-text">
+                      <div className="profile-edit-title">Edit</div>
+                      <div className="profile-edit-desc">Update your profile information below:</div>
+                    </div>
+                  </div>
+
                   <div className="form-group">
                     <label htmlFor="full_name">Full Name</label>
                     <input
@@ -176,16 +196,14 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
 
                   <div className="form-group">
                     <label htmlFor="faculty">Faculty</label>
-                    <select
+                    <input
+                      type="text"
                       id="faculty"
                       name="faculty"
                       value={formData.faculty}
-                      onChange={handleInputChange}
-                    >
-                      {faculties.map(fac => (
-                        <option key={fac} value={fac}>{fac}</option>
-                      ))}
-                    </select>
+                      disabled
+                      style={{ cursor: 'not-allowed' }}
+                    />
                   </div>
 
                   <div className="form-group">
