@@ -58,6 +58,13 @@ export const BackgroundProvider = ({ children }) => {
   const [customBg, setCustomBg] = useState(null)
 
   useEffect(() => {
+    // If a custom background was set previously, restore it first
+    const custom = localStorage.getItem('notesAppCustomBackground')
+    if (custom) {
+      setCustomBg(custom)
+      return
+    }
+
     const saved = localStorage.getItem('notesAppBackground')
     if (saved) {
       const found = backgrounds.find(bg => bg.id === saved)
@@ -69,14 +76,38 @@ export const BackgroundProvider = ({ children }) => {
     const found = backgrounds.find(bg => bg.id === bgId)
     if (found) {
       setCurrentBg(found)
+      // clearing any custom background when user selects a built-in
       setCustomBg(null)
+      localStorage.removeItem('notesAppCustomBackground')
       localStorage.setItem('notesAppBackground', bgId)
     }
   }
 
   const setCustomBackground = (url) => {
     setCustomBg(url)
+    // persist custom image so it survives reloads
+    try {
+      localStorage.setItem('notesAppCustomBackground', url)
+    } catch (err) {
+      // localStorage may fail on some browsers for large images; ignore
+      console.warn('Failed to persist custom background', err)
+    }
+    // clear chosen built-in background when using custom
     localStorage.removeItem('notesAppBackground')
+  }
+
+  const removeCustomBackground = () => {
+    setCustomBg(null)
+    localStorage.removeItem('notesAppCustomBackground')
+    // restore selected built-in if present, otherwise fallback to default
+    const saved = localStorage.getItem('notesAppBackground')
+    if (saved) {
+      const found = backgrounds.find(bg => bg.id === saved)
+      if (found) setCurrentBg(found)
+      else setCurrentBg(backgrounds[0])
+    } else {
+      setCurrentBg(backgrounds[0])
+    }
   }
 
   return (
@@ -85,7 +116,8 @@ export const BackgroundProvider = ({ children }) => {
       customBg,
       backgrounds,
       changeBackground,
-      setCustomBackground
+      setCustomBackground,
+      removeCustomBackground
     }}>
       {children}
     </BackgroundContext.Provider>

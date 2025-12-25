@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useBackground } from '../../context/BackgroundContext'
 import { useUserProfile } from '../../hooks/useUserProfile'
@@ -7,7 +7,7 @@ import './Settings.css'
 
 const Settings = ({ onClose, initialSection = 'profile' }) => {
   const navigate = useNavigate()
-  const { backgrounds, currentBg, changeBackground } = useBackground()
+  const { backgrounds, currentBg, changeBackground, customBg, setCustomBackground, removeCustomBackground } = useBackground()
   const { profile, updateProfile, getInitials, error: profileError } = useUserProfile()
   const { user, signOut, isAuthenticated } = useAuth()
   const [activeSection, setActiveSection] = useState(initialSection)
@@ -18,6 +18,10 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     faculty: profile.faculty || 'Computer Engineering',
     university: profile.university || 'Pokhara University'
   })
+  const fileInputRef = useRef(null)
+  const [uploadError, setUploadError] = useState('')
+  const [uploading, setUploading] = useState(false)
+  const [dropActive, setDropActive] = useState(false)
 
   // Keep local form state in sync with profile when it loads/changes
   useEffect(() => {
@@ -54,6 +58,57 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     } catch (err) {
       console.error('Sign out error:', err)
     }
+  }
+
+  const handleUploadClick = () => {
+    setUploadError('')
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (e) => {
+    const file = e.target?.files?.[0]
+    if (file) processFile(file)
+    // clear input so same file can be selected again if needed
+    e.target.value = ''
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    setDropActive(false)
+    const file = e.dataTransfer?.files?.[0]
+    if (file) processFile(file)
+  }
+
+  const processFile = (file) => {
+    setUploadError('')
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please upload a valid image file.')
+      return
+    }
+    // Limit file size to 8MB
+    if (file.size > 8 * 1024 * 1024) {
+      setUploadError('Image is too large (max 8 MB).')
+      return
+    }
+    setUploading(true)
+    const reader = new FileReader()
+    reader.onload = () => {
+      const url = reader.result
+      try {
+        setCustomBackground(url)
+      } finally {
+        setUploading(false)
+      }
+    }
+    reader.onerror = () => {
+      setUploadError('Failed to read file.')
+      setUploading(false)
+    }
+    reader.readAsDataURL(file)
   }
 
   const sections = [
@@ -254,6 +309,52 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                       {currentBg.id === bg.id && <span className="bg-check">✓</span>}
                     </div>
                   ))}
+                </div>
+
+                {/* Custom Background Upload */}
+                <div className="custom-bg-section">
+                  <p className="section-description" style={{ marginTop: 18 }}>Or upload your own background</p>
+
+                  <div
+                    className={`custom-bg-dropzone ${dropActive ? 'active' : ''}`}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                    onDragEnter={() => setDropActive(true)}
+                    onDragLeave={() => setDropActive(false)}
+                    onClick={handleUploadClick}
+                  >
+                    {customBg ? (
+                      <div className="custom-bg-preview" style={{ backgroundImage: `url(${customBg})` }}>
+                        <div className="custom-bg-badge">Custom</div>
+                      </div>
+                    ) : (
+                      <div className="custom-bg-placeholder">Drag & drop an image here or click to browse</div>
+                    )}
+                  </div>
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                  />
+
+                  {uploadError && <div className="upload-error">{uploadError}</div>}
+
+                  <div className="custom-bg-actions">
+                    {!customBg ? (
+                      <button className="btn-save-profile" onClick={handleUploadClick} disabled={uploading} style={{ marginTop: 12 }}>
+                        {uploading ? 'Uploading...' : 'Upload custom background'}
+                      </button>
+                    ) : (
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <button className="btn-save-profile" onClick={() => removeCustomBackground()} style={{ marginTop: 12, background: '#ff3b30' }}>
+                          Remove custom background
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
