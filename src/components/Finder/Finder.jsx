@@ -50,9 +50,16 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
   const [favorites, setFavorites] = useState([])
   const [recents, setRecents] = useState([])
   const [displayedItems, setDisplayedItems] = useState([])
-  const [windowState, setWindowState] = useState('normal') // 'normal', 'maximized', 'minimized'
-  
-  const finderRef = useRef(null)
+  const [toastMessage, setToastMessage] = useState(null)
+  const toastTimerRef = useRef(null)
+  const longPressTimeoutRef = useRef(null)
+  const longPressActiveRef = useRef(false)
+  const longPressStartPos = useRef({ x: 0, y: 0 })
+  const suppressClickRef = useRef(false)
+  const [pressedItemId, setPressedItemId] = useState(null)
+   const [windowState, setWindowState] = useState('normal') // 'normal', 'maximized', 'minimized'
+   
+   const finderRef = useRef(null)
 
   // Auto-focus finder on mount
   useEffect(() => {
@@ -89,83 +96,125 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
     if (recResult.data) setRecents(recResult.data)
   }
 
+  const showToast = (msg, timeout = 1400) => {
+    setToastMessage(msg)
+    clearTimeout(toastTimerRef.current)
+    toastTimerRef.current = setTimeout(() => setToastMessage(null), timeout)
+  }
+
+  // Long-press handlers for touch devices
+  const startLongPress = (e, item) => {
+    if (!e.touches || e.touches.length === 0) return
+    const t = e.touches[0]
+    longPressStartPos.current = { x: t.clientX, y: t.clientY }
+    longPressActiveRef.current = false
+    clearTimeout(longPressTimeoutRef.current)
+    longPressTimeoutRef.current = setTimeout(async () => {
+      longPressActiveRef.current = true
+      suppressClickRef.current = true
+      setPressedItemId(item.id)
+      // light haptic feedback when long-press action fires
+      try { navigator.vibrate?.(12) } catch (e) {}
+      await toggleFavoriteForItem(item)
+      // brief pressed visual
+      setTimeout(() => setPressedItemId(null), 600)
+      // keep suppressing click briefly
+      setTimeout(() => { suppressClickRef.current = false }, 500)
+    }, 650)
+  }
+
+  const cancelLongPress = () => {
+    clearTimeout(longPressTimeoutRef.current)
+    longPressTimeoutRef.current = null
+  }
+
+  const moveCancelLongPress = (e) => {
+    if (!e.touches || e.touches.length === 0) return
+    const t = e.touches[0]
+    const dx = Math.abs(t.clientX - longPressStartPos.current.x)
+    const dy = Math.abs(t.clientY - longPressStartPos.current.y)
+    if (dx > 10 || dy > 10) cancelLongPress()
+  }
+
+  const endTouch = () => {
+    cancelLongPress()
+    longPressActiveRef.current = false
+  }
+
+  // Centralized favorite toggle helper (used by Spacebar and long-press)
+  const toggleFavoriteForItem = async (item) => {
+    if (!user?.id) {
+      showToast('Sign in to add favorites')
+      return
+    }
+
+    // Normalize item
+    let itemToProcess = item
+    if (item.item_data && typeof item.item_data === 'string') {
+      try { itemToProcess = JSON.parse(item.item_data) } catch (e) { itemToProcess = item }
+    }
+
+    const itemType = itemToProcess.type || item.type || item.item_type
+    if (itemType === 'folder') {
+      showToast('Folders cannot be added to favorites')
+      return
+    }
+
+    const itemId = itemToProcess.id || item.id || item.item_id
+    const itemPath = itemToProcess.path || item.path || item.item_path || itemToProcess.name || item.name
+    const isAlreadyFavorited = favorites.some(fav => String(fav.item_id) === String(itemId) || (fav.item_path || fav.path) === itemPath)
+
+    try {
+      if (isAlreadyFavorited) {
+        const result = await removeFavorite(user.id, itemPath)
+        if (!result.error) {
+          await fetchFavoritesAndRecents()
+          showToast('Removed from favorites')
+        } else {
+          showToast('Failed to remove favorite')
+        }
+      } else {
+        const favoriteItem = {
+          item_id: itemId,
+          item_name: itemToProcess.name || item.name || item.item_name,
+          item_path: itemPath,
+          item_type: itemType || 'file',
+          item_data: JSON.stringify({
+            id: itemToProcess.id,
+            name: itemToProcess.name || item.name || item.item_name,
+            type: itemType,
+            path: itemToProcess.path || item.path || item.item_path,
+            fileType: itemToProcess.fileType || item.fileType || item.file_type,
+            url: itemToProcess.url,
+            ...itemToProcess
+          })
+        }
+        const result = await toggleFavorite({ userId: user.id, item: favoriteItem })
+        if (!result.error) {
+          await fetchFavoritesAndRecents()
+          showToast('Added to favorites')
+        } else {
+          showToast('Failed to add favorite')
+        }
+      }
+    } catch (err) {
+      console.error('Favorite error:', err)
+      showToast('Failed to update favorite')
+    }
+  }
+
   // Handle spacebar press to add/remove favorites
   useEffect(() => {
     const handleKeyDown = async (e) => {
       if (e.code === 'Space' && selectedItem && user?.id) {
         e.preventDefault()
-        
-        // Search in items first (original GitHub items), then in displayedItems
+        // find the selected item from original items or displayedItems
         let item = items.find(i => i.id === selectedItem)
-        
-        if (!item) {
-          // If not found in items, search in displayedItems and parse if needed
-          const displayItem = displayedItems.find(i => i.id === selectedItem)
-          if (displayItem && displayItem.item_data) {
-            try {
-              item = JSON.parse(displayItem.item_data)
-              item.id = displayItem.id || item.id
-            } catch (e) {
-              item = displayItem
-            }
-          } else {
-            item = displayItem
-          }
-        }
-
+        if (!item) item = displayedItems.find(i => i.id === selectedItem)
         if (!item) return
-
-        // Don't allow folders to be added to favorites
-        if (item.type === 'folder') {
-          console.log('Folders cannot be added to favorites')
-          return
-        }
-
-        // Use item_id for comparison (more reliable than path)
-        const itemId = item.id || item.item_id
-        const isAlreadyFavorited = favorites.some(fav => fav.item_id === itemId)
-        
-        console.log('Item ID:', itemId, 'Already favorited:', isAlreadyFavorited, 'Favorites:', favorites)
-
-        if (isAlreadyFavorited) {
-          // Remove from favorites
-          const itemPath = item.path || item.name
-          const result = await removeFavorite(user.id, itemPath)
-          if (!result.error) {
-            console.log('Removed from favorites')
-            await fetchFavoritesAndRecents()
-          } else {
-            console.error('Error removing from favorites:', result.error)
-          }
-        } else {
-          // Add to favorites
-          const itemPath = item.path || item.name
-          const favoriteItem = {
-            item_id: item.id,
-            item_name: item.name,
-            item_path: itemPath,
-            item_type: item.type || 'file',
-            item_data: JSON.stringify({
-              id: item.id,
-              name: item.name,
-              type: item.type,
-              path: item.path,
-              fileType: item.fileType || item.file_type,
-              url: item.url,
-              ...item
-            })
-          }
-
-          const result = await toggleFavorite({ userId: user.id, item: favoriteItem })
-          if (!result.error) {
-            console.log('Added to favorites')
-            await fetchFavoritesAndRecents()
-          } else {
-            console.error('Error adding to favorites:', result.error)
-          }
-        }
-      }
-    }
+        await toggleFavoriteForItem(item)
+       }
+     }
 
     const finder = finderRef.current
     if (finder) {
@@ -200,6 +249,11 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
   }
 
   const handleItemClick = (item) => {
+    if (suppressClickRef.current) {
+      // suppress intentional click after long-press
+      suppressClickRef.current = false
+      return
+    }
     setSelectedItem(item.id)
     if ((item.type || item.item_type) !== 'folder') {
       onFileSelect?.(item)
@@ -218,7 +272,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
         item_type: itemType,
         item_data: item.item_data ? item.item_data : JSON.stringify({
           id: item.id,
-          name: item.name || item.item_name,
+          name: item.name,
           type: itemType,
           path: item.path || item.item_path,
           fileType: item.fileType || item.file_type,
@@ -414,19 +468,23 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
             return (
               <div
                 key={item.id}
-                className={`finder-item ${selectedItem === item.id ? 'selected' : ''}`}
+                className={`finder-item ${selectedItem === item.id ? 'selected' : ''} ${pressedItemId === item.id ? 'pressed' : ''}`}
                 onClick={() => handleItemClick(item)}
                 onDoubleClick={() => handleItemDoubleClick(item)}
+                onTouchStart={(e) => startLongPress(e, item)}
+                onTouchMove={moveCancelLongPress}
+                onTouchEnd={endTouch}
+                onTouchCancel={cancelLongPress}
               >
-                <div className="item-icon">
-                  {(displayItem.type || item.type || item.item_type) === 'folder' 
-                    ? '📁' 
-                    : getFileIcon(displayItem.fileType || item.fileType || item.file_type)
-                  }
-                </div>
-                <span className="item-name">{displayItem.name || item.name || item.item_name}</span>
-              </div>
-            )
+                 <div className="item-icon">
+                   {(displayItem.type || item.type || item.item_type) === 'folder' 
+                     ? '📁' 
+                     : getFileIcon(displayItem.fileType || item.fileType || item.file_type)
+                   }
+                 </div>
+                 <span className="item-name">{displayItem.name || item.name || item.item_name}</span>
+               </div>
+             )
           })}
         </div>
       </div>
@@ -449,6 +507,13 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
         })()}
         {!isConfigured && <span className="demo-notice">Demo Mode - Configure GitHub repo</span>}
       </div>
+
+      {/* Toast message */}
+      {toastMessage && (
+        <div className="toast">
+          {toastMessage}
+        </div>
+      )}
     </div>
   )
 }
