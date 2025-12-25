@@ -617,6 +617,19 @@
   .finder-view-toggle {
     display: none;
   }
+  
+  /* Bring the finder above the dock so items at the bottom are tappable */
+  .finder {
+    z-index: 2000;
+    /* Make sure the last rows are not covered by the dock; leave room for dock + safe area */
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+
+  /* When Finder is maximized on mobile, ensure it also stays above the dock */
+  .finder.maximized {
+    z-index: 2000;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
 }
 
 /* Small mobile devices */
