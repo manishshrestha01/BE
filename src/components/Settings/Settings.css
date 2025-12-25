@@ -490,8 +490,17 @@
 }
 
 .about-app-icon {
-  font-size: 64px;
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-app-icon-img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  display: block;
 }
 
 .about-section h4 {

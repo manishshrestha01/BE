@@ -382,12 +382,17 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                     )}
                     {mobileView === 'about' && (
                       <div className="about-section">
-                        <div className="about-app-icon">📖</div>
-                        <h4>PU Notes</h4>
+                        <div className="about-app-icon">
+                          <picture>
+                            <source srcSet="/white.svg" media="(prefers-color-scheme: dark)" />
+                            <img src="/black.svg" alt="StudyMate logo" className="about-app-icon-img" />
+                          </picture>
+                        </div>
+                        <h4>StudyMate</h4>
                         <p className="about-version">Version 1.0.0</p>
                         <div className="about-details">
-                          <p>A macOS-inspired notes viewer for Pokhara University Computer Engineering students.</p>
-                          <p>Access comprehensive study materials for all 8 semesters.</p>
+                          <p>Your study companion — organized notes, past papers, and semester-wise resources for PU students.</p>
+                          <p>Discover curated materials and helpful guides to support your learning across all semesters.</p>
                         </div>
                       </div>
                     )}
@@ -570,16 +575,21 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
             {/* About Section */}
             {activeSection === 'about' && (
               <div className="about-section">
-                <div className="about-app-icon">📖</div>
-                <h4>PU Notes</h4>
+                <div className="about-app-icon">
+                  <picture>
+                    <source srcSet="/white.svg" media="(prefers-color-scheme: dark)" />
+                    <img src="/black.svg" alt="StudyMate logo" className="about-app-icon-img" />
+                  </picture>
+                </div>
+                <h4>StudyMate</h4>
                 <p className="about-version">Version 1.0.0</p>
                 <div className="about-details">
-                  <p>A macOS-inspired notes viewer for Pokhara University Computer Engineering students.</p>
-                  <p>Access comprehensive study materials for all 8 semesters.</p>
+                  <p>Your study companion — organized notes, past papers, and semester-wise resources for PU students.</p>
+                  <p>Discover curated materials and helpful guides to support your learning across all semesters.</p>
                 </div>
                 <div className="about-credits">
                   <p>Built with React + Vite</p>
-                  <p>© 2025 PU Notes</p>
+                  <p>© 2025 StudyMate</p>
                 </div>
               </div>
             )}
