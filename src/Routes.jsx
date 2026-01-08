@@ -6,6 +6,7 @@ import Login from './components/Login'
 import PrivacyPolicy from './components/Landing/PrivacyPolicy'
 import TermsOfService from './components/Landing/TermsOfService'
 import UserInfo from './components/UserInfo'
+import NotFound from './components/Landing/NotFound'
 
 const AppRoutes = () => (
   <Routes>
@@ -17,6 +18,7 @@ const AppRoutes = () => (
     <Route path="/user-info" element={<UserInfo />} />
     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
     <Route path="/terms-of-service" element={<TermsOfService />} />
+    <Route path="*" element={<NotFound />} />
   </Routes>
 )
 

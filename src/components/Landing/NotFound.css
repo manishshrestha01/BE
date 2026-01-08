@@ -1,0 +1,123 @@
+/* ==================== 404 NOT FOUND PAGE STYLES ==================== */
+
+.not-found-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  padding: 24px;
+}
+
+.not-found-container {
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+/* 404 Error Code */
+.not-found-code {
+  font-size: clamp(120px, 25vw, 200px);
+  font-weight: 700;
+  color: #0a0a0a;
+  line-height: 1;
+  letter-spacing: -8px;
+  margin-bottom: 24px;
+  background: linear-gradient(180deg, #0a0a0a 0%, #404040 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Title */
+.not-found-title {
+  font-size: clamp(24px, 5vw, 36px);
+  font-weight: 600;
+  color: #0a0a0a;
+  margin: 0 0 16px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+/* Description */
+.not-found-description {
+  font-size: 16px;
+  color: #525252;
+  line-height: 1.7;
+  margin: 0 auto 40px;
+  max-width: 500px;
+}
+
+/* Back to Home Button */
+.not-found-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #0a0a0a;
+  color: #ffffff;
+  padding: 14px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.not-found-button:hover {
+  background: #262626;
+  transform: translateY(-1px);
+}
+
+.not-found-button:active {
+  transform: translateY(0);
+}
+
+.not-found-button svg {
+  transition: transform 0.2s ease;
+}
+
+.not-found-button:hover svg {
+  transform: translateX(4px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .not-found-page {
+    padding: 20px;
+  }
+
+  .not-found-code {
+    letter-spacing: -4px;
+    margin-bottom: 16px;
+  }
+
+  .not-found-title {
+    margin-bottom: 12px;
+  }
+
+  .not-found-description {
+    font-size: 15px;
+    margin-bottom: 32px;
+    padding: 0 10px;
+  }
+
+  .not-found-button {
+    padding: 12px 24px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .not-found-code {
+    letter-spacing: -2px;
+  }
+
+  .not-found-description {
+    font-size: 14px;
+  }
+}
