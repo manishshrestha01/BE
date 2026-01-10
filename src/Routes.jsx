@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Landing from './components/Landing/Landing'
 import Home from './components/Home'
-import About from './components/About'
 import Login from './components/Login'
 import PrivacyPolicy from './components/Landing/PrivacyPolicy'
 import TermsOfService from './components/Landing/TermsOfService'
@@ -13,7 +12,7 @@ const AppRoutes = () => (
     <Route path="/" element={<Landing />} />
     <Route path="/dashboard" element={<Home />} />
     <Route path="/home" element={<Home />} />
-    <Route path="/about" element={<About />} />
+    <Route path="/about" element={<Landing />} />
     <Route path="/login" element={<Login />} />
     <Route path="/user-info" element={<UserInfo />} />
     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
