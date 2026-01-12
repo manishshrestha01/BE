@@ -1,6 +1,6 @@
 User-agent: *
 Disallow: /login
 Disallow: /user-info
-Disallow: /dashboard
+Disallow: /home
 
 Sitemap: https://www.manishshrestha012.com.np/sitemap.xml

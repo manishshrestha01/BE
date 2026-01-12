@@ -24,14 +24,21 @@
   <url>
     <loc>https://www.manishshrestha012.com.np/terms-of-service</loc>
     <changefreq>yearly</changefreq>
-    <priority>0.50</priority>
+    <priority>0.40</priority>
+  </url>
+
+  <!-- FAQ Page -->
+  <url>
+    <loc>https://www.manishshrestha012.com.np/faq</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
   </url>
 
   <!-- App / Auth Pages (optional for indexing) -->
   <url>
     <loc>https://www.manishshrestha012.com.np/dashboard</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.70</priority>
+    <priority>0.90</priority>
   </url>
 
 </urlset>
