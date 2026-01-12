@@ -14,12 +14,14 @@ Disallow: /user-info
 Disallow: /home
 Disallow: /about
 
-# Disallow static assets and build folders
+# Disallow build folders but allow site assets so crawlers can fetch CSS/JS
 Disallow: /_next/
-Disallow: /assets/
-Disallow: /*.woff2$
-Disallow: /*.woff$
-Disallow: /*.ttf$
+# Allow /assets/ so Googlebot can load site CSS/JS
+Allow: /assets/
+# Allow common web font extensions so fonts are indexable and loadable
+Allow: /*.woff2$
+Allow: /*.woff$
+Allow: /*.ttf$
 
 # Disallow query parameters that might create duplicate content
 Disallow: /*?*
