@@ -1,6 +1,20 @@
+# StudyMate - Pokhara University Study Materials
+# https://www.manishshrestha012.com.np
+
 User-agent: *
+Allow: /
+Allow: /dashboard
+Allow: /faq
+Allow: /privacy-policy
+Allow: /terms-of-service
+
+# Disallow private/auth pages
 Disallow: /login
 Disallow: /user-info
 Disallow: /home
+Disallow: /about
+
+# Disallow query parameters that might create duplicate content
+Disallow: /*?*
 
 Sitemap: https://www.manishshrestha012.com.np/sitemap.xml

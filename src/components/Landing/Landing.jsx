@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import './Landing.css'
@@ -8,26 +8,41 @@ const Landing = () => {
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+  // Set page title and meta for SEO
+  useEffect(() => {
+    document.title = 'PU Notes - Free Pokhara University Computer Engineering Notes | StudyMate'
+    
+    // Update meta description
+    const metaDesc = document.querySelector('meta[name="description"]')
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Free PU notes for BE Computer Engineering students. Download Pokhara University notes, compiler design notes, C programming notes, DBMS, DSA, and all semester study materials. NCIT, CCRC affiliated college notes.')
+    }
+    
+    return () => {
+      document.title = 'StudyMate'
+    }
+  }, [])
+
   const features = [
     {
       icon: '📚',
-      title: 'Comprehensive Notes',
-      description: 'Access complete study materials for all semesters of Computer Engineering at Pokhara University.'
+      title: 'Complete PU Notes',
+      description: 'Access free Pokhara University notes for all 8 semesters of BE Computer Engineering. Compiler design, C programming, DBMS, DSA and more.'
     },
     {
       icon: '🎯',
       title: 'Organized by Subject',
-      description: 'Find exactly what you need with our intuitive folder structure organized by semester and subject.'
+      description: 'Find exactly what you need - notes organized by semester and subject. Perfect for NCIT, CCRC and all PU affiliated colleges.'
     },
     {
       icon: '📱',
       title: 'Access Anywhere',
-      description: 'Study on any device - desktop, tablet, or mobile. Your notes are always within reach.'
+      description: 'Study on any device - desktop, tablet, or mobile. Download PDFs of computer engineering notes anytime.'
     },
     {
       icon: '✏️',
       title: 'Personal Notes',
-      description: 'Create and save your own notes while studying. Keep track of important concepts.'
+      description: 'Create and save your own notes while studying. Keep track of important concepts for PU exams.'
     }
   ]
 
@@ -101,20 +116,20 @@ const Landing = () => {
       <section className="hero">
         <div className="hero-container">
           <div className="hero-badge">
-            <span>🎓</span> Pokhara University • Computer Engineering
+            <span>🎓</span> Pokhara University • BE Computer Engineering
           </div>
           <h1 className="hero-title">
-            Your Complete Study
+            Free PU Notes for
             <br />
-            <span className="hero-highlight">Resource Hub</span>
+            <span className="hero-highlight">Computer Engineering</span>
           </h1>
           <p className="hero-subtitle">
-            Access comprehensive notes, study materials, and resources for all 8 semesters 
-            of Computer Engineering. Organized, accessible, and always free.
+            Download free Pokhara University notes for all 8 semesters of BE Computer Engineering. 
+            Compiler design, C programming, DBMS, DSA, OS and more. Perfect for NCIT, CCRC students.
           </p>
           <div className="hero-cta">
             <Link to="/dashboard" className="btn-primary">
-              Start Learning
+              Access PU Notes
               <span className="btn-arrow">→</span>
             </Link>
             <a href="#features" className="btn-secondary">
@@ -176,30 +191,29 @@ const Landing = () => {
       <section id="about" className="about">
         <div className="about-container">
           <div className="about-content">
-            <span className="section-badge">About</span>
+            <span className="section-badge">About PU Notes</span>
             <h2 className="section-title">Built by students, for students</h2>
             <p className="about-text">
-              We understand the challenges of finding quality study materials. That's why we created 
-              this platform - a centralized hub where PU Computer Engineering students can access 
-              all the notes and resources they need.
+              We understand the challenges of finding quality Pokhara University study materials. That's why we created 
+              this platform - a centralized hub where BE Computer Engineering students can access 
+              all the PU notes and resources they need for free.
             </p>
             <p className="about-text">
-              Our materials are carefully organized by semester and subject, making it easy to find 
-              exactly what you're looking for. Whether you're preparing for exams or catching up on 
-              lectures, we've got you covered.
+              Our materials cover all subjects including Compiler Design, C Programming, DBMS, Data Structures, 
+              Operating Systems, Computer Networks and more. Perfect for students from NCIT, CCRC and all PU affiliated colleges.
             </p>
             <div className="about-features">
               <div className="about-feature">
                 <span className="check-icon">✓</span>
-                <span>Verified study materials</span>
+                <span>All 8 semesters covered</span>
               </div>
               <div className="about-feature">
                 <span className="check-icon">✓</span>
-                <span>Regular updates</span>
+                <span>Free PDF downloads</span>
               </div>
               <div className="about-feature">
                 <span className="check-icon">✓</span>
-                <span>Community driven</span>
+                <span>Updated for PU syllabus</span>
               </div>
             </div>
           </div>

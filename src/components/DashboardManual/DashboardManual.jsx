@@ -9,24 +9,24 @@ import './DashboardManual.css'
 // SEO configurations for different sections
 const seoConfig = {
   default: {
-    title: 'Dashboard Guide - How to Use StudyMate | StudyMate',
-    description: 'Learn how to use the StudyMate dashboard. Complete guide to Finder, Notes, Settings, and all features for Pokhara University Computer Engineering students.',
-    keywords: 'StudyMate dashboard, PU notes guide, computer engineering study materials, how to use StudyMate, Pokhara University, study app tutorial'
+    title: 'PU Notes Dashboard - Free Pokhara University Computer Engineering Notes',
+    description: 'Access free PU notes for BE Computer Engineering. Download Pokhara University notes for Compiler Design, C Programming, DBMS, DSA, OS. NCIT, CCRC notes available.',
+    keywords: 'PU notes, Pokhara University notes, BE Computer notes, computer engineering notes, PU computer engineering, compiler notes, C notes, DBMS notes, DSA notes, NCIT notes, CCRC notes, free engineering notes Nepal'
   },
   'how-it-works': {
-    title: 'How It Works - Getting Started with StudyMate | StudyMate',
-    description: 'Step-by-step guide to getting started with StudyMate. Learn how to sign in, complete your profile, and start accessing study materials for PU Computer Engineering.',
-    keywords: 'StudyMate tutorial, how to use StudyMate, getting started, PU notes, sign in guide, study app setup'
+    title: 'How to Access PU Notes - Pokhara University Study Materials Guide',
+    description: 'Step-by-step guide to accessing free Pokhara University notes. Download BE Computer Engineering notes, compiler design, C programming, DBMS and more.',
+    keywords: 'PU notes download, how to get PU notes, Pokhara University notes free, BE computer notes download, engineering notes PDF'
   },
   'features': {
-    title: 'Dashboard Features - StudyMate Guide | StudyMate',
-    description: 'Explore all StudyMate dashboard features including cloud sync, custom themes, and access to 8 semesters of Computer Engineering study materials.',
-    keywords: 'StudyMate features, cloud sync, custom themes, study materials, PU computer engineering, dashboard features'
+    title: 'PU Notes Features - All Semester Computer Engineering Notes',
+    description: 'Access all 8 semesters of Pokhara University BE Computer Engineering notes. Compiler, C programming, DBMS, DSA, Operating System notes with PDF download.',
+    keywords: 'PU notes all semester, computer engineering notes PDF, semester 1-8 notes, PU syllabus notes, engineering exam notes'
   },
   'faq': {
-    title: 'FAQ - Dashboard Questions | StudyMate',
-    description: 'Frequently asked questions about StudyMate dashboard. Learn about syllabus access, notes for BE Computer, IT, Software & Civil Engineering students.',
-    keywords: 'StudyMate FAQ, dashboard questions, PU notes help, BE IT notes, software engineering, civil engineering notes'
+    title: 'PU Notes FAQ - Pokhara University Study Materials Questions',
+    description: 'FAQs about PU notes. Access notes for BE Computer, IT, Software Engineering. NCIT, CCRC and all PU affiliated college notes available.',
+    keywords: 'PU notes FAQ, BE IT notes, software engineering notes, civil engineering notes, NCIT notes, CCRC notes, PU affiliated college notes'
   }
 }
 

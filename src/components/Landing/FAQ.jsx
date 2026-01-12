@@ -9,11 +9,11 @@ const FAQ = () => {
   // SEO - Update document title and meta tags
   useEffect(() => {
     // Set page title
-    document.title = 'FAQ - Frequently Asked Questions | StudyMate'
+    document.title = 'PU Notes FAQ - Pokhara University Computer Engineering Notes Questions'
     
     // Set meta description
     const metaDescription = document.querySelector('meta[name="description"]')
-    const descriptionContent = 'Find answers to frequently asked questions about StudyMate. Learn about syllabus access, notes for BE Computer, IT, Software & Civil Engineering students at Pokhara University.'
+    const descriptionContent = 'FAQs about PU notes. Free Pokhara University notes for BE Computer Engineering, IT, Software Engineering. Compiler notes, C programming, DBMS, DSA. NCIT, CCRC notes available.'
     
     if (metaDescription) {
       metaDescription.setAttribute('content', descriptionContent)
@@ -26,7 +26,7 @@ const FAQ = () => {
 
     // Set meta keywords
     const metaKeywords = document.querySelector('meta[name="keywords"]')
-    const keywordsContent = 'StudyMate FAQ, PU notes questions, computer engineering syllabus, BE IT notes, software engineering notes, civil engineering notes, Pokhara University study materials'
+    const keywordsContent = 'PU notes FAQ, Pokhara University notes, BE computer notes, computer engineering notes FAQ, PU syllabus, NCIT notes, CCRC notes, compiler notes, C programming notes, DBMS notes, BE IT notes, software engineering notes, free engineering notes Nepal'
     
     if (metaKeywords) {
       metaKeywords.setAttribute('content', keywordsContent)
@@ -39,11 +39,11 @@ const FAQ = () => {
 
     // Set Open Graph tags
     const ogTags = {
-      'og:title': 'FAQ - Frequently Asked Questions | StudyMate',
-      'og:description': 'Find answers to frequently asked questions about StudyMate for Pokhara University students.',
+      'og:title': 'PU Notes FAQ - Pokhara University Computer Engineering Notes',
+      'og:description': 'FAQs about free PU notes for BE Computer Engineering. Compiler, C programming, DBMS, DSA notes for NCIT, CCRC students.',
       'og:type': 'website',
       'og:url': window.location.href,
-      'og:site_name': 'StudyMate'
+      'og:site_name': 'StudyMate - PU Notes'
     }
 
     Object.entries(ogTags).forEach(([property, content]) => {
