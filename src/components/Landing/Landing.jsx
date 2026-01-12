@@ -26,23 +26,23 @@ const Landing = () => {
   const features = [
     {
       icon: '📚',
-      title: 'Complete PU Notes',
-      description: 'Access free Pokhara University notes for all 8 semesters of BE Computer Engineering. Compiler design, C programming, DBMS, DSA and more.'
+      title: 'Comprehensive Notes',
+      description: 'Access complete study materials for all semesters of Computer Engineering at Pokhara University.'
     },
     {
       icon: '🎯',
       title: 'Organized by Subject',
-      description: 'Find exactly what you need - notes organized by semester and subject. Perfect for NCIT, CCRC and all PU affiliated colleges.'
+      description: 'Find exactly what you need with our intuitive folder structure organized by semester and subject.'
     },
     {
       icon: '📱',
       title: 'Access Anywhere',
-      description: 'Study on any device - desktop, tablet, or mobile. Download PDFs of computer engineering notes anytime.'
+      description: 'Study on any device - desktop, tablet, or mobile. Your notes are always within reach.'
     },
     {
       icon: '✏️',
       title: 'Personal Notes',
-      description: 'Create and save your own notes while studying. Keep track of important concepts for PU exams.'
+      description: 'Create and save your own notes while studying. Keep track of important concepts.'
     }
   ]
 
@@ -116,20 +116,20 @@ const Landing = () => {
       <section className="hero">
         <div className="hero-container">
           <div className="hero-badge">
-            <span>🎓</span> Pokhara University • BE Computer Engineering
+            <span>🎓</span> Pokhara University • Computer Engineering
           </div>
           <h1 className="hero-title">
-            Free PU Notes for
+            Your Complete Study
             <br />
-            <span className="hero-highlight">Computer Engineering</span>
+            <span className="hero-highlight">Resource Hub</span>
           </h1>
           <p className="hero-subtitle">
-            Download free Pokhara University notes for all 8 semesters of BE Computer Engineering. 
-            Compiler design, C programming, DBMS, DSA, OS and more. Perfect for NCIT, CCRC students.
+            Access comprehensive notes, study materials, and resources for all 8 semesters 
+            of Computer Engineering. Organized, accessible, and always free.
           </p>
           <div className="hero-cta">
             <Link to="/dashboard" className="btn-primary">
-              Access PU Notes
+              Start Learning
               <span className="btn-arrow">→</span>
             </Link>
             <a href="#features" className="btn-secondary">
@@ -191,29 +191,30 @@ const Landing = () => {
       <section id="about" className="about">
         <div className="about-container">
           <div className="about-content">
-            <span className="section-badge">About PU Notes</span>
+            <span className="section-badge">About</span>
             <h2 className="section-title">Built by students, for students</h2>
             <p className="about-text">
-              We understand the challenges of finding quality Pokhara University study materials. That's why we created 
-              this platform - a centralized hub where BE Computer Engineering students can access 
-              all the PU notes and resources they need for free.
+              We understand the challenges of finding quality study materials. That's why we created 
+              this platform - a centralized hub where PU Computer Engineering students can access 
+              all the notes and resources they need.
             </p>
             <p className="about-text">
-              Our materials cover all subjects including Compiler Design, C Programming, DBMS, Data Structures, 
-              Operating Systems, Computer Networks and more. Perfect for students from NCIT, CCRC and all PU affiliated colleges.
+              Our materials are carefully organized by semester and subject, making it easy to find 
+              exactly what you're looking for. Whether you're preparing for exams or catching up on 
+              lectures, we've got you covered.
             </p>
             <div className="about-features">
               <div className="about-feature">
                 <span className="check-icon">✓</span>
-                <span>All 8 semesters covered</span>
+                <span>Verified study materials</span>
               </div>
               <div className="about-feature">
                 <span className="check-icon">✓</span>
-                <span>Free PDF downloads</span>
+                <span>Regular updates</span>
               </div>
               <div className="about-feature">
                 <span className="check-icon">✓</span>
-                <span>Updated for PU syllabus</span>
+                <span>Community driven</span>
               </div>
             </div>
           </div>
@@ -229,13 +230,13 @@ const Landing = () => {
                   <span>📁</span> Semester 5
                 </div>
                 <div className="visual-subfolder">
-                  <span>📄</span> Computer Networks.pdf
+                  <span>📄</span> Computer Architecture.pdf
                 </div>
                 <div className="visual-subfolder">
-                  <span>📄</span> Database Systems.pdf
+                  <span>📄</span> Artificial Intelligence.pdf
                 </div>
                 <div className="visual-subfolder">
-                  <span>📄</span> Operating Systems.pdf</div>
+                  <span>📄</span> Embedded Systems.pdf</div>
               </div>
             </div>
           </div>
