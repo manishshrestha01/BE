@@ -5,6 +5,31 @@ import './Landing.css'
 const TermsOfService = () => {
   useEffect(() => {
     window.scrollTo(0, 0)
+    
+    // SEO meta tags
+    document.title = 'Terms of Service - StudyMate | PU Notes Platform'
+    
+    const metaDescription = document.querySelector('meta[name="description"]')
+    const descContent = 'Terms of Service for StudyMate - Pokhara University notes platform. Rules and guidelines for using BE Computer Engineering study materials and resources.'
+    if (metaDescription) {
+      metaDescription.setAttribute('content', descContent)
+    }
+
+    const metaKeywords = document.querySelector('meta[name="keywords"]')
+    const keywordsContent = 'StudyMate terms of service, PU notes terms, Pokhara University notes usage terms, student platform terms Nepal'
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', keywordsContent)
+    }
+
+    // Set canonical URL
+    let canonical = document.querySelector('link[rel="canonical"]')
+    if (canonical) {
+      canonical.setAttribute('href', 'https://www.manishshrestha012.com.np/terms-of-service')
+    }
+
+    return () => {
+      document.title = 'StudyMate'
+    }
   }, [])
 
   return (

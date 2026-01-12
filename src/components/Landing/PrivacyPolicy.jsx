@@ -5,6 +5,31 @@ import './Landing.css'
 const PrivacyPolicy = () => {
   useEffect(() => {
     window.scrollTo(0, 0)
+    
+    // SEO meta tags
+    document.title = 'Privacy Policy - StudyMate | PU Notes Platform'
+    
+    const metaDescription = document.querySelector('meta[name="description"]')
+    const descContent = 'Privacy Policy for StudyMate - Pokhara University notes platform. Learn how we protect your data and privacy while providing BE Computer Engineering study materials.'
+    if (metaDescription) {
+      metaDescription.setAttribute('content', descContent)
+    }
+
+    const metaKeywords = document.querySelector('meta[name="keywords"]')
+    const keywordsContent = 'StudyMate privacy policy, PU notes privacy, Pokhara University notes data protection, student data privacy Nepal'
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', keywordsContent)
+    }
+
+    // Set canonical URL
+    let canonical = document.querySelector('link[rel="canonical"]')
+    if (canonical) {
+      canonical.setAttribute('href', 'https://www.manishshrestha012.com.np/privacy-policy')
+    }
+
+    return () => {
+      document.title = 'StudyMate'
+    }
   }, [])
 
   return (

@@ -13,7 +13,7 @@ const FAQ = () => {
     
     // Set meta description
     const metaDescription = document.querySelector('meta[name="description"]')
-    const descriptionContent = 'FAQs about PU notes. Free Pokhara University notes for BE Computer Engineering, IT, Software Engineering. Compiler notes, C programming, DBMS, DSA. NCIT, CCRC notes available.'
+    const descriptionContent = 'FAQs about PU notes. Pokhara University notes for BE Computer Engineering, IT, Software Engineering. Compiler notes, C programming, DBMS, DSA. NCIT, CCRC notes available.'
     
     if (metaDescription) {
       metaDescription.setAttribute('content', descriptionContent)
@@ -26,7 +26,7 @@ const FAQ = () => {
 
     // Set meta keywords
     const metaKeywords = document.querySelector('meta[name="keywords"]')
-    const keywordsContent = 'PU notes FAQ, Pokhara University notes, BE computer notes, computer engineering notes FAQ, PU syllabus, NCIT notes, CCRC notes, compiler notes, C programming notes, DBMS notes, BE IT notes, software engineering notes, free engineering notes Nepal'
+    const keywordsContent = 'PU notes FAQ, Pokhara University notes, BE computer notes, computer engineering notes FAQ, PU syllabus, NCIT notes, CCRC notes, compiler notes, C programming notes, DBMS notes, BE IT notes, software engineering notes, engineering notes Nepal'
     
     if (metaKeywords) {
       metaKeywords.setAttribute('content', keywordsContent)
@@ -40,7 +40,7 @@ const FAQ = () => {
     // Set Open Graph tags
     const ogTags = {
       'og:title': 'PU Notes FAQ - Pokhara University Computer Engineering Notes',
-      'og:description': 'FAQs about free PU notes for BE Computer Engineering. Compiler, C programming, DBMS, DSA notes for NCIT, CCRC students.',
+      'og:description': 'FAQs about PU notes for BE Computer Engineering. Compiler, C programming, DBMS, DSA notes for NCIT, CCRC students.',
       'og:type': 'website',
       'og:url': window.location.href,
       'og:site_name': 'StudyMate - PU Notes'

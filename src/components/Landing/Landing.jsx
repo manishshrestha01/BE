@@ -10,12 +10,12 @@ const Landing = () => {
 
   // Set page title and meta for SEO
   useEffect(() => {
-    document.title = 'PU Notes - Free Pokhara University Computer Engineering Notes | StudyMate'
+    document.title = 'Computer Engineering Notes Pokhara University | StudyMate'
     
     // Update meta description
     const metaDesc = document.querySelector('meta[name="description"]')
     if (metaDesc) {
-      metaDesc.setAttribute('content', 'Free PU notes for BE Computer Engineering students. Download Pokhara University notes, compiler design notes, C programming notes, DBMS, DSA, and all semester study materials. NCIT, CCRC affiliated college notes.')
+      metaDesc.setAttribute('content', 'PU notes for BE Computer Engineering students. Download Pokhara University notes, compiler design notes, C programming notes, DBMS, DSA, and all semester study materials. NCIT, CCRC affiliated college notes.')
     }
     
     return () => {

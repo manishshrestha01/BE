@@ -9,14 +9,14 @@ import './DashboardManual.css'
 // SEO configurations for different sections
 const seoConfig = {
   default: {
-    title: 'PU Notes Dashboard - Free Pokhara University Computer Engineering Notes',
-    description: 'Access free PU notes for BE Computer Engineering. Download Pokhara University notes for Compiler Design, C Programming, DBMS, DSA, OS. NCIT, CCRC notes available.',
-    keywords: 'PU notes, Pokhara University notes, BE Computer notes, computer engineering notes, PU computer engineering, compiler notes, C notes, DBMS notes, DSA notes, NCIT notes, CCRC notes, free engineering notes Nepal'
+    title: 'PU Notes Dashboard - Pokhara University Computer Engineering Notes',
+    description: 'Access PU notes for BE Computer Engineering. Download Pokhara University notes for Compiler Design, C Programming, DBMS, DSA, OS. NCIT, CCRC notes available.',
+    keywords: 'PU notes, Pokhara University notes, BE Computer notes, computer engineering notes, PU computer engineering, compiler notes, C notes, DBMS notes, DSA notes, NCIT notes, CCRC notes, engineering notes Nepal'
   },
   'how-it-works': {
     title: 'How to Access PU Notes - Pokhara University Study Materials Guide',
-    description: 'Step-by-step guide to accessing free Pokhara University notes. Download BE Computer Engineering notes, compiler design, C programming, DBMS and more.',
-    keywords: 'PU notes download, how to get PU notes, Pokhara University notes free, BE computer notes download, engineering notes PDF'
+    description: 'Step-by-step guide to accessing Pokhara University notes. Download BE Computer Engineering notes, compiler design, C programming, DBMS and more.',
+    keywords: 'PU notes download, how to get PU notes, Pokhara University notes, BE computer notes download, engineering notes PDF'
   },
   'features': {
     title: 'PU Notes Features - All Semester Computer Engineering Notes',

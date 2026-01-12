@@ -11,6 +11,33 @@ const Login = () => {
   const navigate = useNavigate()
   const { signInWithEmail, signInWithGoogle, isAuthenticated, isSupabaseConfigured } = useAuth()
 
+  // SEO meta tags
+  useEffect(() => {
+    document.title = 'Login - StudyMate | PU Notes for Computer Engineering'
+    
+    const metaDescription = document.querySelector('meta[name="description"]')
+    const descContent = 'Sign in to StudyMate to access Pokhara University notes for BE Computer Engineering. Save personal notes, access all semester materials, compiler notes, C programming, DBMS, DSA.'
+    if (metaDescription) {
+      metaDescription.setAttribute('content', descContent)
+    }
+
+    const metaKeywords = document.querySelector('meta[name="keywords"]')
+    const keywordsContent = 'StudyMate login, PU notes login, Pokhara University notes access, BE computer engineering notes, student login Nepal'
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', keywordsContent)
+    }
+
+    // Set canonical URL
+    let canonical = document.querySelector('link[rel="canonical"]')
+    if (canonical) {
+      canonical.setAttribute('href', 'https://www.manishshrestha012.com.np/login')
+    }
+
+    return () => {
+      document.title = 'StudyMate'
+    }
+  }, [])
+
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {

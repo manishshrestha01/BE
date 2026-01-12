@@ -5,14 +5,21 @@ User-agent: *
 Allow: /
 Allow: /dashboard
 Allow: /faq
+Allow: /login
 Allow: /privacy-policy
 Allow: /terms-of-service
 
 # Disallow private/auth pages
-Disallow: /login
 Disallow: /user-info
 Disallow: /home
 Disallow: /about
+
+# Disallow static assets and build folders
+Disallow: /_next/
+Disallow: /assets/
+Disallow: /*.woff2$
+Disallow: /*.woff$
+Disallow: /*.ttf$
 
 # Disallow query parameters that might create duplicate content
 Disallow: /*?*
