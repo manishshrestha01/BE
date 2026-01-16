@@ -50,12 +50,13 @@ const Home = () => {
         setupComplete: profile.setupComplete
       } : null
     });
-    if (isAuthenticated && profileInitialized && !isSetupComplete && !justCompletedProfile.current) {
-      console.log('Profile not complete, redirecting to user-info');
-      // Small delay to ensure profile state has updated
-      setTimeout(() => {
-        navigate('/user-info');
-      }, 200);
+    // Only redirect if the profile is actually missing required fields or setup flag is false
+    if (!isAuthenticated || !profileInitialized || justCompletedProfile.current) return
+
+    const missingRequired = !profile || !profile.full_name || !profile.semester || !profile.college
+    if (missingRequired || !isSetupComplete) {
+      console.log('Profile incomplete or missing required fields, redirecting to user-info', { missingRequired, isSetupComplete })
+      setTimeout(() => navigate('/user-info'), 200)
     }
   }, [isAuthenticated, isSetupComplete, profileLoading, profileInitialized, navigate, profile])
 

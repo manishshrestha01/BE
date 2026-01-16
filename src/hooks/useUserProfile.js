@@ -7,6 +7,7 @@ const defaultProfile = {
   semester: '',
   faculty: 'Computer Engineering',
   university: 'Pokhara University',
+  college: '',
   setupComplete: false
 }
 
@@ -16,6 +17,7 @@ const mapDbProfileToClient = (data) => ({
   semester: data?.semester ?? '',
   faculty: data?.faculty ?? defaultProfile.faculty,
   university: data?.university ?? defaultProfile.university,
+  college: data?.college ?? defaultProfile.college,
   setupComplete: Boolean(data?.setup_complete)
 })
 
@@ -57,6 +59,7 @@ export const useUserProfile = () => {
           semester: '',
           faculty: defaultProfile.faculty,
           university: defaultProfile.university,
+          college: defaultProfile.college,
           setup_complete: false
         };
         
@@ -83,7 +86,14 @@ export const useUserProfile = () => {
   // Save profile to Supabase
   const updateProfile = async (updates) => {
     if (!user) return;
+    // Merge updates into in-memory profile
     const newProfile = { ...profile, ...updates };
+
+    // Normalize: if caller passed snake_case setup_complete, convert to camelCase in-memory
+    if (typeof newProfile.setup_complete !== 'undefined' && typeof newProfile.setupComplete === 'undefined') {
+      newProfile.setupComplete = newProfile.setup_complete;
+    }
+
     setProfile(newProfile);
 
     const upsertData = {
@@ -91,11 +101,17 @@ export const useUserProfile = () => {
       full_name: newProfile.full_name,
       semester: newProfile.semester,
       faculty: newProfile.faculty,
-      university: newProfile.university
+      university: newProfile.university,
+      college: newProfile.college
     };
 
-    if (typeof newProfile.setupComplete !== 'undefined') {
-      upsertData.setup_complete = newProfile.setupComplete;
+    // Accept either camelCase or snake_case from callers
+    let setupCompleteVal;
+    if (typeof newProfile.setupComplete !== 'undefined') setupCompleteVal = newProfile.setupComplete;
+    else if (typeof newProfile.setup_complete !== 'undefined') setupCompleteVal = newProfile.setup_complete;
+
+    if (typeof setupCompleteVal !== 'undefined') {
+      upsertData.setup_complete = Boolean(setupCompleteVal);
     }
 
     const { error } = await supabase.from('profiles').upsert(upsertData);
@@ -104,6 +120,10 @@ export const useUserProfile = () => {
       console.error('Database error during profile update:', error);
       throw error; // Throw the error so calling code can handle it
     } else {
+      // Ensure in-memory profile camelCase flag is set correctly
+      if (typeof setupCompleteVal !== 'undefined') {
+        setProfile(prev => ({ ...prev, setupComplete: Boolean(setupCompleteVal) }));
+      }
       console.log('Profile updated successfully in database, upsertData:', upsertData);
     }
   };

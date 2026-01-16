@@ -32,7 +32,7 @@ const seoConfig = {
 
 const DashboardManual = () => {
   const { isAuthenticated, loading } = useAuth()
-  const { isSetupComplete, loading: profileLoading, profileInitialized } = useUserProfile()
+  const { profile, isSetupComplete, loading: profileLoading, profileInitialized } = useUserProfile()
   const navigate = useNavigate()
   const location = useLocation()
   const justCompletedProfile = useRef(false)
@@ -46,11 +46,17 @@ const DashboardManual = () => {
   }, [location.state])
 
   // Redirect to user-info if profile not complete (for logged-in users)
+  // Only redirect when required profile fields are actually missing to avoid false redirects on refresh
   useEffect(() => {
-    if (isAuthenticated && profileInitialized && !isSetupComplete && !justCompletedProfile.current) {
+    if (!isAuthenticated || !profileInitialized || justCompletedProfile.current) return
+
+    const missingRequired = !profile || !profile.full_name || !profile.semester || !profile.college
+
+    // Redirect if required fields are missing OR the setup flag is false
+    if (missingRequired || !isSetupComplete) {
       setTimeout(() => navigate('/user-info'), 200)
     }
-  }, [isAuthenticated, isSetupComplete, profileInitialized, navigate])
+  }, [isAuthenticated, isSetupComplete, profileInitialized, profile, navigate])
 
   // SEO - Update document title and meta tags based on hash (only for non-authenticated)
   useEffect(() => {

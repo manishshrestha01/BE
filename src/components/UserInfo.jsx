@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useAuth } from '../context/AuthContext';
 import './UserInfo.css';
+import { COLLEGES } from '../lib/colleges';
 
 const UserInfo = () => {
   const { profile, updateProfile, loading } = useUserProfile();
@@ -13,6 +14,7 @@ const UserInfo = () => {
     semester: '',
     faculty: 'Computer Engineering',
     university: 'Pokhara University',
+    college: ''
   });
   const [error, setError] = useState('');
 
@@ -38,6 +40,7 @@ const UserInfo = () => {
         semester: profile.semester || '',
         faculty: profile.faculty || 'Computer Engineering',
         university: profile.university || 'Pokhara University',
+        college: profile.college || ''
       });
     }
   }, [profile]);
@@ -49,15 +52,23 @@ const UserInfo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.full_name || !formData.semester) {
+    if (!formData.full_name || !formData.semester || !formData.college) {
       setError('Please fill all required fields.');
       return;
     }
     
     try {
-      await updateProfile({ ...formData, setupComplete: true });
-      console.log('Profile updated successfully, navigating to home...');
-      navigate('/home', { state: { profileJustCompleted: true } });
+      // Ensure the selected college is valid to avoid sending malformed values
+      const validCollege = COLLEGES.some(c => c.value === formData.college);
+      if (!validCollege) {
+        setError('Please select a valid college from the list.');
+        return;
+      }
+
+      const isComplete = Boolean(formData.full_name && formData.semester && formData.college);
+      await updateProfile({ ...formData, setup_complete: isComplete });
+      console.log('Profile updated successfully, navigating to dashboard...');
+      navigate('/dashboard', { state: { profileJustCompleted: true } });
     } catch (err) {
       setError('Failed to save profile. Please try again.');
       console.error('Profile update error:', err);
@@ -110,6 +121,20 @@ const UserInfo = () => {
               <option value="6th Semester">6th Semester</option>
               <option value="7th Semester">7th Semester</option>
               <option value="8th Semester">8th Semester</option>
+            </select>
+            <label htmlFor="college" className="auth-label">College</label>
+            <select
+              id="college"
+              name="college"
+              className="auth-input"
+              value={formData.college}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select College</option>
+              {COLLEGES.map((c) => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+              ))}
             </select>
             <label htmlFor="faculty" className="auth-label">Faculty</label>
             <input

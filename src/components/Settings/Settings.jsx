@@ -5,6 +5,7 @@ import { useUserProfile } from '../../hooks/useUserProfile'
 import { useAuth } from '../../context/AuthContext'
 import SettingRow from './SettingRow'
 import './Settings.css'
+import { COLLEGES } from '../../lib/colleges'
 
 const Settings = ({ onClose, initialSection = 'profile' }) => {
   const navigate = useNavigate()
@@ -18,10 +19,12 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     full_name: profile.full_name || '',
     semester: profile.semester || '',
     faculty: profile.faculty || 'Computer Engineering',
-    university: profile.university || 'Pokhara University'
+    university: profile.university || 'Pokhara University',
+    college: profile.college || ''
   })
   const fileInputRef = useRef(null)
   const [uploadError, setUploadError] = useState('')
+  const [saveError, setSaveError] = useState('')
   const [uploading, setUploading] = useState(false)
   const [dropActive, setDropActive] = useState(false)
   const touchStartX = useRef(null)
@@ -33,7 +36,8 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
       full_name: profile.full_name || '',
       semester: profile.semester || '',
       faculty: profile.faculty || 'Computer Engineering',
-      university: profile.university || 'Pokhara University'
+      university: profile.university || 'Pokhara University',
+      college: profile.college || ''
     })
   }, [profile])
 
@@ -49,9 +53,24 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSaveProfile = () => {
-    // Persist profile and mark setup as complete
-    updateProfile({ ...formData, setupComplete: true })
+  const handleSaveProfile = async () => {
+    // Persist profile and mark setup_complete only when all required fields are present
+    // clear previous saveError
+    setSaveError('')
+    // validate college value if present
+    if (formData.college && !COLLEGES.some(c => c.value === formData.college)) {
+      setSaveError('Please select a valid college from the list.')
+      return;
+    }
+
+    const isComplete = Boolean(formData.full_name && formData.semester && formData.college)
+    try {
+      await updateProfile({ ...formData, setup_complete: isComplete })
+      console.log('Profile saved')
+    } catch (err) {
+      console.error('Failed to save profile:', err)
+      setSaveError('Failed to save profile. Please try again.')
+    }
   }
 
   const handleSignOut = async () => {
@@ -311,9 +330,19 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                               ))}
                             </select>
                           </div>
+                          <div className="form-group">
+                            <label htmlFor="mobile_college">College</label>
+                            <select id="mobile_college" name="college" value={formData.college} onChange={handleInputChange}>
+                              <option value="">Select College</option>
+                              {COLLEGES.map(c => (
+                                <option key={c.value} value={c.value}>{c.label}</option>
+                              ))}
+                            </select>
+                          </div>
                           <button className="btn-save-profile" onClick={handleSaveProfile}>
                             Save
                           </button>
+                          {saveError && <div style={{ color: 'red', marginTop: 8 }}>{saveError}</div>}
                           {/* Removed Change Wallpaper button - accessible from main navigation */}
                         </div>
                       </div>
@@ -456,6 +485,21 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                   </div>
 
                   <div className="form-group">
+                    <label htmlFor="college">College</label>
+                    <select
+                      id="college"
+                      name="college"
+                      value={formData.college}
+                      onChange={handleInputChange}
+                    >
+                      <option value="">Select College</option>
+                      {COLLEGES.map(c => (
+                        <option key={c.value} value={c.value}>{c.label}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
                     <label htmlFor="faculty">Faculty</label>
                     <input
                       type="text"
@@ -467,21 +511,22 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label htmlFor="university">University</label>
-                    <input
-                      type="text"
-                      id="university"
-                      name="university"
-                      value={formData.university}
-                      onChange={handleInputChange}
-                      disabled
-                    />
-                  </div>
+                   <div className="form-group">
+                     <label htmlFor="university">University</label>
+                     <input
+                       type="text"
+                       id="university"
+                       name="university"
+                       value={formData.university}
+                       disabled
+                       style={{ cursor: 'not-allowed' }}
+                     />
+                   </div>
 
                   <button className="btn-save-profile" onClick={handleSaveProfile}>
                     Save Profile
                   </button>
+                  {saveError && <div style={{ color: 'red', marginTop: 8 }}>{saveError}</div>}
                 </div>
 
                 {/* Account Section */}
