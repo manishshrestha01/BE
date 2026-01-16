@@ -4,7 +4,7 @@
   <!-- Landing Page - Main entry point -->
   <url>
     <loc>https://www.manishshrestha012.com.np/</loc>
-    <lastmod>2026-01-13</lastmod>
+    <lastmod>2026-01-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.00</priority>
   </url>
@@ -12,7 +12,7 @@
   <!-- Dashboard - Study materials for PU students -->
   <url>
     <loc>https://www.manishshrestha012.com.np/dashboard</loc>
-    <lastmod>2026-01-13</lastmod>
+    <lastmod>2026-01-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
@@ -20,7 +20,7 @@
   <!-- FAQ Page - Common questions answered -->
   <url>
     <loc>https://www.manishshrestha012.com.np/faq</loc>
-    <lastmod>2026-01-13</lastmod>
+    <lastmod>2026-01-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
@@ -28,7 +28,7 @@
   <!-- Login Page - User authentication -->
   <url>
     <loc>https://www.manishshrestha012.com.np/login</loc>
-    <lastmod>2026-01-13</lastmod>
+    <lastmod>2026-01-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.60</priority>
   </url>
@@ -36,7 +36,7 @@
   <!-- Privacy Policy -->
   <url>
     <loc>https://www.manishshrestha012.com.np/privacy-policy</loc>
-    <lastmod>2026-01-13</lastmod>
+    <lastmod>2026-01-17</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.40</priority>
   </url>
@@ -44,7 +44,7 @@
   <!-- Terms of Service -->
   <url>
     <loc>https://www.manishshrestha012.com.np/terms-of-service</loc>
-    <lastmod>2026-01-13</lastmod>
+    <lastmod>2026-01-17</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.40</priority>
   </url>
