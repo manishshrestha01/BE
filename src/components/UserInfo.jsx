@@ -17,6 +17,7 @@ const UserInfo = () => {
     college: ''
   });
   const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -58,20 +59,42 @@ const UserInfo = () => {
     }
     
     try {
+      setSaving(true)
       // Ensure the selected college is valid to avoid sending malformed values
       const validCollege = COLLEGES.some(c => c.value === formData.college);
       if (!validCollege) {
         setError('Please select a valid college from the list.');
+        setSaving(false)
         return;
       }
 
       const isComplete = Boolean(formData.full_name && formData.semester && formData.college);
-      await updateProfile({ ...formData, setup_complete: isComplete });
+      const updatedProfile = await updateProfile({ ...formData, setup_complete: isComplete });
+      console.log('Profile update response:', updatedProfile);
+
+      if (!updatedProfile) {
+        setError('Failed to save profile. Please try again.');
+        setSaving(false)
+        return;
+      }
+
+      // Set a short-lived flag so refreshes shortly after saving do not redirect the user
+      try {
+        const expiry = Date.now() + 60 * 1000 // 60 seconds
+        localStorage.setItem('profileJustCompletedUntil', String(expiry))
+      } catch (e) {
+        console.warn('Failed to set profileJustCompletedUntil in localStorage', e)
+      }
+
+      // Proceed to dashboard even if DB did not flip setupComplete (we have the latest values in-memory)
       console.log('Profile updated successfully, navigating to dashboard...');
       navigate('/dashboard', { state: { profileJustCompleted: true } });
     } catch (err) {
-      setError('Failed to save profile. Please try again.');
-      console.error('Profile update error:', err);
+      const message = err?.message || err?.error?.message || JSON.stringify(err)
+      setError(message || 'Failed to save profile. Please try again.')
+      console.error('Profile update error:', err)
+    } finally {
+      setSaving(false)
     }
   };
 
@@ -156,8 +179,8 @@ const UserInfo = () => {
               disabled
               style={{ cursor: 'not-allowed' }}
             />
-            <button type="submit" className="auth-btn-primary" disabled={loading} style={{ marginTop: 18 }}>
-              {loading ? 'Saving...' : 'Save & Continue'}
+            <button type="submit" className="auth-btn-primary" disabled={loading || saving} style={{ marginTop: 18 }}>
+              {loading || saving ? 'Saving...' : 'Save & Continue'}
             </button>
           </form>
         </div>

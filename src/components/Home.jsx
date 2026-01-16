@@ -34,6 +34,22 @@ const Home = () => {
       // Clear the state so it doesn't persist on refresh
       window.history.replaceState({}, document.title);
     }
+
+    // Also check localStorage for a short-lived bypass (survives refresh)
+    try {
+      const expiryStr = localStorage.getItem('profileJustCompletedUntil')
+      if (expiryStr) {
+        const expiry = Number(expiryStr)
+        if (!Number.isNaN(expiry) && expiry > Date.now()) {
+          justCompletedProfile.current = true
+          console.log('Bypassing profile redirect due to recent profile completion', { expiry })
+        } else {
+          localStorage.removeItem('profileJustCompletedUntil')
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to read profileJustCompletedUntil from localStorage', e)
+    }
   }, [location.state])
 
   useEffect(() => {
@@ -43,6 +59,7 @@ const Home = () => {
       isSetupComplete, 
       justCompleted: justCompletedProfile.current, 
       profileInitialized,
+      profileExistsOnDb: undefined,
       profile: profile ? {
         id: profile.id,
         full_name: profile.full_name,
@@ -50,11 +67,11 @@ const Home = () => {
         setupComplete: profile.setupComplete
       } : null
     });
-    // Only redirect if the profile is actually missing required fields or setup flag is false
+    // Only redirect if the profile is actually missing required fields
     if (!isAuthenticated || !profileInitialized || justCompletedProfile.current) return
 
     const missingRequired = !profile || !profile.full_name || !profile.semester || !profile.college
-    if (missingRequired || !isSetupComplete) {
+    if (missingRequired) {
       console.log('Profile incomplete or missing required fields, redirecting to user-info', { missingRequired, isSetupComplete })
       setTimeout(() => navigate('/user-info'), 200)
     }

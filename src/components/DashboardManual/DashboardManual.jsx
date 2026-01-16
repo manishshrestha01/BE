@@ -43,17 +43,34 @@ const DashboardManual = () => {
       justCompletedProfile.current = true
       window.history.replaceState({}, document.title)
     }
+
+    // Check localStorage bypass to handle refreshes immediately after completing profile
+    try {
+      const expiryStr = localStorage.getItem('profileJustCompletedUntil')
+      if (expiryStr) {
+        const expiry = Number(expiryStr)
+        if (!Number.isNaN(expiry) && expiry > Date.now()) {
+          justCompletedProfile.current = true
+          console.log('Bypassing profile redirect on dashboard due to recent profile completion', { expiry })
+        } else {
+          localStorage.removeItem('profileJustCompletedUntil')
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to read profileJustCompletedUntil from localStorage', e)
+    }
   }, [location.state])
 
   // Redirect to user-info if profile not complete (for logged-in users)
   // Only redirect when required profile fields are actually missing to avoid false redirects on refresh
   useEffect(() => {
+    console.log('Dashboard check:', { isAuthenticated, profileInitialized, isSetupComplete, profile })
     if (!isAuthenticated || !profileInitialized || justCompletedProfile.current) return
 
     const missingRequired = !profile || !profile.full_name || !profile.semester || !profile.college
 
-    // Redirect if required fields are missing OR the setup flag is false
-    if (missingRequired || !isSetupComplete) {
+    // Redirect if required fields are missing
+    if (missingRequired) {
       setTimeout(() => navigate('/user-info'), 200)
     }
   }, [isAuthenticated, isSetupComplete, profileInitialized, profile, navigate])
