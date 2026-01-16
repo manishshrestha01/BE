@@ -1,3 +1,20 @@
+/* Full-bleed fallback for dark sections (CTA, Footer) to prevent white slivers at viewport edge */
+.cta, .footer {
+  position: relative;
+  z-index: 1;
+  border-radius: 0 !important;
+}
+.cta::before, .footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(50% - 50vw - 1px);
+  width: calc(100vw + 2px);
+  height: 100%;
+  background: var(--landing-dark);
+  z-index: -1;
+  pointer-events: none;
+}
 /* ==================== LANDING PAGE STYLES ==================== */
 
 /* CSS Variables for Landing Page */
@@ -821,6 +838,17 @@
   margin: 0 0 8px 0;
 }
 
+.legal-content .terms-title::after {
+  content: '';
+  display: block;
+  width: 72px;
+  height: 4px;
+  border-radius: 4px;
+  margin-top: 14px;
+  background: linear-gradient(90deg, var(--landing-accent), #00c6ff);
+  box-shadow: 0 6px 18px rgba(0,102,255,0.06);
+}
+
 .legal-content .terms-subtitle {
   font-size: clamp(14px, 1.6vw, 18px);
   color: var(--landing-gray-600);
@@ -851,12 +879,94 @@
   margin-top: 16px;
 }
 
-@media (max-width: 768px) {
-  .legal-hero { padding: 24px 16px; }
-  .legal-container { padding: 18px 16px; margin: 12px; }
-  .legal-content p, .legal-content h2 { font-size: clamp(11px, 2.5vw, 14px); }
+/* Dark version for legal pages: Privacy Policy & Terms */
+.legal-page.landing.legal-dark {
+  background: var(--landing-dark);
+  color: var(--landing-white);
 }
-/* ==================== RESPONSIVE DESIGN ==================== */
+
+.legal-page.landing.legal-dark .legal-container {
+  background: rgba(255,255,255,0.02);
+  color: var(--landing-white);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.legal-page.landing.legal-dark .legal-content p,
+.legal-page.landing.legal-dark .legal-content li {
+  color: var(--landing-gray-300);
+  line-height: 1.8;
+}
+
+.legal-page.landing.legal-dark .legal-content .terms-title {
+  font-size: clamp(32px, 5vw, 60px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 14px;
+  /* Fallback color for browsers that don't support background-clip */
+  color: var(--landing-white);
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+.legal-page.landing.legal-dark .legal-content .terms-title::after {
+  content: '';
+  display: block;
+  width: 72px;
+  height: 4px;
+  border-radius: 4px;
+  margin-top: 14px;
+  background: linear-gradient(90deg, var(--landing-accent), #00c6ff);
+  box-shadow: 0 6px 18px rgba(0,102,255,0.06);
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .legal-page.landing.legal-dark .legal-content .terms-title {
+    /* Animated gradient text for a subtle shine */
+    background: linear-gradient(90deg, #ffffff 0%, var(--landing-accent) 45%, #00c6ff 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-shadow: 0 4px 18px rgba(0,0,0,0.6), 0 0 12px rgba(0,102,255,0.06);
+    animation: legal-title-shine 4s linear infinite;
+  }
+}
+
+@keyframes legal-title-shine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .legal-page.landing.legal-dark .legal-content .terms-title {
+    animation: none;
+    /* keep gradient centered if present */
+    background-position: 50% 50%;
+  }
+}
+
+.legal-page.landing.legal-dark .legal-content .terms-subtitle {
+  color: var(--landing-gray-400);
+  font-size: clamp(14px, 1.6vw, 18px);
+  margin-bottom: 12px;
+  opacity: 0.95;
+}
+
+.legal-page.landing.legal-dark .legal-content h2 {
+  color: var(--landing-white);
+  font-weight: 700;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+/* Improve paragraph readability on dark background */
+.legal-page.landing.legal-dark .legal-content p,
+.legal-page.landing.legal-dark .legal-content li {
+  color: var(--landing-gray-400);
+  line-height: 1.7;
+}
 
 @media (max-width: 1023px) {
   .features-grid {
@@ -1108,4 +1218,76 @@
 @keyframes slideInRight {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
+}
+
+/* Legal page - improve Back to Home button on dark background */
+.legal-page.landing.legal-dark .btn-secondary {
+  color: var(--landing-white);
+  border-color: rgba(255,255,255,0.08);
+  background: transparent;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.legal-page.landing.legal-dark .btn-secondary:hover,
+.legal-page.landing.legal-dark .btn-secondary:focus {
+  color: var(--landing-white);
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.12);
+}
+
+.legal-page.landing.legal-dark .btn-secondary::after {
+  content: '→';
+  display: inline-block;
+  margin-left: 10px;
+  transform: translateX(0);
+  transition: transform 0.18s ease, opacity 0.18s ease;
+  color: var(--landing-white);
+  opacity: 0.95;
+}
+
+.legal-page.landing.legal-dark .btn-secondary:hover::after {
+  transform: translateX(6px);
+}
+
+.legal-page.landing.legal-dark .btn-secondary:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.12);
+  outline-offset: 3px;
+}
+
+/* Make hero/cta/footer full-bleed so dark backgrounds cover the full viewport width and avoid white slivers */
+.hero,
+.cta,
+.footer {
+  position: relative;
+  /* Use calc(50% - 50vw) to avoid subpixel issues and ensure full-bleed */
+  width: calc(100vw + 2px);
+  margin-left: calc(50% - 50vw - 1px);
+  margin-right: calc(50% - 50vw - 1px);
+  box-sizing: border-box;
+  padding-left: calc(24px + env(safe-area-inset-left));
+  padding-right: calc(24px + env(safe-area-inset-right));
+  transform: translateZ(0);
+}
+
+/* Add a pseudo-element fallback that guarantees full-bleed background coverage for dark sections */
+.cta::before,
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(50% - 50vw - 1px);
+  width: calc(100vw + 2px);
+  height: 100%;
+  z-index: -1;
+}
+
+/* Use matching background colors on the pseudo-elements for dark sections */
+.cta::before { background: var(--landing-dark); }
+.footer::before { background: var(--landing-dark); }
+
+/* Prevent tiny horizontal gaps caused by subpixel rounding on some browsers */
+@media (min-width: 0px) {
+  html, body, #root {
+    overflow-x: hidden;
+  }
 }

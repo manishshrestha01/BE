@@ -23,6 +23,8 @@ const Landing = () => {
     }
   }, [])
 
+  // No global body theme manipulation here; full-bleed CSS handles edge cases
+
   const features = [
     {
       icon: '📚',
@@ -342,6 +344,7 @@ const Landing = () => {
           <div className="footer-bottom">
             <p>© 2026 PU Notes. Built with ❤️ for students.</p>
             <div className="footer-bottom-links">
+              <a href="/faq" target="_blank" rel="noopener noreferrer">FAQ</a>
               <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
               <a href="/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a>
             </div>

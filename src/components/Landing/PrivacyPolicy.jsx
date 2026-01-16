@@ -27,13 +27,17 @@ const PrivacyPolicy = () => {
       canonical.setAttribute('href', 'https://www.manishshrestha012.com.np/privacy-policy')
     }
 
+    // Apply body legal-theme so page background covers full viewport
+    document.body.classList.add('legal-theme')
+
     return () => {
       document.title = 'StudyMate'
+      document.body.classList.remove('legal-theme')
     }
   }, [])
 
   return (
-    <div className="legal-page landing">
+    <div className="legal-page landing legal-dark">
       <div className="legal-container">
         <div className="legal-content">
           <h1 className="terms-title">Privacy Policy</h1>
@@ -78,8 +82,22 @@ const PrivacyPolicy = () => {
           </div>
         </div>
       </div>
-    </div>
-  )
+      
+    {/* Footer */}
+    <footer className="footer">
+      <div className="footer-container">
+        <div className="footer-bottom">
+          <p>© 2026 StudyMate. Made with ❤️ for PU Students</p>
+          <div className="footer-bottom-links">
+            <Link to="/faq">FAQ</Link>
+            <Link to="/privacy-policy">Privacy Policy</Link>
+            <Link to="/terms-of-service">Terms of Service</Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+ )
 }
 
 export default PrivacyPolicy

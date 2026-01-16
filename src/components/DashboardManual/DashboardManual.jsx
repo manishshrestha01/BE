@@ -554,6 +554,7 @@ const ManualPage = ({ location }) => {
           <div className="footer-bottom">
             <p>© 2026 StudyMate. Made with ❤️ for PU Students</p>
             <div className="footer-bottom-links">
+              <Link to="/faq">FAQ</Link>
               <Link to="/privacy-policy">Privacy Policy</Link>
               <Link to="/terms-of-service">Terms of Service</Link>
             </div>

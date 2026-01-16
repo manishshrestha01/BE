@@ -1,3 +1,21 @@
+/* Make scrollbar background transparent to avoid white/gray slivers at viewport edge */
+::-webkit-scrollbar {
+  background: transparent !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent !important;
+}
+
+/* For Firefox */
+html {
+  scrollbar-color: auto transparent;
+  scrollbar-width: thin;
+}
 * {
   box-sizing: border-box;
   margin: 0;
@@ -35,9 +53,26 @@ body.auth-theme {
   color: #0a0a0a !important;
 }
 
+/* Dark background for legal pages */
+body.legal-theme {
+  background-color: var(--landing-dark) !important;
+  color: var(--landing-white) !important;
+  background: #000 !important;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Also ensure #root uses dark background when legal-theme is active to avoid any white gap at viewport edges */
+body.legal-theme #root {
+  background-color: var(--landing-dark) !important;
+}
+
+/* No landing-theme global background: full-bleed sections and overflow-x hidden handle edge cases */
+
 #root {
   min-height: 100vh;
   width: 100%;
+  background-color: #fafafa; /* Ensure root uses the light landing background by default */
 }
 
 a {
