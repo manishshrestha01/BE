@@ -28,7 +28,37 @@
       .container{max-width:900px;margin:0 auto}
       footer{margin-top:48px;color:#666;font-size:14px}
       a{color:#0366d6}
+      /* Explicit dark-mode class styles */
+      .dark-mode, .dark-mode body {
+        background: #0a0a0a;
+        color: #d9d9d9;
+      }
+      .dark-mode header h1 { color: #1e90ff; }
+      .dark-mode .container { color: #d9d9d9; }
+      .dark-mode a { color: #66b3ff; }
+      .dark-mode footer { color: #9aa3ad; }
+
+      /* System preference: prefer dark */
+      @media (prefers-color-scheme: dark) {
+        body { background: #0a0a0a; color: #d9d9d9; }
+        header h1 { color: #1e90ff; }
+        .container { color: #d9d9d9; }
+        a { color: #66b3ff; }
+        footer { color: #9aa3ad; }
+      }
     </style>
+    <script>
+      (function(){
+        try {
+          var userTheme = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (userTheme === 'dark' || (userTheme === null && prefersDark)) {
+            document.documentElement.classList.add('dark-mode');
+            document.body.classList.add('dark-mode');
+          }
+        } catch(e) { /* noop */ }
+      })();
+    </script>
   </head>
   <body>
     <header>

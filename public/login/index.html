@@ -26,7 +26,30 @@
       h1{font-size:28px;margin-bottom:8px}
       a{color:#0366d6}
       .note{margin-top:12px;color:#333}
+      .dark-mode, .dark-mode body {
+        background: #0a0a0a;
+        color: #d9d9d9;
+      }
+      .dark-mode h1 { color: #1e90ff; }
+      .dark-mode a { color: #66b3ff; }
+      @media (prefers-color-scheme: dark) {
+        body { background: #0a0a0a; color: #d9d9d9; }
+        h1 { color: #1e90ff; }
+        a { color: #66b3ff; }
+      }
     </style>
+    <script>
+      (function(){
+        try {
+          var userTheme = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (userTheme === 'dark' || (userTheme === null && prefersDark)) {
+            document.documentElement.classList.add('dark-mode');
+            document.body.classList.add('dark-mode');
+          }
+        } catch(e) {}
+      })();
+    </script>
   </head>
   <body>
     <main class="container">
