@@ -482,7 +482,14 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
                      : getFileIcon(displayItem.fileType || item.fileType || item.file_type)
                    }
                  </div>
-                 <span className="item-name">{displayItem.name || item.name || item.item_name}</span>
+                 {/* show full name on hover via title and aria-label for accessibility */}
+                 <span
+                   className="item-name"
+                   title={displayItem.name || item.name || item.item_name}
+                   aria-label={displayItem.name || item.name || item.item_name}
+                 >
+                   {displayItem.name || item.name || item.item_name}
+                 </span>
                </div>
              )
           })}

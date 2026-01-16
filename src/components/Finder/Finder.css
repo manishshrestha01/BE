@@ -289,6 +289,8 @@
   flex-direction: row;
   padding: 8px 16px;
   gap: 12px;
+  width: 100%; /* allow list items to fill the available horizontal space */
+  align-items: center;
 }
 
 .item-icon {
@@ -338,6 +340,17 @@
 
 .finder-content.list .item-name {
   font-size: 14px;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: none;
+  flex: 1; /* take remaining space between icon and edge */
+  display: block; /* override multi-line clamp styles from grid view */
+  -webkit-line-clamp: none;
+  line-clamp: none;
+  -webkit-box-orient: unset;
+  text-align: left;
 }
 
 /* Empty state */
