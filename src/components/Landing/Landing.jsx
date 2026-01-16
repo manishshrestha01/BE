@@ -342,7 +342,7 @@ const Landing = () => {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>© 2026 PU Notes. Built with ❤️ for students.</p>
+            <p>© {new Date().getFullYear()} StudyMate. Made with ❤️ for PU Students</p>
             <div className="footer-bottom-links">
               <a href="/faq" target="_blank" rel="noopener noreferrer">FAQ</a>
               <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>

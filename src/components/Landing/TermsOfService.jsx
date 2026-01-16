@@ -80,7 +80,7 @@ const TermsOfService = () => {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-bottom">
-          <p>© 2026 StudyMate. Made with ❤️ for PU Students</p>
+          <p>© {new Date().getFullYear()} StudyMate. Made with ❤️ for PU Students</p>
           <div className="footer-bottom-links">
             <Link to="/faq">FAQ</Link>
             <Link to="/privacy-policy">Privacy Policy</Link>
