@@ -25,22 +25,6 @@
     <priority>0.85</priority>
   </url>
 
-  <!-- Login Page - User authentication -->
-  <url>
-    <loc>https://www.manishshrestha012.com.np/login</loc>
-    <lastmod>2026-01-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.60</priority>
-  </url>
-
-  <!-- Privacy Policy -->
-  <url>
-    <loc>https://www.manishshrestha012.com.np/privacy-policy</loc>
-    <lastmod>2026-01-17</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.40</priority>
-  </url>
-
   <!-- Terms of Service -->
   <url>
     <loc>https://www.manishshrestha012.com.np/terms-of-service</loc>

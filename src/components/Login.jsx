@@ -11,68 +11,22 @@ const Login = () => {
   const navigate = useNavigate()
   const { signInWithEmail, signInWithGoogle, isAuthenticated, isSupabaseConfigured } = useAuth()
 
-  // SEO meta tags
+  // Ensure login page is not indexed by search engines
   useEffect(() => {
     document.title = 'Login - StudyMate | PU Notes for Computer Engineering'
-    
+
+    const metaRobots = document.querySelector('meta[name="robots"]')
+    if (metaRobots) metaRobots.setAttribute('content', 'noindex, nofollow')
+
+    // Keep description in case of client-side sharing; do NOT add JSON-LD or OG tags for login
     const metaDescription = document.querySelector('meta[name="description"]')
-    const descContent = 'Sign in to StudyMate to access Pokhara University notes for BE Computer Engineering. Save personal notes, access all semester materials, compiler notes, C programming, DBMS, DSA.'
+    const descContent = 'Sign in to StudyMate to access Pokhara University notes for BE Computer Engineering.'
     if (metaDescription) {
       metaDescription.setAttribute('content', descContent)
     }
 
-    const metaKeywords = document.querySelector('meta[name="keywords"]')
-    const keywordsContent = 'StudyMate login, PU notes login, Pokhara University notes access, BE computer engineering notes, student login Nepal'
-    if (metaKeywords) {
-      metaKeywords.setAttribute('content', keywordsContent)
-    }
-
-    // Ensure page is indexable and update Open Graph + Twitter meta tags for better discovery
-    const metaRobots = document.querySelector('meta[name="robots"]')
-    if (metaRobots) metaRobots.setAttribute('content', 'index, follow')
-
-    const ogTitle = document.querySelector('meta[property="og:title"]')
-    const ogDesc = document.querySelector('meta[property="og:description"]')
-    const ogUrl = document.querySelector('meta[property="og:url"]')
-    if (ogTitle) ogTitle.setAttribute('content', 'Login - StudyMate | PU Notes')
-    if (ogDesc) ogDesc.setAttribute('content', descContent)
-    if (ogUrl) ogUrl.setAttribute('content', 'https://www.manishshrestha012.com.np/login')
-
-    const twitterTitle = document.querySelector('meta[name="twitter:title"]')
-    const twitterDesc = document.querySelector('meta[name="twitter:description"]')
-    const twitterUrl = document.querySelector('meta[name="twitter:url"]')
-    if (twitterTitle) twitterTitle.setAttribute('content', 'Login - StudyMate | PU Notes')
-    if (twitterDesc) twitterDesc.setAttribute('content', descContent)
-    if (twitterUrl) twitterUrl.setAttribute('content', 'https://www.manishshrestha012.com.np/login')
-
-    // Add lightweight JSON-LD WebPage structured data to help indexing
-    const ldKey = 'ld-json-login'
-    let ld = document.querySelector(`script[type="application/ld+json"][data-key="${ldKey}"]`)
-    if (!ld) {
-      ld = document.createElement('script')
-      ld.type = 'application/ld+json'
-      ld.setAttribute('data-key', ldKey)
-      ld.textContent = JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "Login - StudyMate",
-        "url": "https://www.manishshrestha012.com.np/login",
-        "description": descContent
-      })
-      document.head.appendChild(ld)
-    }
-
-    // Set canonical URL
-    let canonical = document.querySelector('link[rel="canonical"]')
-    if (canonical) {
-      canonical.setAttribute('href', 'https://www.manishshrestha012.com.np/login')
-    }
-
     return () => {
       document.title = 'StudyMate'
-      // cleanup: remove ld-json for this page
-      const existingLd = document.querySelector(`script[type="application/ld+json"][data-key="ld-json-login"]`)
-      if (existingLd) existingLd.remove()
     }
   }, [])
 

@@ -21,44 +21,9 @@ const PrivacyPolicy = () => {
       metaKeywords.setAttribute('content', keywordsContent)
     }
 
-    // Ensure privacy page is indexable and update Open Graph/Twitter tags
+    // Do NOT index privacy policy page: set robots to noindex
     const metaRobots = document.querySelector('meta[name="robots"]')
-    if (metaRobots) metaRobots.setAttribute('content', 'index, follow')
-
-    const ogTitle = document.querySelector('meta[property="og:title"]')
-    const ogDesc = document.querySelector('meta[property="og:description"]')
-    const ogUrl = document.querySelector('meta[property="og:url"]')
-    if (ogTitle) ogTitle.setAttribute('content', 'Privacy Policy - StudyMate')
-    if (ogDesc) ogDesc.setAttribute('content', descContent)
-    if (ogUrl) ogUrl.setAttribute('content', 'https://www.manishshrestha012.com.np/privacy-policy')
-
-    const twitterTitle = document.querySelector('meta[name="twitter:title"]')
-    const twitterDesc = document.querySelector('meta[name="twitter:description"]')
-    if (twitterTitle) twitterTitle.setAttribute('content', 'Privacy Policy - StudyMate')
-    if (twitterDesc) twitterDesc.setAttribute('content', descContent)
-
-    // JSON-LD for Privacy Policy page (WebPage)
-    const ldKey = 'ld-json-privacy'
-    let ld = document.querySelector(`script[type="application/ld+json"][data-key="${ldKey}"]`)
-    if (!ld) {
-      ld = document.createElement('script')
-      ld.type = 'application/ld+json'
-      ld.setAttribute('data-key', ldKey)
-      ld.textContent = JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "Privacy Policy - StudyMate",
-        "url": "https://www.manishshrestha012.com.np/privacy-policy",
-        "description": descContent
-      })
-      document.head.appendChild(ld)
-    }
-
-    // Set canonical URL
-    let canonical = document.querySelector('link[rel="canonical"]')
-    if (canonical) {
-      canonical.setAttribute('href', 'https://www.manishshrestha012.com.np/privacy-policy')
-    }
+    if (metaRobots) metaRobots.setAttribute('content', 'noindex, nofollow')
 
     // Apply body legal-theme so page background covers full viewport
     document.body.classList.add('legal-theme')
@@ -66,8 +31,6 @@ const PrivacyPolicy = () => {
     return () => {
       document.title = 'StudyMate'
       document.body.classList.remove('legal-theme')
-      const existingLd = document.querySelector(`script[type="application/ld+json"][data-key="ld-json-privacy"]`)
-      if (existingLd) existingLd.remove()
     }
   }, [])
 
