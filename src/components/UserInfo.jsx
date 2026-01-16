@@ -22,6 +22,14 @@ const UserInfo = () => {
     }
   }, [user, navigate]);
 
+  // Ensure auth pages set a light background while mounted
+  useEffect(() => {
+    document.body.classList.add('auth-theme')
+    return () => {
+      document.body.classList.remove('auth-theme')
+    }
+  }, [])
+
   // Update form data when profile loads
   useEffect(() => {
     if (profile) {

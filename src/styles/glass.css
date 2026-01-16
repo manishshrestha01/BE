@@ -58,7 +58,8 @@
   box-sizing: border-box;
 }
 
-body {
+/* Desktop-only dark background; toggled via body.desktop-theme */
+body.desktop-theme {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   background: #000;
 }

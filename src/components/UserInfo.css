@@ -55,6 +55,7 @@
   padding-top: 80px; /* Height of navbar */
   min-height: calc(100vh - 80px);
   box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .user-info-card {
@@ -68,8 +69,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  max-height: 80vh;
-  overflow-y: auto;
+  /* Remove fixed height and overflow, let card grow naturally */
 }
 
 .user-info-title {
@@ -152,6 +152,7 @@
     min-width: 0;
     max-width: 98vw;
     border-radius: 10px;
+    /* Remove fixed height and overflow, let card grow naturally */
   }
   .user-info-title {
     font-size: 1.25rem;
@@ -186,6 +187,5 @@ body.user-info-no-scroll, html.user-info-no-scroll {
 
 .auth-page {
   min-height: 100vh;
-  height: 100vh;
-  overflow: hidden;
+  /* No fixed height so page can grow and scroll naturally */
 }

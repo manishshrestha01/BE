@@ -45,6 +45,14 @@ const Login = () => {
     }
   }, [isAuthenticated, navigate])
 
+  // Ensure auth pages set a light background while mounted
+  useEffect(() => {
+    document.body.classList.add('auth-theme')
+    return () => {
+      document.body.classList.remove('auth-theme')
+    }
+  }, [])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)

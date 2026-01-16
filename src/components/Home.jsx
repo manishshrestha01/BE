@@ -14,6 +14,14 @@ const Home = () => {
   const justCompletedProfile = useRef(false)
 
   useEffect(() => {
+    // Add desktop theme class to body when Home is mounted so global styles in glass.css apply only for desktop
+    document.body.classList.add('desktop-theme')
+    return () => {
+      document.body.classList.remove('desktop-theme')
+    }
+  }, [])
+
+  useEffect(() => {
     if (!loading && !isAuthenticated) {
       navigate('/login')
     }
