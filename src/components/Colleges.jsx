@@ -22,6 +22,8 @@ const Colleges = () => {
     setLinkRel('canonical', 'https://www.manishshrestha012.com.np/colleges')
     setMeta({ property: 'og:title', content: 'Colleges — BE Computer Engineering Notes — StudyMate' })
     setMeta({ property: 'og:description', content: 'Find Pokhara University BE Computer Engineering notes for colleges like PEC, NCIT and NEC. Choose your college to see semester-wise BE Computer notes.' })
+    setMeta({ property: 'og:image', content: 'https://www.manishshrestha012.com.np/logo-512.png' })
+    setMeta({ name: 'twitter:card', content: 'summary_large_image' })
     setMeta({ property: 'og:site_name', content: 'StudyMate' })
 
     const collectionLD = {
