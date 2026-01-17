@@ -102,6 +102,13 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+   <!-- Login -->
+  <url>
+    <loc>https://www.manishshrestha012.com.np/login</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
 
   <!-- Dashboard - Study materials for PU students -->
   <url>
@@ -122,6 +129,13 @@
   <!-- Terms of Service -->
   <url>
     <loc>https://www.manishshrestha012.com.np/terms-of-service</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.40</priority>
+  </url>
+    <!-- Privacy Policy -->
+    <url>
+    <loc>https://www.manishshrestha012.com.np/privacy-policy</loc>
     <lastmod>2026-01-17</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.40</priority>

@@ -1,21 +1,41 @@
 /* Shared styles for static college pages */
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color: #222; background: #fff; }
-.college-hero { padding: 40px 20px; border-bottom: 1px solid #eee; background: linear-gradient(180deg,#fff,#fbfdff); }
-.college-hero-inner { max-width: 1000px; margin: 0 auto; display: flex; gap: 20px; align-items: center; }
+.colleges-hero {
+  padding: 80px 20px 20px;
+  background: linear-gradient(180deg,#f6f8ff 0%, #ffffff 100%);
+  border-bottom: 1px solid #eaeaea;
+}
+.colleges-hero-inner { max-width:1100px; margin:0 auto; display:flex; gap:24px; align-items:center; justify-content:space-between }
 .college-breadcrumbs { font-size: 13px; color:#666; margin-bottom: 8px; }
 .college-logo { height: 72px; width: 72px; border-radius: 10px; border:1px solid #eee; background:#fff; }
 .college-hero h1 { margin: 0 0 6px 0; font-size: 22px; }
+.hero-content h1 { font-size: clamp(28px, 4vw, 40px); margin:0 0 8px 0 }
+.hero-gradient { background: linear-gradient(90deg,#0066ff,#00c6ff); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; font-weight:800 }
+.hero-highlight { color:#0066ff; font-weight:700 }
+.hero-accent-line { margin-top:8px; height:6px; width:180px; border-radius:999px; background:linear-gradient(90deg,#0066ff,#00c6ff); box-shadow:0 6px 18px rgba(0,102,255,0.06) }
 .college-sub { margin: 0 0 12px 0; color: #555; }
+.hero-sub { margin:8px 0 12px 0; color:#555 }
 .college-actions { margin-top: 8px; display:flex; gap:8px; }
 .college-btn-primary, .college-btn-secondary { display:inline-block; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:600; }
 .college-btn-primary { background:#000; color:#fff; border: none }
 .college-btn-primary:hover { background:#111 }
 .college-btn-secondary { background:transparent; color:#0a84ff; border:1px solid #e6f0ff }
-.college-content { max-width: 1000px; margin: 24px auto; padding: 0 20px; display:grid; grid-template-columns: 1fr 300px; gap: 20px; }
-.semesters { background: #fff; border:1px solid #eee; border-radius:10px; padding:12px }
-.semester-item { display:block; margin-bottom:8px; padding:8px 10px; background:#fafafa; border-radius:8px; text-decoration:none; color:#333; font-weight:600 }
-.related-colleges { background:#fff; border:1px solid #eee; padding:12px; border-radius:10px }
-@media (max-width:900px) { .college-hero-inner { flex-direction:column; align-items:flex-start } .college-content { grid-template-columns: 1fr } }
+.search-row { display:flex; gap:8px; align-items:center; max-width:520px }
+.college-search { width:100%; padding:12px 14px; border-radius:8px; border:1px solid #ddd }
+.colleges-list { padding:36px 20px 80px }
+.colleges-grid { max-width:1100px; margin:0 auto; display:grid; grid-template-columns: repeat(3, 1fr); gap:20px }
+.college-card { display:flex; gap:16px; background:#fff; border:1px solid #ececec; border-radius:12px; padding:18px; align-items:center; transition: transform 0.15s ease, box-shadow 0.15s ease }
+.college-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(20,30,60,0.06) }
+.college-card img { height:64px; width:64px; border-radius:10px; object-fit:cover; border:1px solid #f0f0f0; background:#fff }
+.college-card-body { flex:1 }
+.college-title { font-size:16px; margin:0 0 6px 0 }
+.college-desc { margin:0 0 12px 0; color:#666; font-size:13px }
+.college-actions { display:flex; gap:8px }
+.college-btn-primary { background:#000; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:600 }
+.college-btn-primary:hover { background:#111 }
+
+@media (max-width:900px) { .colleges-grid { grid-template-columns: repeat(2, 1fr) } .colleges-hero-inner { flex-direction:column; gap:16px; text-align:center } .hero-visual { display:none } }
+@media (max-width:560px) { .colleges-grid { grid-template-columns: 1fr } }
 
 /* Simple navbar styles for static college pages (keeps look similar to landing site chrome) */
 .college-nav { background: #fff; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 1000; }
