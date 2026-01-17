@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "inspect-seo": "node scripts/inspect-seo.js",
+    "inspect-live": "node scripts/inspect-seo.js https://www.manishshrestha012.com.np/colleges https://www.manishshrestha012.com.np/college/pec"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.0",

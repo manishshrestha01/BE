@@ -1,0 +1,39 @@
+/* Shared styles for static college pages */
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color: #222; background: #fff; }
+.college-hero { padding: 40px 20px; border-bottom: 1px solid #eee; background: linear-gradient(180deg,#fff,#fbfdff); }
+.college-hero-inner { max-width: 1000px; margin: 0 auto; display: flex; gap: 20px; align-items: center; }
+.college-breadcrumbs { font-size: 13px; color:#666; margin-bottom: 8px; }
+.college-logo { height: 72px; width: 72px; border-radius: 10px; border:1px solid #eee; background:#fff; }
+.college-hero h1 { margin: 0 0 6px 0; font-size: 22px; }
+.college-sub { margin: 0 0 12px 0; color: #555; }
+.college-actions { margin-top: 8px; display:flex; gap:8px; }
+.college-btn-primary, .college-btn-secondary { display:inline-block; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:600; }
+.college-btn-primary { background:#000; color:#fff; border: none }
+.college-btn-primary:hover { background:#111 }
+.college-btn-secondary { background:transparent; color:#0a84ff; border:1px solid #e6f0ff }
+.college-content { max-width: 1000px; margin: 24px auto; padding: 0 20px; display:grid; grid-template-columns: 1fr 300px; gap: 20px; }
+.semesters { background: #fff; border:1px solid #eee; border-radius:10px; padding:12px }
+.semester-item { display:block; margin-bottom:8px; padding:8px 10px; background:#fafafa; border-radius:8px; text-decoration:none; color:#333; font-weight:600 }
+.related-colleges { background:#fff; border:1px solid #eee; padding:12px; border-radius:10px }
+@media (max-width:900px) { .college-hero-inner { flex-direction:column; align-items:flex-start } .college-content { grid-template-columns: 1fr } }
+
+/* Simple navbar styles for static college pages (keeps look similar to landing site chrome) */
+.college-nav { background: #fff; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 1000; }
+.college-nav-container { max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between; padding:12px 20px; gap: 20px; }
+.college-nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:#222; font-weight:700; }
+.college-nav-logo img { height:28px; display:block; }
+.college-nav-links { display:flex; gap:16px; align-items:center; }
+.college-nav-links a { color:#333; text-decoration:none; font-size:14px; }
+.college-nav-login { color:#333; text-decoration:none; font-weight:600; }
+.college-nav-cta { background:#000; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:600; }
+.college-nav-cta:hover { background:#111; }
+
+/* Footer */
+.college-footer { background:#0a0a0a; color:#fff; padding:40px 20px; margin-top:40px }
+.college-footer-container { max-width:1100px; margin:0 auto; display:flex; gap:40px; align-items:flex-start; }
+.college-footer-brand { flex:1; }
+.college-footer-brand .college-nav-logo { color: #fff; }
+.college-footer-tagline { color: rgba(255,255,255,0.85); margin-top:6px; }
+.college-footer-links { display:flex; gap:40px; }
+.college-footer a { color: rgba(255,255,255,0.9); text-decoration:none; display:block; margin-bottom:6px; }
+.college-footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); margin-top:20px; padding-top:12px; text-align:center; color: rgba(255,255,255,0.7); font-size:14px }

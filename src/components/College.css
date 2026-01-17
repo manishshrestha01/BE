@@ -1,0 +1,301 @@
+/* Styles for individual college pages */
+.college-hero {
+  padding: 80px 24px 40px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border-bottom: 1px solid #eee;
+}
+
+.college-hero-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.college-hero-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.college-hero-content h1 {
+  font-size: clamp(22px, 2.8vw, 32px);
+  margin: 0 0 8px 0;
+}
+
+.college-hero-content .hero-highlight {
+  color: var(--landing-accent);
+  font-weight: 700;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.meta-badge {
+  background: linear-gradient(90deg, var(--landing-accent), #00c6ff);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.meta-item {
+  color: #666;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.hero-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.hero-actions .btn-primary {
+  padding: 12px 20px;
+}
+
+.college-breadcrumbs {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.college-logo {
+  height: 84px;
+  width: 84px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  object-fit: contain;
+  background: #fff;
+}
+
+.college-hero h1 {
+  margin: 0 0 8px 0;
+  font-size: clamp(22px, 3vw, 30px);
+}
+
+/* Gradient text for the hero title */
+.hero-gradient {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px; /* space for underline */
+  font-weight: 900;
+  background: linear-gradient(90deg, #0066ff, #00c6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent; /* fallback */
+  letter-spacing: -0.2px;
+  z-index: 0;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.25);
+}
+
+/* Animated underline (write-out) under the title */
+.hero-gradient::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px; /* sit closely under the title */
+  height: 4px; /* thin underline */
+  width: 100%;
+ 
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0066ff, #00c6ff);
+  background-size: 200% 100%;
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: underlineWrite 0.9s cubic-bezier(0.2,0.8,0.2,1) 0.12s forwards, gradientShift 6s linear infinite;
+  box-shadow: none;
+}
+
+@keyframes underlineWrite {
+  0% { transform: scaleX(0); }
+  60% { transform: scaleX(1.05); }
+  100% { transform: scaleX(1); }
+}
+
+/* hide the sibling accent line to avoid duplicate visuals */
+.hero-accent-line { display: none }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-gradient::after { animation: none; transform: scaleX(1); }
+}
+
+.college-sub {
+  color: #555;
+  margin: 0 0 12px 0;
+}
+
+.college-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.college-content {
+  max-width: 1000px;
+  margin: 24px auto 80px;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+.semesters {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.semesters h4 {
+  margin: 0 0 8px 0;
+}
+
+.semesters-list {
+  display: grid;
+  gap: 8px;
+}
+
+.semester-item {
+  padding: 10px 12px;
+  background: #fafafa;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.related-colleges {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.semesters-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin-top: 12px;
+}
+
+.semester-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #eee;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.semester-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(20, 20, 40, 0.06);
+}
+
+.semester-card-number {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: #f2f8ff;
+  color: var(--landing-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.semester-card-title {
+  font-weight: 700;
+}
+
+.popular-subjects {
+  margin-top: 12px;
+}
+
+.popular-subjects .chip {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f2f6ff;
+  color: var(--landing-accent);
+  font-weight: 700;
+  margin-right: 8px;
+  margin-top: 8px;
+}
+
+.related-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+}
+
+.related-card {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #eee;
+  text-decoration: none;
+  color: inherit;
+}
+
+.related-card img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+}
+
+.college-about {
+  margin-top: 20px;
+}
+
+.college-about h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+}
+
+.college-about p {
+  margin: 0;
+  color: #555;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .college-hero-inner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .college-hero-media {
+    order: -1;
+  }
+
+  .related-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .college-content {
+    grid-template-columns: 1fr;
+  }
+}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import './Landing.css'
+import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../../lib/seo'
 
 const Landing = () => {
   const { isAuthenticated, loading } = useAuth()
@@ -10,16 +11,38 @@ const Landing = () => {
 
   // Set page title and meta for SEO
   useEffect(() => {
-    document.title = 'Computer Engineering Notes Pokhara University | StudyMate'
-    
+    setTitle('StudyMate — Computer Engineering Notes Pokhara University')
     // Update meta description
-    const metaDesc = document.querySelector('meta[name="description"]')
-    if (metaDesc) {
-      metaDesc.setAttribute('content', 'PU notes for BE Computer Engineering students. Download Pokhara University notes, compiler design notes, C programming notes, DBMS, DSA, and all semester study materials. NCIT, CCRC affiliated college notes.')
+    setMeta({ name: 'description', content: 'PU notes for BE Computer Engineering students (NEC, PEC, NCIT, LEC and others). Download Pokhara University notes, compiler design notes, C programming notes, DBMS, DSA, and all semester study materials. NCIT, CCRC affiliated college notes.' })
+    setLinkRel('canonical', 'https://www.manishshrestha012.com.np/')
+
+    // Open Graph / Twitter
+    setMeta({ property: 'og:title', content: 'StudyMate — PU Notes for Computer Engineering' })
+    setMeta({ property: 'og:description', content: 'Access PU notes for BE Computer Engineering students. Download semester-wise notes, PDFs, and study materials.' })
+    setMeta({ property: 'og:image', content: 'https://www.manishshrestha012.com.np/logo-512.png' })
+    setMeta({ property: 'og:url', content: 'https://www.manishshrestha012.com.np/' })
+    setMeta({ property: 'og:site_name', content: 'StudyMate' })
+
+    setMeta({ name: 'twitter:title', content: 'StudyMate — PU Notes for Computer Engineering' })
+    setMeta({ name: 'twitter:description', content: 'Access PU notes for BE Computer Engineering students. Download semester-wise notes, PDFs, and study materials.' })
+    setMeta({ name: 'twitter:image', content: 'https://www.manishshrestha012.com.np/logo-512.png' })
+
+    // JSON-LD for homepage
+    const homeLD = {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      '@id': 'https://www.manishshrestha012.com.np/#homepage',
+      'url': 'https://www.manishshrestha012.com.np/',
+      'name': 'StudyMate',
+      'description': 'Your Complete Study Resource Hub for Pokhara University Computer Engineering — notes, PDFs, and semester material.',
+      'isPartOf': { '@id': 'https://www.manishshrestha012.com.np/#website' }
     }
-    
+
+    setJSONLD(homeLD, 'json-ld-home')
+
     return () => {
-      document.title = 'StudyMate'
+      setTitle('StudyMate')
+      removeElementById('json-ld-home')
     }
   }, [])
 
@@ -91,6 +114,7 @@ const Landing = () => {
             <a href="#features">Features</a>
             <a href="#about">About</a>
             <a href="#testimonials">Reviews</a>
+            <Link to="/colleges">Colleges</Link>
             <Link to="/login" className="nav-login">Login</Link>
             <Link to="/dashboard" className="nav-cta">Open Dashboard</Link>
           </div>
@@ -107,6 +131,7 @@ const Landing = () => {
               <a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
               <a href="#about" onClick={() => setMobileMenuOpen(false)}>About</a>
               <a href="#testimonials" onClick={() => setMobileMenuOpen(false)}>Reviews</a>
+              <Link to="/colleges" onClick={() => setMobileMenuOpen(false)}>Colleges</Link>
               <Link to="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
               <Link to="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
             </div>
@@ -323,6 +348,7 @@ const Landing = () => {
               <div className="footer-column">
                 <h4>Quick Links</h4>
                 <Link to="/dashboard">Dashboard</Link>
+                <Link to="/colleges">Colleges</Link>
                 <a href="#features">Features</a>
                 <a href="#about">About</a>
                 <a href="#testimonials">Reviews</a>
