@@ -712,7 +712,7 @@
   gap: 40px;
 }
 
-.footer-column h4 {
+.footer-column h2 {
   font-size: 14px;
   font-weight: 600;
   color: var(--landing-white);

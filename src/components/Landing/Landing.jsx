@@ -346,7 +346,7 @@ const Landing = () => {
             </div>
             <div className="footer-links-grid">
               <div className="footer-column">
-                <h4>Quick Links</h4>
+                <h2>Quick Links</h2>
                 <Link to="/dashboard">Dashboard</Link>
                 <Link to="/colleges">Colleges</Link>
                 <a href="#features">Features</a>
@@ -354,14 +354,14 @@ const Landing = () => {
                 <a href="#testimonials">Reviews</a>
               </div>
               <div className="footer-column">
-                <h4>Semesters</h4>
+                <h2>Semesters</h2>
                 <Link to="/">Semester 1-2</Link>
                 <Link to="/">Semester 3-4</Link>
                 <Link to="/">Semester 5-6</Link>
                 <Link to="/">Semester 7-8</Link>
               </div>
               <div className="footer-column">
-                <h4>Account</h4>
+                <h2>Account</h2>
                 <Link to="/login">Login</Link>
                 <Link to="/login">Continue with Google</Link>
               </div>
