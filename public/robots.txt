@@ -3,27 +3,27 @@
 
 User-agent: *
 Allow: /
+
+# Explicitly allow important public pages
 Allow: /dashboard
 Allow: /faq
 Allow: /login
 Allow: /privacy-policy
 Allow: /terms-of-service
 
-# Disallow private/auth pages
+# Block non-public / internal pages
 Disallow: /user-info
-Disallow: /home
-Disallow: /about
 
-# Disallow build folders but allow site assets so crawlers can fetch CSS/JS
+# Block framework internals
 Disallow: /_next/
-# Allow /assets/ so Googlebot can load site CSS/JS
+
+# Allow assets so Google can render pages correctly
 Allow: /assets/
-# Allow common web font extensions so fonts are indexable and loadable
 Allow: /*.woff2$
 Allow: /*.woff$
 Allow: /*.ttf$
 
-# Disallow query parameters that might create duplicate content
-Disallow: /*?*
+# Block non-HTML technical files
+Disallow: /manifest.json
 
 Sitemap: https://www.manishshrestha012.com.np/sitemap.xml
