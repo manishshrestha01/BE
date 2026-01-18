@@ -71,6 +71,16 @@
             document.body.appendChild(root);
           }
 
+          // Helper: reveal the page by removing the initial hide style (if present)
+          var revealed = false;
+          function reveal() {
+            if (revealed) return;
+            revealed = true;
+            var hide = document.getElementById('spa-hide');
+            if (hide && hide.parentNode) hide.parentNode.removeChild(hide);
+            try { document.documentElement.style.visibility = ''; } catch (e) {}
+          }
+
           // Wait briefly for styles to load (or timeout) before loading app script to avoid FOUC
           whenAllSettledOrTimeout(cssPromises, 500).then(function () {
             // Load the SPA entry module
@@ -78,7 +88,14 @@
             s.type = 'module';
             s.src = src;
             s.defer = true;
+            var revealTimeout = setTimeout(reveal, 3000);
+            s.onload = function () {
+              clearTimeout(revealTimeout);
+              // small delay to allow SPA to render
+              setTimeout(reveal, 30);
+            };
             s.onerror = function () {
+              clearTimeout(revealTimeout);
               var path = location.pathname + location.search + location.hash;
               location.replace('/?r=' + encodeURIComponent(path));
             };
