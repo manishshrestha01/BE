@@ -51,8 +51,18 @@ Quick next steps (what I recommend you do now)
 4. Wait 48–72 hours and re-check the Performance/Index Coverage reports; open a ticket if a page still isn't indexed after 2 weeks.
 
 Notes
-- There is no guaranteed way to "set" sitelinks — search engines pick them algorithmically. These changes substantially increase the chance the preferred pages are surfaced.
 - Google may take hours to days to update how the site is displayed in search. Showing the brand name (StudyMate) in the Organization JSON-LD, site title, and using canonical, og:site_name together will help Google replace the globe/domain with your brand over time.
 - If you want, I can:
   - run the Rich Results test for one page and report back the findings (I can't perform Search Console verified actions without access), or
   - create unique thumbnail images for each college and wire them into the og:image for better click-throughs. Let me know which you prefer.
+
+Meta description length (practical rule)
+- Keep meta descriptions between ~120–155 characters for best display across Google/Bing. Avoid stuffing keywords — write concise, user-focused copy that includes the primary target phrase (e.g. "PEC notes").
+
+Automated checks
+- The repository includes an enhanced SEO inspector that prints meta description length and warns when a description is >160 characters. Example:
+  - npm run inspect-seo -- https://www.manishshrestha012.com.np
+  - To make CI fail on long descriptions: npm run inspect-seo -- <url> --fail-on-long-desc
+
+Quick example of a good homepage description (we applied this):
+"Pokhara University BE Computer Engineering notes — semester-wise PDFs for PEC, NCIT, NEC and other colleges."

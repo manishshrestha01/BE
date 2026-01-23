@@ -7,9 +7,15 @@
 
 import fs from 'fs/promises'
 
-const args = process.argv.slice(2)
+const rawArgs = process.argv.slice(2)
+const flags = rawArgs.filter(a => a.startsWith('--'))
+const args = rawArgs.filter(a => !a.startsWith('--'))
+const failOnLongDesc = flags.includes('--fail-on-long-desc')
+let hadError = false
+
 if (!args.length) {
   console.error('Usage: node scripts/inspect-seo.js <url|file> [<url|file>...]')
+  console.error('Optional flags: --fail-on-long-desc')
   process.exit(1)
 }
 
@@ -35,8 +41,19 @@ async function inspect(url) {
 
     console.log('\n== ' + url + ' ==')
     console.log('Status:', status)
-    console.log('Title:', get(/<title>([^<]+)<\/title>/i) || '—')
-    console.log('Meta description:', get(/<meta[^>]+name=["']description["'][^>]*content=["']([^"']+)["'][^>]*>/i) || '—')
+
+    const title = get(/<title>([^<]+)<\/title>/i) || '—'
+    const desc = get(/<meta[^>]+name=["']description["'][^>]*content=["']([^"']+)["'][^>]*>/i) || ''
+
+    console.log('Title:', title)
+    console.log('Meta description:', desc || '—')
+    console.log('Meta description length:', desc.length)
+
+    if (desc.length > 160) {
+      console.log('WARNING: meta description is longer than recommended (<=160 chars). Shorten to ~120–155 chars for best results.')
+      if (failOnLongDesc) hadError = true
+    }
+
     console.log('OG title:', get(/<meta[^>]+property=["']og:title["'][^>]*content=["']([^"']+)["'][^>]*>/i) || '—')
     console.log('OG desc:', get(/<meta[^>]+property=["']og:description["'][^>]*content=["']([^"']+)["'][^>]*>/i) || '—')
     console.log('OG image:', get(/<meta[^>]+property=["']og:image["'][^>]*content=["']([^"']+)["'][^>]*>/i) || '—')
@@ -88,4 +105,5 @@ async function inspect(url) {
 
 ;(async () => {
   for (const url of args) await inspect(url)
+  if (hadError) process.exit(2)
 })()
