@@ -89,9 +89,15 @@
 <body>
   <!-- SEO-only: no visible HTML. React SPA will render the UI on the client. -->
 
+  <!-- Server-rendered brand mention to reinforce 'StudyMate' for crawlers -->
+  <div style="text-align:center;font-size:13px;padding:8px 12px;color:inherit;"> 
+    <a href="/" style="color:inherit;text-decoration:none;font-weight:600">StudyMate — Colleges</a>
+  </div>
+
   <!-- noscript fallback: explicit list of college links so crawlers that don't execute JS can discover all pages -->
   <noscript>
     <nav aria-label="College directory (no-JS)">
+      <h2>StudyMate — Colleges</h2>
       <ul>
         <li><a href="/college/pec">Pokhara Engineering College (PEC)</a></li>
         <li><a href="/college/nec">Nepal Engineering College (NEC)</a></li>
