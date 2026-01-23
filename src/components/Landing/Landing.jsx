@@ -13,7 +13,7 @@ const Landing = () => {
   useEffect(() => {
     setTitle('StudyMate — Computer Engineering Notes Pokhara University')
     // Update meta description
-    setMeta({ name: 'description', content: 'PU notes for BE Computer Engineering students (NEC, PEC, NCIT, LEC and others). Download Pokhara University notes, compiler design notes, C programming notes, DBMS, DSA, and all semester study materials. NCIT, CCRC affiliated college notes.' })
+    setMeta({ name: 'description', content: 'Pokhara University BE Computer Engineering notes — semester-wise PDFs for PEC, NCIT, NEC and other colleges.' })
     setLinkRel('canonical', 'https://www.manishshrestha012.com.np/')
 
     // Open Graph / Twitter

@@ -24,13 +24,14 @@ const College = () => {
     if (college) {
       const title = `${college.label} — BE Computer Engineering Notes — StudyMate | Pokhara University`
       setTitle(title)
-      setMeta({ name: 'description', content: `Download ${college.label} BE Computer Engineering notes for Pokhara University. Semester-wise BE Computer Engineering notes, PDFs and study materials for BE students.` })
+      const shortDesc = `Semester-wise BE Computer Engineering PDFs and notes for ${college.label} — Pokhara University.`
+      setMeta({ name: 'description', content: shortDesc })
       setLinkRel('canonical', `https://www.manishshrestha012.com.np/college/${slug}`)
       setMeta({ name: 'robots', content: 'index, follow' })
 
       // Open Graph / Twitter
       setMeta({ property: 'og:title', content: title })
-      setMeta({ property: 'og:description', content: `Download ${college.label} BE Computer Engineering notes for Pokhara University. Semester-wise notes and PDFs for BE Computer students.` })
+      setMeta({ property: 'og:description', content: shortDesc })
       setMeta({ property: 'og:image', content: `https://www.manishshrestha012.com.np${college.logo || '/logo-512.png'}` })
       setMeta({ property: 'og:image:alt', content: `${college.label} logo` })
       setMeta({ property: 'og:type', content: 'website' })
@@ -43,7 +44,7 @@ const College = () => {
       setMeta({ property: 'og:site_name', content: 'StudyMate' })
 
       setMeta({ name: 'twitter:title', content: title })
-      setMeta({ name: 'twitter:description', content: `Download ${college.label} BE Computer Engineering notes for Pokhara University.` })
+      setMeta({ name: 'twitter:description', content: shortDesc })
       setMeta({ name: 'twitter:image', content: `https://www.manishshrestha012.com.np${college.logo || '/logo-512.png'}` })
       setMeta({ name: 'twitter:image:alt', content: `${college.label} logo` })
 
@@ -57,7 +58,7 @@ const College = () => {
         'url': `https://www.manishshrestha012.com.np/college/${slug}`,
         'image': `https://www.manishshrestha012.com.np${college.logo || '/logo-512.png'}`,
         'name': title,
-        'description': `Download ${college.label} BE Computer Engineering notes for Pokhara University. Semester-wise BE Computer notes, PDFs and study materials for BE students.`,
+        'description': shortDesc,
         'inLanguage': 'en-US',
         'publisher': { '@id': 'https://www.manishshrestha012.com.np/#organization' },
         'mainEntity': {

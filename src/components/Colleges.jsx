@@ -18,10 +18,10 @@ const Colleges = () => {
 
   useEffect(() => {
     setTitle('Colleges — BE Computer Engineering Notes — StudyMate')
-    setMeta({ name: 'description', content: 'Find Pokhara University BE Computer Engineering notes for specific colleges like PEC, NCIT, NEC, and others. Choose your college to see semester-wise BE Computer notes and study materials.' })
+    setMeta({ name: 'description', content: 'Find Pokhara University BE Computer Engineering notes — semester-wise PDFs for PEC, NCIT, NEC and other colleges.' })
     setLinkRel('canonical', 'https://www.manishshrestha012.com.np/colleges')
     setMeta({ property: 'og:title', content: 'Colleges — BE Computer Engineering Notes — StudyMate' })
-    setMeta({ property: 'og:description', content: 'Find Pokhara University BE Computer Engineering notes for colleges like PEC, NCIT and NEC. Choose your college to see semester-wise BE Computer notes.' })
+    setMeta({ property: 'og:description', content: 'Find Pokhara University BE Computer Engineering notes — semester-wise PDFs for PEC, NCIT, NEC and other colleges.' })
     setMeta({ property: 'og:image', content: 'https://www.manishshrestha012.com.np/logo-512.png' })
     setMeta({ name: 'twitter:card', content: 'summary_large_image' })
     setMeta({ property: 'og:site_name', content: 'StudyMate' })
@@ -31,7 +31,7 @@ const Colleges = () => {
       '@type': 'CollectionPage',
       'url': 'https://www.manishshrestha012.com.np/colleges',
       'name': 'Colleges — BE Computer Engineering Notes — StudyMate',
-      'description': 'Find Pokhara University BE Computer Engineering notes for specific colleges like PEC, NCIT, NEC, and others.',
+      'description': 'Find Pokhara University BE Computer Engineering notes — semester-wise PDFs for PEC, NCIT, NEC and other colleges.',
       'isPartOf': { '@id': 'https://www.manishshrestha012.com.np/#website' },
       'mainEntity': {
         '@type': 'ItemList',
