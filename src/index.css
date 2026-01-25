@@ -44,7 +44,6 @@ body {
   color: #0a0a0a;
   min-height: 100vh;
   /* Prevent overscroll bouncing */
-  overscroll-behavior: none;
 }
 
 /* Light background for auth pages */
