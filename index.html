@@ -49,6 +49,7 @@
     <meta name="theme-color" content="#000000" />
     <meta name="application-name" content="StudyMate" />
     <meta name="apple-mobile-web-app-title" content="StudyMate" />
+    <meta name="publisher" content="StudyMate" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
     <link rel="shortcut icon" href="/favicon-48.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="/logo-512.png" />
@@ -97,17 +98,20 @@
           "@type": "Organization",
           "@id": "https://www.manishshrestha012.com.np/#organization",
           "name": "StudyMate",
-          "alternateName": "StudyMate",
+          "alternateName": ["StudyMate","Study Mate"],
           "url": "https://www.manishshrestha012.com.np/",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://www.manishshrestha012.com.np/logo-512.png"
+            "url": "https://www.manishshrestha012.com.np/logo-512.png",
+            "width": 512,
+            "height": 512
           },
-          "sameAs": [
-            "https://github.com/manishshrestha01"
-          ],
-          "description": "PU notes for BE Computer Engineering students."
-        },
+          "image": { "@type": "ImageObject", "url": "https://www.manishshrestha012.com.np/logo-512.png", "width": 512, "height": 512 },
+           "sameAs": [
+             "https://github.com/manishshrestha01"
+           ],
+           "description": "PU notes for BE Computer Engineering students."
+         },
         {
           "@type": "WebSite",
           "@id": "https://www.manishshrestha012.com.np/#website",
@@ -142,23 +146,39 @@
     <style>
       .skip-to-content { position: absolute; left: -999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
       .skip-to-content:focus { left: 12px; top: 12px; width: auto; height: auto; padding: 8px 12px; z-index: 10000; background: #000; color: #fff; border-radius: 6px; text-decoration: none; }
+      /* small server-rendered brand banner (non-intrusive) */
+      .ssr-brand { text-align: center; font-size: 13px; padding: 6px 12px; color: inherit; opacity: 0.95; }
+      .ssr-brand a { color: inherit; text-decoration: none; font-weight: 600; }
     </style>
    </head>
    <body>
     <a href="#main" class="skip-to-content">Skip to main content</a>
 
+    <!-- Server-rendered brand mention (helps search engines confirm site name) -->
+    <div class="ssr-brand" aria-hidden="false">
+      <a href="/">StudyMate — Pokhara University BE Computer Engineering notes</a>
+    </div>
+
+    <!-- Microdata Organization fallback (hidden) to reinforce brand for crawlers that prefer microdata) -->
+    <div itemscope itemtype="https://schema.org/Organization" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;" aria-hidden="true">
+      <span itemprop="name">StudyMate</span>
+      <link itemprop="url" href="https://www.manishshrestha012.com.np/" />
+      <img itemprop="logo" src="/logo-512.png" alt="StudyMate logo" width="512" height="512" />
+    </div>
+
     <!-- noscript navigation: explicit links for crawlers and users without JS -->
     <noscript>
       <nav aria-label="Main (no-JS)">
         <ul>
-          <li><a href="/dashboard">Dashboard</a></li>
-          <li><a href="/colleges">Colleges</a></li>
-          <li><a href="/login">Login</a></li>
-          <li><a href="/privacy-policy">Privacy Policy</a></li>
-          <li><a href="/terms-of-service">Terms of Service</a></li>
-        </ul>
-      </nav>
-    </noscript>
+          <li><a href="/">StudyMate</a></li>
+           <li><a href="/dashboard">Dashboard</a></li>
+           <li><a href="/colleges">Colleges</a></li>
+           <li><a href="/login">Login</a></li>
+           <li><a href="/privacy-policy">Privacy Policy</a></li>
+           <li><a href="/terms-of-service">Terms of Service</a></li>
+         </ul>
+       </nav>
+     </noscript>
 
     <main id="main" role="main" tabindex="-1">
       <div id="root"></div>
