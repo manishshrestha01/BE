@@ -138,10 +138,155 @@
       ]
     }
     </script>
-    <!-- Skip link styles (visually hidden until focused) -->
+    <!-- Inline critical CSS for nav and hero sections -->
     <style>
       .skip-to-content { position: absolute; left: -999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
       .skip-to-content:focus { left: 12px; top: 12px; width: auto; height: auto; padding: 8px 12px; z-index: 10000; background: #000; color: #fff; border-radius: 6px; text-decoration: none; }
+
+      /* Critical NAV styles */
+      .landing-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid #e5e5e5;
+      }
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 28px;
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: #0a0a0a;
+        flex-shrink: 0;
+      }
+      .logo-text {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        line-height: 1;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+      .nav-links a {
+        color: #525252;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: color 0.2s ease;
+        line-height: 1.5;
+      }
+      .nav-links a:hover { color: #0a0a0a; }
+      .nav-login { color: #0a0a0a !important; font-weight: 600 !important; }
+      .nav-cta {
+        display: inline-block;
+        background: #0a0a0a !important;
+        color: #fff !important;
+        padding: 10px 20px !important;
+        border-radius: 8px;
+        transition: background 0.2s ease !important;
+        line-height: 1.5;
+        white-space: nowrap;
+      }
+      .nav-cta:hover { background: #262626 !important; }
+
+      /* Critical HERO styles */
+      .hero {
+        padding: 160px 24px 80px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-container { max-width: 900px; margin: 0 auto; }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 100px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #525252;
+        margin-bottom: 32px;
+      }
+      .hero-title {
+        font-size: clamp(40px, 8vw, 72px);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -2px;
+        margin-bottom: 24px;
+        color: #0a0a0a;
+      }
+      .hero-highlight {
+        background: linear-gradient(135deg, #0066ff, #00c6ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero-subtitle {
+        font-size: 18px;
+        color: #737373;
+        max-width: 600px;
+        margin: 0 auto 40px;
+        line-height: 1.7;
+      }
+      .hero-cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        margin-bottom: 80px;
+      }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0a0a0a;
+        color: #fff;
+        padding: 16px 32px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+      }
+      .btn-primary:hover { background: #262626; transform: translateY(-2px); }
+      .btn-arrow { transition: transform 0.2s ease; }
+      .btn-primary:hover .btn-arrow { transform: translateX(4px); }
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        color: #525252;
+        padding: 16px 32px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s ease;
+        border: 1px solid #d4d4d4;
+      }
+      .btn-secondary:hover { color: #0a0a0a; border-color: #a3a3a3; }
     </style>
    </head>
    <body>
