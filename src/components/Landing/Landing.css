@@ -1184,6 +1184,7 @@
   padding: 32px 24px 24px 24px;
   position: relative;
   animation: slideInRight 0.2s cubic-bezier(0.4,0,0.2,1);
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
 }
 
 .mobile-nav-close {
@@ -1266,6 +1267,7 @@
   margin-left: calc(50% - 50vw - 1px);
   margin-right: calc(50% - 50vw - 1px);
   box-sizing: border-box;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
   padding-left: calc(24px + env(safe-area-inset-left));
   padding-right: calc(24px + env(safe-area-inset-right));
   transform: translateZ(0);
