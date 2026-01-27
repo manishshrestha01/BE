@@ -55,7 +55,7 @@
 /* Tablets */
 @media (max-width: 768px) {
   .navbar {
-    padding: 0.75rem 1rem;
+    padding: max(0.75rem, env(safe-area-inset-top)) 1rem 0.75rem 1rem;
   }
   
   .navbar-brand a {
@@ -79,7 +79,7 @@
 /* Mobile devices */
 @media (max-width: 480px) {
   .navbar {
-    padding: 0.5rem 0.75rem;
+    padding: max(0.5rem, env(safe-area-inset-top)) 0.75rem 0.5rem 0.75rem;
     flex-wrap: wrap;
   }
   
