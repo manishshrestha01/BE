@@ -2,7 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  /* UPDATED: Add safe area inset to the top padding */
+  padding: calc(1rem + env(safe-area-inset-top, 0px)) 2rem 1rem 2rem; 
   background-color: #1a1a2e;
   color: white;
   position: sticky;
