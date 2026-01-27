@@ -16,6 +16,20 @@ window.console.error = (...args) => {
   resizeObserverErr(...args)
 }
 
+// Detect when app is running as a standalone PWA and expose a class on <html>
+function updateStandaloneClass() {
+  try {
+    const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+    document.documentElement.classList.toggle('is-standalone', Boolean(isStandalone));
+  } catch (err) {
+    // ignore in non-browser environments
+  }
+}
+updateStandaloneClass();
+window.addEventListener('appinstalled', updateStandaloneClass);
+window.addEventListener('DOMContentLoaded', updateStandaloneClass);
+window.addEventListener('visibilitychange', updateStandaloneClass);
+
 // React app routes
 createRoot(document.getElementById('root')).render(
   <StrictMode>
