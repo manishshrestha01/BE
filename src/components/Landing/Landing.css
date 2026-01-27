@@ -79,6 +79,7 @@
   align-items: center;
   justify-content: space-between;
   min-height: 28px;
+  padding: max(16px, env(safe-area-inset-top)) 24px 12px 24px;
 }
 
 .nav-logo {
