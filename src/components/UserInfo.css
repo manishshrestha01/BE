@@ -18,17 +18,12 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid #e5e5e5;
-  /* Ensure header content remains visible on iOS notch / Dynamic Island */
-  padding-top: max(0px, constant(safe-area-inset-top));
-  padding-top: max(0px, env(safe-area-inset-top));
-  box-sizing: border-box;
 }
 
 .user-info-nav-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: max(16px, constant(safe-area-inset-top)) 24px 16px 24px;
-  padding: max(16px, env(safe-area-inset-top)) 24px 16px 24px;
+  padding: 16px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -57,9 +52,7 @@
   align-items: center;
   justify-content: center;
   margin-top: 0 !important; /* Remove margin-top to eliminate gap */
-  /* Account for navbar height + iOS safe area inset */
-  padding-top: calc(80px + constant(safe-area-inset-top)); /* Height of navbar */
-  padding-top: calc(80px + env(safe-area-inset-top)); /* Height of navbar */
+  padding-top: 80px; /* Height of navbar */
   min-height: calc(100vh - 80px);
   box-sizing: border-box;
   overflow-y: auto;
