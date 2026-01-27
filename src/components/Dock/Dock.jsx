@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import './Dock.css'
 
-const Dock = ({ onFinderClick, onNotesClick, onSettingsClick, activeApp }) => {
+const Dock = ({ onFinderClick, onNotesClick, onSettingsClick, onContactClick, activeApp }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null)
 
   const apps = [
     { id: 'finder', name: 'Finder', icon: '📁', action: onFinderClick },
     { id: 'notes', name: 'Notes', icon: '📝', action: onNotesClick },
+    { id: 'contact', name: 'Contact', isImage: true, icon: '/gedit.png', action: onContactClick },
     { id: 'settings', name: 'Settings', icon: '⚙️', action: onSettingsClick },
   ]
 

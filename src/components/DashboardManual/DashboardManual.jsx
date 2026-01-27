@@ -261,6 +261,18 @@ const ManualPage = ({ location }) => {
         'Use the drawing canvas for diagrams and sketches'
       ]
     },
+       {
+      // Use gedit.png as the icon for the Contact App
+      icon: <img src="/gedit.png" alt="Contact App" className="feature-icon-img" />, 
+       title: 'Contact App',
+       description: 'Send messages to the StudyMate team — upload study materials or report issues and feature requests.',
+       tips: [
+         'Upload notes and supporting files (up to 15 MB)',
+         'Report app problems with screenshots and a clear description',
+         'You can upload the notes through google drive link as well',
+         'Use it for feature requests, bug reports, and general feedback'
+       ]
+     },
     {
       icon: '⚙️',
       title: 'Settings',
@@ -278,7 +290,7 @@ const ManualPage = ({ location }) => {
       tips: [
         'Hover over icons to see app names',
         'Active apps show a dot indicator below',
-        'Access Finder, Notes, and Settings quickly'
+        'Access Finder, Notes, Contact and Settings quickly'
       ]
     }
   ]
@@ -332,7 +344,7 @@ const ManualPage = ({ location }) => {
   const faqs = [
     {
       question: 'Is StudyMate free to use?',
-      answer: 'Yes! StudyMate is completely free for all Pokhara University Computer Engineering students.'
+      answer: 'Yes! StudyMate is completely free.'
     },
     {
       question: 'Can I access the syllabus for each subject?',
@@ -344,7 +356,7 @@ const ManualPage = ({ location }) => {
     },
     {
       question: 'Can I upload my own notes?',
-      answer: 'Yes, you can upload your own study materials through the Settings panel and organize them in your personal folders.'
+      answer: 'Yes! Once you sign in, you can upload your study materials through the Contact app.'
     },
     {
       question: 'Are my notes saved automatically?',
@@ -352,7 +364,7 @@ const ManualPage = ({ location }) => {
     },
     {
       question: 'What file formats are supported?',
-      answer: 'We support PDF, images (PNG, JPG), and text files. More formats coming soon!'
+      answer: 'We support PDF, images (PNG, JPG), text files, and Microsoft Office documents (DOCX, PPTX). More formats coming soon!'
     }
   ]
 
@@ -408,7 +420,11 @@ const ManualPage = ({ location }) => {
               <span className="card-icon">📝</span>
               <span className="card-text">Notes</span>
             </div>
-            <div className="visual-card card-3">
+              <div className="visual-card card-3">
+              <span className="card-icon"><img src="/gedit.png" alt="Contact" className="hero-card-icon" /></span>
+              <span className="card-text">Contact</span>
+            </div>
+            <div className="visual-card card-4">
               <span className="card-icon">⚙️</span>
               <span className="card-text">Settings</span>
             </div>

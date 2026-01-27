@@ -320,7 +320,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
   return (
     <div 
       ref={finderRef}
-      className="finder glass-dark"
+      className={getWindowClassName()}
       tabIndex={0}
     >
 
@@ -331,10 +331,10 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
           <button className="window-btn close" onClick={onClose} title="Close">
             <span>×</span>
           </button>
-          <button className="window-btn minimize" title="Minimize">
+          <button className="window-btn minimize" onClick={handleMinimize} title="Minimize">
             <span>−</span>
           </button>
-          <button className="window-btn maximize" title="Maximize">
+          <button className="window-btn maximize" onClick={handleMaximize} title="Maximize">
             <span>+</span>
           </button>
         </div>

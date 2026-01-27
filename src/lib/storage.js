@@ -1,7 +1,8 @@
 import { supabase, isSupabaseConfigured } from './supabase'
-import { createFileRecord, deleteFileRecord } from './database'
+// optionally create file records in DB if you want; currently not required for support attachments
+// import { createFileRecord, deleteFileRecord } from './database'
 
-const BUCKET_NAME = 'notes'
+const BUCKET_NAME = import.meta.env.VITE_SUPPORT_BUCKET || 'support-attachments'
 
 // Get file type from extension
 export const getFileType = (filename) => {
@@ -49,30 +50,16 @@ export const uploadFile = async (file, folderId = null) => {
       .from(BUCKET_NAME)
       .getPublicUrl(storagePath)
 
-    // Create file record in database
-    const fileType = getFileType(file.name)
-    const { data: fileRecord, error: dbError } = await createFileRecord({
-      name: file.name,
-      fileType,
-      fileSize: file.size,
-      storagePath,
-      url: urlData.publicUrl,
-      folderId
-    })
-
-    if (dbError) {
-      // Rollback: delete uploaded file if DB insert fails
-      await supabase.storage.from(BUCKET_NAME).remove([storagePath])
-      return { data: null, error: dbError }
-    }
-
-    return { 
-      data: { 
-        ...fileRecord, 
-        type: 'file',
-        fileType 
-      }, 
-      error: null 
+    // Return minimal file info (no DB record created here). Contact app expects res.data.url
+    return {
+      data: {
+        name: file.name,
+        path: storagePath,
+        url: urlData?.publicUrl ?? null,
+        size: file.size,
+        type: getFileType(file.name)
+      },
+      error: null
     }
   } catch (err) {
     console.error('Upload exception:', err)

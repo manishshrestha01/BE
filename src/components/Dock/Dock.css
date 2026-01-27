@@ -35,8 +35,8 @@
 }
 
 .dock-icon-img {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 60px;
   object-fit: contain;
 }
 
@@ -94,6 +94,11 @@
   .dock-icon {
     font-size: 36px;
   }
+    .dock-icon-img {
+  width: 45px;
+  height: 54px;
+  object-fit: contain;
+}
   
   .dock-tooltip {
     top: -32px;
@@ -121,6 +126,11 @@
   .dock-icon {
     font-size: 32px;
   }
+     .dock-icon-img {
+  width: 39px;
+  height: 48px;
+  object-fit: contain;
+}
   
   .dock-tooltip {
     display: none;
@@ -159,6 +169,11 @@
   .dock-icon {
     font-size: 28px;
   }
+    .dock-icon-img {
+  width: 30px;
+  height: 45px;
+  object-fit: contain;
+}
   
   .dock-indicator {
     bottom: -3px;
@@ -181,4 +196,9 @@
   .dock-icon {
     font-size: 26px;
   }
+  .dock-icon-img {
+  width: 30px;
+  height: 40px;
+  object-fit: contain;
+}
 }

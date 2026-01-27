@@ -81,7 +81,7 @@ const FAQ = () => {
   const faqs = [
     {
       question: 'What is StudyMate?',
-      answer: 'StudyMate is a free online platform designed for Pokhara University engineering students. It provides organized study materials, notes, syllabi, and a personal notes feature to help you study effectively.'
+      answer: 'StudyMate is a free online platform designed for Computer Engineering students. It provides organized study materials, notes, syllabi, and a personal notes feature to help you study effectively.'
     },
     {
       question: 'Is StudyMate free to use?',
@@ -101,7 +101,7 @@ const FAQ = () => {
     },
     {
       question: 'Can I upload my own notes?',
-      answer: 'Yes! Once you sign in, you can upload your own study materials through the Settings panel. You can organize them in personal folders and access them from any device.'
+      answer: 'Yes! Once you sign in, you can upload your study materials through the Contact app.'
     },
     {
       question: 'Are my notes saved automatically?',
@@ -109,7 +109,7 @@ const FAQ = () => {
     },
     {
       question: 'What file formats are supported?',
-      answer: 'We currently support PDF documents, images (PNG, JPG, JPEG), and text files. We\'re working on adding support for more formats like Word documents and PowerPoint presentations.'
+      answer: 'We currently support PDF documents, images (PNG, JPG, JPEG), text files, and Microsoft Office documents (DOCX, PPTX). More formats are coming soon.'
     },
     {
       question: 'Do I need to create an account?',
@@ -125,7 +125,7 @@ const FAQ = () => {
     },
     {
       question: 'How do I report an issue or suggest a feature?',
-      answer: 'We\'d love to hear from you! You can reach out through our contact form or email us directly. Your feedback helps us improve StudyMate for everyone.'
+      answer: 'We\'d love to hear from you! You can send feedback or report issues using the Contact app in the desktop (or email us directly). Please also review our Privacy Policy and Terms of Service for information about how we handle reports and personal data.'
     }
   ]
 

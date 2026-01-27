@@ -73,7 +73,12 @@ const PrivacyPolicy = () => {
           </p>
 
           <h2>Contact</h2>
-          <p>If you have questions about this policy, please contact the site maintainer.</p>
+          <p>
+            If you have questions about this policy, would like to report a privacy-related
+            issue, or request data removal, please contact us using the Contact app within
+            the desktop environment or email the site maintainer. You can also review our
+            <Link to="/terms-of-service"> Terms of Service</Link> for related information.
+          </p>
 
           <div className="legal-actions">
             <Link to="/" className="btn-secondary">Back to Home</Link>

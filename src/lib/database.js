@@ -239,3 +239,31 @@ export const upsertRecentTab = async ({ userId, item }) => {
   if (error) console.error('Error saving recent tab:', error, recentData)
   return { data, error }
 }
+
+// ============ SUPPORT MESSAGES ============
+
+/**
+ * Persist a support / contact message to the `support_messages` table.
+ * Columns expected: user_id (uuid), email (text), subject (text), message (text), metadata (json), created_at
+ */
+export const createSupportMessage = async ({ userId = null, name = null, email = null, subject = '', message = '', metadata = {} } = {}) => {
+  if (!isSupabaseConfigured()) return { data: null, error: 'Supabase not configured' }
+
+  const payload = {
+    user_id: userId ?? null,
+    name: name || null,
+    email: email || null,
+    subject: subject || null,
+    message: message || null,
+    metadata: Object.keys(metadata || {}).length ? metadata : null
+  }
+
+  // Insert without selecting the newly created row to avoid requiring a separate
+  // SELECT policy in RLS-protected environments. The REST endpoint will return
+  // an HTTP 201 on success and `data` may be null depending on DB settings.
+  const { data, error } = await supabase
+    .from('support_messages')
+    .insert([payload])
+
+  return { data, error }
+}

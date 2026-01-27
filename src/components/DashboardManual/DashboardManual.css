@@ -255,6 +255,15 @@
   font-size: 20px;
 }
 
+/* Hero visual image icon for Contact */
+.dashboard-manual .visual-card .card-icon img,
+.dashboard-manual .hero-card-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: inline-block;
+}
+
 .dashboard-manual .card-1 { animation-delay: 0s; }
 .dashboard-manual .card-2 { animation-delay: 0.5s; }
 .dashboard-manual .card-3 { animation-delay: 1s; }
@@ -372,6 +381,13 @@
   font-size: 40px;
   display: block;
   margin-bottom: 20px;
+}
+
+.dashboard-manual .feature-icon img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  display: inline-block;
 }
 
 .dashboard-manual .feature-title {

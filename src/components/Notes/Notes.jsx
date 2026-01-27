@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 import { ExcalidrawCanvas } from "./ExcalidrawCanvas";
 import "./Notes.css";
 
 const Notes = ({ onClose }) => {
   const [noteId, setNoteId] = useState(null);
+  const [windowState, setWindowState] = useState("normal"); // 'normal' | 'maximized' | 'minimized'
+  const containerRef = useRef(null);
 
   /* auto-create single drawing */
   useEffect(() => {
@@ -48,10 +50,36 @@ const Notes = ({ onClose }) => {
     init();
   }, []);
 
+  const handleMinimize = () => setWindowState("minimized");
+  const handleMaximize = () => {
+    setWindowState((p) => (p === "maximized" ? "normal" : "maximized"));
+    setTimeout(() => { try { containerRef.current?.focus() } catch (e) {} }, 60);
+  };
+
+  const getWindowClassName = () => {
+    let cls = "notes-app";
+    if (windowState === "maximized") cls += " maximized";
+    if (windowState === "minimized") cls += " minimized";
+    return cls;
+  };
+
+  if (windowState === "minimized") {
+    return (
+      <div className="notes-minimized" onClick={() => setWindowState("normal")} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setWindowState('normal')}>
+        <span>📝</span>
+        <span>Notes</span>
+      </div>
+    );
+  }
+
   return (
-    <div className="notes-app glass-dark">
+    <div ref={containerRef} className={`${getWindowClassName()} glass-dark`} tabIndex={-1}>
       <div className="notes-toolbar">
-        <button className="window-btn close" onClick={onClose}>×</button>
+        <div className="window-controls">
+          <button className="window-btn close" onClick={onClose} title="Close">×</button>
+          <button className="window-btn minimize" onClick={handleMinimize} title="Minimize">−</button>
+          <button className="window-btn maximize" onClick={handleMaximize} title={windowState === 'maximized' ? 'Restore' : 'Maximize'}>+</button>
+        </div>
         <div className="notes-title">Notes (Drawing Mode)</div>
       </div>
 

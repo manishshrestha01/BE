@@ -70,6 +70,13 @@ const TermsOfService = () => {
           <h2>Changes</h2>
           <p>We may update these terms from time to time. It is your responsibility to review them.</p>
 
+          <h2>Contact</h2>
+          <p>
+            If you have questions about these terms, or wish to report a violation or abuse,
+            please reach out via the Contact app in the desktop environment or consult our
+            <Link to="/privacy-policy"> Privacy Policy</Link> for details about data handling.
+          </p>
+
           <div className="legal-actions">
             <Link to="/" className="btn-secondary">Back to Home</Link>
           </div>
