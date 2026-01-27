@@ -40,7 +40,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     { id: 'q3', question: 'How do I sign out?', answer: 'Open Settings → Profile → Account and click Sign Out, or use the Sign Out row in mobile Settings.' },
     { id: 'q4', question: 'Can I upload my own background image?', answer: 'Yes — use the Wallpaper section to upload or drag & drop an image. Supported files are images only.' },
     { id: 'q5', question: 'Where can I find the app version?', answer: 'Open Settings → About to see the current version.' },
-    { id: 'q6', question: 'What is the Dashboard app?', answer: 'The Dashboard is the main hub of StudyMate — it surfaces curated semester-wise resources, featured notes, and quick links (Notes, Contact, and other apps) so you can quickly find study materials.' },
+    { id: 'q6', question: 'What is the Dashboard?', answer: 'The Dashboard is the main hub of StudyMate — it surfaces curated semester-wise resources, featured notes, and quick links (Notes, Contact, and other apps) so you can quickly find study materials.' },
     { id: 'q7', question: 'How can I upload notes or report bugs?', answer: 'Use the Contact app (accessible from the Dashboard) to upload study materials. If you need to report bugs, request features, or share files directly, use the Contact app — attach screenshots or files (common formats supported) and send a message. Contact attachments are limited to ~15 MB per file.' }
   ]
 
@@ -683,8 +683,8 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                   <p>Discover curated materials and helpful guides to support your learning across all semesters.</p>
                 </div>
                 <div className="about-credits">
-                  <p>Built with React + Vite</p>
-                  <p>© 2025 StudyMate</p>
+                  <p>Built with React</p>
+                  <p>© 2026 StudyMate</p>
                 </div>
               </div>
             )}
