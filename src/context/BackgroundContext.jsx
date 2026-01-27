@@ -77,28 +77,61 @@ export const BackgroundProvider = ({ children }) => {
     if (found) {
       setCurrentBg(found)
       // clearing any custom background when user selects a built-in
-      setCustomBg(null)
-      localStorage.removeItem('notesAppCustomBackground')
+      setCustomBg(prev => {
+        try {
+          if (prev && typeof prev === 'string' && prev.startsWith('blob:')) {
+            URL.revokeObjectURL(prev)
+          }
+        } catch (err) { /* ignore */ }
+        return null
+      })
+      try { localStorage.removeItem('notesAppCustomBackground') } catch (err) { /* ignore */ }
       localStorage.setItem('notesAppBackground', bgId)
     }
   }
 
   const setCustomBackground = (url) => {
-    setCustomBg(url)
-    // persist custom image so it survives reloads
-    try {
-      localStorage.setItem('notesAppCustomBackground', url)
-    } catch (err) {
-      // localStorage may fail on some browsers for large images; ignore
-      console.warn('Failed to persist custom background', err)
+    // Revoke previous blob URL when replacing it to avoid memory leaks
+    setCustomBg(prev => {
+      try {
+        if (prev && typeof prev === 'string' && prev.startsWith('blob:') && prev !== url) {
+          URL.revokeObjectURL(prev)
+        }
+      } catch (err) {
+        // ignore
+      }
+      return url
+    })
+
+    // Persist only non-blob URLs (data URLs). Blob URLs cannot be stored and are session-scoped.
+    if (typeof url === 'string' && !url.startsWith('blob:')) {
+      try {
+        localStorage.setItem('notesAppCustomBackground', url)
+      } catch (err) {
+        // localStorage may fail on some browsers for large images; ignore
+        console.warn('Failed to persist custom background', err)
+      }
+    } else {
+      try { localStorage.removeItem('notesAppCustomBackground') } catch (err) { /* ignore */ }
     }
+
     // clear chosen built-in background when using custom
     localStorage.removeItem('notesAppBackground')
   }
 
   const removeCustomBackground = () => {
-    setCustomBg(null)
-    localStorage.removeItem('notesAppCustomBackground')
+    // If custom background is a blob URL, revoke it before clearing
+    setCustomBg(prev => {
+      try {
+        if (prev && typeof prev === 'string' && prev.startsWith('blob:')) {
+          URL.revokeObjectURL(prev)
+        }
+      } catch (err) {
+        // ignore
+      }
+      return null
+    })
+    try { localStorage.removeItem('notesAppCustomBackground') } catch (err) { /* ignore */ }
     // restore selected built-in if present, otherwise fallback to default
     const saved = localStorage.getItem('notesAppBackground')
     if (saved) {

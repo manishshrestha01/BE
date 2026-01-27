@@ -30,6 +30,22 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   const touchStartX = useRef(null)
   const touchDelta = useRef(0)
 
+  // FAQ state (namespaced for settings only)
+  const [faqSearch, setFaqSearch] = useState('')
+  const [openFaq, setOpenFaq] = useState(null)
+
+  const settingsFaqs = [
+    { id: 'q1', question: 'How do I change my wallpaper?', answer: 'Open Settings → Wallpaper. Select a built-in background or upload a custom image (max 100 MB).' },
+    { id: 'q2', question: 'How do I update my profile?', answer: 'Go to Settings → Profile. Update your full name, semester, and college, then click Save.' },
+    { id: 'q3', question: 'How do I sign out?', answer: 'Open Settings → Profile → Account and click Sign Out, or use the Sign Out row in mobile Settings.' },
+    { id: 'q4', question: 'Can I upload my own background image?', answer: 'Yes — use the Wallpaper section to upload or drag & drop an image. Supported files are images only.' },
+    { id: 'q5', question: 'Where can I find the app version?', answer: 'Open Settings → About to see the current version.' },
+    { id: 'q6', question: 'What is the Dashboard app?', answer: 'The Dashboard is the main hub of StudyMate — it surfaces curated semester-wise resources, featured notes, and quick links (Notes, Contact, and other apps) so you can quickly find study materials.' },
+    { id: 'q7', question: 'How can I upload notes or report bugs?', answer: 'Use the Contact app (accessible from the Dashboard) to upload study materials. If you need to report bugs, request features, or share files directly, use the Contact app — attach screenshots or files (common formats supported) and send a message. Contact attachments are limited to ~15 MB per file.' }
+  ]
+
+  const toggleFaq = (id) => setOpenFaq(prev => prev === id ? null : id)
+
   // Keep local form state in sync with profile when it loads/changes
   useEffect(() => {
     setFormData({
@@ -112,11 +128,31 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
       setUploadError('Please upload a valid image file.')
       return
     }
-    // Limit file size to 8MB
-    if (file.size > 8 * 1024 * 1024) {
-      setUploadError('Image is too large (max 8 MB).')
+
+    // Allow files up to 100 MB
+    const MAX_SIZE = 100 * 1024 * 1024 // 100 MB
+    if (file.size > MAX_SIZE) {
+      setUploadError('Image is too large (max 100 MB).')
       return
     }
+
+    // For large files, prefer using blob URLs to avoid expensive base64 encoding in memory
+    const BLOB_THRESHOLD = 10 * 1024 * 1024 // 10 MB
+    if (file.size > BLOB_THRESHOLD && typeof URL.createObjectURL === 'function') {
+      try {
+        const blobUrl = URL.createObjectURL(file)
+        // If setting a blob URL, we won't persist it (localStorage can't store blobs reliably)
+        setCustomBackground(blobUrl)
+      } catch (err) {
+        console.error('Failed to create blob URL for image', err)
+        setUploadError('Failed to process image. Please try a smaller file.')
+      } finally {
+        setUploading(false)
+      }
+      return
+    }
+
+    // Smaller files: read as data URL and persist where possible
     setUploading(true)
     const reader = new FileReader()
     reader.onload = () => {
@@ -137,7 +173,8 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   const sections = [
     { id: 'profile', icon: '👤', label: profile.full_name || 'Profile' },
     { id: 'wallpaper', icon: '🖼️', label: 'Wallpaper' },
-    { id: 'about', icon: 'ℹ️', label: 'About' }
+    { id: 'about', icon: 'ℹ️', label: 'About' },
+    { id: 'faq', icon: '❓', label: 'FAQ' }
   ]
 
   const handleMinimize = () => {
@@ -266,6 +303,11 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                       onClick={() => setMobileView('about')}
                     />
                     <SettingRow
+                      icon={<span>❓</span>}
+                      title="FAQ"
+                      onClick={() => setMobileView('faq')}
+                    />
+                    <SettingRow
                       icon={<span>🚪</span>}
                       title="Sign Out"
                       onClick={handleSignOut}
@@ -281,9 +323,9 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                         <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </button>
-                    <h3 style={{ marginLeft: 8 }}>{mobileView === 'profile' ? 'Profile' : mobileView === 'wallpaper' ? 'Wallpaper' : 'About'}</h3>
-                  </div>
-                  <div style={{ paddingTop: 12 }}>
+                    <h3 style={{ marginLeft: 8 }}>{sections.find(s => s.id === mobileView)?.label || ''}</h3>
+                   </div>
+                   <div style={{ paddingTop: 12 }}>
                     {mobileView === 'profile' && (
                       <div className="profile-section">
                         {/* Reuse the desktop profile form content inside mobile subview */}
@@ -410,7 +452,30 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                         </div>
                       </div>
                     )}
-                  </div>
+                    {mobileView === 'faq' && (
+                      <div className="settings-faq-section">
+                        <h4>Frequently Asked Questions</h4>
+                        <p className="section-description">Quick answers to common questions about StudyMate.</p>
+                        <div className="settings-faq-search">
+                          <input type="search" placeholder="Search FAQs..." value={faqSearch} onChange={(e) => setFaqSearch(e.target.value)} />
+                        </div>
+                        <div className="settings-faq-list">
+                          {settingsFaqs.filter(f => (f.question + ' ' + f.answer).toLowerCase().includes(faqSearch.toLowerCase())).map(f => (
+                            <div className="settings-faq-item" key={f.id}>
+                              <button className="settings-faq-question" onClick={() => toggleFaq(f.id)} aria-expanded={openFaq === f.id} aria-controls={`settings-faq-answer-${f.id}`}>
+                                <span>{f.question}</span>
+                                <span className="settings-faq-toggle">{openFaq === f.id ? '−' : '+'}</span>
+                              </button>
+                              {openFaq === f.id && <div id={`settings-faq-answer-${f.id}`} className="settings-faq-answer" role="region">{f.answer}</div>}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="settings-faq-footer" style={{ marginTop: 12 }}>
+                          <button className="settings-faq-link" onClick={() => { onClose(); navigate('/faq') }}>Open full FAQ</button>
+                        </div>
+                      </div>
+                    )}
+                   </div>
                 </div>
               )}
             </div>
@@ -620,6 +685,30 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                 <div className="about-credits">
                   <p>Built with React + Vite</p>
                   <p>© 2025 StudyMate</p>
+                </div>
+              </div>
+            )}
+            {/* FAQ Section (desktop) */}
+            {activeSection === 'faq' && (
+              <div className="settings-faq-section">
+                <h4>Frequently Asked Questions</h4>
+                <p className="section-description">Quick answers to common questions about StudyMate.</p>
+                <div className="settings-faq-search" style={{ marginTop: 12, marginBottom: 12 }}>
+                  <input type="search" placeholder="Search FAQs..." value={faqSearch} onChange={(e) => setFaqSearch(e.target.value)} />
+                </div>
+                <div className="settings-faq-list">
+                  {settingsFaqs.filter(f => (f.question + ' ' + f.answer).toLowerCase().includes(faqSearch.toLowerCase())).map(f => (
+                    <div className="settings-faq-item" key={f.id}>
+                      <button className="settings-faq-question" onClick={() => toggleFaq(f.id)} aria-expanded={openFaq === f.id} aria-controls={`settings-faq-answer-${f.id}`}>
+                        <span>{f.question}</span>
+                        <span className="settings-faq-toggle">{openFaq === f.id ? '−' : '+'}</span>
+                      </button>
+                      {openFaq === f.id && <div id={`settings-faq-answer-${f.id}`} className="settings-faq-answer" role="region">{f.answer}</div>}
+                    </div>
+                  ))}
+                </div>
+                <div className="settings-faq-footer" style={{ marginTop: 12 }}>
+                  <button className="settings-faq-link" onClick={() => { onClose(); navigate('/faq') }}>Open full FAQ</button>
                 </div>
               </div>
             )}
