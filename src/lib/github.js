@@ -11,6 +11,7 @@ const GITHUB_CONFIG = {
 // You can set a personal access token for higher rate limits (optional)
 // For public repos, no token is needed
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN || ''
+const FUNCTION_URL = import.meta.env.VITE_SUPABASE_FUNCTION_URL || ''
 
 const headers = GITHUB_TOKEN 
   ? { 'Authorization': `token ${GITHUB_TOKEN}` }
@@ -37,13 +38,41 @@ const getFileType = (filename) => {
 }
 
 /**
- * Fetch contents of a directory from GitHub
+ * Fetch contents of a directory from GitHub or proxied Supabase function
  * @param {string} path - Path relative to basePath (empty for root)
  */
 export async function fetchGitHubContents(path = '') {
   const { owner, repo, branch, basePath } = GITHUB_CONFIG
   const fullPath = basePath ? `${basePath}/${path}`.replace(/^\/+/, '') : path
-  
+
+  // If a Supabase function URL is configured, use it as a proxy so the client doesn't need a GitHub token
+  if (FUNCTION_URL) {
+    try {
+      const base = FUNCTION_URL.replace(/\/$/, '')
+      const url = `${base}/list?path=${encodeURIComponent(fullPath)}`
+      const response = await fetch(url)
+      if (!response.ok) {
+        const text = await response.text()
+        throw new Error(`Function error: ${response.status} ${text}`)
+      }
+      const json = await response.json()
+      if (!json.success) throw new Error(json.error || 'Function returned error')
+
+      // Normalize items to ensure file URLs use the configured function base (handles http/https mismatches)
+      const items = (json.data || []).map(item => ({
+        ...item,
+        url: `${base}/file?path=${encodeURIComponent(item.path)}`,
+        fileType: item.fileType || item.file_type || (item.name ? getFileType(item.name) : undefined),
+      }))
+
+      return { success: true, data: items }
+    } catch (error) {
+      console.error('Function fetch error:', error)
+      return { success: false, error: error.message, data: [] }
+    }
+  }
+
+  // Fallback: call GitHub API directly
   const url = `https://api.github.com/repos/${owner}/${repo}/contents/${fullPath}?ref=${branch}`
   
   try {
@@ -100,9 +129,14 @@ export async function fetchGitHubContents(path = '') {
 
 /**
  * Get raw file URL for viewing
+ * If a function URL is configured, return a proxied file URL
  * @param {string} path - File path in repository
  */
 export function getGitHubRawUrl(path) {
+  if (FUNCTION_URL) {
+    return `${FUNCTION_URL.replace(/\/$/, '')}/file?path=${encodeURIComponent(path)}`
+  }
+
   const { owner, repo, branch } = GITHUB_CONFIG
   return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`
 }
@@ -112,6 +146,21 @@ export function getGitHubRawUrl(path) {
  */
 export async function getRepoInfo() {
   const { owner, repo } = GITHUB_CONFIG
+
+  if (FUNCTION_URL) {
+    try {
+      const url = `${FUNCTION_URL.replace(/\/$/, '')}/repo`
+      const response = await fetch(url)
+      if (!response.ok) throw new Error('Failed to fetch repo info from function')
+      const json = await response.json()
+      if (!json.success) throw new Error(json.error || 'Function returned error')
+      return json.data
+    } catch (error) {
+      console.error('Function repo fetch error:', error)
+      return null
+    }
+  }
+
   const url = `https://api.github.com/repos/${owner}/${repo}`
   
   try {
