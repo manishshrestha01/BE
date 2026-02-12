@@ -135,6 +135,6 @@
 
 @media (max-width: 520px) {
   /* Disable desktop shortcuts on phones (keep them on tablets) */
-  .desktop-shortcuts { display: none; }
+  .desktop-shortcuts { display: transparent; }
 }
 
