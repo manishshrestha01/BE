@@ -144,7 +144,7 @@ const FAQ = () => {
           </Link>
           <div className="nav-links">
             <Link to="/">Home</Link>
-            <Link to="/dashboard">Dashboard Guide</Link>
+            <Link to="/dashboard">Dashboard</Link>
             <Link to="/login" className="nav-login">Login</Link>
             <Link to="/dashboard" className="nav-cta">Get Started</Link>
           </div>
@@ -199,10 +199,10 @@ const FAQ = () => {
       <section className="faq-cta">
         <div className="faq-cta-container">
           <h2>Still have questions?</h2>
-          <p>Check out our dashboard guide or get started with StudyMate today.</p>
+          <p>Check out our dashboard or get started with StudyMate today.</p>
           <div className="faq-cta-buttons">
             <Link to="/dashboard" className="btn-primary">
-              Dashboard Guide
+              Dashboard
               <span className="btn-arrow">→</span>
             </Link>
             <Link to="/login" className="btn-secondary">
