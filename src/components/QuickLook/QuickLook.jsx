@@ -1,14 +1,34 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './QuickLook.css'
 
 const QuickLook = ({ file, onClose }) => {
-  const [viewerError, setViewerError] = useState(false)
+  const [viewerErrorKey, setViewerErrorKey] = useState(null)
   const [useSecondaryProxy, setUseSecondaryProxy] = useState(false)
-  
-  if (!file) return null
+  const mobilePptxOpenAttemptRef = useRef('')
+
+  const isMobileDevice = () => {
+    if (typeof navigator === 'undefined') return false
+
+    const userAgent = navigator.userAgent || ''
+    const isIOS =
+      /iPad|iPhone|iPod/i.test(userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    const isAndroid = /Android/i.test(userAgent)
+
+    return isIOS || isAndroid
+  }
+
+  const isMobile = isMobileDevice()
+  const currentFileKey = file ? `${file.fileType}:${file.url}` : null
+  const viewerError = viewerErrorKey === currentFileKey
+
+  const flagViewerError = () => {
+    if (!file) return
+    setViewerErrorKey(`${file.fileType}:${file.url}`)
+  }
 
   // Debug logging
-  console.log('QuickLook file:', { name: file.name, fileType: file.fileType, url: file.url })
+  console.log('QuickLook file:', { name: file?.name, fileType: file?.fileType, url: file?.url })
 
   // Multiple viewer options for different file types
   // PDF.js viewer (Mozilla) - handles large PDFs well
@@ -21,10 +41,67 @@ const QuickLook = ({ file, onClose }) => {
     return `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`
   }
 
-  // Microsoft Office Online viewer - alternative for Office files
-  const getOfficeViewerUrl = (url) => {
+  // Microsoft Office Online embed viewer (desktop iframe)
+  const getOfficeEmbedViewerUrl = (url) => {
     return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`
   }
+
+  // Microsoft Office full viewer (best for mobile/fullscreen)
+  const getOfficeFullViewerUrl = (url) => {
+    return `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(url)}`
+  }
+
+  const renderOfficeFallback = ({ showMobileMessage = false } = {}) => {
+    return (
+      <div className="preview-info">
+        <span className="info-icon">📊</span>
+        <h2>{file.name}</h2>
+        {showMobileMessage ? (
+          <p>PPT preview may appear blank; open fullscreen for best quality.</p>
+        ) : (
+          <p>Preview unavailable in embedded mode.</p>
+        )}
+
+        <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
+          <a
+            href={getOfficeFullViewerUrl(file.url)}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: '#000',
+              background: '#fff',
+              padding: '10px 14px',
+              borderRadius: 8,
+              fontSize: 14,
+              fontWeight: 600,
+              textDecoration: 'none'
+            }}
+          >
+            Open Fullscreen (HD)
+          </a>
+          <a href={getGoogleViewerUrl(file.url)} target="_blank" rel="noopener noreferrer">
+            Open in Google Viewer
+          </a>
+        </div>
+      </div>
+    )
+  }
+
+  useEffect(() => {
+    if (!file || file.fileType !== 'pptx' || !isMobile) {
+      return
+    }
+
+    const attemptKey = `${file.fileType}:${file.url}`
+    if (mobilePptxOpenAttemptRef.current === attemptKey) {
+      return
+    }
+    mobilePptxOpenAttemptRef.current = attemptKey
+
+    window.open(getOfficeFullViewerUrl(file.url), '_blank', 'noopener,noreferrer')
+  }, [file, isMobile])
+
+  if (!file) return null
 
   const renderPreview = () => {
     // Handle folders - show info card
@@ -62,14 +139,14 @@ const QuickLook = ({ file, onClose }) => {
               alt={file.name} 
               className="fullscreen-image"
               onLoad={() => console.log('HEIF image loaded successfully from:', currentUrl)}
-              onError={(e) => {
+              onError={() => {
                 console.error('HEIF image failed to load from:', currentUrl)
                 if (!useSecondaryProxy) {
                   console.log('Trying secondary proxy for HEIF...')
                   setUseSecondaryProxy(true)
                 } else {
                   console.log('All proxies failed for HEIF')
-                  setViewerError(true)
+                  flagViewerError()
                 }
               }}
             />
@@ -93,27 +170,37 @@ const QuickLook = ({ file, onClose }) => {
             src={getPDFJsViewerUrl(file.url)}
             title={file.name}
             className="fullscreen-viewer"
-            onError={() => setViewerError(true)}
+            onError={flagViewerError}
           />
         )
       case 'pptx':
-        // Try Office Online first, fallback to Google
+        if (isMobile) {
+          return renderOfficeFallback({ showMobileMessage: true })
+        }
+
+        if (viewerError) {
+          return renderOfficeFallback()
+        }
+
         return (
           <iframe
-            src={viewerError ? getGoogleViewerUrl(file.url) : getOfficeViewerUrl(file.url)}
+            src={getOfficeEmbedViewerUrl(file.url)}
             title={file.name}
             className="fullscreen-viewer"
-            onError={() => setViewerError(true)}
+            onError={flagViewerError}
           />
         )
       case 'docx':
-        // Try Office Online first, fallback to Google
+        if (viewerError) {
+          return renderOfficeFallback()
+        }
+
         return (
           <iframe
-            src={viewerError ? getGoogleViewerUrl(file.url) : getOfficeViewerUrl(file.url)}
+            src={getOfficeEmbedViewerUrl(file.url)}
             title={file.name}
             className="fullscreen-viewer"
-            onError={() => setViewerError(true)}
+            onError={flagViewerError}
           />
         )
       case 'rtf':
@@ -123,7 +210,7 @@ const QuickLook = ({ file, onClose }) => {
             src={getGoogleViewerUrl(file.url)}
             title={file.name}
             className="fullscreen-viewer"
-            onError={() => setViewerError(true)}
+            onError={flagViewerError}
           />
         )
       case 'text':
