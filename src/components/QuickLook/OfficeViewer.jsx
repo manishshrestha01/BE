@@ -18,6 +18,7 @@ const OfficeViewer = () => {
 
   const sourceUrl = searchParams.get('src') || ''
   const fileName = searchParams.get('name') || 'Document'
+  const backUrl = searchParams.get('back') || ''
   const officeViewerUrl = useMemo(
     () => (sourceUrl ? getOfficeFullViewerUrl(sourceUrl) : ''),
     [sourceUrl]
@@ -33,11 +34,11 @@ const OfficeViewer = () => {
 
   const closeViewer = () => {
     clearQuickLookState()
-    if (window.history.length > 1) {
-      navigate(-1)
+    if (backUrl) {
+      navigate(backUrl, { replace: true })
       return
     }
-    navigate('/dashboard', { replace: true })
+    navigate(-1)
   }
 
   useEffect(() => {
@@ -68,10 +69,12 @@ const OfficeViewer = () => {
 
   if (!sourceUrl) {
     return (
-      <div className="viewer-fullscreen">
-        <button className="viewer-close" onClick={closeViewer}>✕</button>
-        <div className="viewer-filename">Office Viewer</div>
-        <div className="viewer-content">
+      <div className="office-viewer-page">
+        <header className="office-viewer-topbar">
+          <button className="viewer-close" onClick={closeViewer}>✕</button>
+          <div className="viewer-filename">Office Viewer</div>
+        </header>
+        <div className="office-viewer-content">
           <div className="preview-info">
             <span className="info-icon">📄</span>
             <h2>Unable to open file</h2>
@@ -83,10 +86,12 @@ const OfficeViewer = () => {
   }
 
   return (
-    <div className="viewer-fullscreen">
-      <button className="viewer-close" onClick={closeViewer}>✕</button>
-      <div className="viewer-filename">{fileName}</div>
-      <div className="viewer-content">
+    <div className="office-viewer-page">
+      <header className="office-viewer-topbar">
+        <button className="viewer-close" onClick={closeViewer}>✕</button>
+        <div className="viewer-filename">{fileName}</div>
+      </header>
+      <div className="office-viewer-content">
         <div className={`office-viewer-shell ${!iframeLoaded ? 'is-loading' : ''}`}>
           {!iframeLoaded && (
             <div className="office-viewer-status">

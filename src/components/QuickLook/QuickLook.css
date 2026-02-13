@@ -1,14 +1,12 @@
 /* Full Screen Document Viewer */
 .viewer-fullscreen {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: #000;
   z-index: 9999;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   animation: fadeIn 0.2s ease;
 }
 
@@ -17,11 +15,7 @@
   to { opacity: 1; }
 }
 
-/* Close button - top right - simple style */
 .viewer-close {
-  position: absolute;
-  top: 50px;
-  right: 16px;
   width: 32px;
   height: 32px;
   border: none;
@@ -30,7 +24,6 @@
   color: white;
   font-size: 16px;
   cursor: pointer;
-  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,11 +34,7 @@
   background: rgba(0, 0, 0, 0.9);
 }
 
-/* File name - compact */
 .viewer-filename {
-  position: absolute;
-  top: 50px;
-  left: 16px;
   max-width: calc(100% - 80px);
   color: white;
   font-size: 13px;
@@ -56,17 +45,80 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Desktop overlay controls */
+.viewer-desktop .viewer-close {
+  position: absolute;
+  top: 50px;
+  right: 16px;
   z-index: 10000;
+}
+
+.viewer-desktop .viewer-filename {
+  position: absolute;
+  top: 50px;
+  left: 16px;
+  z-index: 10000;
+}
+
+/* Mobile header controls */
+.viewer-topbar {
+  display: none;
+}
+
+.viewer-mobile .viewer-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: calc(env(safe-area-inset-top) + 8px) 12px 10px;
+  background: rgba(0, 0, 0, 0.86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.viewer-mobile .viewer-close {
+  position: static;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 17px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.viewer-mobile .viewer-close:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.viewer-mobile .viewer-filename {
+  position: static;
+  top: auto;
+  left: auto;
+  max-width: none;
+  min-width: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  flex: 1;
 }
 
 /* Main content area */
 .viewer-content {
   flex: 1;
+  min-height: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: stretch;
   width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 
@@ -74,6 +126,8 @@
 .fullscreen-viewer {
   width: 100%;
   height: 100%;
+  display: block;
+  flex: 1;
   border: none;
   background: white;
 }
@@ -94,6 +148,66 @@
 .fullscreen-video {
   max-width: 100%;
   max-height: 100%;
+}
+
+.office-viewer-page {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.office-viewer-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: calc(env(safe-area-inset-top) + 8px) 12px 10px;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.office-viewer-page .viewer-close {
+  position: static;
+  inset: auto;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 17px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.office-viewer-page .viewer-filename {
+  position: static;
+  top: auto;
+  left: auto;
+  max-width: none;
+  min-width: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  flex: 1;
+}
+
+.office-viewer-content {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
 }
 
 .office-viewer-shell {
@@ -140,6 +254,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
   text-align: center;
   color: white;
 }
@@ -169,8 +285,41 @@
     height: 100%;
     height: 100dvh; /* Dynamic viewport height */
   }
+
+  .viewer-mobile .viewer-topbar {
+    min-height: 50px;
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+
+  .office-viewer-page {
+    height: 100%;
+    height: 100dvh;
+  }
+
+  .office-viewer-topbar {
+    min-height: 50px;
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
   
-  .viewer-close {
+  .viewer-mobile .viewer-close {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .viewer-mobile .viewer-close:active {
+    transform: scale(0.9);
+  }
+  
+  .viewer-mobile .viewer-filename {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .viewer-desktop .viewer-close {
     top: max(16px, env(safe-area-inset-top));
     right: max(12px, env(safe-area-inset-right));
     width: 36px;
@@ -179,24 +328,16 @@
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
   }
-  
-  .viewer-close:active {
-    transform: scale(0.9);
-  }
-  
-  .viewer-filename {
+
+  .viewer-desktop .viewer-filename {
     top: max(16px, env(safe-area-inset-top));
     left: max(16px, env(safe-area-inset-left));
+    max-width: calc(100% - 80px);
     font-size: 13px;
     font-weight: 600;
     padding: 6px 12px;
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(10px);
-    max-width: calc(100% - 80px);
-  }
-  
-  .viewer-content {
-    padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
   
   .info-icon {
@@ -226,24 +367,47 @@
     height: 100%;
     height: 100dvh;
   }
+
+  .viewer-mobile .viewer-topbar {
+    min-height: 54px;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+
+  .office-viewer-page {
+    height: 100%;
+    height: 100dvh;
+  }
+
+  .office-viewer-topbar {
+    min-height: 54px;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
   
-  .viewer-close {
+  .viewer-mobile .viewer-close {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .viewer-mobile .viewer-filename {
+    font-size: 14px;
+  }
+
+  .viewer-desktop .viewer-close {
     top: max(20px, env(safe-area-inset-top));
     right: max(16px, env(safe-area-inset-right));
     width: 40px;
     height: 40px;
     font-size: 20px;
   }
-  
-  .viewer-filename {
+
+  .viewer-desktop .viewer-filename {
     top: max(20px, env(safe-area-inset-top));
     left: max(16px, env(safe-area-inset-left));
     font-size: 14px;
     padding: 8px 14px;
-  }
-  
-  .viewer-content {
-    padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
   
   .info-icon {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import ZoomableImage from './ZoomableImage'
 import './QuickLook.css'
 
@@ -10,17 +10,16 @@ const QuickLook = ({ file, onClose }) => {
   const [useSecondaryProxy, setUseSecondaryProxy] = useState(false)
   const mobileOfficeRedirectAttemptRef = useRef('')
   const navigate = useNavigate()
+  const location = useLocation()
 
   const isMobileDevice = () => {
     if (typeof navigator === 'undefined') return false
 
     const userAgent = navigator.userAgent || ''
-    const isIOS =
-      /iPad|iPhone|iPod/i.test(userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    const isIOSPhone = /iPhone|iPod/i.test(userAgent)
     const isAndroid = /Android/i.test(userAgent)
 
-    return isIOS || isAndroid
+    return isIOSPhone || isAndroid
   }
 
   const isMobile = isMobileDevice()
@@ -105,7 +104,7 @@ const QuickLook = ({ file, onClose }) => {
   }
 
   useEffect(() => {
-    if (!file || !isMobile || !['pptx', 'docx'].includes(file.fileType)) {
+    if (!file || !isMobile || file.fileType !== 'pptx') {
       return
     }
 
@@ -119,11 +118,17 @@ const QuickLook = ({ file, onClose }) => {
     }
     mobileOfficeRedirectAttemptRef.current = attemptKey
 
-    const officeViewerRoute = `/office-viewer?src=${encodeURIComponent(file.url)}&name=${encodeURIComponent(file.name || 'Document')}`
+    const backUrl = `${location.pathname}${location.search}${location.hash}`
+    const params = new URLSearchParams({
+      src: file.url,
+      name: file.name || 'Document',
+      back: backUrl
+    })
+    const officeViewerRoute = `/office-viewer?${params.toString()}`
     clearQuickLookState()
     onClose?.()
     navigate(officeViewerRoute)
-  }, [file, isMobile, navigate, onClose])
+  }, [file, isMobile, location.hash, location.pathname, location.search, navigate, onClose])
 
   if (!file) return null
 
@@ -222,10 +227,6 @@ const QuickLook = ({ file, onClose }) => {
           />
         )
       case 'docx':
-        if (isMobile) {
-          return renderMobileOfficeRedirectState()
-        }
-
         if (viewerError) {
           return renderOfficeFallback()
         }
@@ -275,14 +276,18 @@ const QuickLook = ({ file, onClose }) => {
   }
 
   return (
-    <div className="viewer-fullscreen">
-      {/* Close button */}
-      <button className="viewer-close" onClick={onClose}>✕</button>
-      
-      {/* File name */}
-      <div className="viewer-filename">{file.name}</div>
-      
-      {/* Content */}
+    <div className={`viewer-fullscreen ${isMobile ? 'viewer-mobile' : 'viewer-desktop'}`}>
+      {isMobile ? (
+        <header className="viewer-topbar">
+          <button className="viewer-close" onClick={onClose} aria-label="Close preview">✕</button>
+          <div className="viewer-filename">{file.name}</div>
+        </header>
+      ) : (
+        <>
+          <button className="viewer-close" onClick={onClose} aria-label="Close preview">✕</button>
+          <div className="viewer-filename">{file.name}</div>
+        </>
+      )}
       <div className="viewer-content">
         {renderPreview()}
       </div>
