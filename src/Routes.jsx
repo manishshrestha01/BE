@@ -10,11 +10,13 @@ import NotFound from './components/Landing/NotFound'
 import DashboardManual from './components/DashboardManual/DashboardManual'
 import Colleges from './components/Colleges'
 import College from './components/College'
+import OfficeViewer from './components/QuickLook/OfficeViewer'
 
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Landing />} />
     <Route path="/dashboard" element={<DashboardManual />} />
+    <Route path="/office-viewer" element={<OfficeViewer />} />
     <Route path="/home" element={<Home />} />
     <Route path="/about" element={<Landing />} />
     <Route path="/login" element={<Login />} />

@@ -1,16 +1,70 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { fetchGitHubContents, isGitHubConfigured, getGitHubRawUrl } from '../lib/github'
 
 /**
  * Custom hook for managing notes from GitHub repository
  * Read-only - fetches and displays notes stored in GitHub
  */
+const NOTES_PATH_STORAGE_KEY = 'studymate:notespath:v1'
+const ROOT_FOLDER = { id: 'root', name: 'Notes', path: '' }
+
+const isValidFolder = (folder) => {
+  return Boolean(
+    folder &&
+    typeof folder === 'object' &&
+    typeof folder.name === 'string' &&
+    typeof folder.path === 'string'
+  )
+}
+
+const normalizeStoredPathState = (value) => {
+  const normalizedCurrentPath = typeof value?.currentPath === 'string' ? value.currentPath : ''
+  const rawFolderPath = Array.isArray(value?.folderPath) ? value.folderPath : [ROOT_FOLDER]
+  const validFolders = rawFolderPath.filter(isValidFolder)
+
+  const normalizedFolderPath = validFolders.length > 0
+    ? validFolders
+    : [ROOT_FOLDER]
+
+  if (normalizedFolderPath[0]?.path !== '') {
+    normalizedFolderPath.unshift(ROOT_FOLDER)
+  }
+
+  return {
+    currentPath: normalizedCurrentPath,
+    folderPath: normalizedFolderPath
+  }
+}
+
+const readStoredNotesPathState = () => {
+  try {
+    const raw = sessionStorage.getItem(NOTES_PATH_STORAGE_KEY)
+    if (!raw) return normalizeStoredPathState(null)
+
+    const parsed = JSON.parse(raw)
+    return normalizeStoredPathState(parsed)
+  } catch {
+    return normalizeStoredPathState(null)
+  }
+}
+
+const persistNotesPathState = (state) => {
+  try {
+    const normalized = normalizeStoredPathState(state)
+    sessionStorage.setItem(NOTES_PATH_STORAGE_KEY, JSON.stringify(normalized))
+  } catch {
+    // Ignore storage failures.
+  }
+}
+
 export function useGitHubNotes() {
+  const initialPathStateRef = useRef(readStoredNotesPathState())
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [currentPath, setCurrentPath] = useState('') // Current directory path
-  const [folderPath, setFolderPath] = useState([{ id: 'root', name: 'Notes', path: '' }]) // Breadcrumb
+  const [currentPath, setCurrentPath] = useState(initialPathStateRef.current.currentPath) // Current directory path
+  const [folderPath, setFolderPath] = useState(initialPathStateRef.current.folderPath) // Breadcrumb
+  const pathStateRef = useRef({ currentPath, folderPath })
   
   const isConfigured = isGitHubConfigured()
 
@@ -56,6 +110,46 @@ export function useGitHubNotes() {
   useEffect(() => {
     fetchItems(currentPath)
   }, [currentPath, fetchItems])
+
+  useEffect(() => {
+    pathStateRef.current = { currentPath, folderPath }
+    persistNotesPathState({ currentPath, folderPath })
+  }, [currentPath, folderPath])
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        persistNotesPathState(pathStateRef.current)
+        return
+      }
+
+      if (document.visibilityState === 'visible') {
+        const restored = readStoredNotesPathState()
+        const previous = pathStateRef.current
+        const prevSerializedPath = JSON.stringify(previous.folderPath)
+        const restoredSerializedPath = JSON.stringify(restored.folderPath)
+
+        if (restored.currentPath !== previous.currentPath) {
+          setCurrentPath(restored.currentPath)
+        }
+        if (restoredSerializedPath !== prevSerializedPath) {
+          setFolderPath(restored.folderPath)
+        }
+      }
+    }
+
+    const handleBeforeUnload = () => {
+      persistNotesPathState(pathStateRef.current)
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [])
 
   // Navigate into a folder
   const navigateToFolder = useCallback((folderId, folderName, folderPath) => {

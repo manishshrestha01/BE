@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ZoomableImage from './ZoomableImage'
 import './QuickLook.css'
+
+const QUICKLOOK_STATE_KEY = 'studymate:quicklook:v1'
 
 const QuickLook = ({ file, onClose }) => {
   const [viewerErrorKey, setViewerErrorKey] = useState(null)
   const [useSecondaryProxy, setUseSecondaryProxy] = useState(false)
-  const mobilePptxOpenAttemptRef = useRef('')
+  const mobileOfficeRedirectAttemptRef = useRef('')
+  const navigate = useNavigate()
 
   const isMobileDevice = () => {
     if (typeof navigator === 'undefined') return false
@@ -28,9 +32,6 @@ const QuickLook = ({ file, onClose }) => {
     setViewerErrorKey(`${file.fileType}:${file.url}`)
   }
 
-  // Debug logging
-  console.log('QuickLook file:', { name: file?.name, fileType: file?.fileType, url: file?.url })
-
   // Multiple viewer options for different file types
   // PDF.js viewer (Mozilla) - handles large PDFs well
   const getPDFJsViewerUrl = (url) => {
@@ -50,6 +51,24 @@ const QuickLook = ({ file, onClose }) => {
   // Microsoft Office full viewer (best for mobile/fullscreen)
   const getOfficeFullViewerUrl = (url) => {
     return `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(url)}`
+  }
+
+  const clearQuickLookState = () => {
+    try {
+      sessionStorage.removeItem(QUICKLOOK_STATE_KEY)
+    } catch {
+      // Ignore storage failures.
+    }
+  }
+
+  const renderMobileOfficeRedirectState = () => {
+    return (
+      <div className="preview-info">
+        <span className="info-icon">{file.fileType === 'docx' ? '📝' : '📊'}</span>
+        <h2>{file.name}</h2>
+        <p>Opening fullscreen Office viewer...</p>
+      </div>
+    )
   }
 
   const renderOfficeFallback = ({ showMobileMessage = false } = {}) => {
@@ -86,18 +105,25 @@ const QuickLook = ({ file, onClose }) => {
   }
 
   useEffect(() => {
-    if (!file || file.fileType !== 'pptx' || !isMobile) {
+    if (!file || !isMobile || !['pptx', 'docx'].includes(file.fileType)) {
+      return
+    }
+
+    if (!file.url) {
       return
     }
 
     const attemptKey = `${file.fileType}:${file.url}`
-    if (mobilePptxOpenAttemptRef.current === attemptKey) {
+    if (mobileOfficeRedirectAttemptRef.current === attemptKey) {
       return
     }
-    mobilePptxOpenAttemptRef.current = attemptKey
+    mobileOfficeRedirectAttemptRef.current = attemptKey
 
-    window.open(getOfficeFullViewerUrl(file.url), '_blank', 'noopener,noreferrer')
-  }, [file, isMobile])
+    const officeViewerRoute = `/office-viewer?src=${encodeURIComponent(file.url)}&name=${encodeURIComponent(file.name || 'Document')}`
+    clearQuickLookState()
+    onClose?.()
+    navigate(officeViewerRoute)
+  }, [file, isMobile, navigate, onClose])
 
   if (!file) return null
 
@@ -180,7 +206,7 @@ const QuickLook = ({ file, onClose }) => {
         )
       case 'pptx':
         if (isMobile) {
-          return renderOfficeFallback({ showMobileMessage: true })
+          return renderMobileOfficeRedirectState()
         }
 
         if (viewerError) {
@@ -196,6 +222,10 @@ const QuickLook = ({ file, onClose }) => {
           />
         )
       case 'docx':
+        if (isMobile) {
+          return renderMobileOfficeRedirectState()
+        }
+
         if (viewerError) {
           return renderOfficeFallback()
         }

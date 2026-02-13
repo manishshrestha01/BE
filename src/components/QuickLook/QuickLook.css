@@ -96,6 +96,29 @@
   max-height: 100%;
 }
 
+.office-viewer-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.office-viewer-shell.is-loading .fullscreen-viewer {
+  opacity: 0;
+}
+
+.office-viewer-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  background: #000;
+  z-index: 2;
+}
+
 /* Desktop cursor states for zoom/pan */
 @media (hover: hover) and (pointer: fine) {
   .ql-cursor-zoom-in {
