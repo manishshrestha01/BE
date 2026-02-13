@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import ZoomableImage from './ZoomableImage'
 import './QuickLook.css'
 
 const QuickLook = ({ file, onClose }) => {
@@ -116,7 +117,12 @@ const QuickLook = ({ file, onClose }) => {
     switch (file.fileType) {
       case 'image':
         return (
-          <img src={file.url} alt={file.name} className="fullscreen-image" />
+          <ZoomableImage
+            src={file.url}
+            alt={file.name}
+            className="fullscreen-image"
+            isMobile={isMobile}
+          />
         )
       case 'heif': {
         // Display HEIC/HEIF images using image proxy/converter
@@ -128,36 +134,38 @@ const QuickLook = ({ file, onClose }) => {
         const currentUrl = useSecondaryProxy ? secondaryUrl : primaryUrl
         
         console.log('HEIF/HEIC viewer:', { filename: file.name, originalUrl: imageUrl, usingSecondary: useSecondaryProxy, proxyUrl: currentUrl })
-        
+
+        if (viewerError) {
+          return (
+            <div className="preview-info">
+              <span className="info-icon">🖼️</span>
+              <h2>{file.name}</h2>
+              <p>
+                HEIC/HEIF format. 
+                <a href={file.url} target="_blank" rel="noopener noreferrer"> Download original</a>
+              </p>
+            </div>
+          )
+        }
+
         return (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            <img 
-              src={currentUrl} 
-              alt={file.name} 
-              className="fullscreen-image"
-              onLoad={() => console.log('HEIF image loaded successfully from:', currentUrl)}
-              onError={() => {
-                console.error('HEIF image failed to load from:', currentUrl)
-                if (!useSecondaryProxy) {
-                  console.log('Trying secondary proxy for HEIF...')
-                  setUseSecondaryProxy(true)
-                } else {
-                  console.log('All proxies failed for HEIF')
-                  flagViewerError()
-                }
-              }}
-            />
-            {viewerError && (
-              <div className="preview-info">
-                <span className="info-icon">🖼️</span>
-                <h2>{file.name}</h2>
-                <p>
-                  HEIC/HEIF format. 
-                  <a href={file.url} target="_blank" rel="noopener noreferrer"> Download original</a>
-                </p>
-              </div>
-            )}
-          </div>
+          <ZoomableImage
+            src={currentUrl}
+            alt={file.name}
+            className="fullscreen-image"
+            isMobile={isMobile}
+            onLoad={() => console.log('HEIF image loaded successfully from:', currentUrl)}
+            onError={() => {
+              console.error('HEIF image failed to load from:', currentUrl)
+              if (!useSecondaryProxy) {
+                console.log('Trying secondary proxy for HEIF...')
+                setUseSecondaryProxy(true)
+              } else {
+                console.log('All proxies failed for HEIF')
+                flagViewerError()
+              }
+            }}
+          />
         )
       }
       case 'pdf':

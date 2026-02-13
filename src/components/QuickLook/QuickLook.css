@@ -96,6 +96,21 @@
   max-height: 100%;
 }
 
+/* Desktop cursor states for zoom/pan */
+@media (hover: hover) and (pointer: fine) {
+  .ql-cursor-zoom-in {
+    cursor: zoom-in;
+  }
+
+  .ql-cursor-zoom-out {
+    cursor: zoom-out;
+  }
+
+  .ql-cursor-grabbing {
+    cursor: grabbing;
+  }
+}
+
 /* Info card for folders and unsupported files */
 .preview-info {
   display: flex;
