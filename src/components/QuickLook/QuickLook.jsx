@@ -79,9 +79,6 @@ const QuickLook = ({ file, onClose }) => {
           >
             Open Fullscreen (HD)
           </a>
-          <a href={getGoogleViewerUrl(file.url)} target="_blank" rel="noopener noreferrer">
-            Open in Google Viewer
-          </a>
         </div>
       </div>
     )
