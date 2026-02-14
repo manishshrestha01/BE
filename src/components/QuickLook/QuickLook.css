@@ -122,6 +122,11 @@
   overflow: hidden;
 }
 
+.viewer-content-no-pinch {
+  touch-action: pan-x pan-y;
+  overscroll-behavior: contain;
+}
+
 /* Full screen iframe viewer (PDF, PPTX, DOCX) */
 .fullscreen-viewer {
   width: 100%;

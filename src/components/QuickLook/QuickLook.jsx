@@ -17,9 +17,10 @@ const QuickLook = ({ file, onClose }) => {
 
     const userAgent = navigator.userAgent || ''
     const isIOSPhone = /iPhone|iPod/i.test(userAgent)
+    const isIPad = /iPad/i.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
     const isAndroid = /Android/i.test(userAgent)
 
-    return isIOSPhone || isAndroid
+    return isIOSPhone || isIPad || isAndroid
   }
 
   const isMobile = isMobileDevice()
@@ -129,6 +130,34 @@ const QuickLook = ({ file, onClose }) => {
     onClose?.()
     navigate(officeViewerRoute)
   }, [file, isMobile, location.hash, location.pathname, location.search, navigate, onClose])
+
+  useEffect(() => {
+    if (!file || file.fileType !== 'pdf' || !isMobile) {
+      return
+    }
+
+    const preventGestureZoom = (event) => {
+      event.preventDefault()
+    }
+
+    const preventPinchTouch = (event) => {
+      if (event.touches?.length > 1) {
+        event.preventDefault()
+      }
+    }
+
+    document.addEventListener('gesturestart', preventGestureZoom, { passive: false })
+    document.addEventListener('gesturechange', preventGestureZoom, { passive: false })
+    document.addEventListener('gestureend', preventGestureZoom, { passive: false })
+    document.addEventListener('touchmove', preventPinchTouch, { passive: false })
+
+    return () => {
+      document.removeEventListener('gesturestart', preventGestureZoom)
+      document.removeEventListener('gesturechange', preventGestureZoom)
+      document.removeEventListener('gestureend', preventGestureZoom)
+      document.removeEventListener('touchmove', preventPinchTouch)
+    }
+  }, [file, isMobile])
 
   if (!file) return null
 
@@ -288,7 +317,7 @@ const QuickLook = ({ file, onClose }) => {
           <div className="viewer-filename">{file.name}</div>
         </>
       )}
-      <div className="viewer-content">
+      <div className={`viewer-content ${isMobile && file.fileType === 'pdf' ? 'viewer-content-no-pinch' : ''}`}>
         {renderPreview()}
       </div>
     </div>
