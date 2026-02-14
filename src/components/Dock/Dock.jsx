@@ -6,7 +6,7 @@ const Dock = ({ onFinderClick, onNotesClick, onSettingsClick, onContactClick, ac
 
   const apps = [
     { id: 'finder', name: 'Finder', icon: '📁', action: onFinderClick },
-    { id: 'notes', name: 'Notes', icon: '📝', action: onNotesClick },
+    { id: 'notes', name: 'Draw', icon: '📝', action: onNotesClick },
     { id: 'contact', name: 'Contact', isImage: true, icon: '/gedit.png', action: onContactClick },
     { id: 'settings', name: 'Settings', icon: '⚙️', action: onSettingsClick },
   ]

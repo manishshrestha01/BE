@@ -99,7 +99,7 @@ const Notes = ({ onClose, initialState = DEFAULT_NOTES_STATE, onStateChange }) =
     return (
       <div className="notes-minimized" onClick={() => setWindowState("normal")} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setWindowState('normal')}>
         <span>📝</span>
-        <span>Notes</span>
+        <span>Draw</span>
       </div>
     );
   }
@@ -112,7 +112,7 @@ const Notes = ({ onClose, initialState = DEFAULT_NOTES_STATE, onStateChange }) =
           <button className="window-btn minimize" onClick={handleMinimize} title="Minimize">−</button>
           <button className="window-btn maximize" onClick={handleMaximize} title={windowState === 'maximized' ? 'Restore' : 'Maximize'}>+</button>
         </div>
-        <div className="notes-title">Notes ({mode === "read" ? "Read Mode" : "Drawing Mode"})</div>
+        <div className="notes-title">Draw ({mode === "read" ? "Read Mode" : "Drawing Mode"})</div>
         <div className="notes-toolbar-actions">
           <button
             className="notes-btn"

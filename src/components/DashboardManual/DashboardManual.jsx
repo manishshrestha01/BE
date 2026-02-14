@@ -254,7 +254,7 @@ const ManualPage = ({ location }) => {
     },
     {
       icon: '📝',
-      title: 'Notes App',
+      title: 'Draw App',
       description: 'Create, edit, and save your personal notes while studying. Perfect for jotting down important concepts and formulas.',
       tips: [
         'Your notes are auto-saved as you type',
@@ -290,7 +290,7 @@ const ManualPage = ({ location }) => {
       tips: [
         'Hover over icons to see app names',
         'Active apps show a dot indicator below',
-        'Access Finder, Notes, Contact and Settings quickly'
+        'Access Finder, Draw, Contact and Settings quickly'
       ]
     }
   ]
@@ -332,7 +332,7 @@ const ManualPage = ({ location }) => {
     {
       number: '3',
       title: 'Explore Dashboard',
-      description: 'Access your desktop environment. Open Finder to browse notes or create your own in the Notes app.'
+      description: 'Access your desktop environment. Open Finder to browse notes or create your own in the Draw app.'
     },
     {
       number: '4',
@@ -418,7 +418,7 @@ const ManualPage = ({ location }) => {
             </div>
             <div className="visual-card card-2">
               <span className="card-icon">📝</span>
-              <span className="card-text">Notes</span>
+              <span className="card-text">Draw</span>
             </div>
               <div className="visual-card card-3">
               <span className="card-icon"><img src="/gedit.png" alt="Contact" className="hero-card-icon" /></span>

@@ -358,7 +358,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
                 className="breadcrumb-item"
                 onClick={() => navigateToPathIndex(index)}
               >
-                {folder.name}
+                {index === 0 ? 'Finder' : folder.name}
               </button>
               {index < folderPath.length - 1 && <span className="breadcrumb-sep">/</span>}
             </span>

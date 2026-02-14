@@ -248,12 +248,12 @@ const Desktop = () => {
 
         <button
           className="desktop-shortcut desktop-shortcut--finder"
-          title="Notes"
-          aria-label="Open Notes"
+          title="Draw"
+          aria-label="Open Draw"
           onClick={() => openApp('notes')}
         >
           <div className="desktop-shortcut-icon"><span>📝</span></div>
-          <div className="desktop-shortcut-label">Notes</div>
+          <div className="desktop-shortcut-label">Draw</div>
         </button>
         
         <button className="desktop-shortcut" onClick={() => openApp('contact')} title="Contact Me" aria-label="Open Contact">
