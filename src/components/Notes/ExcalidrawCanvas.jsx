@@ -115,6 +115,26 @@ export const ExcalidrawCanvas = () => {
   const supabaseUnavailableRef = useRef(false);
   const ignoreChangesUntilRef = useRef(0);
   const syncInFlightRef = useRef(false);
+  const hasAutoFittedRef = useRef(false);
+  const lastLocalInputAtRef = useRef(0);
+
+  const fitSceneToViewport = useCallback(() => {
+    const api = excalidrawApiRef.current;
+    if (!api || typeof api.scrollToContent !== "function") return;
+
+    const elements = api.getSceneElements?.() || [];
+    if (!elements.length) return;
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        api.scrollToContent(elements, {
+          fitToViewport: true,
+          viewportZoomFactor: 0.92,
+          animate: false
+        });
+      });
+    });
+  }, []);
 
   const persistLocal = useCallback((scene, updatedAt) => {
     const runtimeScene = normalizeSceneForRuntime(scene);
@@ -141,8 +161,32 @@ export const ExcalidrawCanvas = () => {
     return snapshot;
   }, []);
 
+  const updateLocalSnapshotTimestamp = useCallback((updatedAt) => {
+    if (!updatedAt) return;
+
+    const current = localSnapshotRef.current;
+    if (!current?.scene) return;
+
+    const nextTs = toTimestamp(updatedAt);
+    const currentTs = toTimestamp(current.updated_at);
+    if (nextTs <= currentTs) return;
+
+    current.updated_at = updatedAt;
+    try {
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify({
+          scene: normalizeSceneForStorage(current.scene),
+          updated_at: updatedAt
+        })
+      );
+    } catch (error) {
+      console.error("[Excalidraw] Failed to persist local timestamp:", error);
+    }
+  }, []);
+
   const applyScene = useCallback((scene, updatedAt, options = {}) => {
-    const { suppressNextChange = false } = options;
+    const { suppressNextChange = false, fitViewport = false } = options;
     const snapshot = persistLocal(scene, updatedAt);
     setInitialData(snapshot.scene);
 
@@ -151,8 +195,11 @@ export const ExcalidrawCanvas = () => {
         ignoreChangesUntilRef.current = Date.now() + 300;
       }
       excalidrawApiRef.current.updateScene(snapshot.scene);
+      if (fitViewport) {
+        fitSceneToViewport();
+      }
     }
-  }, [persistLocal]);
+  }, [fitSceneToViewport, persistLocal]);
 
   const upsertSceneNow = useCallback(async (scene, updatedAt) => {
     if (!isSupabaseConfigured() || !supabase || supabaseUnavailableRef.current) return;
@@ -160,7 +207,7 @@ export const ExcalidrawCanvas = () => {
     const userId = userIdRef.current;
     if (!userId) return;
 
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("excalidraw_notes")
       .upsert(
         {
@@ -169,7 +216,9 @@ export const ExcalidrawCanvas = () => {
           updated_at: updatedAt || new Date().toISOString()
         },
         { onConflict: "user_id" }
-      );
+      )
+      .select("updated_at")
+      .maybeSingle();
 
     if (error) {
       console.error("[Excalidraw] Supabase upsert failed:", error);
@@ -177,8 +226,13 @@ export const ExcalidrawCanvas = () => {
         supabaseUnavailableRef.current = true;
         console.error("[Excalidraw] public.excalidraw_notes table not available. Using local storage fallback.");
       }
+      return;
     }
-  }, []);
+
+    if (data?.updated_at) {
+      updateLocalSnapshotTimestamp(data.updated_at);
+    }
+  }, [updateLocalSnapshotTimestamp]);
 
   const scheduleSupabaseSave = useCallback((scene, updatedAt) => {
     if (!isSupabaseConfigured() || !supabase || supabaseUnavailableRef.current || !userIdRef.current) {
@@ -254,8 +308,10 @@ export const ExcalidrawCanvas = () => {
           const serverTs = toTimestamp(data.updated_at);
 
           if (!localScene || serverTs > localTs) {
+            if (Date.now() - lastLocalInputAtRef.current < 2000) return;
             applyScene(serverScene, data.updated_at || new Date().toISOString(), {
-              suppressNextChange: true
+              suppressNextChange: true,
+              fitViewport: !hasAutoFittedRef.current
             });
             return;
           }
@@ -312,6 +368,7 @@ export const ExcalidrawCanvas = () => {
             const serverTs = toTimestamp(payload.new.updated_at);
             const localTs = toTimestamp(localSnapshotRef.current?.updated_at);
             if (serverTs <= localTs) return;
+            if (Date.now() - lastLocalInputAtRef.current < 2000) return;
 
             applyScene(payload.new.scene, payload.new.updated_at || new Date().toISOString(), {
               suppressNextChange: true
@@ -370,6 +427,19 @@ export const ExcalidrawCanvas = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!mounted || hasAutoFittedRef.current) return;
+
+    const api = excalidrawApiRef.current;
+    if (!api) return;
+
+    const elements = api.getSceneElements?.() || [];
+    if (!elements.length) return;
+
+    hasAutoFittedRef.current = true;
+    fitSceneToViewport();
+  }, [fitSceneToViewport, initialData, mounted]);
+
   const handleChange = (elements, appState, files) => {
     if (Date.now() < ignoreChangesUntilRef.current) return;
 
@@ -379,6 +449,7 @@ export const ExcalidrawCanvas = () => {
       files
     });
     const updatedAt = new Date().toISOString();
+    lastLocalInputAtRef.current = Date.now();
 
     persistLocal(scene, updatedAt);
     scheduleSupabaseSave(scene, updatedAt);
@@ -393,6 +464,13 @@ export const ExcalidrawCanvas = () => {
       <Excalidraw
         excalidrawAPI={(api) => {
           excalidrawApiRef.current = api;
+          if (!hasAutoFittedRef.current) {
+            const elements = api?.getSceneElements?.() || [];
+            if (elements.length) {
+              hasAutoFittedRef.current = true;
+              fitSceneToViewport();
+            }
+          }
         }}
         initialData={initialData}
         onChange={handleChange}
