@@ -1229,3 +1229,93 @@
   .toast { bottom: 48px; }
 }
 
+/* Force tablet-style Finder for 481px-768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .finder {
+    position: fixed;
+    inset: 0;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding-bottom: 0 !important;
+    overflow: hidden;
+  }
+
+  .finder:focus {
+    box-shadow: none;
+  }
+
+  .finder-toolbar {
+    border-radius: 0;
+    gap: 10px;
+    flex-wrap: nowrap;
+    padding: calc(env(safe-area-inset-top) + 10px) max(12px, env(safe-area-inset-right)) 10px max(12px, env(safe-area-inset-left));
+  }
+
+  .window-controls {
+    display: flex !important;
+  }
+
+  .finder-layout {
+    display: grid !important;
+    grid-template-columns: minmax(200px, 240px) 1fr;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .finder-sidebar {
+    width: auto !important;
+    max-height: none;
+    padding: 12px;
+    border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-bottom: none !important;
+    background: rgba(0, 0, 0, 0.24);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .sidebar-section {
+    margin-bottom: 16px;
+  }
+
+  .sidebar-section ul {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sidebar-section li {
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .finder-content {
+    padding: 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .finder-content.grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    align-content: start;
+  }
+
+  .finder-item,
+  .finder-content.grid .finder-item {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .finder-statusbar {
+    display: flex;
+    border-radius: 0;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  }
+}
