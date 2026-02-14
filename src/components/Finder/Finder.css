@@ -33,14 +33,21 @@
 /* Window Controls - macOS style */
 .window-controls {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: var(--window-control-gap);
   padding-right: 12px;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
+  transform: none;
 }
 
 .window-btn {
-  width: 14px;
-  height: 14px;
+  width: var(--window-control-size);
+  height: var(--window-control-size);
+  min-width: var(--window-control-size);
+  min-height: var(--window-control-size);
+  max-width: var(--window-control-size);
+  max-height: var(--window-control-size);
+  flex: 0 0 var(--window-control-size);
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -51,6 +58,7 @@
   font-weight: bold;
   color: transparent;
   transition: all 0.15s ease;
+  transform: none;
 }
 
 .window-btn span {

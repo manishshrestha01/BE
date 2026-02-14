@@ -353,8 +353,12 @@
   /* Prevent the message textarea from growing too tall and pushing the footer off-screen */
   .contact-textarea { max-height: 40vh; min-height: 120px }
 
-  /* Slightly larger touch targets for titlebar controls */
-  .window-controls .window-btn { width: 14px; height: 14px }
+  .window-controls .window-btn {
+    width: var(--window-control-size);
+    height: var(--window-control-size);
+    min-width: var(--window-control-size);
+    min-height: var(--window-control-size);
+  }
 }
 
 @media (max-width: 420px) {
@@ -394,8 +398,12 @@
    /* Prevent the message textarea from growing too tall and pushing the footer off-screen */
    .contact-textarea { max-height: 40vh; min-height: 120px }
 
-   /* Slightly larger touch targets for titlebar controls */
-   .window-controls .window-btn { width: 14px; height: 14px }
+   .window-controls .window-btn {
+     width: var(--window-control-size);
+     height: var(--window-control-size);
+     min-width: var(--window-control-size);
+     min-height: var(--window-control-size);
+   }
 }
 
 @media (max-height: 520px) and (orientation: landscape) {

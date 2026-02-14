@@ -83,13 +83,20 @@
 /* Window Controls - macOS Traffic Lights */
 .window-controls {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: var(--window-control-gap);
   margin-bottom: 12px;
+  transform: none;
 }
 
 .window-btn {
-  width: 12px;
-  height: 12px;
+  width: var(--window-control-size);
+  height: var(--window-control-size);
+  min-width: var(--window-control-size);
+  min-height: var(--window-control-size);
+  max-width: var(--window-control-size);
+  max-height: var(--window-control-size);
+  flex: 0 0 var(--window-control-size);
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -98,6 +105,7 @@
   justify-content: center;
   transition: all 0.15s ease;
   position: relative;
+  transform: none;
 }
 
 .window-btn span {
@@ -1324,4 +1332,3 @@
   .settings-window .settings-faq-search input { font-size: 13px; }
   .settings-window .settings-faq-answer { font-size: 13px; }
 }
-
