@@ -12,6 +12,12 @@ const EMPTY_SCENE = {
   files: {}
 };
 
+const PERSISTED_APP_STATE_KEYS = new Set([
+  "viewBackgroundColor",
+  "theme",
+  "gridSize"
+]);
+
 const toTimestamp = (value) => {
   const ts = Date.parse(value || "");
   return Number.isFinite(ts) ? ts : 0;
@@ -28,8 +34,21 @@ const isTableMissingError = (error) => {
   );
 };
 
+const pickPersistedAppState = (appState) => {
+  if (!appState || typeof appState !== "object") return {};
+
+  const persisted = {};
+  for (const key of PERSISTED_APP_STATE_KEYS) {
+    if (key in appState) {
+      persisted[key] = appState[key];
+    }
+  }
+
+  return persisted;
+};
+
 const normalizeAppStateForRuntime = (appState) => {
-  const normalized = appState && typeof appState === "object" ? { ...appState } : {};
+  const normalized = pickPersistedAppState(appState);
   normalized.collaborators =
     normalized.collaborators instanceof Map ? normalized.collaborators : new Map();
   return normalized;
@@ -52,8 +71,7 @@ const normalizeSceneForRuntime = (scene) => {
 
 const normalizeSceneForStorage = (scene) => {
   const runtimeScene = normalizeSceneForRuntime(scene);
-  const appState = { ...runtimeScene.appState };
-  delete appState.collaborators;
+  const appState = pickPersistedAppState(runtimeScene.appState);
 
   return {
     elements: runtimeScene.elements,
