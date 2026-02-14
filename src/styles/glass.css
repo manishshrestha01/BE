@@ -37,16 +37,16 @@
   --spacing-xl: 32px;
 
   /* macOS traffic-light controls */
-  --window-control-size: clamp(12px, calc(0.7rem + 0.1vmin), 14px);
-  --window-control-gap: clamp(7px, calc(0.45rem + 0.08vmin), 10px);
+  --window-control-size: clamp(12px, calc(0.62rem + 0.25vmin), 14px);
+  --window-control-gap: clamp(7px, calc(0.36rem + 0.22vmin), 10px);
 }
 
 /* Responsive adjustments for tablets */
 @media (max-width: 1023px) {
   :root {
     --sidebar-width: 200px;
-    --window-control-size: clamp(12px, calc(0.72rem + 0.1vmin), 13px);
-    --window-control-gap: clamp(7px, calc(0.42rem + 0.08vmin), 9px);
+    --window-control-size: clamp(11px, calc(0.6rem + 0.18vmin), 13px);
+    --window-control-gap: clamp(6px, calc(0.34rem + 0.16vmin), 9px);
   }
 }
 
@@ -55,13 +55,22 @@
   :root {
     --sidebar-width: 100%;
     --glass-blur: blur(15px);
+    --window-control-size: clamp(10px, calc(0.56rem + 0.14vmin), 12px);
+    --window-control-gap: clamp(6px, calc(0.32rem + 0.14vmin), 8px);
   }
 }
 
 @media (max-width: 480px) {
   :root {
-    --window-control-size: clamp(11px, calc(0.74rem + 0.15vmin), 12px);
-    --window-control-gap: clamp(6px, calc(0.4rem + 0.08vmin), 8px);
+    --window-control-size: clamp(10px, calc(0.54rem + 0.1vmin), 11px);
+    --window-control-gap: clamp(5px, calc(0.3rem + 0.08vmin), 7px);
+  }
+}
+
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) and (max-width: 950px) and (max-height: 600px) {
+  :root {
+    --window-control-size: clamp(10px, calc(0.52rem + 0.12vmin), 11px);
+    --window-control-gap: clamp(5px, calc(0.29rem + 0.08vmin), 7px);
   }
 }
 
