@@ -30,28 +30,9 @@
   text-align: center;
 }
 
-.notes-toolbar-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.notes-btn {
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
-  cursor: pointer;
-  font-size: 16px;
-  transition: var(--transition-fast);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.notes-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+.notes-toolbar-spacer {
+  width: 70px;
+  flex-shrink: 0;
 }
 
 /* Layout */
@@ -460,12 +441,6 @@
   
   .notes-toolbar {
     padding: 8px 10px;
-  }
-  
-  .notes-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
   }
   
   .notes-sidebar {
