@@ -317,9 +317,9 @@
   position: fixed;
   inset: 0;
   width: 100vw !important;
-  height: 100vh !important;
+  height: 100dvh !important;
   max-width: 100vw !important;
-  max-height: 100vh !important;
+  max-height: 100dvh !important;
   border-radius: 0 !important;
   margin: 0 !important;
   box-shadow: none !important;
@@ -336,6 +336,13 @@
 
 .notes-app.maximized .notes-editor {
   padding-bottom: calc(0px + env(safe-area-inset-bottom));
+}
+
+.notes-app.maximized .notes-toolbar {
+  border-radius: 0;
+  padding-top: max(8px, calc(env(safe-area-inset-top) + 6px));
+  padding-left: max(12px, env(safe-area-inset-left));
+  padding-right: max(12px, env(safe-area-inset-right));
 }
 
 /* Minimized bar */

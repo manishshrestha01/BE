@@ -36,6 +36,8 @@ html {
   scroll-behavior: smooth;
   /* Prevent zoom on input focus in iOS */
   font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -122,11 +124,44 @@ a {
   }
 }
 
+/* Prevent landscape font-size jump (appears as zoom) on mobile/tablet touch devices */
+@media (orientation: landscape) and (any-pointer: coarse) and (max-width: 1024px) {
+  html {
+    font-size: 14px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+}
+
 /* Safe area for notched devices */
 @supports (padding: env(safe-area-inset-left)) {
   body {
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
+  }
+
+  @media (display-mode: standalone) {
+    body {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+  }
+}
+
+/* Standalone app mode (Add to Home Screen) viewport stability */
+@media (display-mode: standalone) {
+  html,
+  body,
+  #root {
+    min-height: 100dvh;
+  }
+
+  body.desktop-theme {
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: manipulation;
   }
 }
 @import "tailwindcss";

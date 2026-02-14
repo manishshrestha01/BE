@@ -74,9 +74,9 @@
   bottom: 0;
   transform: none; /* override centered translate from normal state */
   width: 100vw !important;
-  height: 100vh !important;
+  height: 100dvh !important;
   max-width: 100vw !important;
-  max-height: 100vh !important;
+  max-height: 100dvh !important;
   border-radius: 0 !important;
   margin: 0 !important;
   box-shadow: none !important;
@@ -96,13 +96,14 @@
 .contact-window.maximized .contact-shell {
   max-width: none;
   margin: 0; /* keep shell flush like Settings */
-  max-height: calc(100vh - 120px);
+  max-height: calc(100dvh - 120px);
   padding: 12px 14px 14px 14px;
 }
 
 /* Small polish: when Contact is maximized, make titlebar corners flush */
 .contact-window.maximized .contact-titlebar {
   border-radius: 0;
+  padding-top: max(8px, calc(env(safe-area-inset-top) + 6px));
   padding-left: max(12px, env(safe-area-inset-left));
   padding-right: max(12px, env(safe-area-inset-right));
 }
@@ -142,7 +143,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-height: calc(100vh - 120px); /* reserve chrome + dock space */
+  max-height: calc(100dvh - 120px); /* reserve chrome + dock space */
   overflow: auto; /* internal scroll when content becomes tall */
   padding: clamp(8px, 2vw, 12px);
   border-radius: 12px;
