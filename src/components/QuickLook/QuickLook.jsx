@@ -24,6 +24,10 @@ const QuickLook = ({ file, onClose }) => {
   }
 
   const isMobile = isMobileDevice()
+  const isStandalone =
+    typeof window !== 'undefined' &&
+    (window.matchMedia?.('(display-mode: standalone)')?.matches ||
+      window.navigator?.standalone === true)
   const currentFileKey = file ? `${file.fileType}:${file.url}` : null
   const viewerError = viewerErrorKey === currentFileKey
 
@@ -182,6 +186,7 @@ const QuickLook = ({ file, onClose }) => {
             alt={file.name}
             className="fullscreen-image"
             isMobile={isMobile}
+            allowMobilePinch={isStandalone}
           />
         )
       case 'heif': {
@@ -214,6 +219,7 @@ const QuickLook = ({ file, onClose }) => {
             alt={file.name}
             className="fullscreen-image"
             isMobile={isMobile}
+            allowMobilePinch={isStandalone}
             onLoad={() => console.log('HEIF image loaded successfully from:', currentUrl)}
             onError={() => {
               console.error('HEIF image failed to load from:', currentUrl)

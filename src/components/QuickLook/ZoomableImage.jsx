@@ -1,12 +1,21 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 
-const ZoomableImage = ({ src, alt, className = 'fullscreen-image', isMobile = false, onLoad, onError }) => {
+const ZoomableImage = ({
+  src,
+  alt,
+  className = 'fullscreen-image',
+  isMobile = false,
+  allowMobilePinch = false,
+  onLoad,
+  onError
+}) => {
   const transformRef = useRef(null)
   const skipClickRef = useRef(false)
   const panMovedRef = useRef(false)
   const [isZoomed, setIsZoomed] = useState(false)
   const [isPanning, setIsPanning] = useState(false)
+  const useNativeMobileImage = isMobile && !allowMobilePinch
 
   const handleTransformed = useCallback((_ref, state) => {
     setIsZoomed(state.scale > 1.01)
@@ -52,7 +61,7 @@ const ZoomableImage = ({ src, alt, className = 'fullscreen-image', isMobile = fa
     )
   }, [isZoomed])
 
-  if (isMobile) {
+  if (useNativeMobileImage) {
     return (
       <img
         src={src}
@@ -65,6 +74,10 @@ const ZoomableImage = ({ src, alt, className = 'fullscreen-image', isMobile = fa
   }
 
   const cursorClass = isPanning ? 'ql-cursor-grabbing' : (isZoomed ? 'ql-cursor-zoom-out' : 'ql-cursor-zoom-in')
+  const wrapperProps = useMemo(() => {
+    if (isMobile) return {}
+    return { onClick: handleToggleZoom }
+  }, [handleToggleZoom, isMobile])
 
   return (
     <TransformWrapper
@@ -121,9 +134,7 @@ const ZoomableImage = ({ src, alt, className = 'fullscreen-image', isMobile = fa
           alignItems: 'center',
           justifyContent: 'center'
         }}
-        wrapperProps={{
-          onClick: handleToggleZoom
-        }}
+        wrapperProps={wrapperProps}
       >
         <img
           src={src}

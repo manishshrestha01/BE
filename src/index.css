@@ -161,7 +161,7 @@ a {
   body.desktop-theme {
     overflow: hidden;
     overscroll-behavior: none;
-    touch-action: manipulation;
+    touch-action: auto;
   }
 }
 @import "tailwindcss";
