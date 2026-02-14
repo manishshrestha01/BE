@@ -1,22 +1,176 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Excalidraw } from "@excalidraw/excalidraw";
 import "@excalidraw/excalidraw/index.css";
 
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 
-export const ExcalidrawCanvas = ({ noteId }) => {
+const LOCAL_STORAGE_KEY = "excalidraw-data";
+
+const EMPTY_SCENE = {
+  elements: [],
+  appState: {},
+  files: {}
+};
+
+const toTimestamp = (value) => {
+  const ts = Date.parse(value || "");
+  return Number.isFinite(ts) ? ts : 0;
+};
+
+const isTableMissingError = (error) => {
+  const message = `${error?.message || ""} ${error?.details || ""} ${error?.hint || ""}`.toLowerCase();
+  return (
+    error?.status === 404 ||
+    error?.code === "42P01" ||
+    message.includes("relation") ||
+    message.includes("does not exist") ||
+    message.includes("excalidraw_notes")
+  );
+};
+
+const normalizeAppStateForRuntime = (appState) => {
+  const normalized = appState && typeof appState === "object" ? { ...appState } : {};
+  normalized.collaborators =
+    normalized.collaborators instanceof Map ? normalized.collaborators : new Map();
+  return normalized;
+};
+
+const normalizeSceneForRuntime = (scene) => {
+  if (!scene || typeof scene !== "object") {
+    return {
+      ...EMPTY_SCENE,
+      appState: normalizeAppStateForRuntime({})
+    };
+  }
+
+  return {
+    elements: Array.isArray(scene.elements) ? scene.elements : [],
+    appState: normalizeAppStateForRuntime(scene.appState),
+    files: scene.files && typeof scene.files === "object" ? scene.files : {}
+  };
+};
+
+const normalizeSceneForStorage = (scene) => {
+  const runtimeScene = normalizeSceneForRuntime(scene);
+  const appState = { ...runtimeScene.appState };
+  delete appState.collaborators;
+
+  return {
+    elements: runtimeScene.elements,
+    appState,
+    files: runtimeScene.files
+  };
+};
+
+const readLocalSnapshot = () => {
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && parsed.scene) {
+      return {
+        scene: normalizeSceneForRuntime(parsed.scene),
+        updated_at: typeof parsed.updated_at === "string" ? parsed.updated_at : null
+      };
+    }
+
+    return {
+      scene: normalizeSceneForRuntime(parsed),
+      updated_at: null
+    };
+  } catch (error) {
+    console.error("[Excalidraw] Failed to parse local scene:", error);
+    return null;
+  }
+};
+
+export const ExcalidrawCanvas = () => {
+  const localSnapshotRef = useRef(readLocalSnapshot());
   const [mounted, setMounted] = useState(false);
-  const [initialData, setInitialData] = useState(null);
+  const [initialData, setInitialData] = useState(localSnapshotRef.current?.scene ?? null);
 
   const wrapperRef = useRef(null);
-  const saveTimeout = useRef(null);
+  const saveTimeoutRef = useRef(null);
+  const excalidrawApiRef = useRef(null);
+  const userIdRef = useRef(null);
+  const supabaseUnavailableRef = useRef(false);
 
-  /* mount safety */
+  const persistLocal = useCallback((scene, updatedAt) => {
+    const runtimeScene = normalizeSceneForRuntime(scene);
+    const storageScene = normalizeSceneForStorage(runtimeScene);
+    const snapshot = {
+      scene: runtimeScene,
+      updated_at: updatedAt || new Date().toISOString()
+    };
+
+    localSnapshotRef.current = snapshot;
+
+    try {
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify({
+          scene: storageScene,
+          updated_at: snapshot.updated_at
+        })
+      );
+    } catch (error) {
+      console.error("[Excalidraw] Failed to persist local scene:", error);
+    }
+
+    return snapshot;
+  }, []);
+
+  const applyScene = useCallback((scene, updatedAt) => {
+    const snapshot = persistLocal(scene, updatedAt);
+    setInitialData(snapshot.scene);
+
+    if (excalidrawApiRef.current) {
+      excalidrawApiRef.current.updateScene(snapshot.scene);
+    }
+  }, [persistLocal]);
+
+  const upsertSceneNow = useCallback(async (scene, updatedAt) => {
+    if (!isSupabaseConfigured() || !supabase || supabaseUnavailableRef.current) return;
+
+    const userId = userIdRef.current;
+    if (!userId) return;
+
+    const { error } = await supabase
+      .from("excalidraw_notes")
+      .upsert(
+        {
+          user_id: userId,
+          scene: normalizeSceneForStorage(scene),
+          updated_at: updatedAt || new Date().toISOString()
+        },
+        { onConflict: "user_id" }
+      );
+
+    if (error) {
+      console.error("[Excalidraw] Supabase upsert failed:", error);
+      if (isTableMissingError(error)) {
+        supabaseUnavailableRef.current = true;
+        console.error("[Excalidraw] public.excalidraw_notes table not available. Using local storage fallback.");
+      }
+    }
+  }, []);
+
+  const scheduleSupabaseSave = useCallback((scene, updatedAt) => {
+    if (!isSupabaseConfigured() || !supabase || supabaseUnavailableRef.current || !userIdRef.current) {
+      return;
+    }
+
+    clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(async () => {
+      await upsertSceneNow(scene, updatedAt);
+    }, 800);
+  }, [upsertSceneNow]);
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  /* resize fix */
   useEffect(() => {
     if (!mounted) return;
 
@@ -36,69 +190,96 @@ export const ExcalidrawCanvas = ({ noteId }) => {
     };
   }, [mounted]);
 
-  /* load from DB (or fallback local) */
   useEffect(() => {
-    if (!noteId || !isSupabaseConfigured()) {
-      const local = localStorage.getItem("excalidraw-data");
-      if (local) setInitialData(JSON.parse(local));
-      return;
-    }
+    let cancelled = false;
 
-    const load = async () => {
-      const { data } = await supabase
-        .from("excalidraw_notes")
-        .select("*")
-        .eq("id", noteId)
-        .single();
+    const syncWithSupabase = async () => {
+      if (!isSupabaseConfigured() || !supabase) return;
 
-      if (data) {
-        setInitialData({
-          elements: data.elements,
-          appState: data.app_state,
-          files: data.files
-        });
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError) {
+        console.error("[Excalidraw] Failed to fetch auth user:", authError);
+        return;
       }
-    };
 
-    load();
-  }, [noteId]);
+      const userId = authData?.user?.id;
+      userIdRef.current = userId || null;
+      if (!userId || cancelled) return;
 
-  /* save local + DB */
-  const handleChange = (elements, appState, files) => {
-    const payload = {
-      elements,
-      appState: { viewBackgroundColor: appState.viewBackgroundColor },
-      files
-    };
-
-    localStorage.setItem("excalidraw-data", JSON.stringify(payload));
-
-    if (!noteId || !isSupabaseConfigured()) return;
-
-    clearTimeout(saveTimeout.current);
-    saveTimeout.current = setTimeout(async () => {
-      await supabase
+      const { data, error } = await supabase
         .from("excalidraw_notes")
-        .update({
-          elements,
-          app_state: payload.appState,
-          files
-        })
-        .eq("id", noteId);
-    }, 800);
+        .select("scene, updated_at")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (cancelled) return;
+
+      if (error) {
+        console.error("[Excalidraw] Failed to load Supabase scene:", error);
+        if (isTableMissingError(error)) {
+          supabaseUnavailableRef.current = true;
+          console.error("[Excalidraw] public.excalidraw_notes table not available. Using local storage fallback.");
+        }
+        return;
+      }
+
+      const localSnapshot = localSnapshotRef.current;
+      const localScene = localSnapshot?.scene || null;
+      const localTs = toTimestamp(localSnapshot?.updated_at);
+
+      if (data?.scene) {
+        const serverScene = normalizeSceneForRuntime(data.scene);
+        const serverTs = toTimestamp(data.updated_at);
+
+        if (!localScene || serverTs > localTs) {
+          applyScene(serverScene, data.updated_at || new Date().toISOString());
+          return;
+        }
+
+        await upsertSceneNow(localScene, localSnapshot?.updated_at || new Date().toISOString());
+        return;
+      }
+
+      const seedScene = localScene || EMPTY_SCENE;
+      const seedUpdatedAt = localSnapshot?.updated_at || new Date().toISOString();
+      await upsertSceneNow(seedScene, seedUpdatedAt);
+    };
+
+    syncWithSupabase();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [applyScene, upsertSceneNow]);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(saveTimeoutRef.current);
+    };
+  }, []);
+
+  const handleChange = (elements, appState, files) => {
+    const scene = normalizeSceneForRuntime({
+      elements,
+      appState,
+      files
+    });
+    const updatedAt = new Date().toISOString();
+
+    persistLocal(scene, updatedAt);
+    scheduleSupabaseSave(scene, updatedAt);
   };
 
   if (!mounted) {
-    return (
-      <div className="notes-canvas-loading">
-        Loading canvas...
-      </div>
-    );
+    return <div className="notes-canvas-loading">Loading canvas...</div>;
   }
 
   return (
     <div ref={wrapperRef} className="excalidraw-wrapper">
       <Excalidraw
+        excalidrawAPI={(api) => {
+          excalidrawApiRef.current = api;
+        }}
         initialData={initialData}
         onChange={handleChange}
         style={{ width: "100%", height: "100%" }}
