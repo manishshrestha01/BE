@@ -230,6 +230,12 @@ const DashboardManual = () => {
 
 // Separate component for the manual page content
 const ManualPage = ({ location }) => {
+  const handleLogoClick = () => {
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
+  }
+
   const manualSections = [
     {
       icon: '🖥️',
@@ -373,7 +379,7 @@ const ManualPage = ({ location }) => {
       {/* Navigation */}
       <nav className="landing-nav">
         <div className="nav-container">
-          <Link to="/" className="nav-logo">
+          <Link to="/" className="nav-logo" onClick={handleLogoClick}>
             <img src="/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />
             <span className="logo-text">StudyMate</span>
           </Link>
@@ -592,7 +598,7 @@ const ManualPage = ({ location }) => {
         <div className="footer-container">
           <div className="footer-grid">
             <div className="footer-brand">
-              <Link to="/" className="nav-logo">
+              <Link to="/" className="nav-logo" onClick={handleLogoClick}>
                 <img src="/white.svg" alt="StudyMate Logo" style={{ height: 32 }} />
                 <span className="logo-text">StudyMate</span>
               </Link>

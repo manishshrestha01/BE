@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { COLLEGES } from '../lib/colleges'
 import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../lib/seo'
@@ -16,9 +16,23 @@ const findCollegeBySlug = (slug) => {
   return COLLEGES.find(c => makeSlugFromLabel(c.label) === slug || (c.value && makeSlugFromLabel(c.value) === slug))
 }
 
+const forceScrollTop = () => {
+  window.scrollTo(0, 0)
+  document.documentElement.scrollTop = 0
+  document.body.scrollTop = 0
+}
+
 const College = () => {
   const { slug } = useParams()
   const college = findCollegeBySlug(slug)
+
+  useLayoutEffect(() => {
+    forceScrollTop()
+    const frame = window.requestAnimationFrame(() => {
+      forceScrollTop()
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [slug])
 
   useEffect(() => {
     if (college) {
@@ -182,7 +196,7 @@ const College = () => {
             <h4>Other Colleges</h4>
             <div className="related-grid">
               {otherColleges.map(c => (
-                <Link key={c.value} to={`/college/${makeSlugFromLabel(c.label)}`} className="related-card">
+                <Link key={c.value} to={`/college/${makeSlugFromLabel(c.label)}`} className="related-card" onClick={forceScrollTop}>
                   <img src={c.logo || '/logo-512.png'} alt={c.label} />
                   <span>{c.label}</span>
                 </Link>

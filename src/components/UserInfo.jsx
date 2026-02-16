@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useAuth } from '../context/AuthContext';
 import './UserInfo.css';
@@ -9,6 +9,7 @@ const UserInfo = () => {
   const { profile, updateProfile, loading } = useUserProfile();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     full_name: '',
     semester: '',
@@ -18,6 +19,12 @@ const UserInfo = () => {
   });
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const handleLogoClick = () => {
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     if (!user) {
@@ -103,7 +110,7 @@ const UserInfo = () => {
       {/* Navigation - Same as Login */}
       <nav className="auth-nav">
         <div className="auth-nav-container">
-          <Link to="/" className="auth-nav-logo">
+          <Link to="/" className="auth-nav-logo" onClick={handleLogoClick}>
             <img src="/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />
             <span className="auth-logo-text">StudyMate</span>
           </Link>

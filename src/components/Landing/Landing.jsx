@@ -1,13 +1,20 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import './Landing.css'
 import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../../lib/seo'
 
 const Landing = () => {
-  const { isAuthenticated, loading } = useAuth()
-  const navigate = useNavigate()
+  const { loading } = useAuth()
+  const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const handleLogoClick = () => {
+    setMobileMenuOpen(false)
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
+  }
 
   // Set page title and meta for SEO
   useEffect(() => {
@@ -106,7 +113,7 @@ const Landing = () => {
       {/* Navigation */}
       <nav className="landing-nav">
         <div className="nav-container">
-          <Link to="/" className="nav-logo">
+          <Link to="/" className="nav-logo" onClick={handleLogoClick}>
             <img src="/black.svg" alt="StudyMate Logo" style={{ height: 32, width: 32 }} />
             <span className="logo-text">StudyMate</span>
           </Link>
@@ -318,7 +325,7 @@ const Landing = () => {
         <div className="footer-container">
           <div className="footer-grid">
             <div className="footer-brand">
-              <Link to="/" className="nav-logo">
+              <Link to="/" className="nav-logo" onClick={handleLogoClick}>
                 <img src="/white.svg" alt="StudyMate Logo" style={{ height: 32, width: 32 }} />
                 <span className="logo-text">StudyMate</span>
               </Link>

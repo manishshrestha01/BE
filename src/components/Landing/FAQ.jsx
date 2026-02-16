@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import './Landing.css'
 import './FAQ.css'
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null)
+  const location = useLocation()
+
+  const handleLogoClick = () => {
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
+  }
 
   // SEO - Update document title and meta tags
   useEffect(() => {
@@ -138,7 +145,7 @@ const FAQ = () => {
       {/* Navigation */}
       <nav className="landing-nav">
         <div className="nav-container">
-          <Link to="/" className="nav-logo">
+          <Link to="/" className="nav-logo" onClick={handleLogoClick}>
             <img src="/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />
             <span className="logo-text">StudyMate</span>
           </Link>

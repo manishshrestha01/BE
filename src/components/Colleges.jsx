@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useLayoutEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { COLLEGES } from '../lib/colleges'
 import './Landing/Landing.css'
@@ -13,8 +13,22 @@ const makeSlug = (label) => {
   return label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 }
 
+const forceScrollTop = () => {
+  window.scrollTo(0, 0)
+  document.documentElement.scrollTop = 0
+  document.body.scrollTop = 0
+}
+
 const Colleges = () => {
   const [query, setQuery] = useState('')
+
+  useLayoutEffect(() => {
+    forceScrollTop()
+    const frame = window.requestAnimationFrame(() => {
+      forceScrollTop()
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [])
 
   useEffect(() => {
     setTitle('Colleges — BE Computer Engineering Notes — StudyMate')
@@ -101,7 +115,7 @@ const Colleges = () => {
                    <h3 className="college-title">{c.label}</h3>
                    <p className="college-desc">{c.label} — BE Computer Engineering notes for Pokhara University. Search: "{slug} BE computer notes"</p>
                    <div className="college-actions">
-                     <Link to={`/college/${slug}`} className="college-btn-primary">Open Notes</Link>
+                     <Link to={`/college/${slug}`} className="college-btn-primary" onClick={forceScrollTop}>Open Notes</Link>
                    </div>
                  </div>
                </article>
