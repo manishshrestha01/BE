@@ -1,15 +1,16 @@
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { BookOpen } from "lucide-react";
 
 import Footer from "../Footer";
 import SiteNav from "../SiteNav";
+import { applyMetadata, applyOrganizationGraph, buildMetadata, clearSeoScripts } from "../../lib/blogSeo";
 import {
   BLOG_BASE_URL,
   BLOG_CURRICULUM,
   buildSemesterDescription,
 } from "../../lib/blogCurriculum";
+import { setJSONLD, setMeta } from "../../lib/seo";
 import "./Blog.css";
 
 const forceScrollTop = () => {
@@ -68,30 +69,31 @@ const BlogHome = () => {
     return () => window.cancelAnimationFrame(frame);
   }, []);
 
+  useEffect(() => {
+    const metadata = buildMetadata({
+      title: pageTitle,
+      description: pageDescription,
+      canonicalPath: "/blog",
+      type: "website",
+    });
+
+    applyMetadata(metadata);
+    applyOrganizationGraph();
+    setMeta({
+      name: "keywords",
+      content:
+        "StudyMate blog, Pokhara University BE Computer Engineering, semester guides, subject tutorials, PU notes",
+    });
+    setJSONLD(breadcrumbLd, "json-ld-blog-home-breadcrumb");
+    setJSONLD(collectionLd, "json-ld-blog-home-collection");
+
+    return () => {
+      clearSeoScripts(["json-ld-blog-home-breadcrumb", "json-ld-blog-home-collection"]);
+    };
+  }, []);
+
   return (
     <div className="landing blog-page blog-home-page">
-      <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={canonical} />
-
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={canonical} />
-        <meta property="og:site_name" content="StudyMate" />
-        <meta property="og:image" content={`${BLOG_BASE_URL}/logo-512.png`} />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={pageTitle} />
-        <meta name="twitter:description" content={pageDescription} />
-        <meta name="twitter:image" content={`${BLOG_BASE_URL}/logo-512.png`} />
-
-        <script type="application/ld+json">{JSON.stringify(breadcrumbLd)}</script>
-        <script type="application/ld+json">{JSON.stringify(collectionLd)}</script>
-      </Helmet>
-
       <SiteNav />
 
       <section className="blog-hero">

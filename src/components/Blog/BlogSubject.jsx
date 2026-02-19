@@ -1,6 +1,5 @@
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 
 import Footer from "../Footer";
@@ -8,6 +7,7 @@ import SiteNav from "../SiteNav";
 import Breadcrumbs from "./Breadcrumbs";
 import TableOfContents from "./TableOfContents";
 import { getSubjectArticle } from "../../data/subjectArticles";
+import { applyMetadata, applyOrganizationGraph, buildMetadata, clearSeoScripts } from "../../lib/blogSeo";
 import {
   BLOG_BASE_URL,
   BLOG_LAST_UPDATED,
@@ -21,6 +21,7 @@ import {
   getSubjectBySlug,
   getSubjectNeighbors,
 } from "../../lib/blogCurriculum";
+import { setJSONLD, setMeta } from "../../lib/seo";
 import "./Blog.css";
 
 const forceScrollTop = () => {
@@ -348,31 +349,40 @@ const BlogSubject = () => {
     keywords: seoKeywords,
   };
 
+  useEffect(() => {
+    if (!semesterData || !subjectData) {
+      return undefined;
+    }
+
+    const metadata = buildMetadata({
+      title,
+      description,
+      canonicalPath,
+      type: "article",
+    });
+
+    applyMetadata(metadata);
+    applyOrganizationGraph();
+    setMeta({ name: "keywords", content: seoKeywords.join(", ") });
+    setJSONLD(breadcrumbLd, "json-ld-blog-subject-breadcrumb");
+    setJSONLD(articleLd, "json-ld-blog-subject-article");
+
+    return () => {
+      clearSeoScripts(["json-ld-blog-subject-breadcrumb", "json-ld-blog-subject-article"]);
+    };
+  }, [
+    semesterData,
+    subjectData,
+    title,
+    description,
+    canonicalPath,
+    seoKeywords,
+    breadcrumbLd,
+    articleLd,
+  ]);
+
   return (
     <div className="landing blog-page">
-      <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <meta name="keywords" content={seoKeywords.join(", ")} />
-        <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={canonical} />
-
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonical} />
-        <meta property="og:site_name" content="StudyMate" />
-        <meta property="og:image" content={`${BLOG_BASE_URL}/logo-512.png`} />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={`${BLOG_BASE_URL}/logo-512.png`} />
-
-        <script type="application/ld+json">{JSON.stringify(breadcrumbLd)}</script>
-        <script type="application/ld+json">{JSON.stringify(articleLd)}</script>
-      </Helmet>
-
       <SiteNav />
 
       <section className="blog-hero subject-hero">

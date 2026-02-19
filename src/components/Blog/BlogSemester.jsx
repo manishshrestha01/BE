@@ -1,15 +1,16 @@
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ArrowRight, GraduationCap } from "lucide-react";
 
 import Footer from "../Footer";
 import SiteNav from "../SiteNav";
+import { applyMetadata, applyOrganizationGraph, buildMetadata, clearSeoScripts } from "../../lib/blogSeo";
 import {
   BLOG_BASE_URL,
   buildSemesterDescription,
   getSemesterByNumber,
 } from "../../lib/blogCurriculum";
+import { setJSONLD, setMeta } from "../../lib/seo";
 import "./Blog.css";
 
 const forceScrollTop = () => {
@@ -99,30 +100,43 @@ const BlogSemester = () => {
   const previousSemester = semesterData.semester > 1 ? semesterData.semester - 1 : null;
   const nextSemester = semesterData.semester < 8 ? semesterData.semester + 1 : null;
 
+  useEffect(() => {
+    if (!semesterData) {
+      return undefined;
+    }
+
+    const metadata = buildMetadata({
+      title,
+      description,
+      canonicalPath: semesterData.urlPath,
+      type: "website",
+    });
+
+    applyMetadata(metadata);
+    applyOrganizationGraph();
+    setMeta({
+      name: "keywords",
+      content: [
+        "Pokhara University",
+        "BE Computer Engineering",
+        `semester ${semesterData.semester}`,
+        `semester ${semesterData.semester} notes`,
+        `semester ${semesterData.semester} subject guides`,
+      ].join(", "),
+    });
+    setJSONLD(breadcrumbLd, "json-ld-blog-semester-breadcrumb");
+    setJSONLD(collectionLd, "json-ld-blog-semester-collection");
+
+    return () => {
+      clearSeoScripts([
+        "json-ld-blog-semester-breadcrumb",
+        "json-ld-blog-semester-collection",
+      ]);
+    };
+  }, [semesterData, title, description, breadcrumbLd, collectionLd]);
+
   return (
     <div className="landing blog-page">
-      <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={canonical} />
-
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={canonical} />
-        <meta property="og:site_name" content="StudyMate" />
-        <meta property="og:image" content={`${BLOG_BASE_URL}/logo-512.png`} />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={`${BLOG_BASE_URL}/logo-512.png`} />
-
-        <script type="application/ld+json">{JSON.stringify(breadcrumbLd)}</script>
-        <script type="application/ld+json">{JSON.stringify(collectionLd)}</script>
-      </Helmet>
-
       <SiteNav />
 
       <section className="blog-hero semester-hero">
