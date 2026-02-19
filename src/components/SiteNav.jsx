@@ -40,6 +40,7 @@ const SiteNav = () => {
           <div className="mobile-nav" onClick={e => e.stopPropagation()}>
             <button className="mobile-nav-close" onClick={() => setMobileMenuOpen(false)}>&times;</button>
             <Link to="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+            <Link to="/colleges" onClick={() => setMobileMenuOpen(false)}>Colleges</Link>
             <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
             <Link to="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
             <Link to="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
