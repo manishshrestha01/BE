@@ -46,13 +46,14 @@ const Footer = () => {
               <Link to="/dashboard">Dashboard</Link>
               <Link to="/">Home</Link>
               <a href="/colleges">Colleges</a>
+              <a href="/blog">Blog</a>
             </div>
             <div className="footer-column">
               <h2>Semesters</h2>
-              <Link to="/">Semester 1-2</Link>
-              <Link to="/">Semester 3-4</Link>
-              <Link to="/">Semester 5-6</Link>
-              <Link to="/">Semester 7-8</Link>
+              <a href="/blog/semester/1">Semester 1-2</a>
+              <a href="/blog/semester/3">Semester 3-4</a>
+              <a href="/blog/semester/5">Semester 5-6</a>
+              <a href="/blog/semester/7">Semester 7-8</a>
             </div>
             <div className="footer-column">
               <h2>Account</h2>

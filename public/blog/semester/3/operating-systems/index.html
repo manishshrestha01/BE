@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <style id="spa-hide">body{visibility:hidden!important}</style>
+  <title>Operating Systems (CMP 232) Tutorial - Semester 3 | StudyMate</title>
+  <meta name="description" content="Pokhara University BE Computer Engineering semester 3 tutorial for Operating Systems (course code CMP 232) with syllabus, key topics, concepts, and 5 practice questions.">
+  <meta name="keywords" content="Pokhara University, BE Computer Engineering, semester 3, Operating Systems, Operating Systems notes, Operating Systems unit wise notes, Operating Systems chapter wise notes, Operating Systems PU notes, CMP 232, CMP232, Operating Systems CMP 232, CMP 232 notes, CMP232 notes, CMP 232 PU notes, CMP232 PU notes, Unit 1: Introduction [4 hrs], Unit 1: Introduction [4 hrs] PU notes, Unit 1: Introduction [4 hrs] Pokhara University notes, Introduction [4 hrs] PU notes, Introduction [4 hrs] semester 3 notes, Unit 2: Processes and Threads [10 hours], Unit 2: Processes and Threads [10 hours] PU notes, Unit 2: Processes and Threads [10 hours] Pokhara University notes, Processes and Threads [10 hours] PU notes, Processes and Threads [10 hours] semester 3 notes, Unit 3: Memory Management [10 hours], Unit 3: Memory Management [10 hours] PU notes, Unit 3: Memory Management [10 hours] Pokhara University notes, Memory Management [10 hours] PU notes, Memory Management [10 hours] semester 3 notes, Unit 4: Kernel [2 hrs], Unit 4: Kernel [2 hrs] PU notes, Unit 4: Kernel [2 hrs] Pokhara University notes, Kernel [2 hrs] PU notes, Kernel [2 hrs] semester 3 notes, Unit 5: Input/Output Management [5 hrs], Unit 5: Input/Output Management [5 hrs] PU notes, Unit 5: Input/Output Management [5 hrs] Pokhara University notes, Input/Output Management [5 hrs] PU notes, Input/Output Management [5 hrs] semester 3 notes, Unit 6: File Systems [3 hrs], Unit 6: File Systems [3 hrs] PU notes, Unit 6: File Systems [3 hrs] Pokhara University notes, File Systems [3 hrs] PU notes, File Systems [3 hrs] semester 3 notes, Unit 7: New Trends in Operating System, Unit 7: New Trends in Operating System PU notes, Unit 7: New Trends in Operating System Pokhara University notes, New Trends in Operating System PU notes, New Trends in Operating System semester 3 notes">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.manishshrestha012.com.np/blog/semester/3/operating-systems">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Operating Systems (CMP 232) Tutorial - Semester 3 | StudyMate">
+  <meta property="og:description" content="Pokhara University BE Computer Engineering semester 3 tutorial for Operating Systems (course code CMP 232) with syllabus, key topics, concepts, and 5 practice questions.">
+  <meta property="og:image" content="https://www.manishshrestha012.com.np/logo-512.png">
+  <meta property="og:url" content="https://www.manishshrestha012.com.np/blog/semester/3/operating-systems">
+  <meta property="og:site_name" content="StudyMate">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Operating Systems (CMP 232) Tutorial - Semester 3 | StudyMate">
+  <meta name="twitter:description" content="Pokhara University BE Computer Engineering semester 3 tutorial for Operating Systems (course code CMP 232) with syllabus, key topics, concepts, and 5 practice questions.">
+  <meta name="twitter:image" content="https://www.manishshrestha012.com.np/logo-512.png">
+
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.manishshrestha012.com.np/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://www.manishshrestha012.com.np/blog"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Semester 3",
+      "item": "https://www.manishshrestha012.com.np/blog/semester/3"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "Operating Systems (CMP 232)",
+      "item": "https://www.manishshrestha012.com.np/blog/semester/3/operating-systems"
+    }
+  ]
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": "https://www.manishshrestha012.com.np/blog/semester/3/operating-systems",
+  "headline": "Operating Systems (CMP 232) — Semester 3 Study Guide",
+  "description": "Pokhara University BE Computer Engineering semester 3 tutorial for Operating Systems (course code CMP 232) with syllabus, key topics, concepts, and 5 practice questions.",
+  "inLanguage": "en-US",
+  "about": [
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "Pokhara University"
+    },
+    {
+      "@type": "Course",
+      "name": "Operating Systems (CMP 232) (BE Computer Engineering Semester 3)"
+    }
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "StudyMate"
+  },
+  "publisher": {
+    "@id": "https://www.manishshrestha012.com.np/#organization"
+  },
+  "keywords": [
+    "Pokhara University",
+    "BE Computer Engineering",
+    "semester 3",
+    "Operating Systems",
+    "Operating Systems notes",
+    "Operating Systems unit wise notes",
+    "Operating Systems chapter wise notes",
+    "Operating Systems PU notes",
+    "CMP 232",
+    "CMP232",
+    "Operating Systems CMP 232",
+    "CMP 232 notes",
+    "CMP232 notes",
+    "CMP 232 PU notes",
+    "CMP232 PU notes",
+    "Unit 1: Introduction [4 hrs]",
+    "Unit 1: Introduction [4 hrs] PU notes",
+    "Unit 1: Introduction [4 hrs] Pokhara University notes",
+    "Introduction [4 hrs] PU notes",
+    "Introduction [4 hrs] semester 3 notes",
+    "Unit 2: Processes and Threads [10 hours]",
+    "Unit 2: Processes and Threads [10 hours] PU notes",
+    "Unit 2: Processes and Threads [10 hours] Pokhara University notes",
+    "Processes and Threads [10 hours] PU notes",
+    "Processes and Threads [10 hours] semester 3 notes",
+    "Unit 3: Memory Management [10 hours]",
+    "Unit 3: Memory Management [10 hours] PU notes",
+    "Unit 3: Memory Management [10 hours] Pokhara University notes",
+    "Memory Management [10 hours] PU notes",
+    "Memory Management [10 hours] semester 3 notes",
+    "Unit 4: Kernel [2 hrs]",
+    "Unit 4: Kernel [2 hrs] PU notes",
+    "Unit 4: Kernel [2 hrs] Pokhara University notes",
+    "Kernel [2 hrs] PU notes",
+    "Kernel [2 hrs] semester 3 notes",
+    "Unit 5: Input/Output Management [5 hrs]",
+    "Unit 5: Input/Output Management [5 hrs] PU notes",
+    "Unit 5: Input/Output Management [5 hrs] Pokhara University notes",
+    "Input/Output Management [5 hrs] PU notes",
+    "Input/Output Management [5 hrs] semester 3 notes",
+    "Unit 6: File Systems [3 hrs]",
+    "Unit 6: File Systems [3 hrs] PU notes",
+    "Unit 6: File Systems [3 hrs] Pokhara University notes",
+    "File Systems [3 hrs] PU notes",
+    "File Systems [3 hrs] semester 3 notes",
+    "Unit 7: New Trends in Operating System",
+    "Unit 7: New Trends in Operating System PU notes",
+    "Unit 7: New Trends in Operating System Pokhara University notes",
+    "New Trends in Operating System PU notes",
+    "New Trends in Operating System semester 3 notes"
+  ]
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.manishshrestha012.com.np/#organization",
+      "name": "StudyMate",
+      "url": "https://www.manishshrestha012.com.np/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.manishshrestha012.com.np/logo-512.png"
+      },
+      "description": "PU notes for BE Computer Engineering students."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.manishshrestha012.com.np/#website",
+      "url": "https://www.manishshrestha012.com.np/",
+      "name": "StudyMate",
+      "publisher": {
+        "@id": "https://www.manishshrestha012.com.np/#organization"
+      },
+      "inLanguage": "en-US"
+    }
+  ]
+}</script>
+</head>
+<body>
+  <noscript>
+    <nav aria-label="Blog links (no-JS)">
+      <ul>
+        <li><a href="/blog/semester/3">Back to Semester 3</a></li>
+        <li><a href="/blog">Back to Blog</a></li>
+      </ul>
+    </nav>
+  </noscript>
+  <script src="/spa-loader.js" defer></script>
+</body>
+</html>

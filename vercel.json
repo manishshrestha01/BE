@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/((?!colleges|college|favicon-48.png|logo-512.png|manifest.json|robots.txt|sitemap.xml|css|js|assets|_next|api).*)", "destination": "/" }
+    { "source": "/((?!colleges|college|blog|favicon-48.png|logo-512.png|manifest.json|robots.txt|sitemap.xml|css|js|assets|_next|api).*)", "destination": "/" }
   ]
 }

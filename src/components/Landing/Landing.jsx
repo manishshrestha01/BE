@@ -122,6 +122,7 @@ const Landing = () => {
             <a href="#about">About</a>
             <a href="#testimonials">Reviews</a>
             <Link to="/colleges">Colleges</Link>
+            <Link to="/blog">Blog</Link>
             <Link to="/login" className="nav-login">Login</Link>
             <Link to="/dashboard" className="nav-cta">Open Dashboard</Link>
           </div>
@@ -139,6 +140,7 @@ const Landing = () => {
               <a href="#about" onClick={() => setMobileMenuOpen(false)}>About</a>
               <a href="#testimonials" onClick={() => setMobileMenuOpen(false)}>Reviews</a>
               <Link to="/colleges" onClick={() => setMobileMenuOpen(false)}>Colleges</Link>
+              <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
               <Link to="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
               <Link to="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
             </div>
@@ -356,16 +358,17 @@ const Landing = () => {
                 <h2>Quick Links</h2>
                 <Link to="/dashboard">Dashboard</Link>
                 <Link to="/colleges">Colleges</Link>
+                <Link to="/blog">Blog</Link>
                 <a href="#features">Features</a>
                 <a href="#about">About</a>
                 <a href="#testimonials">Reviews</a>
               </div>
               <div className="footer-column">
                 <h2>Semesters</h2>
-                <Link to="/">Semester 1-2</Link>
-                <Link to="/">Semester 3-4</Link>
-                <Link to="/">Semester 5-6</Link>
-                <Link to="/">Semester 7-8</Link>
+                <Link to="/blog/semester/1">Semester 1-2</Link>
+                <Link to="/blog/semester/3">Semester 3-4</Link>
+                <Link to="/blog/semester/5">Semester 5-6</Link>
+                <Link to="/blog/semester/7">Semester 7-8</Link>
               </div>
               <div className="footer-column">
                 <h2>Account</h2>

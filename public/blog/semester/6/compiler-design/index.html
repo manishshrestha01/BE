@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <style id="spa-hide">body{visibility:hidden!important}</style>
+  <title>Compiler Design (CMP 422) Tutorial - Semester 6 | StudyMate</title>
+  <meta name="description" content="Pokhara University BE Computer Engineering semester 6 tutorial for Compiler Design (course code CMP 422) with syllabus, key topics, concepts, and 5 practice questions.">
+  <meta name="keywords" content="Pokhara University, BE Computer Engineering, semester 6, Compiler Design, Compiler Design notes, Compiler Design unit wise notes, Compiler Design chapter wise notes, Compiler Design PU notes, CMP 422, CMP422, Compiler Design CMP 422, CMP 422 notes, CMP422 notes, CMP 422 PU notes, CMP422 PU notes, Unit 1: Overview of Compilation (4 hrs), Unit 1: Overview of Compilation, Unit 1: Overview of Compilation PU notes, Unit 1: Overview of Compilation Pokhara University notes, Overview of Compilation PU notes, Overview of Compilation semester 6 notes, Unit 2: Scanners (7 hrs), Unit 2: Scanners, Unit 2: Scanners PU notes, Unit 2: Scanners Pokhara University notes, Scanners PU notes, Scanners semester 6 notes, Unit 3: Parsers (6 hrs), Unit 3: Parsers, Unit 3: Parsers PU notes, Unit 3: Parsers Pokhara University notes, Parsers PU notes, Parsers semester 6 notes, Unit 4: Intermediate Representations (5 hrs), Unit 4: Intermediate Representations, Unit 4: Intermediate Representations PU notes, Unit 4: Intermediate Representations Pokhara University notes, Intermediate Representations PU notes, Intermediate Representations semester 6 notes, Unit 5: Code Generation (4 hrs), Unit 5: Code Generation, Unit 5: Code Generation PU notes, Unit 5: Code Generation Pokhara University notes, Code Generation PU notes, Code Generation semester 6 notes, Unit 6: Machine Independent Optimization (4 hrs), Unit 6: Machine Independent Optimization, Unit 6: Machine Independent Optimization PU notes, Unit 6: Machine Independent Optimization Pokhara University notes, Machine Independent Optimization PU notes, Machine Independent Optimization semester 6 notes">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.manishshrestha012.com.np/blog/semester/6/compiler-design">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Compiler Design (CMP 422) Tutorial - Semester 6 | StudyMate">
+  <meta property="og:description" content="Pokhara University BE Computer Engineering semester 6 tutorial for Compiler Design (course code CMP 422) with syllabus, key topics, concepts, and 5 practice questions.">
+  <meta property="og:image" content="https://www.manishshrestha012.com.np/logo-512.png">
+  <meta property="og:url" content="https://www.manishshrestha012.com.np/blog/semester/6/compiler-design">
+  <meta property="og:site_name" content="StudyMate">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Compiler Design (CMP 422) Tutorial - Semester 6 | StudyMate">
+  <meta name="twitter:description" content="Pokhara University BE Computer Engineering semester 6 tutorial for Compiler Design (course code CMP 422) with syllabus, key topics, concepts, and 5 practice questions.">
+  <meta name="twitter:image" content="https://www.manishshrestha012.com.np/logo-512.png">
+
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.manishshrestha012.com.np/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://www.manishshrestha012.com.np/blog"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Semester 6",
+      "item": "https://www.manishshrestha012.com.np/blog/semester/6"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "Compiler Design (CMP 422)",
+      "item": "https://www.manishshrestha012.com.np/blog/semester/6/compiler-design"
+    }
+  ]
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": "https://www.manishshrestha012.com.np/blog/semester/6/compiler-design",
+  "headline": "Compiler Design (CMP 422) — Semester 6 Study Guide",
+  "description": "Pokhara University BE Computer Engineering semester 6 tutorial for Compiler Design (course code CMP 422) with syllabus, key topics, concepts, and 5 practice questions.",
+  "inLanguage": "en-US",
+  "about": [
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "Pokhara University"
+    },
+    {
+      "@type": "Course",
+      "name": "Compiler Design (CMP 422) (BE Computer Engineering Semester 6)"
+    }
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "StudyMate"
+  },
+  "publisher": {
+    "@id": "https://www.manishshrestha012.com.np/#organization"
+  },
+  "keywords": [
+    "Pokhara University",
+    "BE Computer Engineering",
+    "semester 6",
+    "Compiler Design",
+    "Compiler Design notes",
+    "Compiler Design unit wise notes",
+    "Compiler Design chapter wise notes",
+    "Compiler Design PU notes",
+    "CMP 422",
+    "CMP422",
+    "Compiler Design CMP 422",
+    "CMP 422 notes",
+    "CMP422 notes",
+    "CMP 422 PU notes",
+    "CMP422 PU notes",
+    "Unit 1: Overview of Compilation (4 hrs)",
+    "Unit 1: Overview of Compilation",
+    "Unit 1: Overview of Compilation PU notes",
+    "Unit 1: Overview of Compilation Pokhara University notes",
+    "Overview of Compilation PU notes",
+    "Overview of Compilation semester 6 notes",
+    "Unit 2: Scanners (7 hrs)",
+    "Unit 2: Scanners",
+    "Unit 2: Scanners PU notes",
+    "Unit 2: Scanners Pokhara University notes",
+    "Scanners PU notes",
+    "Scanners semester 6 notes",
+    "Unit 3: Parsers (6 hrs)",
+    "Unit 3: Parsers",
+    "Unit 3: Parsers PU notes",
+    "Unit 3: Parsers Pokhara University notes",
+    "Parsers PU notes",
+    "Parsers semester 6 notes",
+    "Unit 4: Intermediate Representations (5 hrs)",
+    "Unit 4: Intermediate Representations",
+    "Unit 4: Intermediate Representations PU notes",
+    "Unit 4: Intermediate Representations Pokhara University notes",
+    "Intermediate Representations PU notes",
+    "Intermediate Representations semester 6 notes",
+    "Unit 5: Code Generation (4 hrs)",
+    "Unit 5: Code Generation",
+    "Unit 5: Code Generation PU notes",
+    "Unit 5: Code Generation Pokhara University notes",
+    "Code Generation PU notes",
+    "Code Generation semester 6 notes",
+    "Unit 6: Machine Independent Optimization (4 hrs)",
+    "Unit 6: Machine Independent Optimization",
+    "Unit 6: Machine Independent Optimization PU notes",
+    "Unit 6: Machine Independent Optimization Pokhara University notes",
+    "Machine Independent Optimization PU notes",
+    "Machine Independent Optimization semester 6 notes"
+  ]
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.manishshrestha012.com.np/#organization",
+      "name": "StudyMate",
+      "url": "https://www.manishshrestha012.com.np/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.manishshrestha012.com.np/logo-512.png"
+      },
+      "description": "PU notes for BE Computer Engineering students."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.manishshrestha012.com.np/#website",
+      "url": "https://www.manishshrestha012.com.np/",
+      "name": "StudyMate",
+      "publisher": {
+        "@id": "https://www.manishshrestha012.com.np/#organization"
+      },
+      "inLanguage": "en-US"
+    }
+  ]
+}</script>
+</head>
+<body>
+  <noscript>
+    <nav aria-label="Blog links (no-JS)">
+      <ul>
+        <li><a href="/blog/semester/6">Back to Semester 6</a></li>
+        <li><a href="/blog">Back to Blog</a></li>
+      </ul>
+    </nav>
+  </noscript>
+  <script src="/spa-loader.js" defer></script>
+</body>
+</html>

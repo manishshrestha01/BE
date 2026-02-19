@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "generate-blog-static": "node scripts/generate-blog-static.js",
     "inspect-seo": "node scripts/inspect-seo.js",
     "inspect-live": "node scripts/inspect-seo.js https://www.manishshrestha012.com.np/colleges https://www.manishshrestha012.com.np/college/pec"
   },
@@ -16,8 +17,10 @@
     "@supabase/supabase-js": "^2.87.1",
     "@tailwindcss/vite": "^4.1.18",
     "@vercel/analytics": "^1.6.1",
+    "lucide-react": "^0.574.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-helmet-async": "^2.0.5",
     "react-router-dom": "^7.10.1",
     "react-zoom-pan-pinch": "^3.7.0",
     "supabase": "^2.74.5",
