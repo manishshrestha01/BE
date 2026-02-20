@@ -24,6 +24,8 @@ const BUILD_DATE = new Date().toISOString().slice(0, 10);
 
 const START_MARKER = "  <!-- Blog pages (auto-generated) -->";
 const END_MARKER = "  <!-- /Blog pages (auto-generated) -->";
+const INDEXNOW_BLOG_EVENT_ENDPOINT =
+  process.env.INDEXNOW_BLOG_EVENT_ENDPOINT || `${BLOG_BASE_URL}/api/indexnow/blog-event`;
 
 const ORG_GRAPH = {
   "@context": "https://schema.org",
@@ -456,10 +458,113 @@ async function updateSitemap() {
   await fs.writeFile(SITEMAP_PATH, nextSitemap, "utf8");
 }
 
+function extractBlogUrlsFromSitemap(xml) {
+  const locRegex = /<loc>([\s\S]*?)<\/loc>/gi;
+  const urls = new Set();
+
+  let match = locRegex.exec(xml);
+  while (match) {
+    const loc = String(match[1] || "").trim();
+    if (loc.startsWith(`${BLOG_BASE_URL}/blog`)) {
+      urls.add(loc);
+    }
+    match = locRegex.exec(xml);
+  }
+
+  return urls;
+}
+
+async function readExistingBlogUrlsFromSitemap() {
+  try {
+    const sitemapXml = await fs.readFile(SITEMAP_PATH, "utf8");
+    return extractBlogUrlsFromSitemap(sitemapXml);
+  } catch (error) {
+    if (error && error.code === "ENOENT") {
+      return new Set();
+    }
+    throw error;
+  }
+}
+
+function diffSets(previousSet, currentSet) {
+  const created = [];
+  const updated = [];
+  const deleted = [];
+
+  for (const url of currentSet) {
+    if (previousSet.has(url)) {
+      updated.push(url);
+    } else {
+      created.push(url);
+    }
+  }
+
+  for (const url of previousSet) {
+    if (!currentSet.has(url)) {
+      deleted.push(url);
+    }
+  }
+
+  return { created, updated, deleted };
+}
+
+async function notifyIndexNowForBlogChanges({ created, updated, deleted }) {
+  const adminToken = String(process.env.INDEXNOW_ADMIN_TOKEN || "").trim();
+  if (!adminToken) {
+    console.log(
+      "Skipped IndexNow blog create/update/delete webhook: INDEXNOW_ADMIN_TOKEN is not set.",
+    );
+    return;
+  }
+
+  const endpoint = String(INDEXNOW_BLOG_EVENT_ENDPOINT || "").trim();
+  if (!endpoint) {
+    console.log("Skipped IndexNow blog webhook: endpoint is empty.");
+    return;
+  }
+
+  const sendEvent = async (action, urls) => {
+    if (!urls.length) return;
+
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-indexnow-token": adminToken,
+      },
+      body: JSON.stringify({ action, urls }),
+    });
+
+    const body = await response.text();
+    if (!response.ok) {
+      throw new Error(
+        `Blog ${action} webhook failed (${response.status}): ${body.slice(0, 220)}`,
+      );
+    }
+
+    console.log(`IndexNow blog ${action}: ${urls.length} URL(s)`);
+  };
+
+  try {
+    await sendEvent("created", created);
+    await sendEvent("updated", updated);
+    await sendEvent("deleted", deleted);
+  } catch (error) {
+    console.error("IndexNow blog webhook failed:", error);
+  }
+}
+
 async function main() {
+  const previousBlogUrls = await readExistingBlogUrlsFromSitemap();
   await generateBlogPages();
   await updateSitemap();
-  console.log(`Generated static blog pages for ${getAllBlogPaths().length} URLs.`);
+
+  const currentBlogUrls = new Set(getAllBlogPaths().map((pathName) => toAbsolute(pathName)));
+  const changes = diffSets(previousBlogUrls, currentBlogUrls);
+
+  await notifyIndexNowForBlogChanges(changes);
+
+  console.log(`Generated static blog pages for ${currentBlogUrls.size} URLs.`);
   console.log(`Updated sitemap at ${SITEMAP_PATH}`);
 }
 

@@ -53,3 +53,47 @@ Next steps to make these changes live and visible in Google:
 5. Locally you can run `npm run inspect-seo https://your-site/colleges https://your-site/college/pec` to quickly verify the public HTML includes the title/og/canonical/JSON-LD.
 
 If you want, I can re-run the inspection once you deploy and then help with Search Console steps (rich results validation and request indexing).
+
+## IndexNow (Bing) integration
+
+This repo now includes server-side IndexNow submission using Vercel API routes.
+
+### Server env vars (do not expose to client)
+
+- `SITE_URL` (example: `https://www.manishshrestha012.com.np`)
+- `INDEXNOW_KEY`
+- `INDEXNOW_ADMIN_TOKEN`
+- `INDEXNOW_KEY_LOCATION` (optional, defaults to `${SITE_URL}/${INDEXNOW_KEY}.txt`)
+- `SITEMAP_URL` (optional, defaults to `${SITE_URL}/sitemap.xml`)
+
+### Endpoints
+
+- `POST /api/indexnow/submit-all`
+  - Auth header: `x-indexnow-token`
+  - Fetches all URLs from sitemap (supports sitemapindex), then submits in batches.
+- `POST /api/indexnow/submit`
+  - Auth header: `x-indexnow-token`
+  - Body: `{ "urls": ["https://..."], "mode": "created|updated|deleted" }`
+- `POST /api/indexnow/blog-event`
+  - Auth header: `x-indexnow-token`
+  - Body examples:
+    - `{ "action": "updated", "postUrl": "https://.../blog/semester/1/calculus-i" }`
+    - `{ "action": "deleted", "urls": ["https://.../blog/semester/1/calculus-i"] }`
+- `GET /<INDEXNOW_KEY>.txt`
+  - Serves the IndexNow key file content at root via Vercel rewrite.
+
+### Admin UI
+
+- Open `/admin/indexnow`
+- Paste `INDEXNOW_ADMIN_TOKEN`
+- Use:
+  - `Submit ALL URLs to Bing (IndexNow)`
+  - custom URL submission with `created|updated|deleted` mode
+
+### Blog create/update/delete hook
+
+`scripts/generate-blog-static.js` now computes created/updated/deleted blog URLs and calls:
+
+- `POST /api/indexnow/blog-event`
+
+when `INDEXNOW_ADMIN_TOKEN` is available in environment.

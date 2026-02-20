@@ -14,6 +14,7 @@ import OfficeViewer from './components/QuickLook/OfficeViewer'
 import BlogHome from './components/Blog/BlogHome'
 import BlogSemester from './components/Blog/BlogSemester'
 import BlogSubject from './components/Blog/BlogSubject'
+import IndexNowAdmin from './components/Admin/IndexNowAdmin'
 
 const AppRoutes = () => (
   <Routes>
@@ -32,6 +33,7 @@ const AppRoutes = () => (
     <Route path="/blog" element={<BlogHome />} />
     <Route path="/blog/semester/:semesterId" element={<BlogSemester />} />
     <Route path="/blog/semester/:semesterId/:subjectSlug" element={<BlogSubject />} />
+    <Route path="/admin/indexnow" element={<IndexNowAdmin />} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 )

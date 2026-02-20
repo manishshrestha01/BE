@@ -1,5 +1,9 @@
 {
   "rewrites": [
+    {
+      "source": "/:indexnowKey([A-Za-z0-9_-]{8,128}).txt",
+      "destination": "/api/indexnow/key?requestedKey=:indexnowKey"
+    },
     { "source": "/((?!colleges|college|blog|favicon-48.png|logo-512.png|manifest.json|robots.txt|sitemap.xml|css|js|assets|_next|api).*)", "destination": "/" }
   ]
 }

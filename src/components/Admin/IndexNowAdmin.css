@@ -1,0 +1,170 @@
+.indexnow-admin-page {
+  min-height: 100vh;
+  padding: 2rem 1rem 3rem;
+  background: linear-gradient(160deg, #f2f7ff 0%, #e7f9f3 100%);
+}
+
+.indexnow-admin-shell {
+  width: min(920px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.indexnow-admin-header {
+  background: #ffffff;
+  border: 1px solid #d7e6eb;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 24px rgba(18, 53, 69, 0.08);
+}
+
+.indexnow-admin-header h1 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  color: #0d3040;
+}
+
+.indexnow-admin-header p {
+  margin: 0.5rem 0 0;
+  color: #355363;
+}
+
+.indexnow-back-link {
+  display: inline-block;
+  margin-top: 0.7rem;
+  color: #0a6f55;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.indexnow-card {
+  background: #ffffff;
+  border: 1px solid #d7e6eb;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 24px rgba(18, 53, 69, 0.08);
+}
+
+.indexnow-card h2 {
+  margin: 0;
+  color: #0d3040;
+  font-size: 1.15rem;
+}
+
+.indexnow-card p {
+  color: #355363;
+  margin: 0.55rem 0 0.75rem;
+}
+
+.indexnow-card input,
+.indexnow-card textarea,
+.indexnow-card select {
+  width: 100%;
+  border: 1px solid #bdd0d8;
+  border-radius: 10px;
+  padding: 0.7rem 0.75rem;
+  font-size: 0.95rem;
+  color: #122932;
+  background: #f9fdff;
+}
+
+.indexnow-card textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+.indexnow-card button {
+  border: none;
+  border-radius: 10px;
+  padding: 0.7rem 0.95rem;
+  background: #0a6f55;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.8rem;
+}
+
+.indexnow-card button:hover:not(:disabled) {
+  background: #085741;
+}
+
+.indexnow-card button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.indexnow-inline-controls {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.indexnow-inline-controls label {
+  color: #1a3f4d;
+  font-weight: 600;
+}
+
+.indexnow-inline-controls select {
+  width: auto;
+  min-width: 130px;
+}
+
+.indexnow-inline-controls span {
+  color: #355363;
+}
+
+.indexnow-error {
+  color: #b42318;
+  font-weight: 600;
+  margin-top: 0.7rem;
+}
+
+.indexnow-result-card {
+  margin-top: 0.9rem;
+  padding: 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #cde4d7;
+  background: #f5fcf7;
+}
+
+.indexnow-result-card h3 {
+  margin: 0 0 0.5rem;
+  color: #0f5132;
+}
+
+.indexnow-result-card p {
+  margin: 0.2rem 0;
+  color: #134737;
+}
+
+.indexnow-failures {
+  margin-top: 0.7rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.indexnow-failure-item {
+  border-radius: 8px;
+  border: 1px solid #efb2ac;
+  background: #fff1f0;
+  padding: 0.6rem;
+}
+
+.indexnow-failure-item p {
+  margin: 0.2rem 0;
+  color: #8e1f16;
+}
+
+@media (max-width: 640px) {
+  .indexnow-admin-page {
+    padding-top: 1rem;
+  }
+
+  .indexnow-card,
+  .indexnow-admin-header {
+    padding: 1rem;
+  }
+}
