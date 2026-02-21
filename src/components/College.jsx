@@ -16,6 +16,14 @@ const findCollegeBySlug = (slug) => {
   return COLLEGES.find(c => makeSlugFromLabel(c.label) === slug || (c.value && makeSlugFromLabel(c.value) === slug))
 }
 
+const getSemesterLabel = (semester) => {
+  return `${semester}${semester === 1 ? 'st' : semester === 2 ? 'nd' : semester === 3 ? 'rd' : 'th'} Semester`
+}
+
+const getSemesterPath = (semester) => `/blog/semester/${semester}`
+
+const getSemesterAbsoluteUrl = (semester) => `https://www.manishshrestha012.com.np/blog/semester/${semester}`
+
 const forceScrollTop = () => {
   window.scrollTo(0, 0)
   document.documentElement.scrollTop = 0
@@ -80,8 +88,8 @@ const College = () => {
           'itemListElement': [1,2,3,4,5,6,7,8].map((s) => ({
             '@type': 'ListItem',
             'position': s,
-            'name': `${s}${s === 1 ? 'st' : s === 2 ? 'nd' : s === 3 ? 'rd' : 'th'} Semester`,
-            'url': `https://www.manishshrestha012.com.np/dashboard?college=${slug}&semester=${s}`
+            'name': getSemesterLabel(s),
+            'url': getSemesterAbsoluteUrl(s)
           }))
         },
         'breadcrumb': {
@@ -156,13 +164,15 @@ const College = () => {
         <div>
           <div id="semesters" className="semesters">
             <h4>Available Semesters</h4>
-            <div className="semesters-grid">
-              {[1,2,3,4,5,6,7,8].map(s => (
-                <Link key={s} to={`/dashboard?college=${slug}&semester=${s}`} className="semester-card">
-                  <div className="semester-card-number">{s}</div>
-                  <div className="semester-card-title">{s}{s === 1 ? 'st' : s === 2 ? 'nd' : s === 3 ? 'rd' : 'th'} Semester</div>
-                </Link>
-              ))}
+            <div className="semesters-list">
+              {[1,2,3,4,5,6,7,8].map((s) => {
+                const semesterLabel = getSemesterLabel(s)
+                return (
+                  <Link key={s} to={getSemesterPath(s)} className="semester-item" onClick={forceScrollTop}>
+                    {semesterLabel}
+                  </Link>
+                )
+              })}
             </div>
             <div className="popular-subjects">
               <h5>Popular Subjects</h5>

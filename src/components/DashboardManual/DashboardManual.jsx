@@ -10,7 +10,7 @@ import './DashboardManual.css'
 const seoConfig = {
   default: {
     title: 'PU Notes Dashboard - Pokhara University Computer Engineering Notes',
-    description: 'Access PU notes for BE Computer Engineering. Download Pokhara University notes for Compiler Design, C Programming, DBMS, DSA, OS. NCIT, CCRC notes available.',
+    description: 'Access PU notes for BE Computer Engineering. Download Pokhara University notes for Compiler Design, C Programming, DBMS, DSA, OS.',
     keywords: 'PU notes, Pokhara University notes, BE Computer notes, computer engineering notes, PU computer engineering, compiler notes, C notes, DBMS notes, DSA notes, NCIT notes, CCRC notes, engineering notes Nepal'
   },
   'how-it-works': {

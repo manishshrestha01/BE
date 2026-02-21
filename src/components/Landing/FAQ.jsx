@@ -20,7 +20,7 @@ const FAQ = () => {
     
     // Set meta description
     const metaDescription = document.querySelector('meta[name="description"]')
-    const descriptionContent = 'FAQs about PU notes. Pokhara University notes for BE Computer Engineering, IT, Software Engineering. Compiler notes, C programming, DBMS, DSA. NCIT, CCRC notes available.'
+    const descriptionContent = 'FAQs about PU notes. Pokhara University notes for BE Computer Engineering, IT, Software Engineering. Compiler notes, C programming, DBMS, DSA.'
     
     if (metaDescription) {
       metaDescription.setAttribute('content', descriptionContent)

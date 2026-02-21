@@ -167,11 +167,20 @@
 }
 
 .semester-item {
+  display: block;
   padding: 10px 12px;
   background: #fafafa;
+  border: 1px solid #efefef;
   border-radius: 8px;
   font-weight: 600;
   color: #333;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.semester-item:hover {
+  background: #f4f8ff;
+  border-color: #d6e6ff;
 }
 
 .related-colleges {
