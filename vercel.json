@@ -1,4 +1,14 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        { "type": "host", "value": "manishshrestha012.com.np" }
+      ],
+      "destination": "https://www.manishshrestha012.com.np/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/:indexnowKey([A-Za-z0-9_-]{8,128}).txt",

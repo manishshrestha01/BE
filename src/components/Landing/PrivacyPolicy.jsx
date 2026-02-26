@@ -21,9 +21,17 @@ const PrivacyPolicy = () => {
       metaKeywords.setAttribute('content', keywordsContent)
     }
 
-    // Do NOT index privacy policy page: set robots to noindex
+    // Privacy policy should be crawlable and indexable
     const metaRobots = document.querySelector('meta[name="robots"]')
-    if (metaRobots) metaRobots.setAttribute('content', 'noindex, nofollow')
+    if (metaRobots) {
+      metaRobots.setAttribute('content', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1')
+    }
+
+    // Set canonical URL
+    const canonical = document.querySelector('link[rel="canonical"]')
+    if (canonical) {
+      canonical.setAttribute('href', 'https://www.manishshrestha012.com.np/privacy-policy')
+    }
 
     // Apply body legal-theme so page background covers full viewport
     document.body.classList.add('legal-theme')
