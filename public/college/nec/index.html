@@ -103,7 +103,19 @@
   </script>
 </head>
 <body>
-  <!-- SEO-only: no visible HTML. React SPA will render the UI on the client. -->
+  <main aria-label="SEO fallback content" data-college-page="nec">
+    <h1>StudyMate College Notes</h1>
+    <p>This page includes semester-wise BE Computer Engineering study resources for this Pokhara University college.</p>
+    <nav aria-label="Fallback links">
+      <a href="/dashboard">Open Dashboard</a> | <a href="/colleges">All Colleges</a> | <a href="/blog">Blog Notes</a>
+    </nav>
+  </main>
+
+  <noscript>
+    <style>
+      body { visibility: visible !important; }
+    </style>
+  </noscript>
   <script src="/spa-loader.js" defer></script>
 </body>
 </html>
