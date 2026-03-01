@@ -36,6 +36,7 @@ const DashboardManual = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const justCompletedProfile = useRef(false)
+  const devtoolsLockedRef = useRef(false)
 
   // Check if profile was just completed
   useEffect(() => {
@@ -168,6 +169,53 @@ const DashboardManual = () => {
       document.title = 'StudyMate'
     }
   }, [isAuthenticated, location.hash])
+
+  // If devtools is open on dashboard, force-exit the dashboard session.
+  useEffect(() => {
+    if (!isAuthenticated) return undefined
+
+    const userAgent = navigator.userAgent || ''
+    const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(userAgent)
+    if (isMobileDevice) return undefined
+
+    const DEVTOOLS_THRESHOLD = 170
+
+    const isDevToolsOpen = () => {
+      const widthGap = Math.abs(window.outerWidth - window.innerWidth)
+      const heightGap = Math.abs(window.outerHeight - window.innerHeight)
+      return widthGap > DEVTOOLS_THRESHOLD || heightGap > DEVTOOLS_THRESHOLD
+    }
+
+    const lockDashboard = () => {
+      if (devtoolsLockedRef.current) return
+      devtoolsLockedRef.current = true
+
+      try {
+        window.close()
+      } catch {
+        // Ignore close failures; browser may block script-initiated close.
+      }
+
+      window.location.replace('/login')
+    }
+
+    const checkDevTools = () => {
+      if (isDevToolsOpen()) {
+        lockDashboard()
+      }
+    }
+
+    checkDevTools()
+    const intervalId = window.setInterval(checkDevTools, 800)
+    window.addEventListener('resize', checkDevTools)
+    window.addEventListener('focus', checkDevTools)
+
+    return () => {
+      window.clearInterval(intervalId)
+      window.removeEventListener('resize', checkDevTools)
+      window.removeEventListener('focus', checkDevTools)
+    }
+  }, [isAuthenticated])
 
   // Disable right-click only for authenticated users on dashboard.
   useEffect(() => {
