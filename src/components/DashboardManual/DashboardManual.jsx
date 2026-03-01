@@ -169,6 +169,20 @@ const DashboardManual = () => {
     }
   }, [isAuthenticated, location.hash])
 
+  // Disable right-click only for authenticated users on dashboard.
+  useEffect(() => {
+    if (!isAuthenticated) return undefined
+
+    const handleContextMenu = (event) => {
+      event.preventDefault()
+    }
+
+    document.addEventListener('contextmenu', handleContextMenu)
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu)
+    }
+  }, [isAuthenticated])
+
   // Show loading only while checking initial auth state
   if (loading) {
     return (

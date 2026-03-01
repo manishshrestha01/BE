@@ -8,6 +8,7 @@ const QUICKLOOK_STATE_KEY = 'studymate:quicklook:v1'
 const QuickLook = ({ file, onClose }) => {
   const [viewerErrorKey, setViewerErrorKey] = useState(null)
   const [useSecondaryProxy, setUseSecondaryProxy] = useState(false)
+  const [textPreviewState, setTextPreviewState] = useState({ status: 'idle', content: '' })
   const mobileOfficeRedirectAttemptRef = useRef('')
   const navigate = useNavigate()
   const location = useLocation()
@@ -163,6 +164,68 @@ const QuickLook = ({ file, onClose }) => {
     }
   }, [file, isMobile])
 
+  useEffect(() => {
+    if (!file || file.fileType !== 'pdf') {
+      return
+    }
+
+    const preventPdfPrintShortcut = (event) => {
+      const key = event.key?.toLowerCase?.()
+      if ((event.ctrlKey || event.metaKey) && key === 'p') {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+    }
+
+    // Capture phase so the shortcut is blocked as early as possible.
+    window.addEventListener('keydown', preventPdfPrintShortcut, true)
+    document.addEventListener('keydown', preventPdfPrintShortcut, true)
+
+    return () => {
+      window.removeEventListener('keydown', preventPdfPrintShortcut, true)
+      document.removeEventListener('keydown', preventPdfPrintShortcut, true)
+    }
+  }, [file])
+
+  useEffect(() => {
+    if (!file || file.fileType !== 'text') {
+      setTextPreviewState({ status: 'idle', content: '' })
+      return
+    }
+
+    const abortController = new AbortController()
+
+    const loadTextPreview = async () => {
+      setTextPreviewState({ status: 'loading', content: '' })
+
+      try {
+        const response = await fetch(file.url, { signal: abortController.signal })
+        if (!response.ok) {
+          throw new Error(`Failed to fetch text file. Status: ${response.status}`)
+        }
+
+        const raw = await response.text()
+        const maxPreviewLength = 200000
+        const truncated =
+          raw.length > maxPreviewLength
+            ? `${raw.slice(0, maxPreviewLength)}\n\n[Preview truncated for performance]`
+            : raw
+
+        setTextPreviewState({ status: 'ready', content: truncated })
+      } catch (error) {
+        if (abortController.signal.aborted) return
+        console.error('Unable to load text preview:', error)
+        setTextPreviewState({ status: 'error', content: '' })
+      }
+    }
+
+    loadTextPreview()
+
+    return () => {
+      abortController.abort()
+    }
+  }, [file])
+
   if (!file) return null
 
   const renderPreview = () => {
@@ -237,12 +300,15 @@ const QuickLook = ({ file, onClose }) => {
       case 'pdf':
         // Use PDF.js for PDFs - handles large files better
         return (
-          <iframe
-            src={getPDFJsViewerUrl(file.url)}
-            title={file.name}
-            className="fullscreen-viewer"
-            onError={flagViewerError}
-          />
+          <div className="pdf-viewer-shell">
+            <iframe
+              src={getPDFJsViewerUrl(file.url)}
+              title={file.name}
+              className="fullscreen-viewer pdf-viewer-frame"
+              sandbox="allow-scripts allow-same-origin"
+              onError={flagViewerError}
+            />
+          </div>
         )
       case 'pptx':
         if (isMobile) {
@@ -285,12 +351,38 @@ const QuickLook = ({ file, onClose }) => {
           />
         )
       case 'text':
+        if (textPreviewState.status === 'loading' || textPreviewState.status === 'idle') {
+          return (
+            <div className="preview-info">
+              <span className="info-icon">📄</span>
+              <h2>{file.name}</h2>
+              <p>Loading text preview...</p>
+            </div>
+          )
+        }
+
+        if (textPreviewState.status === 'error') {
+          return (
+            <div className="preview-info">
+              <span className="info-icon">📄</span>
+              <h2>{file.name}</h2>
+              <p>
+                Text preview unavailable.
+                <a href={file.url} target="_blank" rel="noopener noreferrer"> Open file</a>
+              </p>
+            </div>
+          )
+        }
+
         return (
-          <iframe
-            src={file.url}
-            title={file.name}
-            className="fullscreen-viewer text-viewer"
-          />
+          <div
+            className="text-preview-shell"
+            onCopy={(event) => event.preventDefault()}
+            onCut={(event) => event.preventDefault()}
+            onPaste={(event) => event.preventDefault()}
+          >
+            <pre className="text-preview-content">{textPreviewState.content}</pre>
+          </div>
         )
       case 'video':
         return (
