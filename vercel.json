@@ -14,6 +14,9 @@
       "source": "/:indexnowKey([A-Za-z0-9_-]{8,128}).txt",
       "destination": "/api/indexnow/key?requestedKey=:indexnowKey"
     },
-    { "source": "/((?!colleges|college|blog|favicon-48.png|logo-512.png|manifest.json|robots.txt|sitemap.xml|css|js|assets|_next|api).*)", "destination": "/" }
+    {
+      "source": "/((?!api(?:/|$)|blog(?:/|$)|college(?:/|$)|colleges(?:/|$)|about(?:/|$)|contact(?:/|$)|privacy-policy(?:/|$)|terms(?:/|$)|terms-of-service(?:/|$)|disclaimer(?:/|$)|favicon-48\\.png|logo-512\\.png|manifest\\.json|robots\\.txt|sitemap\\.xml|css(?:/|$)|assets(?:/|$)|_next(?:/|$)|.*\\.[^/]+$).*)",
+      "destination": "/index.html"
+    }
   ]
 }

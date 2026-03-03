@@ -67,8 +67,11 @@ const Footer = () => {
           <p>© {new Date().getFullYear()} StudyMate. Made with ❤️ for PU Students</p>
           <div className="footer-bottom-links">
             <a href="/faq" target="_blank" rel="noopener noreferrer">FAQ</a>
+            <a href="/about" target="_blank" rel="noopener noreferrer">About</a>
+            <a href="/contact" target="_blank" rel="noopener noreferrer">Contact</a>
             <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-            <a href="/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+            <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>
+            <a href="/disclaimer" target="_blank" rel="noopener noreferrer">Disclaimer</a>
           </div>
         </div>
       </div>

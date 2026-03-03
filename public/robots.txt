@@ -5,13 +5,20 @@ User-agent: *
 Allow: /
 
 # Explicitly allow important public pages
+Allow: /about
+Allow: /blogs
+Allow: /blog
+Allow: /contact
 Allow: /dashboard
 Allow: /faq
 Allow: /login
 Allow: /privacy-policy
+Allow: /terms
 Allow: /terms-of-service
+Allow: /disclaimer
 
 # Block non-public / internal pages
+Disallow: /admin
 Disallow: /user-info
 
 # Block framework internals

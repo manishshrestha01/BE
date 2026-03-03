@@ -21,6 +21,7 @@ const Landing = () => {
     setTitle('StudyMate — Computer Engineering Notes Pokhara University')
     // Update meta description
     setMeta({ name: 'description', content: 'Pokhara University BE Computer Engineering notes — semester-wise PDFs for PEC, NCIT, NEC and other colleges.' })
+    setMeta({ name: 'robots', content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' })
     setLinkRel('canonical', 'https://www.manishshrestha012.com.np/')
 
     // Open Graph / Twitter
@@ -382,7 +383,7 @@ const Landing = () => {
             <div className="footer-bottom-links">
               <a href="/faq" target="_blank" rel="noopener noreferrer">FAQ</a>
               <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-              <a href="/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+              <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>
             </div>
           </div>
         </div>

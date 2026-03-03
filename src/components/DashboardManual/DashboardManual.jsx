@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useUserProfile } from '../../hooks/useUserProfile'
 import { BackgroundProvider } from '../../context/BackgroundContext'
 import Desktop from '../Desktop/Desktop'
+import DashboardOnlyProtection from './DashboardOnlyProtection'
 import './DashboardManual.css'
 
 // SEO configurations for different sections
@@ -37,6 +38,7 @@ const DashboardManual = () => {
   const location = useLocation()
   const justCompletedProfile = useRef(false)
   const devtoolsLockedRef = useRef(false)
+  const dashboardScopeRef = useRef(null)
 
   // Check if profile was just completed
   useEffect(() => {
@@ -217,20 +219,6 @@ const DashboardManual = () => {
     }
   }, [isAuthenticated])
 
-  // Disable right-click only for authenticated users on dashboard.
-  useEffect(() => {
-    if (!isAuthenticated) return undefined
-
-    const handleContextMenu = (event) => {
-      event.preventDefault()
-    }
-
-    document.addEventListener('contextmenu', handleContextMenu)
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu)
-    }
-  }, [isAuthenticated])
-
   // Show loading only while checking initial auth state
   if (loading) {
     return (
@@ -285,7 +273,10 @@ const DashboardManual = () => {
   // LOGGED IN: Show the actual macOS-like Desktop with notes
   return (
     <BackgroundProvider>
-      <Desktop />
+      <div ref={dashboardScopeRef}>
+        <DashboardOnlyProtection enabled={isAuthenticated} scopeRef={dashboardScopeRef} />
+        <Desktop />
+      </div>
     </BackgroundProvider>
   )
 }
@@ -714,7 +705,7 @@ const ManualPage = ({ location }) => {
             <div className="footer-bottom-links">
               <a href="/faq" target="_blank" rel="noopener noreferrer">FAQ</a>
               <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-              <a href="/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+              <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>
             </div>
           </div>
         </div>

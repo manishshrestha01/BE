@@ -35,6 +35,10 @@ const Login = () => {
 
     return () => {
       document.title = 'StudyMate'
+      const restoreRobots = document.querySelector('meta[name="robots"]')
+      if (restoreRobots) {
+        restoreRobots.setAttribute('content', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1')
+      }
     }
   }, [])
 

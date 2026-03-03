@@ -65,6 +65,12 @@ const FAQ = () => {
       }
     })
 
+    // FAQ page should be crawlable and indexable
+    const metaRobots = document.querySelector('meta[name="robots"]')
+    if (metaRobots) {
+      metaRobots.setAttribute('content', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1')
+    }
+
     // Set canonical URL
     let canonical = document.querySelector('link[rel="canonical"]')
     if (canonical) {
@@ -227,7 +233,7 @@ const FAQ = () => {
             <div className="footer-bottom-links">
               <Link to="/faq">FAQ</Link>
               <Link to="/privacy-policy">Privacy Policy</Link>
-              <Link to="/terms-of-service">Terms of Service</Link>
+              <Link to="/terms">Terms</Link>
             </div>
           </div>
         </div>

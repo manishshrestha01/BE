@@ -21,10 +21,15 @@ const TermsOfService = () => {
       metaKeywords.setAttribute('content', keywordsContent)
     }
 
+    const metaRobots = document.querySelector('meta[name="robots"]')
+    if (metaRobots) {
+      metaRobots.setAttribute('content', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1')
+    }
+
     // Set canonical URL
     let canonical = document.querySelector('link[rel="canonical"]')
     if (canonical) {
-      canonical.setAttribute('href', 'https://www.manishshrestha012.com.np/terms-of-service')
+      canonical.setAttribute('href', 'https://www.manishshrestha012.com.np/terms')
     }
 
     // Apply body legal-theme so page background covers full viewport
@@ -91,7 +96,7 @@ const TermsOfService = () => {
           <div className="footer-bottom-links">
             <Link to="/faq">FAQ</Link>
             <Link to="/privacy-policy">Privacy Policy</Link>
-            <Link to="/terms-of-service">Terms of Service</Link>
+            <Link to="/terms">Terms of Service</Link>
           </div>
         </div>
       </div>

@@ -85,7 +85,7 @@ const PrivacyPolicy = () => {
             If you have questions about this policy, would like to report a privacy-related
             issue, or request data removal, please contact us using the Contact app within
             the desktop environment or email the site maintainer. You can also review our
-            <Link to="/terms-of-service"> Terms of Service</Link> for related information.
+            <Link to="/terms"> Terms of Service</Link> for related information.
           </p>
 
           <div className="legal-actions">
@@ -102,7 +102,7 @@ const PrivacyPolicy = () => {
           <div className="footer-bottom-links">
             <Link to="/faq">FAQ</Link>
             <Link to="/privacy-policy">Privacy Policy</Link>
-            <Link to="/terms-of-service">Terms of Service</Link>
+            <Link to="/terms">Terms of Service</Link>
           </div>
         </div>
       </div>
