@@ -248,7 +248,7 @@ export default function ContactApp ({ onClose }) {
                 <input ref={fileInputRef} className="hidden-file-input" type="file" accept={ACCEPT} onChange={handleFileInput} multiple={false} />
 
                 <div className={`attachment-dropzone ${dropActive ? 'active' : ''}`} onClick={() => fileInputRef.current?.click()} role="button" tabIndex={0} aria-describedby="contact-attachment-hint">
-                  <div className="attachment-placeholder">Click to attach files or drag & drop here — PNG / JPG / PDF (max 15 MB)</div>
+                  <div className="attachment-placeholder">Attach file or drag &amp; drop (PNG/JPG/PDF, max 15 MB)</div>
                 </div>
 
                 <div className="attachments-col" style={{ marginLeft: 8 }}>
