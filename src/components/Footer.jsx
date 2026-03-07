@@ -1,6 +1,23 @@
 import { Link, useLocation } from 'react-router-dom'
 import './Landing/Landing.css'
 
+const getSemesterGroupTarget = (semester) => {
+  if (semester <= 2) return 1
+  if (semester <= 4) return 3
+  if (semester <= 6) return 5
+  return 7
+}
+
+const footerSemesterLinks = Array.from({ length: 8 }, (_, index) => {
+  const semester = index + 1
+  const targetSemester = getSemesterGroupTarget(semester)
+
+  return {
+    label: `Semester ${semester}`,
+    to: `/blog/semester/${targetSemester}`,
+  }
+})
+
 const Footer = () => {
   const location = useLocation()
 
@@ -50,10 +67,11 @@ const Footer = () => {
             </div>
             <div className="footer-column">
               <h2>Semesters</h2>
-              <a href="/blog/semester/1">Semester 1-2</a>
-              <a href="/blog/semester/3">Semester 3-4</a>
-              <a href="/blog/semester/5">Semester 5-6</a>
-              <a href="/blog/semester/7">Semester 7-8</a>
+              {footerSemesterLinks.map((semesterLink) => (
+                <Link key={semesterLink.label} to={semesterLink.to}>
+                  {semesterLink.label}
+                </Link>
+              ))}
             </div>
             <div className="footer-column">
               <h2>Account</h2>

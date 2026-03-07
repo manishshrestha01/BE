@@ -760,3 +760,76 @@
     min-width: 120px;
   }
 }
+
+/* Final mobile override for maximized mode */
+@media (max-width: 520px) {
+  .contact-window.maximized .contact-body {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+
+  .contact-window.maximized .contact-shell {
+    max-height: none;
+    overflow: visible;
+    padding: 8px;
+    margin: 0;
+  }
+
+  .contact-window.maximized .contact-footer {
+    position: static;
+    min-height: 0;
+    padding: 12px;
+    gap: 12px;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .contact-window.maximized .contact-footer > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .contact-window.maximized .attachment-dropzone {
+    min-width: 0;
+    width: 100%;
+    min-height: 0;
+    padding: 10px 12px;
+    display: block;
+  }
+
+  .contact-window.maximized .attachment-dropzone .attachment-placeholder {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .contact-window.maximized .attachments-col {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    margin-left: 0 !important;
+  }
+
+  .contact-window.maximized .attachment-list {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .contact-window.maximized .attachment-thumb {
+    width: 48px;
+    height: 48px;
+  }
+
+  .contact-window.maximized .contact-footer > div:last-child {
+    align-self: stretch;
+    width: 100%;
+  }
+
+  .contact-window.maximized .contact-footer .btn-send {
+    position: static !important;
+    width: 100%;
+    transform: none !important;
+    padding: 12px 16px;
+    border-radius: 10px;
+  }
+}

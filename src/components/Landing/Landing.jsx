@@ -4,6 +4,23 @@ import { useAuth } from '../../context/AuthContext'
 import './Landing.css'
 import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../../lib/seo'
 
+const getSemesterGroupTarget = (semester) => {
+  if (semester <= 2) return 1
+  if (semester <= 4) return 3
+  if (semester <= 6) return 5
+  return 7
+}
+
+const landingSemesterLinks = Array.from({ length: 8 }, (_, index) => {
+  const semester = index + 1
+  const targetSemester = getSemesterGroupTarget(semester)
+
+  return {
+    label: `Semester ${semester}`,
+    to: `/blog/semester/${targetSemester}`,
+  }
+})
+
 const Landing = () => {
   const { loading } = useAuth()
   const location = useLocation()
@@ -366,10 +383,11 @@ const Landing = () => {
               </div>
               <div className="footer-column">
                 <h2>Semesters</h2>
-                <Link to="/blog/semester/1">Semester 1-2</Link>
-                <Link to="/blog/semester/3">Semester 3-4</Link>
-                <Link to="/blog/semester/5">Semester 5-6</Link>
-                <Link to="/blog/semester/7">Semester 7-8</Link>
+                {landingSemesterLinks.map((semesterLink) => (
+                  <Link key={semesterLink.label} to={semesterLink.to}>
+                    {semesterLink.label}
+                  </Link>
+                ))}
               </div>
               <div className="footer-column">
                 <h2>Account</h2>
