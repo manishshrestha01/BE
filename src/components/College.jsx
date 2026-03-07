@@ -133,7 +133,7 @@ const College = () => {
     )
   }
 
-  const otherColleges = COLLEGES.filter(c => c.value !== college.value).slice(0, 6)
+  const otherColleges = COLLEGES.filter(c => c.value !== college.value)
 
   return (
     <div className="landing college-page">
@@ -147,7 +147,10 @@ const College = () => {
             <div className="college-breadcrumbs"><Link to="/">Home</Link> • <Link to="/colleges">Colleges</Link> • <span>{college.label}</span></div>
             <h1><span className="hero-gradient">{college.label}</span> <span className="hero-highlight">— BE Computer Engineering</span></h1>
             <div className="hero-accent-line" aria-hidden="true" />
-            <p className="college-sub">Semester-wise BE Computer Engineering notes, PDFs and study materials for {college.label} students at Pokhara University. Use the dashboard to filter by semester and subject.</p>
+            <p className="college-sub">
+              Semester-wise BE Computer Engineering notes, PDFs and study materials for {college.label} students on StudyMate, aligned with the Pokhara University curriculum.{' '}
+              <Link to="/dashboard" onClick={forceScrollTop}>Open Dashboard</Link> to get access to the notes by semester and subject.
+            </p>
             <div className="hero-meta">
               <span className="meta-badge">BE Computer Engineering</span>
               <span className="meta-item">8 Semesters</span>
@@ -197,7 +200,7 @@ const College = () => {
 
           <div className="college-about" style={{ marginTop: 20 }}>
             <h3>About {college.label}</h3>
-            <p>StudyMate provides organized BE Computer Engineering notes for {college.label} students at Pokhara University. You can find lecture notes, PDF resources, and create personal notes while studying.</p>
+            <p>StudyMate provides organized BE Computer Engineering notes for {college.label} students, aligned with the Pokhara University curriculum. You can find lecture notes, PDF resources, and create personal notes while studying.</p>
           </div>
         </div>
 
