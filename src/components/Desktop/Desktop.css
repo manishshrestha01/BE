@@ -240,3 +240,46 @@
     white-space: nowrap;
   }
 }
+
+/* iPhone 5/SE (1st gen) portrait and similar compact-tall screens */
+@media (max-width: 360px) and (max-height: 640px) and (orientation: portrait) {
+  .desktop-content {
+    /* Keep content clear of shortcuts on right and dock at bottom */
+    height: calc(100dvh - 62px);
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-right: max(72px, calc(env(safe-area-inset-right) + 66px));
+    padding-bottom: max(82px, calc(env(safe-area-inset-bottom) + 76px));
+    padding-left: max(6px, env(safe-area-inset-left));
+  }
+
+  .desktop-shortcuts {
+    top: max(66px, calc(env(safe-area-inset-top) + 58px));
+    right: max(4px, env(safe-area-inset-right));
+    bottom: max(84px, calc(env(safe-area-inset-bottom) + 74px));
+    gap: 6px;
+    justify-content: space-between;
+  }
+
+  .desktop-shortcut {
+    width: 56px;
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .desktop-shortcut-icon,
+  .desktop-shortcut-png {
+    width: 34px;
+    height: 34px;
+    font-size: 30px;
+  }
+
+  .desktop-shortcut-img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .desktop-shortcut-label {
+    font-size: 10px;
+    line-height: 1.1;
+  }
+}
