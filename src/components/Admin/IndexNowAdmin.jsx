@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 import './IndexNowAdmin.css'
 
 const TOKEN_STORAGE_KEY = 'studymate:indexnow:admin-token'
@@ -25,6 +26,22 @@ const parseCustomUrls = (rawValue) =>
         .filter(Boolean)
     )
   )
+
+const normalizeRequireLogin = (payload) => {
+  if (typeof payload?.requireLogin === 'boolean') return payload.requireLogin
+  if (typeof payload?.authEnabled === 'boolean') return payload.authEnabled
+  if (typeof payload?.authRequired === 'boolean') return payload.authRequired
+  return true
+}
+
+const formatUpdatedAt = (updatedAt) => {
+  if (typeof updatedAt !== 'string' || !updatedAt) return ''
+
+  const parsedDate = new Date(updatedAt)
+  if (Number.isNaN(parsedDate.getTime())) return ''
+
+  return parsedDate.toLocaleString()
+}
 
 const ResultPanel = ({ result, title }) => {
   if (!result) return null
@@ -65,6 +82,7 @@ const ResultPanel = ({ result, title }) => {
 }
 
 const IndexNowAdmin = () => {
+  const { refreshAuthGate } = useAuth()
   const [token, setToken] = useState(readInitialToken)
   const [submitAllLoading, setSubmitAllLoading] = useState(false)
   const [submitAllError, setSubmitAllError] = useState('')
@@ -75,6 +93,14 @@ const IndexNowAdmin = () => {
   const [customLoading, setCustomLoading] = useState(false)
   const [customError, setCustomError] = useState('')
   const [customResult, setCustomResult] = useState(null)
+  const [authGateLoading, setAuthGateLoading] = useState(true)
+  const [authGateUpdating, setAuthGateUpdating] = useState(false)
+  const [authGateError, setAuthGateError] = useState('')
+  const [authGateState, setAuthGateState] = useState({
+    requireLogin: true,
+    updatedAt: null,
+    configured: false,
+  })
 
   const customUrls = useMemo(() => parseCustomUrls(customUrlsRaw), [customUrlsRaw])
 
@@ -105,6 +131,85 @@ const IndexNowAdmin = () => {
       throw new Error(data?.error || `Request failed (${response.status})`)
     }
     return data
+  }
+
+  const loadAuthGateStatus = useCallback(async () => {
+    setAuthGateError('')
+    setAuthGateLoading(true)
+
+    try {
+      const response = await fetch('/api/auth-gate', {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+        },
+        cache: 'no-store',
+      })
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        throw new Error(data?.error || `Request failed (${response.status})`)
+      }
+
+      setAuthGateState({
+        requireLogin: normalizeRequireLogin(data),
+        updatedAt: typeof data?.updatedAt === 'string' ? data.updatedAt : null,
+        configured: Boolean(data?.configured),
+      })
+    } catch (error) {
+      setAuthGateError(error instanceof Error ? error.message : 'Failed to load login toggle status')
+      setAuthGateState((prev) => ({
+        ...prev,
+        configured: false,
+      }))
+    } finally {
+      setAuthGateLoading(false)
+    }
+  }, [])
+
+  const callAuthGateApi = async (payload) => {
+    const response = await fetch('/api/auth-gate', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-auth-toggle-token': token.trim(),
+      },
+      body: JSON.stringify(payload),
+    })
+
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      throw new Error(data?.error || `Request failed (${response.status})`)
+    }
+    return data
+  }
+
+  useEffect(() => {
+    loadAuthGateStatus()
+  }, [loadAuthGateStatus])
+
+  const handleToggleAuthGate = async () => {
+    setAuthGateError('')
+
+    if (!token.trim()) {
+      setAuthGateError('Enter the admin token first.')
+      return
+    }
+
+    setAuthGateUpdating(true)
+    try {
+      const result = await callAuthGateApi({ action: 'toggle' })
+      setAuthGateState({
+        requireLogin: normalizeRequireLogin(result),
+        updatedAt: typeof result?.updatedAt === 'string' ? result.updatedAt : null,
+        configured: true,
+      })
+      await refreshAuthGate()
+    } catch (error) {
+      setAuthGateError(error instanceof Error ? error.message : 'Failed to toggle login requirement')
+    } finally {
+      setAuthGateUpdating(false)
+    }
   }
 
   const handleSubmitAll = async () => {
@@ -170,15 +275,58 @@ const IndexNowAdmin = () => {
           <h2>Admin Token</h2>
           <p>
             Token is kept in local browser storage only for this admin page and never hardcoded
-            in the repo.
+            in the repo. It is used for both IndexNow and login-auth toggle actions.
           </p>
           <input
             type="password"
             value={token}
             onChange={(event) => persistToken(event.target.value)}
-            placeholder="Paste x-indexnow-token"
+            placeholder="Paste admin token"
             autoComplete="off"
           />
+        </section>
+
+        <section className="indexnow-card">
+          <h2>Login Authentication Toggle</h2>
+          <p>
+            Use the same button to disable or re-enable login authentication for all visitors.
+            Disable it when you want crawlers and bots to access site content directly.
+          </p>
+          <div className="indexnow-status-line">
+            <span className={`indexnow-status-pill ${authGateState.requireLogin ? 'locked' : 'open'}`}>
+              {authGateState.requireLogin ? 'Login Required' : 'Login Disabled'}
+            </span>
+            <span className="indexnow-status-meta">
+              {authGateLoading
+                ? 'Loading status...'
+                : authGateState.updatedAt
+                  ? `Last updated: ${formatUpdatedAt(authGateState.updatedAt)}`
+                  : 'No persisted toggle found yet (using default).'}
+            </span>
+          </div>
+          {!authGateState.configured && !authGateLoading && (
+            <p className="indexnow-error">
+              Auth toggle backend is not fully configured. Check env vars and database setup.
+            </p>
+          )}
+          <div className="indexnow-inline-controls">
+            <button type="button" onClick={handleToggleAuthGate} disabled={authGateLoading || authGateUpdating}>
+              {authGateUpdating
+                ? 'Updating login mode...'
+                : authGateState.requireLogin
+                  ? 'Disable Login Authentication'
+                  : 'Enable Login Authentication'}
+            </button>
+            <button
+              type="button"
+              className="indexnow-secondary-btn"
+              onClick={loadAuthGateStatus}
+              disabled={authGateLoading || authGateUpdating}
+            >
+              Refresh Status
+            </button>
+          </div>
+          {authGateError && <p className="indexnow-error">{authGateError}</p>}
         </section>
 
         <section className="indexnow-card">

@@ -90,6 +90,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   }
 
   const handleSignOut = async () => {
+    if (!user) return
     try {
       await signOut()
       onClose()
@@ -307,12 +308,14 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                       title="FAQ"
                       onClick={() => setMobileView('faq')}
                     />
-                    <SettingRow
-                      icon={<span>🚪</span>}
-                      title="Sign Out"
-                      onClick={handleSignOut}
-                      danger
-                    />
+                    {user && (
+                      <SettingRow
+                        icon={<span>🚪</span>}
+                        title="Sign Out"
+                        onClick={handleSignOut}
+                        danger
+                      />
+                    )}
                    </div>
                 </>
               ) : (
@@ -595,7 +598,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                 </div>
 
                 {/* Account Section */}
-                {isAuthenticated && (
+                {Boolean(user) && isAuthenticated && (
                   <div className="account-section">
                     <h4>Account</h4>
                     <div className="account-info">

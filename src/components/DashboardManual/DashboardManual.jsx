@@ -32,7 +32,7 @@ const seoConfig = {
 }
 
 const DashboardManual = () => {
-  const { isAuthenticated, loading } = useAuth()
+  const { user, isAuthenticated, isAuthRequired, loading } = useAuth()
   const { profile, isSetupComplete, loading: profileLoading, profileInitialized } = useUserProfile()
   const navigate = useNavigate()
   const location = useLocation()
@@ -68,7 +68,7 @@ const DashboardManual = () => {
   // Only redirect when required profile fields are actually missing to avoid false redirects on refresh
   useEffect(() => {
     console.log('Dashboard check:', { isAuthenticated, profileInitialized, isSetupComplete, profile })
-    if (!isAuthenticated || !profileInitialized || justCompletedProfile.current) return
+    if (!isAuthenticated || !user || !profileInitialized || justCompletedProfile.current) return
 
     const missingRequired = !profile || !profile.full_name || !profile.semester || !profile.college
 
@@ -76,11 +76,11 @@ const DashboardManual = () => {
     if (missingRequired) {
       setTimeout(() => navigate('/user-info'), 200)
     }
-  }, [isAuthenticated, isSetupComplete, profileInitialized, profile, navigate])
+  }, [isAuthenticated, isSetupComplete, profileInitialized, profile, user, navigate])
 
   // SEO - Update document title and meta tags based on hash (only for non-authenticated)
   useEffect(() => {
-    if (isAuthenticated) return // Skip SEO for authenticated users
+    if (isAuthenticated && user) return // Skip SEO for authenticated users
     
     // Get current section from hash (remove the #)
     const currentSection = location.hash.replace('#', '') || 'default'
@@ -158,7 +158,7 @@ const DashboardManual = () => {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' })
           }, 100)
         }
-      } catch (e) {
+      } catch {
         // Invalid selector, ignore
         window.scrollTo(0, 0)
       }
@@ -170,11 +170,11 @@ const DashboardManual = () => {
     return () => {
       document.title = 'StudyMate'
     }
-  }, [isAuthenticated, location.hash])
+  }, [isAuthenticated, location.hash, user])
 
   // If devtools is open on dashboard, force-exit the dashboard session.
   useEffect(() => {
-    if (!isAuthenticated) return undefined
+    if (!isAuthenticated || !isAuthRequired || !user) return undefined
 
     const userAgent = navigator.userAgent || ''
     const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(userAgent)
@@ -217,7 +217,7 @@ const DashboardManual = () => {
       window.removeEventListener('resize', checkDevTools)
       window.removeEventListener('focus', checkDevTools)
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, isAuthRequired, user])
 
   // Show loading only while checking initial auth state
   if (loading) {
@@ -274,7 +274,7 @@ const DashboardManual = () => {
   return (
     <BackgroundProvider>
       <div ref={dashboardScopeRef}>
-        <DashboardOnlyProtection enabled={isAuthenticated} scopeRef={dashboardScopeRef} />
+        <DashboardOnlyProtection enabled={Boolean(user) && isAuthRequired} scopeRef={dashboardScopeRef} />
         <Desktop />
       </div>
     </BackgroundProvider>

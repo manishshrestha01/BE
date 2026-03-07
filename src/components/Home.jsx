@@ -7,7 +7,7 @@ import Desktop from './Desktop/Desktop'
 import '../styles/glass.css'
 
 const Home = () => {
-  const { isAuthenticated, loading } = useAuth()
+  const { user, isAuthenticated, isAuthRequired, loading } = useAuth()
   const { profile, isSetupComplete, loading: profileLoading, profileInitialized } = useUserProfile()
   const navigate = useNavigate()
   const location = useLocation()
@@ -22,10 +22,10 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
+    if (!loading && isAuthRequired && !isAuthenticated) {
       navigate('/login')
     }
-  }, [isAuthenticated, loading, navigate])
+  }, [isAuthRequired, isAuthenticated, loading, navigate])
 
   useEffect(() => {
     // Check if we just completed the profile
@@ -68,16 +68,16 @@ const Home = () => {
       } : null
     });
     // Only redirect if the profile is actually missing required fields
-    if (!isAuthenticated || !profileInitialized || justCompletedProfile.current) return
+    if (!isAuthenticated || !user || !profileInitialized || justCompletedProfile.current) return
 
     const missingRequired = !profile || !profile.full_name || !profile.semester || !profile.college
     if (missingRequired) {
       console.log('Profile incomplete or missing required fields, redirecting to user-info', { missingRequired, isSetupComplete })
       setTimeout(() => navigate('/user-info'), 200)
     }
-  }, [isAuthenticated, isSetupComplete, profileLoading, profileInitialized, navigate, profile])
+  }, [isAuthenticated, isSetupComplete, profileLoading, profileInitialized, navigate, profile, user])
 
-  if (loading || profileLoading) return null
+  if (loading || (Boolean(user) && profileLoading)) return null
 
   return (
     <BackgroundProvider>

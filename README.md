@@ -97,3 +97,29 @@ This repo now includes server-side IndexNow submission using Vercel API routes.
 - `POST /api/indexnow/blog-event`
 
 when `INDEXNOW_ADMIN_TOKEN` is available in environment.
+
+## Login Authentication Toggle (Bot/Crawler access)
+
+You can now toggle login authentication ON/OFF from the admin page using a single button.
+
+- Admin UI: `/admin/indexnow` -> section **Login Authentication Toggle**
+- API endpoint:
+  - `GET /api/auth-gate` (read current mode)
+  - `POST /api/auth-gate` (toggle/update mode, requires admin token)
+
+### Server env vars
+
+- `SUPABASE_SERVICE_ROLE_KEY` (required, server only)
+- `AUTH_TOGGLE_ADMIN_TOKEN` (recommended; falls back to `INDEXNOW_ADMIN_TOKEN`)
+- Optional:
+  - `AUTH_TOGGLE_TABLE` (default: `site_settings`)
+  - `AUTH_TOGGLE_KEY` (default: `require_login`)
+  - `AUTH_TOGGLE_DEFAULT_REQUIRE_LOGIN` (default: `true`)
+
+### Required database table
+
+Create the table from:
+
+- `supabase/migrations/20260307163000_create_site_settings.sql`
+
+This creates `public.site_settings` with a default `require_login = true` row.
