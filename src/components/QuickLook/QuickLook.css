@@ -145,8 +145,15 @@
   background: #111;
 }
 
-/* Hide remote PDF.js top toolbar (contains print/download controls) by offsetting the frame. */
 .pdf-viewer-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* Hide remote PDF.js top toolbar (contains print/download controls) by offsetting the frame. */
+.pdf-viewer-frame.toolbar-hidden {
   width: 100%;
   height: calc(100% + 32px);
   margin-top: -32px;

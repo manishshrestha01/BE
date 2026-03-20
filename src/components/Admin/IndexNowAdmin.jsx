@@ -34,6 +34,13 @@ const normalizeRequireLogin = (payload) => {
   return true
 }
 
+const normalizePdfDownloadEnabled = (payload) => {
+  if (typeof payload?.pdfDownloadEnabled === 'boolean') return payload.pdfDownloadEnabled
+  if (typeof payload?.downloadEnabled === 'boolean') return payload.downloadEnabled
+  if (typeof payload?.enabled === 'boolean') return payload.enabled
+  return true
+}
+
 const formatUpdatedAt = (updatedAt) => {
   if (typeof updatedAt !== 'string' || !updatedAt) return ''
 
@@ -98,6 +105,14 @@ const IndexNowAdmin = () => {
   const [authGateError, setAuthGateError] = useState('')
   const [authGateState, setAuthGateState] = useState({
     requireLogin: true,
+    updatedAt: null,
+    configured: false,
+  })
+  const [pdfGateLoading, setPdfGateLoading] = useState(true)
+  const [pdfGateUpdating, setPdfGateUpdating] = useState(false)
+  const [pdfGateError, setPdfGateError] = useState('')
+  const [pdfGateState, setPdfGateState] = useState({
+    enabled: true,
     updatedAt: null,
     configured: false,
   })
@@ -167,6 +182,40 @@ const IndexNowAdmin = () => {
     }
   }, [])
 
+  const loadPdfGateStatus = useCallback(async () => {
+    setPdfGateError('')
+    setPdfGateLoading(true)
+
+    try {
+      const response = await fetch('/api/pdf-download-gate', {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+        },
+        cache: 'no-store',
+      })
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        throw new Error(data?.error || `Request failed (${response.status})`)
+      }
+
+      setPdfGateState({
+        enabled: normalizePdfDownloadEnabled(data),
+        updatedAt: typeof data?.updatedAt === 'string' ? data.updatedAt : null,
+        configured: Boolean(data?.configured),
+      })
+    } catch (error) {
+      setPdfGateError(error instanceof Error ? error.message : 'Failed to load PDF download toggle status')
+      setPdfGateState((prev) => ({
+        ...prev,
+        configured: false,
+      }))
+    } finally {
+      setPdfGateLoading(false)
+    }
+  }, [])
+
   const callAuthGateApi = async (payload) => {
     const response = await fetch('/api/auth-gate', {
       method: 'POST',
@@ -184,9 +233,27 @@ const IndexNowAdmin = () => {
     return data
   }
 
+  const callPdfGateApi = async (payload) => {
+    const response = await fetch('/api/pdf-download-gate', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-pdf-toggle-token': token.trim(),
+      },
+      body: JSON.stringify(payload),
+    })
+
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      throw new Error(data?.error || `Request failed (${response.status})`)
+    }
+    return data
+  }
+
   useEffect(() => {
     loadAuthGateStatus()
-  }, [loadAuthGateStatus])
+    loadPdfGateStatus()
+  }, [loadAuthGateStatus, loadPdfGateStatus])
 
   const handleToggleAuthGate = async () => {
     setAuthGateError('')
@@ -209,6 +276,29 @@ const IndexNowAdmin = () => {
       setAuthGateError(error instanceof Error ? error.message : 'Failed to toggle login requirement')
     } finally {
       setAuthGateUpdating(false)
+    }
+  }
+
+  const handleTogglePdfGate = async () => {
+    setPdfGateError('')
+
+    if (!token.trim()) {
+      setPdfGateError('Enter the admin token first.')
+      return
+    }
+
+    setPdfGateUpdating(true)
+    try {
+      const result = await callPdfGateApi({ action: 'toggle' })
+      setPdfGateState({
+        enabled: normalizePdfDownloadEnabled(result),
+        updatedAt: typeof result?.updatedAt === 'string' ? result.updatedAt : null,
+        configured: true,
+      })
+    } catch (error) {
+      setPdfGateError(error instanceof Error ? error.message : 'Failed to toggle PDF download mode')
+    } finally {
+      setPdfGateUpdating(false)
     }
   }
 
@@ -275,7 +365,8 @@ const IndexNowAdmin = () => {
           <h2>Admin Token</h2>
           <p>
             Token is kept in local browser storage only for this admin page and never hardcoded
-            in the repo. It is used for both IndexNow and login-auth toggle actions.
+            in the repo. It is used for IndexNow, login-auth toggle, and PDF download toggle
+            actions.
           </p>
           <input
             type="password"
@@ -327,6 +418,49 @@ const IndexNowAdmin = () => {
             </button>
           </div>
           {authGateError && <p className="indexnow-error">{authGateError}</p>}
+        </section>
+
+        <section className="indexnow-card">
+          <h2>PDF Download Toggle (Mozilla PDF Viewer)</h2>
+          <p>
+            Control whether the PDF.js toolbar download button is visible inside the QuickLook
+            PDF viewer.
+          </p>
+          <div className="indexnow-status-line">
+            <span className={`indexnow-status-pill ${pdfGateState.enabled ? 'open' : 'locked'}`}>
+              {pdfGateState.enabled ? 'Download Enabled' : 'Download Hidden'}
+            </span>
+            <span className="indexnow-status-meta">
+              {pdfGateLoading
+                ? 'Loading status...'
+                : pdfGateState.updatedAt
+                  ? `Last updated: ${formatUpdatedAt(pdfGateState.updatedAt)}`
+                  : 'No persisted toggle found yet (using default).'}
+            </span>
+          </div>
+          {!pdfGateState.configured && !pdfGateLoading && (
+            <p className="indexnow-error">
+              PDF toggle backend is not fully configured. Check env vars and database setup.
+            </p>
+          )}
+          <div className="indexnow-inline-controls">
+            <button type="button" onClick={handleTogglePdfGate} disabled={pdfGateLoading || pdfGateUpdating}>
+              {pdfGateUpdating
+                ? 'Updating PDF download mode...'
+                : pdfGateState.enabled
+                  ? 'Disable PDF Download'
+                  : 'Enable PDF Download'}
+            </button>
+            <button
+              type="button"
+              className="indexnow-secondary-btn"
+              onClick={loadPdfGateStatus}
+              disabled={pdfGateLoading || pdfGateUpdating}
+            >
+              Refresh Status
+            </button>
+          </div>
+          {pdfGateError && <p className="indexnow-error">{pdfGateError}</p>}
         </section>
 
         <section className="indexnow-card">

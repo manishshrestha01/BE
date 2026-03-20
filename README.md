@@ -123,3 +123,30 @@ Create the table from:
 - `supabase/migrations/20260307163000_create_site_settings.sql`
 
 This creates `public.site_settings` with a default `require_login = true` row.
+
+## PDF Download Toggle (Mozilla PDF.js QuickLook)
+
+PDF download in the embedded Mozilla PDF.js viewer can now be controlled from the backend.
+
+- Admin UI: `/admin/indexnow` -> section **PDF Download Toggle (Mozilla PDF Viewer)**
+- API endpoint:
+  - `GET /api/pdf-download-gate` (read current mode)
+  - `POST /api/pdf-download-gate` (toggle/update mode, requires admin token)
+
+### Server env vars
+
+- `SUPABASE_SERVICE_ROLE_KEY` (required, server only)
+- `PDF_DOWNLOAD_TOGGLE_ADMIN_TOKEN` (recommended; falls back to `AUTH_TOGGLE_ADMIN_TOKEN`, then `INDEXNOW_ADMIN_TOKEN`)
+- Optional:
+  - `PDF_DOWNLOAD_TOGGLE_TABLE` (default: `site_settings`)
+  - `PDF_DOWNLOAD_TOGGLE_KEY` (default: `pdf_download_enabled`)
+  - `PDF_DOWNLOAD_DEFAULT_ENABLED` (default: `true`)
+
+### Required database rows
+
+Run these migrations:
+
+- `supabase/migrations/20260307163000_create_site_settings.sql`
+- `supabase/migrations/20260320120000_add_pdf_download_setting.sql`
+
+This stores a `pdf_download_enabled` boolean-like value in `public.site_settings`.

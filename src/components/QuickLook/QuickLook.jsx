@@ -4,11 +4,39 @@ import ZoomableImage from './ZoomableImage'
 import './QuickLook.css'
 
 const QUICKLOOK_STATE_KEY = 'studymate:quicklook:v1'
+const PDF_DOWNLOAD_GATE_ENDPOINT = '/api/pdf-download-gate'
+
+const parseBoolean = (rawValue, fallbackValue = true) => {
+  if (typeof rawValue === 'boolean') return rawValue
+  if (typeof rawValue === 'number') return rawValue !== 0
+
+  if (typeof rawValue === 'string') {
+    const normalized = rawValue.trim().toLowerCase()
+    if (['1', 'true', 'yes', 'on'].includes(normalized)) return true
+    if (['0', 'false', 'no', 'off'].includes(normalized)) return false
+  }
+
+  return fallbackValue
+}
+
+const readPdfDownloadEnabledFromResponse = (payload) => {
+  if (typeof payload?.pdfDownloadEnabled !== 'undefined') {
+    return parseBoolean(payload.pdfDownloadEnabled, true)
+  }
+  if (typeof payload?.downloadEnabled !== 'undefined') {
+    return parseBoolean(payload.downloadEnabled, true)
+  }
+  if (typeof payload?.enabled !== 'undefined') {
+    return parseBoolean(payload.enabled, true)
+  }
+  return true
+}
 
 const QuickLook = ({ file, onClose }) => {
   const [viewerErrorKey, setViewerErrorKey] = useState(null)
   const [useSecondaryProxy, setUseSecondaryProxy] = useState(false)
   const [textPreviewState, setTextPreviewState] = useState({ status: 'idle', content: '' })
+  const [pdfDownloadEnabled, setPdfDownloadEnabled] = useState(true)
   const mobileOfficeRedirectAttemptRef = useRef('')
   const navigate = useNavigate()
   const location = useLocation()
@@ -188,6 +216,41 @@ const QuickLook = ({ file, onClose }) => {
   }, [file])
 
   useEffect(() => {
+    if (!file || file.fileType !== 'pdf') {
+      return
+    }
+
+    const abortController = new AbortController()
+
+    const loadPdfDownloadGate = async () => {
+      try {
+        const response = await fetch(PDF_DOWNLOAD_GATE_ENDPOINT, {
+          method: 'GET',
+          headers: { accept: 'application/json' },
+          cache: 'no-store',
+          signal: abortController.signal,
+        })
+
+        if (!response.ok) {
+          throw new Error(`PDF download gate request failed (${response.status})`)
+        }
+
+        const payload = await response.json().catch(() => ({}))
+        setPdfDownloadEnabled(readPdfDownloadEnabledFromResponse(payload))
+      } catch (error) {
+        if (abortController.signal.aborted) return
+        console.error('Failed to load PDF download gate state:', error)
+      }
+    }
+
+    loadPdfDownloadGate()
+
+    return () => {
+      abortController.abort()
+    }
+  }, [file])
+
+  useEffect(() => {
     if (!file || file.fileType !== 'text') {
       setTextPreviewState({ status: 'idle', content: '' })
       return
@@ -304,8 +367,8 @@ const QuickLook = ({ file, onClose }) => {
             <iframe
               src={getPDFJsViewerUrl(file.url)}
               title={file.name}
-              className="fullscreen-viewer pdf-viewer-frame"
-              sandbox="allow-scripts allow-same-origin"
+              className={`fullscreen-viewer pdf-viewer-frame ${pdfDownloadEnabled ? '' : 'toolbar-hidden'}`.trim()}
+              sandbox={pdfDownloadEnabled ? 'allow-scripts allow-same-origin allow-downloads' : 'allow-scripts allow-same-origin'}
               onError={flagViewerError}
             />
           </div>
