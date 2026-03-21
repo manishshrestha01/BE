@@ -193,7 +193,9 @@ const QuickLook = ({ file, onClose }) => {
   }, [file, isMobile])
 
   useEffect(() => {
-    if (!file || file.fileType !== 'pdf') {
+    // Allow browser/PDF.js print when download is enabled from backend toggle.
+    // Keep print shortcut blocked only in locked mode.
+    if (!file || file.fileType !== 'pdf' || pdfDownloadEnabled) {
       return
     }
 
@@ -213,7 +215,7 @@ const QuickLook = ({ file, onClose }) => {
       window.removeEventListener('keydown', preventPdfPrintShortcut, true)
       document.removeEventListener('keydown', preventPdfPrintShortcut, true)
     }
-  }, [file])
+  }, [file, pdfDownloadEnabled])
 
   useEffect(() => {
     if (!file || file.fileType !== 'pdf') {
@@ -368,7 +370,11 @@ const QuickLook = ({ file, onClose }) => {
               src={getPDFJsViewerUrl(file.url)}
               title={file.name}
               className={`fullscreen-viewer pdf-viewer-frame ${pdfDownloadEnabled ? '' : 'toolbar-hidden'}`.trim()}
-              sandbox={pdfDownloadEnabled ? 'allow-scripts allow-same-origin allow-downloads' : 'allow-scripts allow-same-origin'}
+              sandbox={
+                pdfDownloadEnabled
+                  ? 'allow-scripts allow-same-origin allow-downloads allow-modals'
+                  : 'allow-scripts allow-same-origin'
+              }
               onError={flagViewerError}
             />
           </div>
