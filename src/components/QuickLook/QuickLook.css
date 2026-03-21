@@ -15,7 +15,8 @@
   to { opacity: 1; }
 }
 
-.viewer-close {
+.viewer-close,
+.viewer-download {
   width: 32px;
   height: 32px;
   border: none;
@@ -30,8 +31,14 @@
   transition: background 0.2s ease;
 }
 
-.viewer-close:hover {
+.viewer-close:hover,
+.viewer-download:hover {
   background: rgba(0, 0, 0, 0.9);
+}
+
+.viewer-download:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .viewer-filename {
@@ -52,6 +59,13 @@
   position: absolute;
   top: 50px;
   right: 16px;
+  z-index: 10000;
+}
+
+.viewer-desktop .viewer-download {
+  position: absolute;
+  top: 50px;
+  right: 56px;
   z-index: 10000;
 }
 
@@ -81,7 +95,8 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.viewer-mobile .viewer-close {
+.viewer-mobile .viewer-close,
+.viewer-mobile .viewer-download {
   position: static;
   width: 34px;
   height: 34px;
@@ -92,7 +107,8 @@
   flex: 0 0 auto;
 }
 
-.viewer-mobile .viewer-close:hover {
+.viewer-mobile .viewer-close:hover,
+.viewer-mobile .viewer-download:hover {
   background: rgba(255, 255, 255, 0.22);
 }
 
@@ -369,14 +385,16 @@
     padding-right: max(12px, env(safe-area-inset-right));
   }
   
-  .viewer-mobile .viewer-close {
+  .viewer-mobile .viewer-close,
+  .viewer-mobile .viewer-download {
     width: 36px;
     height: 36px;
     font-size: 18px;
     background: rgba(255, 255, 255, 0.2);
   }
   
-  .viewer-mobile .viewer-close:active {
+  .viewer-mobile .viewer-close:active,
+  .viewer-mobile .viewer-download:active {
     transform: scale(0.9);
   }
   
@@ -388,6 +406,16 @@
   .viewer-desktop .viewer-close {
     top: max(16px, env(safe-area-inset-top));
     right: max(12px, env(safe-area-inset-right));
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+  }
+
+  .viewer-desktop .viewer-download {
+    top: max(16px, env(safe-area-inset-top));
+    right: calc(max(12px, env(safe-area-inset-right)) + 44px);
     width: 36px;
     height: 36px;
     font-size: 18px;
@@ -451,7 +479,8 @@
     padding-right: max(16px, env(safe-area-inset-right));
   }
   
-  .viewer-mobile .viewer-close {
+  .viewer-mobile .viewer-close,
+  .viewer-mobile .viewer-download {
     width: 40px;
     height: 40px;
     font-size: 20px;
@@ -464,6 +493,14 @@
   .viewer-desktop .viewer-close {
     top: max(20px, env(safe-area-inset-top));
     right: max(16px, env(safe-area-inset-right));
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .viewer-desktop .viewer-download {
+    top: max(20px, env(safe-area-inset-top));
+    right: calc(max(16px, env(safe-area-inset-right)) + 48px);
     width: 40px;
     height: 40px;
     font-size: 20px;

@@ -32,11 +32,27 @@ const readPdfDownloadEnabledFromResponse = (payload) => {
   return true
 }
 
+const getPdfDownloadFileName = (file) => {
+  const fromName = typeof file?.name === 'string' ? file.name.trim() : ''
+  if (fromName) {
+    return fromName.toLowerCase().endsWith('.pdf') ? fromName : `${fromName}.pdf`
+  }
+
+  try {
+    const parsed = new URL(file?.url || '', window.location.origin)
+    const lastSegment = parsed.pathname.split('/').filter(Boolean).pop() || 'document.pdf'
+    return lastSegment.toLowerCase().endsWith('.pdf') ? lastSegment : `${lastSegment}.pdf`
+  } catch {
+    return 'document.pdf'
+  }
+}
+
 const QuickLook = ({ file, onClose }) => {
   const [viewerErrorKey, setViewerErrorKey] = useState(null)
   const [useSecondaryProxy, setUseSecondaryProxy] = useState(false)
   const [textPreviewState, setTextPreviewState] = useState({ status: 'idle', content: '' })
   const [pdfDownloadEnabled, setPdfDownloadEnabled] = useState(true)
+  const [pdfDownloading, setPdfDownloading] = useState(false)
   const mobileOfficeRedirectAttemptRef = useRef('')
   const navigate = useNavigate()
   const location = useLocation()
@@ -135,6 +151,52 @@ const QuickLook = ({ file, onClose }) => {
         </div>
       </div>
     )
+  }
+
+  const handlePdfDownload = async () => {
+    if (!file?.url || pdfDownloading) {
+      return
+    }
+
+    const downloadName = getPdfDownloadFileName(file)
+    setPdfDownloading(true)
+
+    try {
+      const response = await fetch(file.url)
+      if (!response.ok) {
+        throw new Error(`Download request failed (${response.status})`)
+      }
+
+      const blob = await response.blob()
+      const blobUrl = URL.createObjectURL(blob)
+
+      const anchor = document.createElement('a')
+      anchor.href = blobUrl
+      anchor.download = downloadName
+      anchor.style.display = 'none'
+      document.body.appendChild(anchor)
+      anchor.click()
+      anchor.remove()
+
+      setTimeout(() => {
+        URL.revokeObjectURL(blobUrl)
+      }, 1500)
+    } catch (error) {
+      console.error('PDF download failed; opening direct URL:', error)
+
+      try {
+        const directUrl = new URL(file.url, window.location.origin)
+        if (directUrl.hostname.includes('supabase') && !directUrl.searchParams.has('download')) {
+          directUrl.searchParams.set('download', downloadName)
+        }
+
+        window.open(directUrl.toString(), '_blank', 'noopener,noreferrer')
+      } catch {
+        window.open(file.url, '_blank', 'noopener,noreferrer')
+      }
+    } finally {
+      setPdfDownloading(false)
+    }
   }
 
   useEffect(() => {
@@ -292,6 +354,7 @@ const QuickLook = ({ file, onClose }) => {
   }, [file])
 
   if (!file) return null
+  const showPdfDownloadButton = file.fileType === 'pdf' && pdfDownloadEnabled
 
   const renderPreview = () => {
     // Handle folders - show info card
@@ -477,9 +540,31 @@ const QuickLook = ({ file, onClose }) => {
         <header className="viewer-topbar">
           <button className="viewer-close" onClick={onClose} aria-label="Close preview">✕</button>
           <div className="viewer-filename">{file.name}</div>
+          {showPdfDownloadButton && (
+            <button
+              className="viewer-download"
+              onClick={handlePdfDownload}
+              aria-label="Download PDF"
+              disabled={pdfDownloading}
+              title="Download PDF"
+            >
+              {pdfDownloading ? '…' : '⬇'}
+            </button>
+          )}
         </header>
       ) : (
         <>
+          {showPdfDownloadButton && (
+            <button
+              className="viewer-download"
+              onClick={handlePdfDownload}
+              aria-label="Download PDF"
+              disabled={pdfDownloading}
+              title="Download PDF"
+            >
+              {pdfDownloading ? '…' : '⬇'}
+            </button>
+          )}
           <button className="viewer-close" onClick={onClose} aria-label="Close preview">✕</button>
           <div className="viewer-filename">{file.name}</div>
         </>
