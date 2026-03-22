@@ -41,6 +41,13 @@ const normalizePdfDownloadEnabled = (payload) => {
   return true
 }
 
+const normalizeSupportReplyEnabled = (payload) => {
+  if (typeof payload?.supportReplyEnabled === 'boolean') return payload.supportReplyEnabled
+  if (typeof payload?.replyEnabled === 'boolean') return payload.replyEnabled
+  if (typeof payload?.enabled === 'boolean') return payload.enabled
+  return true
+}
+
 const formatUpdatedAt = (updatedAt) => {
   if (typeof updatedAt !== 'string' || !updatedAt) return ''
 
@@ -112,6 +119,14 @@ const IndexNowAdmin = () => {
   const [pdfGateUpdating, setPdfGateUpdating] = useState(false)
   const [pdfGateError, setPdfGateError] = useState('')
   const [pdfGateState, setPdfGateState] = useState({
+    enabled: true,
+    updatedAt: null,
+    configured: false,
+  })
+  const [supportReplyGateLoading, setSupportReplyGateLoading] = useState(true)
+  const [supportReplyGateUpdating, setSupportReplyGateUpdating] = useState(false)
+  const [supportReplyGateError, setSupportReplyGateError] = useState('')
+  const [supportReplyGateState, setSupportReplyGateState] = useState({
     enabled: true,
     updatedAt: null,
     configured: false,
@@ -216,6 +231,40 @@ const IndexNowAdmin = () => {
     }
   }, [])
 
+  const loadSupportReplyGateStatus = useCallback(async () => {
+    setSupportReplyGateError('')
+    setSupportReplyGateLoading(true)
+
+    try {
+      const response = await fetch('/api/support-reply-gate', {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+        },
+        cache: 'no-store',
+      })
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        throw new Error(data?.error || `Request failed (${response.status})`)
+      }
+
+      setSupportReplyGateState({
+        enabled: normalizeSupportReplyEnabled(data),
+        updatedAt: typeof data?.updatedAt === 'string' ? data.updatedAt : null,
+        configured: Boolean(data?.configured),
+      })
+    } catch (error) {
+      setSupportReplyGateError(error instanceof Error ? error.message : 'Failed to load support reply toggle status')
+      setSupportReplyGateState((prev) => ({
+        ...prev,
+        configured: false,
+      }))
+    } finally {
+      setSupportReplyGateLoading(false)
+    }
+  }, [])
+
   const callAuthGateApi = async (payload) => {
     const response = await fetch('/api/auth-gate', {
       method: 'POST',
@@ -250,10 +299,28 @@ const IndexNowAdmin = () => {
     return data
   }
 
+  const callSupportReplyGateApi = async (payload) => {
+    const response = await fetch('/api/support-reply-gate', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-support-reply-toggle-token': token.trim(),
+      },
+      body: JSON.stringify(payload),
+    })
+
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      throw new Error(data?.error || `Request failed (${response.status})`)
+    }
+    return data
+  }
+
   useEffect(() => {
     loadAuthGateStatus()
     loadPdfGateStatus()
-  }, [loadAuthGateStatus, loadPdfGateStatus])
+    loadSupportReplyGateStatus()
+  }, [loadAuthGateStatus, loadPdfGateStatus, loadSupportReplyGateStatus])
 
   const handleToggleAuthGate = async () => {
     setAuthGateError('')
@@ -299,6 +366,29 @@ const IndexNowAdmin = () => {
       setPdfGateError(error instanceof Error ? error.message : 'Failed to toggle PDF download mode')
     } finally {
       setPdfGateUpdating(false)
+    }
+  }
+
+  const handleToggleSupportReplyGate = async () => {
+    setSupportReplyGateError('')
+
+    if (!token.trim()) {
+      setSupportReplyGateError('Enter the admin token first.')
+      return
+    }
+
+    setSupportReplyGateUpdating(true)
+    try {
+      const result = await callSupportReplyGateApi({ action: 'toggle' })
+      setSupportReplyGateState({
+        enabled: normalizeSupportReplyEnabled(result),
+        updatedAt: typeof result?.updatedAt === 'string' ? result.updatedAt : null,
+        configured: true,
+      })
+    } catch (error) {
+      setSupportReplyGateError(error instanceof Error ? error.message : 'Failed to toggle support reply mode')
+    } finally {
+      setSupportReplyGateUpdating(false)
     }
   }
 
@@ -365,7 +455,8 @@ const IndexNowAdmin = () => {
           <h2>Admin Token</h2>
           <p>
             Token is kept in local browser storage only for this admin page and never hardcoded
-            in the repo. It is used for IndexNow, login-auth toggle, and PDF download toggle
+            in the repo. It is used for IndexNow, login-auth toggle, PDF download toggle, and
+            support-reply toggle
             actions.
           </p>
           <input
@@ -461,6 +552,52 @@ const IndexNowAdmin = () => {
             </button>
           </div>
           {pdfGateError && <p className="indexnow-error">{pdfGateError}</p>}
+        </section>
+
+        <section className="indexnow-card">
+          <h2>Support Reply Toggle (Email Replies)</h2>
+          <p>
+            Control whether backend support replies can send emails from `/api/support/reply`.
+          </p>
+          <div className="indexnow-status-line">
+            <span className={`indexnow-status-pill ${supportReplyGateState.enabled ? 'open' : 'locked'}`}>
+              {supportReplyGateState.enabled ? 'Support Reply Enabled' : 'Support Reply Disabled'}
+            </span>
+            <span className="indexnow-status-meta">
+              {supportReplyGateLoading
+                ? 'Loading status...'
+                : supportReplyGateState.updatedAt
+                  ? `Last updated: ${formatUpdatedAt(supportReplyGateState.updatedAt)}`
+                  : 'No persisted toggle found yet (using default).'}
+            </span>
+          </div>
+          {!supportReplyGateState.configured && !supportReplyGateLoading && (
+            <p className="indexnow-error">
+              Support reply toggle backend is not fully configured. Check env vars and database setup.
+            </p>
+          )}
+          <div className="indexnow-inline-controls">
+            <button
+              type="button"
+              onClick={handleToggleSupportReplyGate}
+              disabled={supportReplyGateLoading || supportReplyGateUpdating}
+            >
+              {supportReplyGateUpdating
+                ? 'Updating support reply mode...'
+                : supportReplyGateState.enabled
+                  ? 'Disable Support Reply'
+                  : 'Enable Support Reply'}
+            </button>
+            <button
+              type="button"
+              className="indexnow-secondary-btn"
+              onClick={loadSupportReplyGateStatus}
+              disabled={supportReplyGateLoading || supportReplyGateUpdating}
+            >
+              Refresh Status
+            </button>
+          </div>
+          {supportReplyGateError && <p className="indexnow-error">{supportReplyGateError}</p>}
         </section>
 
         <section className="indexnow-card">

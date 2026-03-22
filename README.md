@@ -157,9 +157,13 @@ You can now reply to support messages from backend and deliver replies only to t
 
 - API endpoint:
   - `POST /api/support/reply` (requires admin token)
+  - `GET /api/support-reply-gate` (check if replies are enabled)
+  - `POST /api/support-reply-gate` (toggle/update enabled state, requires admin token)
 - Auth headers accepted:
   - `x-support-admin-token` (recommended)
   - `authorization: Bearer <token>`
+
+`/api/support/reply` respects this gate. If support-reply gate is OFF, email sending is blocked.
 
 ### Server env vars
 
@@ -172,6 +176,10 @@ You can now reply to support messages from backend and deliver replies only to t
   - `SUPPORT_MESSAGES_TABLE` (default: `support_messages`)
   - `SUPPORT_REPLIES_TABLE` (default: `support_replies`)
   - `SUPPORT_EMAIL_SUBJECT_PREFIX` (default: `StudyMate Support`)
+  - `SUPPORT_REPLY_TOGGLE_ADMIN_TOKEN` (for `/api/support-reply-gate`; falls back to `SUPPORT_REPLY_ADMIN_TOKEN`)
+  - `SUPPORT_REPLY_TOGGLE_TABLE` (default: `site_settings`)
+  - `SUPPORT_REPLY_TOGGLE_KEY` (default: `support_reply_enabled`)
+  - `SUPPORT_REPLY_DEFAULT_ENABLED` (default: `true`)
 
 ### Request body
 
@@ -201,5 +209,23 @@ curl -X POST "https://www.manishshrestha012.com.np/api/support/reply" \
 Run:
 
 - `supabase/migrations/20260322170000_create_support_messaging.sql`
+- `supabase/migrations/20260322174500_add_support_reply_setting.sql`
 
 This creates `public.support_replies` (reply logs), and creates `public.support_messages` for fresh setups when missing.
+
+### Gate API examples
+
+Check status:
+
+```bash
+curl "https://www.manishshrestha012.com.np/api/support-reply-gate"
+```
+
+Toggle ON/OFF:
+
+```bash
+curl -X POST "https://www.manishshrestha012.com.np/api/support-reply-gate" \
+  -H "content-type: application/json" \
+  -H "x-support-reply-toggle-token: <SUPPORT_REPLY_TOGGLE_ADMIN_TOKEN>" \
+  -d '{ "action": "toggle" }'
+```

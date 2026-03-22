@@ -14,6 +14,11 @@ import {
   sendJson,
   sendMethodNotAllowed,
 } from '../_lib/http.js'
+import {
+  isSupportReplyGateConfigured,
+  loadSupportReplyGateConfig,
+  readSupportReplyGateState,
+} from '../_lib/support-reply-gate.js'
 
 const MAX_MESSAGE_ID_LENGTH = 128
 const MAX_REPLY_LENGTH = 10_000
@@ -89,11 +94,36 @@ export default async function handler(req, res) {
   res.setHeader('cache-control', 'no-store')
 
   const config = loadSupportReplyConfig()
+  const gateConfig = loadSupportReplyGateConfig()
+  let supportReplyEnabled = gateConfig.defaultEnabled
 
   if (!isSupportReplyConfigured(config)) {
     sendJson(res, 500, {
       error:
         'Support reply backend is not configured. Set SUPABASE_URL/VITE_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY, SUPPORT_EMAIL_FROM, and table names.',
+    })
+    return
+  }
+
+  try {
+    if (isSupportReplyGateConfigured(gateConfig)) {
+      const gateState = await readSupportReplyGateState(gateConfig)
+      supportReplyEnabled = gateState.supportReplyEnabled
+    }
+  } catch (error) {
+    sendJson(res, 500, {
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to read support reply gate state',
+    })
+    return
+  }
+
+  if (!supportReplyEnabled) {
+    sendJson(res, 403, {
+      error: 'Support reply is currently disabled',
+      supportReplyEnabled: false,
     })
     return
   }
