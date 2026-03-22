@@ -21,15 +21,15 @@ const parseBoolean = (rawValue, fallbackValue = true) => {
 
 const readPdfDownloadEnabledFromResponse = (payload) => {
   if (typeof payload?.pdfDownloadEnabled !== 'undefined') {
-    return parseBoolean(payload.pdfDownloadEnabled, true)
+    return parseBoolean(payload.pdfDownloadEnabled, false)
   }
   if (typeof payload?.downloadEnabled !== 'undefined') {
-    return parseBoolean(payload.downloadEnabled, true)
+    return parseBoolean(payload.downloadEnabled, false)
   }
   if (typeof payload?.enabled !== 'undefined') {
-    return parseBoolean(payload.enabled, true)
+    return parseBoolean(payload.enabled, false)
   }
-  return true
+  return false
 }
 
 const getPdfDownloadFileName = (file) => {
@@ -51,7 +51,8 @@ const QuickLook = ({ file, onClose }) => {
   const [viewerErrorKey, setViewerErrorKey] = useState(null)
   const [useSecondaryProxy, setUseSecondaryProxy] = useState(false)
   const [textPreviewState, setTextPreviewState] = useState({ status: 'idle', content: '' })
-  const [pdfDownloadEnabled, setPdfDownloadEnabled] = useState(true)
+  const [pdfDownloadEnabled, setPdfDownloadEnabled] = useState(false)
+  const [pdfGateLoaded, setPdfGateLoaded] = useState(false)
   const [pdfDownloading, setPdfDownloading] = useState(false)
   const mobileOfficeRedirectAttemptRef = useRef('')
   const navigate = useNavigate()
@@ -83,8 +84,11 @@ const QuickLook = ({ file, onClose }) => {
 
   // Multiple viewer options for different file types
   // PDF.js viewer (Mozilla) - handles large PDFs well
-  const getPDFJsViewerUrl = (url) => {
-    return `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(url)}`
+  const getPDFJsViewerUrl = (url, showViewerFeatures = true) => {
+    const hash = showViewerFeatures
+      ? 'toolbar=1&navpanes=1&scrollbar=1'
+      : 'toolbar=0&navpanes=0&scrollbar=1'
+    return `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(url)}#${hash}`
   }
 
   // Google Docs viewer - good for Office files, has size limits
@@ -259,6 +263,10 @@ const QuickLook = ({ file, onClose }) => {
       return
     }
 
+    if (pdfGateLoaded && pdfDownloadEnabled) {
+      return
+    }
+
     const preventPdfPrintShortcut = (event) => {
       const key = event.key?.toLowerCase?.()
       if ((event.ctrlKey || event.metaKey) && key === 'p') {
@@ -275,12 +283,15 @@ const QuickLook = ({ file, onClose }) => {
       window.removeEventListener('keydown', preventPdfPrintShortcut, true)
       document.removeEventListener('keydown', preventPdfPrintShortcut, true)
     }
-  }, [file])
+  }, [file, pdfDownloadEnabled, pdfGateLoaded])
 
   useEffect(() => {
     if (!file || file.fileType !== 'pdf') {
       return
     }
+
+    setPdfGateLoaded(false)
+    setPdfDownloadEnabled(false)
 
     const abortController = new AbortController()
 
@@ -302,6 +313,11 @@ const QuickLook = ({ file, onClose }) => {
       } catch (error) {
         if (abortController.signal.aborted) return
         console.error('Failed to load PDF download gate state:', error)
+        setPdfDownloadEnabled(false)
+      } finally {
+        if (!abortController.signal.aborted) {
+          setPdfGateLoaded(true)
+        }
       }
     }
 
@@ -352,7 +368,7 @@ const QuickLook = ({ file, onClose }) => {
   }, [file])
 
   if (!file) return null
-  const showPdfDownloadButton = file.fileType === 'pdf' && pdfDownloadEnabled
+  const showPdfDownloadButton = file.fileType === 'pdf' && pdfGateLoaded && pdfDownloadEnabled
 
   const renderPreview = () => {
     // Handle folders - show info card
@@ -428,7 +444,7 @@ const QuickLook = ({ file, onClose }) => {
         return (
           <div className="pdf-viewer-shell">
             <iframe
-              src={getPDFJsViewerUrl(file.url)}
+              src={getPDFJsViewerUrl(file.url, pdfDownloadEnabled)}
               title={file.name}
               className="fullscreen-viewer pdf-viewer-frame"
               sandbox={
