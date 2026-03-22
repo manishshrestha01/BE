@@ -131,6 +131,14 @@ const IndexNowAdmin = () => {
     updatedAt: null,
     configured: false,
   })
+  const [replyMessageId, setReplyMessageId] = useState('')
+  const [replyToEmail, setReplyToEmail] = useState('')
+  const [replyToName, setReplyToName] = useState('')
+  const [replySubject, setReplySubject] = useState('')
+  const [replyBody, setReplyBody] = useState('')
+  const [supportSendLoading, setSupportSendLoading] = useState(false)
+  const [supportSendError, setSupportSendError] = useState('')
+  const [supportSendResult, setSupportSendResult] = useState(null)
 
   const customUrls = useMemo(() => parseCustomUrls(customUrlsRaw), [customUrlsRaw])
 
@@ -316,6 +324,23 @@ const IndexNowAdmin = () => {
     return data
   }
 
+  const callSupportSendApi = async (payload) => {
+    const response = await fetch('/api/support/send-email', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-support-admin-token': token.trim(),
+      },
+      body: JSON.stringify(payload),
+    })
+
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      throw new Error(data?.error || `Request failed (${response.status})`)
+    }
+    return data
+  }
+
   useEffect(() => {
     loadAuthGateStatus()
     loadPdfGateStatus()
@@ -409,6 +434,64 @@ const IndexNowAdmin = () => {
       setSubmitAllError(error instanceof Error ? error.message : 'Submit-all failed')
     } finally {
       setSubmitAllLoading(false)
+    }
+  }
+
+  const handleSendSupportReply = async () => {
+    setSupportSendError('')
+    setSupportSendResult(null)
+
+    const normalizedToken = token.trim()
+    const normalizedMessageId = replyMessageId.trim()
+    const normalizedToEmail = replyToEmail.trim()
+    const normalizedToName = replyToName.trim()
+    const normalizedSubject = replySubject.trim()
+    const normalizedReply = replyBody.trim()
+
+    if (!normalizedToken) {
+      setSupportSendError('Enter the admin token first.')
+      return
+    }
+
+    if (!supportReplyGateState.enabled) {
+      setSupportSendError('Support reply is currently disabled. Enable it first from the toggle above.')
+      return
+    }
+
+    if (!normalizedReply) {
+      setSupportSendError('Reply message is required.')
+      return
+    }
+
+    if (!normalizedMessageId && !normalizedToEmail) {
+      setSupportSendError('Provide message ID or recipient email.')
+      return
+    }
+
+    const payload = {
+      reply: normalizedReply,
+      sentBy: 'admin-ui',
+    }
+
+    if (normalizedMessageId) {
+      payload.messageId = normalizedMessageId
+    } else {
+      payload.toEmail = normalizedToEmail
+      if (normalizedToName) payload.toName = normalizedToName
+    }
+
+    if (normalizedSubject) {
+      payload.subject = normalizedSubject
+    }
+
+    setSupportSendLoading(true)
+    try {
+      const result = await callSupportSendApi(payload)
+      setSupportSendResult(result)
+    } catch (error) {
+      setSupportSendError(error instanceof Error ? error.message : 'Failed to send support reply')
+    } finally {
+      setSupportSendLoading(false)
     }
   }
 
@@ -598,6 +681,113 @@ const IndexNowAdmin = () => {
             </button>
           </div>
           {supportReplyGateError && <p className="indexnow-error">{supportReplyGateError}</p>}
+        </section>
+
+        <section className="indexnow-card">
+          <h2>Send Support Reply</h2>
+          <p>
+            Send email from admin without terminal. Use a message ID from `support_messages` or
+            send directly to an email address.
+          </p>
+
+          <div className="support-reply-grid">
+            <div>
+              <label htmlFor="support-reply-message-id">Support Message ID (recommended)</label>
+              <input
+                id="support-reply-message-id"
+                type="text"
+                value={replyMessageId}
+                onChange={(event) => setReplyMessageId(event.target.value)}
+                placeholder="83bf9d5f-bcee-4ff8-aec0-b37d6c2566bf"
+                autoComplete="off"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="support-reply-email">Recipient Email (if no message ID)</label>
+              <input
+                id="support-reply-email"
+                type="email"
+                value={replyToEmail}
+                onChange={(event) => setReplyToEmail(event.target.value)}
+                placeholder="user@example.com"
+                autoComplete="off"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="support-reply-name">Recipient Name (optional)</label>
+              <input
+                id="support-reply-name"
+                type="text"
+                value={replyToName}
+                onChange={(event) => setReplyToName(event.target.value)}
+                placeholder="User Name"
+                autoComplete="off"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="support-reply-subject">Subject (optional)</label>
+              <input
+                id="support-reply-subject"
+                type="text"
+                value={replySubject}
+                onChange={(event) => setReplySubject(event.target.value)}
+                placeholder="Support Update"
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          <label htmlFor="support-reply-body">Reply Message</label>
+          <textarea
+            id="support-reply-body"
+            rows={6}
+            value={replyBody}
+            onChange={(event) => setReplyBody(event.target.value)}
+            placeholder="Hi, thank you for your message. We have fixed the issue."
+          />
+
+          <div className="indexnow-inline-controls">
+            <button
+              type="button"
+              onClick={handleSendSupportReply}
+              disabled={supportSendLoading || !supportReplyGateState.enabled}
+            >
+              {supportSendLoading ? 'Sending reply...' : 'Send Reply Email'}
+            </button>
+            <button
+              type="button"
+              className="indexnow-secondary-btn"
+              onClick={() => {
+                setReplyMessageId('')
+                setReplyToEmail('')
+                setReplyToName('')
+                setReplySubject('')
+                setReplyBody('')
+                setSupportSendError('')
+                setSupportSendResult(null)
+              }}
+              disabled={supportSendLoading}
+            >
+              Clear Form
+            </button>
+          </div>
+
+          {supportSendError && <p className="indexnow-error">{supportSendError}</p>}
+
+          {supportSendResult && (
+            <div className="support-reply-result" aria-live="polite">
+              <p><strong>Status:</strong> {supportSendResult.sent ? 'Sent' : 'Unknown'}</p>
+              <p><strong>Recipient:</strong> {supportSendResult.recipientEmail || '-'}</p>
+              <p><strong>Subject:</strong> {supportSendResult.subject || '-'}</p>
+              <p><strong>Provider:</strong> {supportSendResult.provider || '-'}</p>
+              <p><strong>Provider Message ID:</strong> {supportSendResult.providerMessageId || '-'}</p>
+              <p><strong>Logged:</strong> {supportSendResult.logged ? 'Yes' : 'No'}</p>
+              {supportSendResult.warning && <p><strong>Note:</strong> {supportSendResult.warning}</p>}
+            </div>
+          )}
         </section>
 
         <section className="indexnow-card">
