@@ -53,6 +53,13 @@ function parseBody(body) {
     readStringField(body?.messageId) ||
     readStringField(body?.supportMessageId) ||
     readStringField(body?.id)
+  const toEmail =
+    readStringField(body?.toEmail) ||
+    readStringField(body?.email) ||
+    readStringField(body?.to)
+  const toName =
+    readStringField(body?.toName) ||
+    readStringField(body?.name)
 
   const reply =
     readStringField(body?.reply) ||
@@ -62,15 +69,15 @@ function parseBody(body) {
   const subject = readStringField(body?.subject)
   const sentBy = readStringField(body?.sentBy) || null
 
-  return { messageId, reply, subject, sentBy }
+  return { messageId, toEmail, toName, reply, subject, sentBy }
 }
 
 function validateRequestBody(payload) {
-  if (!payload.messageId) {
-    return 'messageId is required'
+  if (!payload.messageId && !payload.toEmail) {
+    return 'Provide messageId (recommended) or toEmail'
   }
 
-  if (payload.messageId.length > MAX_MESSAGE_ID_LENGTH) {
+  if (payload.messageId && payload.messageId.length > MAX_MESSAGE_ID_LENGTH) {
     return `messageId is too long (max ${MAX_MESSAGE_ID_LENGTH} chars)`
   }
 
@@ -80,6 +87,10 @@ function validateRequestBody(payload) {
 
   if (payload.reply.length > MAX_REPLY_LENGTH) {
     return `reply is too long (max ${MAX_REPLY_LENGTH} chars)`
+  }
+
+  if (payload.toEmail && !isValidEmail(payload.toEmail)) {
+    return 'toEmail is not a valid email address'
   }
 
   return null
@@ -131,7 +142,7 @@ export default async function handler(req, res) {
   if (!config.adminToken) {
     sendJson(res, 500, {
       error:
-        'SUPPORT_REPLY_ADMIN_TOKEN is not configured on the server (fallback: AUTH_TOGGLE_ADMIN_TOKEN or INDEXNOW_ADMIN_TOKEN).',
+        'SUPPORT_REPLY_ADMIN_TOKEN is not configured on the server (fallback: SUPPORT_REPLY_TOGGLE_ADMIN_TOKEN, AUTH_TOGGLE_ADMIN_TOKEN, or INDEXNOW_ADMIN_TOKEN).',
     })
     return
   }
@@ -157,52 +168,69 @@ export default async function handler(req, res) {
     return
   }
 
-  let client
-  try {
-    client = createSupportAdminClient(config)
-  } catch (error) {
-    sendJson(res, 500, {
-      error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to initialize support reply backend',
-    })
-    return
+  let client = null
+  let supportMessage = null
+  let recipientEmail = requestPayload.toEmail || null
+  let recipientName = requestPayload.toName || null
+  let originalSubject = requestPayload.subject || null
+
+  if (requestPayload.messageId) {
+    try {
+      client = createSupportAdminClient(config)
+    } catch (error) {
+      sendJson(res, 500, {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to initialize support reply backend',
+      })
+      return
+    }
+
+    try {
+      supportMessage = await readSupportMessageById(
+        client,
+        config,
+        requestPayload.messageId
+      )
+    } catch (error) {
+      sendJson(res, 500, {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to read support message before reply',
+      })
+      return
+    }
+
+    if (!supportMessage) {
+      sendJson(res, 404, { error: 'Support message not found' })
+      return
+    }
+
+    if (!isValidEmail(supportMessage.email)) {
+      sendJson(res, 400, {
+        error: 'Support message does not have a valid recipient email',
+      })
+      return
+    }
+
+    recipientEmail = supportMessage.email
+    recipientName = supportMessage.name || recipientName
+    originalSubject = supportMessage.subject || originalSubject
   }
 
-  let supportMessage
-  try {
-    supportMessage = await readSupportMessageById(
-      client,
-      config,
-      requestPayload.messageId
-    )
-  } catch (error) {
-    sendJson(res, 500, {
-      error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to read support message before reply',
-    })
-    return
-  }
-
-  if (!supportMessage) {
-    sendJson(res, 404, { error: 'Support message not found' })
-    return
-  }
-
-  if (!isValidEmail(supportMessage.email)) {
+  if (!recipientEmail || !isValidEmail(recipientEmail)) {
     sendJson(res, 400, {
-      error: 'Support message does not have a valid recipient email',
+      error: 'Recipient email is required and must be valid',
     })
     return
   }
 
   const emailPayload = buildReplyEmail({
     config,
-    recipientName: supportMessage.name,
-    originalSubject: supportMessage.subject,
+    recipientName,
+    originalSubject,
     providedSubject: requestPayload.subject,
     replyMessage: requestPayload.reply,
   })
@@ -210,7 +238,7 @@ export default async function handler(req, res) {
   let emailResult
   try {
     emailResult = await sendSupportReplyEmail(config, {
-      toEmail: supportMessage.email,
+      toEmail: recipientEmail,
       subject: emailPayload.subject,
       text: emailPayload.text,
       html: emailPayload.html,
@@ -225,10 +253,24 @@ export default async function handler(req, res) {
     return
   }
 
+  if (!supportMessage?.id || !client) {
+    sendJson(res, 200, {
+      sent: true,
+      logged: false,
+      warning: 'Email sent directly (no messageId provided), so reply log was skipped.',
+      supportMessageId: null,
+      recipientEmail,
+      provider: emailResult.provider,
+      providerMessageId: emailResult.providerMessageId,
+      subject: emailPayload.subject,
+    })
+    return
+  }
+
   try {
     const logged = await logSupportReply(client, config, {
       messageId: supportMessage.id,
-      recipientEmail: supportMessage.email,
+      recipientEmail,
       emailSubject: emailPayload.subject,
       replyMessage: requestPayload.reply,
       sentBy: requestPayload.sentBy,
@@ -241,7 +283,7 @@ export default async function handler(req, res) {
       logged: true,
       supportMessageId: supportMessage.id,
       replyId: logged?.id || null,
-      recipientEmail: supportMessage.email,
+      recipientEmail,
       provider: emailResult.provider,
       providerMessageId: emailResult.providerMessageId,
       subject: emailPayload.subject,
@@ -256,7 +298,7 @@ export default async function handler(req, res) {
           ? error.message
           : 'Email sent, but reply log could not be saved',
       supportMessageId: supportMessage.id,
-      recipientEmail: supportMessage.email,
+      recipientEmail,
       provider: emailResult.provider,
       providerMessageId: emailResult.providerMessageId,
       subject: emailPayload.subject,

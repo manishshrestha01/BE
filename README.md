@@ -157,6 +157,7 @@ You can now reply to support messages from backend and deliver replies only to t
 
 - API endpoint:
   - `POST /api/support/reply` (requires admin token)
+  - `POST /api/support/send-email` (alias of `/api/support/reply`)
   - `GET /api/support-reply-gate` (check if replies are enabled)
   - `POST /api/support-reply-gate` (toggle/update enabled state, requires admin token)
 - Auth headers accepted:
@@ -170,7 +171,7 @@ You can now reply to support messages from backend and deliver replies only to t
 - `SUPABASE_SERVICE_ROLE_KEY` (required, server only)
 - `RESEND_API_KEY` (required)
 - `SUPPORT_EMAIL_FROM` (required; verified sender in Resend)
-- `SUPPORT_REPLY_ADMIN_TOKEN` (recommended; falls back to `AUTH_TOGGLE_ADMIN_TOKEN`, then `INDEXNOW_ADMIN_TOKEN`)
+- `SUPPORT_REPLY_ADMIN_TOKEN` (recommended; falls back to `SUPPORT_REPLY_TOGGLE_ADMIN_TOKEN`, then `AUTH_TOGGLE_ADMIN_TOKEN`, then `INDEXNOW_ADMIN_TOKEN`)
 - Optional:
   - `SUPPORT_EMAIL_REPLY_TO`
   - `SUPPORT_MESSAGES_TABLE` (default: `support_messages`)
@@ -192,6 +193,17 @@ You can now reply to support messages from backend and deliver replies only to t
 }
 ```
 
+You can also send directly without `messageId`:
+
+```json
+{
+  "toEmail": "user@example.com",
+  "toName": "User Name",
+  "subject": "Support update",
+  "reply": "Hi, here is an update on your issue."
+}
+```
+
 ### Example cURL
 
 ```bash
@@ -201,6 +213,20 @@ curl -X POST "https://www.manishshrestha012.com.np/api/support/reply" \
   -d '{
     "messageId": "00000000-0000-0000-0000-000000000000",
     "reply": "Thanks for your message. We have resolved the issue."
+  }'
+```
+
+Direct email example:
+
+```bash
+curl -X POST "https://www.manishshrestha012.com.np/api/support/send-email" \
+  -H "content-type: application/json" \
+  -H "x-support-admin-token: <SUPPORT_REPLY_ADMIN_TOKEN>" \
+  -d '{
+    "toEmail": "user@example.com",
+    "toName": "User Name",
+    "subject": "Support Update",
+    "reply": "Hi, we have fixed your issue."
   }'
 ```
 

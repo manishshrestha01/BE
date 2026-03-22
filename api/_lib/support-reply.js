@@ -74,6 +74,7 @@ export function loadSupportReplyConfig() {
   ).trim()
   const adminToken = (
     process.env.SUPPORT_REPLY_ADMIN_TOKEN ||
+    process.env.SUPPORT_REPLY_TOGGLE_ADMIN_TOKEN ||
     process.env.AUTH_TOGGLE_ADMIN_TOKEN ||
     process.env.INDEXNOW_ADMIN_TOKEN ||
     ''
