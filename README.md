@@ -150,3 +150,56 @@ Run these migrations:
 - `supabase/migrations/20260320120000_add_pdf_download_setting.sql`
 
 This stores a `pdf_download_enabled` boolean-like value in `public.site_settings`.
+
+## Support Reply Backend (Email-only replies)
+
+You can now reply to support messages from backend and deliver replies only to the sender's email.
+
+- API endpoint:
+  - `POST /api/support/reply` (requires admin token)
+- Auth headers accepted:
+  - `x-support-admin-token` (recommended)
+  - `authorization: Bearer <token>`
+
+### Server env vars
+
+- `SUPABASE_SERVICE_ROLE_KEY` (required, server only)
+- `RESEND_API_KEY` (required)
+- `SUPPORT_EMAIL_FROM` (required; verified sender in Resend)
+- `SUPPORT_REPLY_ADMIN_TOKEN` (recommended; falls back to `AUTH_TOGGLE_ADMIN_TOKEN`, then `INDEXNOW_ADMIN_TOKEN`)
+- Optional:
+  - `SUPPORT_EMAIL_REPLY_TO`
+  - `SUPPORT_MESSAGES_TABLE` (default: `support_messages`)
+  - `SUPPORT_REPLIES_TABLE` (default: `support_replies`)
+  - `SUPPORT_EMAIL_SUBJECT_PREFIX` (default: `StudyMate Support`)
+
+### Request body
+
+```json
+{
+  "messageId": "support-message-uuid",
+  "reply": "Thanks for reporting this. We have fixed it.",
+  "subject": "Re: Login issue",
+  "sentBy": "admin@yourdomain.com"
+}
+```
+
+### Example cURL
+
+```bash
+curl -X POST "https://www.manishshrestha012.com.np/api/support/reply" \
+  -H "content-type: application/json" \
+  -H "x-support-admin-token: <SUPPORT_REPLY_ADMIN_TOKEN>" \
+  -d '{
+    "messageId": "00000000-0000-0000-0000-000000000000",
+    "reply": "Thanks for your message. We have resolved the issue."
+  }'
+```
+
+### Required database migration
+
+Run:
+
+- `supabase/migrations/20260322170000_create_support_messaging.sql`
+
+This creates `public.support_replies` (reply logs), and creates `public.support_messages` for fresh setups when missing.
