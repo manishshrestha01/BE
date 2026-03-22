@@ -255,9 +255,7 @@ const QuickLook = ({ file, onClose }) => {
   }, [file, isMobile])
 
   useEffect(() => {
-    // Allow browser/PDF.js print when download is enabled from backend toggle.
-    // Keep print shortcut blocked only in locked mode.
-    if (!file || file.fileType !== 'pdf' || pdfDownloadEnabled) {
+    if (!file || file.fileType !== 'pdf') {
       return
     }
 
@@ -277,7 +275,7 @@ const QuickLook = ({ file, onClose }) => {
       window.removeEventListener('keydown', preventPdfPrintShortcut, true)
       document.removeEventListener('keydown', preventPdfPrintShortcut, true)
     }
-  }, [file, pdfDownloadEnabled])
+  }, [file])
 
   useEffect(() => {
     if (!file || file.fileType !== 'pdf') {
