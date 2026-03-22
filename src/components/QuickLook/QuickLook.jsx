@@ -430,7 +430,7 @@ const QuickLook = ({ file, onClose }) => {
             <iframe
               src={getPDFJsViewerUrl(file.url)}
               title={file.name}
-              className="fullscreen-viewer pdf-viewer-frame toolbar-hidden"
+              className="fullscreen-viewer pdf-viewer-frame"
               sandbox={
                 pdfDownloadEnabled
                   ? 'allow-scripts allow-same-origin allow-downloads'
