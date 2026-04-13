@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import RouteAdvertisementBanner from '../RouteAdvertisementBanner'
 import './Landing.css'
 import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../../lib/seo'
 
@@ -164,6 +165,7 @@ const Landing = () => {
             </div>
           </div>
         )}
+        <RouteAdvertisementBanner />
       </nav>
 
       {/* Hero Section */}

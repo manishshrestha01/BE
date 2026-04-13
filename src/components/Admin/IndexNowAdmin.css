@@ -141,6 +141,125 @@
   font-weight: 600;
 }
 
+.site-display-grid {
+  margin-top: 0.4rem;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.site-color-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.site-color-input-row input[type="color"] {
+  width: 76px;
+  min-width: 76px;
+  height: 48px;
+  padding: 0.25rem;
+  border-radius: 12px;
+}
+
+.site-color-code {
+  color: #355363;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.folder-color-list {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.folder-color-item {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0.85rem;
+  border-radius: 12px;
+  border: 1px solid #d7e6eb;
+  background: #f8fcff;
+}
+
+.folder-color-preview {
+  width: 52px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.folder-color-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.folder-color-meta strong,
+.folder-color-meta span {
+  overflow-wrap: anywhere;
+}
+
+.folder-color-meta strong {
+  color: #0d3040;
+}
+
+.folder-color-meta span {
+  color: #355363;
+}
+
+.folder-color-remove {
+  margin-top: 0 !important;
+}
+
+.site-admin-helper-text {
+  margin-top: 0.45rem !important;
+  font-size: 0.88rem;
+}
+
+.site-toggle-card {
+  border: 1px solid #d7e6eb;
+  border-radius: 12px;
+  background: #f8fcff;
+  padding: 0.9rem;
+}
+
+.site-toggle-line {
+  display: flex !important;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 !important;
+}
+
+.site-toggle-line input {
+  width: 20px !important;
+  height: 20px;
+  min-width: 20px;
+  padding: 0;
+}
+
+.site-ad-preview {
+  margin-top: 0.95rem;
+  width: min(100%, 320px);
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid #d7e6eb;
+  box-shadow: 0 12px 30px rgba(18, 53, 69, 0.1);
+  background: #ffffff;
+}
+
+.site-ad-preview img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
 .support-reply-result {
   margin-top: 0.85rem;
   padding: 0.85rem;
@@ -235,6 +354,7 @@
     padding-top: 1rem;
   }
 
+  .site-display-grid,
   .support-reply-grid {
     grid-template-columns: 1fr;
   }
@@ -242,5 +362,14 @@
   .indexnow-card,
   .indexnow-admin-header {
     padding: 1rem;
+  }
+
+  .folder-color-item {
+    grid-template-columns: 1fr;
+  }
+
+  .folder-color-preview {
+    width: auto;
+    justify-content: flex-start;
   }
 }

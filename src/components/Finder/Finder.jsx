@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useGitHubNotes } from '../../hooks/useGitHubNotes'
 import { useAuth } from '../../context/AuthContext'
+import useFolderColors from '../../hooks/useFolderColors'
+import FolderIcon from '../FolderIcon'
 import { toggleFavorite, getUserFavorites, getUserRecents, upsertRecentTab, removeFavorite } from '../../lib/database'
 import './Finder.css'
 
@@ -43,6 +45,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
   } = useGitHubNotes()
 
   const { user } = useAuth()
+  const { folderColors } = useFolderColors()
 
   const [selectedItem, setSelectedItem] = useState(null)
   const [viewMode, setViewMode] = useState('grid')
@@ -60,6 +63,35 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
    const [windowState, setWindowState] = useState('normal') // 'normal', 'maximized', 'minimized'
    
    const finderRef = useRef(null)
+
+  const normalizedFolderColorMap = React.useMemo(() => (
+    Object.fromEntries(
+      Object.entries(folderColors || {}).map(([key, value]) => [key.trim().toLowerCase(), value])
+    )
+  ), [folderColors])
+
+  const getFolderColor = (item) => {
+    const path = (item?.path || item?.item_path || '').trim()
+    const name = (item?.name || item?.item_name || '').trim()
+    const exactCandidates = [path, name]
+    const normalizedCandidates = exactCandidates
+      .filter(Boolean)
+      .map((value) => value.toLowerCase())
+
+    for (const candidate of exactCandidates) {
+      if (candidate && folderColors?.[candidate]) {
+        return folderColors[candidate]
+      }
+    }
+
+    for (const candidate of normalizedCandidates) {
+      if (candidate && normalizedFolderColorMap?.[candidate]) {
+        return normalizedFolderColorMap[candidate]
+      }
+    }
+
+    return '#f5b64b'
+  }
 
   // Auto-focus finder on mount
   useEffect(() => {
@@ -478,7 +510,13 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
               >
                  <div className="item-icon">
                    {(displayItem.type || item.type || item.item_type) === 'folder' 
-                     ? '📁' 
+                     ? (
+                         <FolderIcon
+                           className="folder-icon-svg"
+                           color={getFolderColor(displayItem)}
+                           title={displayItem.name || item.name || item.item_name || 'Folder'}
+                         />
+                       )
                      : getFileIcon(displayItem.fileType || item.fileType || item.file_type)
                    }
                  </div>

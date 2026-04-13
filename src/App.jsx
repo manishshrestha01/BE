@@ -4,6 +4,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { Analytics } from "@vercel/analytics/react";
 import AdSenseRouteRefresh from "./AdSenseRouteRefresh";
 import ScrollToTop from "./components/ScrollToTop";
+import RouteAdvertisement from "./components/RouteAdvertisement";
 
 function App() {
   useEffect(() => {
@@ -32,6 +33,7 @@ function App() {
       <ScrollToTop />
       <AdSenseRouteRefresh />
       <AppRoutes />
+      <RouteAdvertisement />
       <Analytics />
     </AuthProvider>
   );

@@ -318,6 +318,12 @@
   object-fit: contain;
 }
 
+.folder-icon-svg {
+  width: 52px;
+  height: auto;
+  display: block;
+}
+
 .finder-item:hover .item-icon {
   transform: scale(1.1);
 }
@@ -330,6 +336,10 @@
 .finder-content.list .file-icon-svg {
   width: 24px;
   height: 24px;
+}
+
+.finder-content.list .folder-icon-svg {
+  width: 30px;
 }
 
 .item-name {
@@ -1012,6 +1022,10 @@
     font-size: 28px;
     line-height: 1;
   }
+
+  .folder-icon-svg {
+    width: 34px;
+  }
   
   .item-name {
     font-size: 9px;
@@ -1209,6 +1223,10 @@
   
   .item-icon {
     font-size: 32px;
+  }
+
+  .folder-icon-svg {
+    width: 38px;
   }
   
   .item-name {
@@ -1419,6 +1437,10 @@
     font-size: 30px;
   }
 
+  .folder-icon-svg {
+    width: 34px;
+  }
+
   .item-name {
     font-size: 11px;
   }
@@ -1450,6 +1472,10 @@
 
   .item-icon {
     font-size: 24px;
+  }
+
+  .folder-icon-svg {
+    width: 28px;
   }
 
   .item-name {

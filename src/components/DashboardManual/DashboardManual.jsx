@@ -5,6 +5,7 @@ import { useUserProfile } from '../../hooks/useUserProfile'
 import { BackgroundProvider } from '../../context/BackgroundContext'
 import Desktop from '../Desktop/Desktop'
 import DashboardOnlyProtection from './DashboardOnlyProtection'
+import RouteAdvertisementBanner from '../RouteAdvertisementBanner'
 import './DashboardManual.css'
 
 // SEO configurations for different sections
@@ -444,6 +445,7 @@ const ManualPage = ({ location }) => {
             <Link to="/login" className="nav-cta">Get Started</Link>
           </div>
         </div>
+        <RouteAdvertisementBanner />
       </nav>
 
       {/* Hero Section */}

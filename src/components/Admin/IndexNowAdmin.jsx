@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import SiteDisplayAdmin from './SiteDisplayAdmin'
 import './IndexNowAdmin.css'
 
 const TOKEN_STORAGE_KEY = 'studymate:indexnow:admin-token'
@@ -528,7 +529,7 @@ const IndexNowAdmin = () => {
       <div className="indexnow-admin-shell">
         <header className="indexnow-admin-header">
           <h1>IndexNow Admin</h1>
-          <p>Server-side Bing IndexNow submission tools for sitemap and custom URL batches.</p>
+          <p>Admin tools for search submission, route pop-up ads, Finder folder colors, and server-side site toggles.</p>
           <Link className="indexnow-back-link" to="/dashboard">
             Back to Dashboard
           </Link>
@@ -538,8 +539,8 @@ const IndexNowAdmin = () => {
           <h2>Admin Token</h2>
           <p>
             Token is kept in local browser storage only for this admin page and never hardcoded
-            in the repo. It is used for IndexNow, login-auth toggle, PDF download toggle, and
-            support-reply toggle
+            in the repo. It is used for IndexNow, route pop-up ads, folder colors, login-auth
+            toggle, PDF download toggle, and support-reply toggle
             actions.
           </p>
           <input
@@ -550,6 +551,8 @@ const IndexNowAdmin = () => {
             autoComplete="off"
           />
         </section>
+
+        <SiteDisplayAdmin token={token} />
 
         <section className="indexnow-card">
           <h2>Login Authentication Toggle</h2>
