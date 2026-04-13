@@ -1,4 +1,4 @@
-const FALLBACK_FOLDER_COLOR = '#f5b64b'
+const FALLBACK_FOLDER_COLOR = '#4f83ff'
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
 

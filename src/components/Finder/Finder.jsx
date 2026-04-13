@@ -90,7 +90,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
       }
     }
 
-    return '#f5b64b'
+    return '#4f83ff'
   }
 
   // Auto-focus finder on mount

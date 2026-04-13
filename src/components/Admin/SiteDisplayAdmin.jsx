@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import FolderIcon from '../FolderIcon'
 import { fetchFolderColors, fetchSiteAd, saveFolderColors, saveSiteAd, uploadSiteAdFile } from '../../lib/siteDisplay'
 
-const DEFAULT_FOLDER_COLOR = '#f5b64b'
+const DEFAULT_FOLDER_COLOR = '#4f83ff'
 const REQUIRED_AD_WIDTH = 1080
 const REQUIRED_AD_HEIGHT = 1080
 
