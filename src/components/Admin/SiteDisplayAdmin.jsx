@@ -260,7 +260,8 @@ const SiteDisplayAdmin = ({ token }) => {
         <h2>Folder Color Manager</h2>
         <p>
           Color Finder folders by GitHub folder path or visible folder name. Path matches are the
-          most precise, while name matches work as a fallback.
+          most precise, while name matches work as a fallback. Subfolders now inherit the nearest
+          parent folder color unless you save a more specific child-folder override.
         </p>
 
         <div className="site-display-grid">

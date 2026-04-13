@@ -30,6 +30,17 @@ const getFileIcon = (type) => {
   return icons[type] || icons.unknown
 }
 
+const getColorFromMap = (colorMap, normalizedColorMap, candidate) => {
+  const normalizedCandidate = typeof candidate === 'string' ? candidate.trim() : ''
+  if (!normalizedCandidate) return ''
+
+  return (
+    colorMap?.[normalizedCandidate] ||
+    normalizedColorMap?.[normalizedCandidate.toLowerCase()] ||
+    ''
+  )
+}
+
 const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
   const {
     items,
@@ -73,21 +84,26 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
   const getFolderColor = (item) => {
     const path = (item?.path || item?.item_path || '').trim()
     const name = (item?.name || item?.item_name || '').trim()
-    const exactCandidates = [path, name]
-    const normalizedCandidates = exactCandidates
-      .filter(Boolean)
-      .map((value) => value.toLowerCase())
 
-    for (const candidate of exactCandidates) {
-      if (candidate && folderColors?.[candidate]) {
-        return folderColors[candidate]
+    if (path) {
+      const segments = path.split('/').filter(Boolean)
+
+      for (let index = segments.length; index > 0; index -= 1) {
+        const ancestorPath = segments.slice(0, index).join('/')
+        const ancestorName = segments[index - 1]
+        const inheritedColor =
+          getColorFromMap(folderColors, normalizedFolderColorMap, ancestorPath) ||
+          getColorFromMap(folderColors, normalizedFolderColorMap, ancestorName)
+
+        if (inheritedColor) {
+          return inheritedColor
+        }
       }
     }
 
-    for (const candidate of normalizedCandidates) {
-      if (candidate && normalizedFolderColorMap?.[candidate]) {
-        return normalizedFolderColorMap[candidate]
-      }
+    const directNameColor = getColorFromMap(folderColors, normalizedFolderColorMap, name)
+    if (directNameColor) {
+      return directNameColor
     }
 
     return '#007bff'
