@@ -10,6 +10,8 @@ const HEX_COLOR_PATTERN = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/
 const TRUE_VALUES = new Set(['1', 'true', 'yes', 'on'])
 const FALSE_VALUES = new Set(['0', 'false', 'no', 'off'])
 const ABSOLUTE_HTTP_PATTERN = /^https?:\/\//i
+const REQUIRED_SITE_AD_WIDTH = 1080
+const ALLOWED_SITE_AD_HEIGHTS = new Set([1080, 1350])
 
 function normalizeSupabaseError(error, fallbackMessage) {
   if (!error) return fallbackMessage
@@ -100,9 +102,15 @@ export function normalizeSiteAd(rawValue) {
 
   const imageUrl = normalizeAbsoluteUrl(value.imageUrl)
   const targetUrl = normalizeRelativeOrAbsoluteUrl(value.targetUrl)
-  const enabled = parseBoolean(value.enabled, false) && Boolean(imageUrl && targetUrl)
-  const imageWidth = Number.isFinite(value.imageWidth) ? Number(value.imageWidth) : null
-  const imageHeight = Number.isFinite(value.imageHeight) ? Number(value.imageHeight) : null
+  const rawImageWidth = Number.isFinite(value.imageWidth) ? Number(value.imageWidth) : null
+  const rawImageHeight = Number.isFinite(value.imageHeight) ? Number(value.imageHeight) : null
+  const hasAllowedDimensions = (
+    rawImageWidth === REQUIRED_SITE_AD_WIDTH &&
+    ALLOWED_SITE_AD_HEIGHTS.has(rawImageHeight)
+  )
+  const imageWidth = hasAllowedDimensions ? rawImageWidth : null
+  const imageHeight = hasAllowedDimensions ? rawImageHeight : null
+  const enabled = parseBoolean(value.enabled, false) && Boolean(imageUrl && targetUrl && imageWidth && imageHeight)
 
   return {
     enabled,

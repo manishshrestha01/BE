@@ -7,7 +7,7 @@ import { isSupabaseConfigured } from '../../lib/supabase'
 import './ContactApp.css'
 
 const MAX_ATTACHMENTS = 3
-const MAX_FILE_BYTES = 15 * 1024 * 1024 // 15MB
+const MAX_FILE_BYTES = 25 * 1024 * 1024 // 25MB
 const ACCEPT = 'image/*,.pdf,.ppt,.pptx,.doc,.docx,.txt,.md'
 const LOCAL_KEY = 'study_contact_messages_v1'
 
@@ -55,7 +55,7 @@ export default function ContactApp ({ onClose }) {
         return
       }
       if (f.size > MAX_FILE_BYTES) {
-        setStatusMsg('File too large — max 15 MB')
+        setStatusMsg('File too large — max 25 MB')
         return
       }
       const reader = new FileReader()
@@ -248,7 +248,7 @@ export default function ContactApp ({ onClose }) {
                 <input ref={fileInputRef} className="hidden-file-input" type="file" accept={ACCEPT} onChange={handleFileInput} multiple={false} />
 
                 <div className={`attachment-dropzone ${dropActive ? 'active' : ''}`} onClick={() => fileInputRef.current?.click()} role="button" tabIndex={0} aria-describedby="contact-attachment-hint">
-                  <div className="attachment-placeholder">Attach file or drag &amp; drop (PNG/JPG/PDF, max 15 MB)</div>
+                  <div className="attachment-placeholder">Attach file or drag &amp; drop (PNG/JPG/PDF, max 25 MB)</div>
                 </div>
 
                 <div className="attachments-col" style={{ marginLeft: 8 }}>

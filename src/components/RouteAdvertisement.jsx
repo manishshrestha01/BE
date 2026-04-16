@@ -39,6 +39,14 @@ const RouteAdvertisement = () => {
 
   const canRenderOnRoute = ROUTE_TARGETS.has(location.pathname)
   const dismissKey = useMemo(() => buildDismissKey(ad), [ad])
+  const imageAspectRatio = useMemo(
+    () => (
+      ad?.imageWidth && ad?.imageHeight
+        ? `${ad.imageWidth} / ${ad.imageHeight}`
+        : '1 / 1'
+    ),
+    [ad?.imageHeight, ad?.imageWidth]
+  )
   const isVisible = Boolean(
     canRenderOnRoute &&
     !loading &&
@@ -125,6 +133,7 @@ const RouteAdvertisement = () => {
             className="route-advertisement-image"
             height={ad.imageHeight || 1080}
             src={ad.imageUrl}
+            style={{ aspectRatio: imageAspectRatio }}
             width={ad.imageWidth || 1080}
           />
         </button>

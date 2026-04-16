@@ -4,7 +4,7 @@ import { fetchFolderColors, fetchSiteAd, saveFolderColors, saveSiteAd, uploadSit
 
 const DEFAULT_FOLDER_COLOR = '#007bff'
 const REQUIRED_AD_WIDTH = 1080
-const REQUIRED_AD_HEIGHT = 1080
+const ALLOWED_AD_HEIGHTS = new Set([1080, 1350])
 
 const serializeFolderColors = (value) => JSON.stringify(
   Object.entries(value || {}).sort(([left], [right]) => left.localeCompare(right))
@@ -36,6 +36,11 @@ const readImageDimensions = (file) => new Promise((resolve, reject) => {
 
   image.src = objectUrl
 })
+
+const isAllowedAdDimensions = (width, height) => (
+  width === REQUIRED_AD_WIDTH &&
+  ALLOWED_AD_HEIGHTS.has(height)
+)
 
 const SiteDisplayAdmin = ({ token }) => {
   const [folderColors, setFolderColors] = useState({})
@@ -195,12 +200,9 @@ const SiteDisplayAdmin = ({ token }) => {
 
     try {
       const dimensions = await readImageDimensions(file)
-      if (
-        dimensions.width !== REQUIRED_AD_WIDTH ||
-        dimensions.height !== REQUIRED_AD_HEIGHT
-      ) {
+      if (!isAllowedAdDimensions(dimensions.width, dimensions.height)) {
         throw new Error(
-          `Ad image must be exactly ${REQUIRED_AD_WIDTH} × ${REQUIRED_AD_HEIGHT} px.`
+          'Ad image must be exactly 1080 × 1080 px or 1080 × 1350 px.'
         )
       }
 
@@ -227,7 +229,7 @@ const SiteDisplayAdmin = ({ token }) => {
 
     if (siteAd.enabled) {
       if (!siteAd.imageUrl) {
-        setSiteAdError('Upload a 1080 × 1080 ad image before enabling the advertisement.')
+        setSiteAdError('Upload a 1080 × 1080 or 1080 × 1350 ad image before enabling the advertisement.')
         return
       }
 
@@ -346,7 +348,7 @@ const SiteDisplayAdmin = ({ token }) => {
       <section className="indexnow-card">
         <h2>Homepage / Dashboard Ad</h2>
         <p>
-          Upload a square 1080 × 1080 px social media creative. It will appear as a closable
+          Upload a `1080 × 1080` or `1080 × 1350` social media creative. It will appear as a closable
           popup on both <code>/</code> and <code>/dashboard</code>.
         </p>
 
@@ -378,7 +380,7 @@ const SiteDisplayAdmin = ({ token }) => {
 
         <div className="site-display-grid">
           <div>
-            <label htmlFor="site-ad-image">1080 × 1080 Image</label>
+            <label htmlFor="site-ad-image">1080 × 1080 or 1080 × 1350 Image</label>
             <input
               id="site-ad-image"
               type="file"
@@ -386,7 +388,7 @@ const SiteDisplayAdmin = ({ token }) => {
               onChange={handleAdImageUpload}
             />
             <p className="site-admin-helper-text">
-              Supported types: PNG, JPG, WEBP. Exact size required: 1080 × 1080 px.
+              Supported types: PNG, JPG, WEBP. Allowed sizes only: 1080 × 1080 px and 1080 × 1350 px.
             </p>
           </div>
 
@@ -456,7 +458,15 @@ const SiteDisplayAdmin = ({ token }) => {
 
         {siteAd.imageUrl ? (
           <div className="site-ad-preview">
-            <img src={siteAd.imageUrl} alt={siteAd.altText || 'Site ad preview'} />
+            <img
+              src={siteAd.imageUrl}
+              alt={siteAd.altText || 'Site ad preview'}
+              style={{
+                aspectRatio: siteAd.imageWidth && siteAd.imageHeight
+                  ? `${siteAd.imageWidth} / ${siteAd.imageHeight}`
+                  : '1 / 1',
+              }}
+            />
           </div>
         ) : (
           <p>No ad image uploaded yet.</p>

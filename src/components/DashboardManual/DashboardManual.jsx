@@ -326,7 +326,7 @@ const ManualPage = ({ location }) => {
        title: 'Contact App',
        description: 'Send messages to the StudyMate team — upload study materials or report issues and feature requests.',
        tips: [
-         'Upload notes and supporting files (up to 15 MB)',
+         'Upload notes and supporting files (up to 25 MB)',
          'Report app problems with screenshots and a clear description',
          'You can upload the notes through google drive link as well',
          'Use it for feature requests, bug reports, and general feedback'

@@ -13,6 +13,7 @@
 .route-advertisement-dialog {
   position: relative;
   width: min(92vw, 520px);
+  max-height: calc(100vh - 48px);
 }
 
 .route-advertisement-close {
@@ -39,6 +40,7 @@
 
 .route-advertisement-card {
   width: 100%;
+  max-height: calc(100vh - 48px);
   border: none;
   border-radius: 28px;
   background: #ffffff;
@@ -58,8 +60,8 @@
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
+  max-height: calc(100vh - 48px);
+  object-fit: contain;
   background: #ffffff;
 }
 
@@ -70,6 +72,7 @@
 
   .route-advertisement-dialog {
     width: min(100%, 460px);
+    max-height: calc(100vh - 32px);
   }
 
   .route-advertisement-close {
@@ -81,6 +84,7 @@
   }
 
   .route-advertisement-card {
+    max-height: calc(100vh - 32px);
     border-radius: 22px;
   }
 }
