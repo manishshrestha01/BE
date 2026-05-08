@@ -59,7 +59,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
   const { folderColors } = useFolderColors()
 
   const [selectedItem, setSelectedItem] = useState(null)
-  const [viewMode, setViewMode] = useState('grid')
+  const [viewMode, setViewMode] = useState('list')
   const [activeTab, setActiveTab] = useState('all')
   const [favorites, setFavorites] = useState([])
   const [recents, setRecents] = useState([])
