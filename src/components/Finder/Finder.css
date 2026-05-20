@@ -915,6 +915,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    min-height: 0;
     overflow: hidden;
   }
   
@@ -978,10 +979,12 @@
   /* Main content - scrollable */
   .finder-content {
     flex: 1;
+    min-height: 0;
     padding: 12px 8px;
     padding-top: 8px;
     overflow-y: auto;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     order: 1;
     background: #000;
   }
@@ -996,7 +999,7 @@
   }
   
   /* iOS-style file item */
-  .finder-item {
+  .finder-content.grid .finder-item {
     flex-direction: column;
     gap: 4px;
     padding: 8px 4px;
@@ -1007,6 +1010,19 @@
     align-items: center;
     justify-content: center;
     min-height: 0;
+  }
+
+  .finder-content.list {
+    gap: 2px;
+    padding: 8px 12px 12px;
+  }
+
+  .finder-content.list .finder-item {
+    aspect-ratio: auto;
+    min-height: 52px;
+    padding: 10px 8px;
+    gap: 12px;
+    border-radius: 10px;
   }
   
   .finder-item:active {
@@ -1480,5 +1496,46 @@
 
   .item-name {
     font-size: 10px;
+  }
+}
+
+/* Final mobile list guard: keep folder/file rows compact even when later device overrides apply. */
+@media (max-width: 768px) {
+  .finder-layout,
+  .finder-content {
+    min-height: 0;
+  }
+
+  .finder-content.list {
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .finder-content.list .finder-item {
+    flex: 0 0 56px;
+    width: 100%;
+    height: 56px;
+    min-height: 56px;
+    max-height: 56px;
+    aspect-ratio: auto !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 10px;
+    gap: 12px;
+  }
+
+  .finder-content.list .item-icon {
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 0;
+  }
+
+  .finder-content.list .folder-icon-svg {
+    width: 30px;
   }
 }
