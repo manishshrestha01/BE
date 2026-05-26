@@ -388,7 +388,7 @@ const SiteDisplayAdmin = ({ token }) => {
               onChange={handleAdImageUpload}
             />
             <p className="site-admin-helper-text">
-              Supported types: PNG, JPG, WEBP. Allowed sizes only: 1080 × 1080 px and 1080 × 1350 px.
+              Supported types: PNG, JPG, WEBP. Allowed sizes only: 1080 × 1080 px, 1080 × 1350 px, or 1592 × 2468 px.
             </p>
           </div>
 
