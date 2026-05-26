@@ -11,7 +11,7 @@ const TRUE_VALUES = new Set(['1', 'true', 'yes', 'on'])
 const FALSE_VALUES = new Set(['0', 'false', 'no', 'off'])
 const ABSOLUTE_HTTP_PATTERN = /^https?:\/\//i
 const REQUIRED_SITE_AD_WIDTH = 1080
-const ALLOWED_SITE_AD_HEIGHTS = new Set([1080, 1350])
+const ALLOWED_SITE_AD_HEIGHTS = new Set([1080, 1350, 2468])
 
 function normalizeSupabaseError(error, fallbackMessage) {
   if (!error) return fallbackMessage
