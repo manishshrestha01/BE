@@ -3,7 +3,7 @@ import FolderIcon from '../FolderIcon'
 import { fetchFolderColors, fetchSiteAd, saveFolderColors, saveSiteAd, uploadSiteAdFile } from '../../lib/siteDisplay'
 
 const DEFAULT_FOLDER_COLOR = '#007bff'
-const REQUIRED_AD_WIDTH = 1080
+const ALLOWED_AD_WIDTHS = new Set([1080, 1592])
 const ALLOWED_AD_HEIGHTS = new Set([1080, 1350, 2468])
 
 const serializeFolderColors = (value) => JSON.stringify(
@@ -38,7 +38,7 @@ const readImageDimensions = (file) => new Promise((resolve, reject) => {
 })
 
 const isAllowedAdDimensions = (width, height) => (
-  width === REQUIRED_AD_WIDTH &&
+  ALLOWED_AD_WIDTHS.has(width) &&
   ALLOWED_AD_HEIGHTS.has(height)
 )
 

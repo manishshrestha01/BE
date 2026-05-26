@@ -10,7 +10,7 @@ const HEX_COLOR_PATTERN = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/
 const TRUE_VALUES = new Set(['1', 'true', 'yes', 'on'])
 const FALSE_VALUES = new Set(['0', 'false', 'no', 'off'])
 const ABSOLUTE_HTTP_PATTERN = /^https?:\/\//i
-const REQUIRED_SITE_AD_WIDTH = 1080
+const ALLOWED_SITE_AD_WIDTHS = new Set([1080, 1592])
 const ALLOWED_SITE_AD_HEIGHTS = new Set([1080, 1350, 2468])
 
 function normalizeSupabaseError(error, fallbackMessage) {
@@ -105,7 +105,7 @@ export function normalizeSiteAd(rawValue) {
   const rawImageWidth = Number.isFinite(value.imageWidth) ? Number(value.imageWidth) : null
   const rawImageHeight = Number.isFinite(value.imageHeight) ? Number(value.imageHeight) : null
   const hasAllowedDimensions = (
-    rawImageWidth === REQUIRED_SITE_AD_WIDTH &&
+    ALLOWED_SITE_AD_WIDTHS.has(rawImageWidth) &&
     ALLOWED_SITE_AD_HEIGHTS.has(rawImageHeight)
   )
   const imageWidth = hasAllowedDimensions ? rawImageWidth : null
