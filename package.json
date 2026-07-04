@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "fetch-adcash-lib": "node scripts/fetch-adcash-anti-adblock.js",
     "generate-blog-static": "node scripts/generate-blog-static.js",
     "inspect-seo": "node scripts/inspect-seo.js",
     "inspect-live": "node scripts/inspect-seo.js https://www.manishshrestha012.com.np/colleges https://www.manishshrestha012.com.np/college/pec"
