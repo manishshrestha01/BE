@@ -54,15 +54,6 @@ const ORG_GRAPH = {
   ],
 };
 
-const SUBJECT_EXTRA_KEYWORDS = {
-  "calculus-i": [
-    "Unit 3: Integral Calculus PU notes",
-    "Unit 3 Integral Calculus PU notes",
-    "Integral Calculus PU notes",
-    "Integral Calculus semester 1 notes",
-  ],
-};
-
 const SUBJECT_ARTICLES_PATH = path.join(ROOT_DIR, "src/data/subjectArticles.ts");
 
 function buildBreadcrumbList(items) {
@@ -100,77 +91,93 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
+function renderArticleToHtml(article) {
+  if (!article) return "";
+
+  const parts = [];
+
+  for (const section of article.sections) {
+    const tag = `h${Math.min(Math.max(section.level, 2), 6)}`;
+    parts.push(
+      `<${tag} id="${escapeHtml(section.id || "")}">${escapeHtml(section.title)}</${tag}>`,
+    );
+
+    if (section.content) {
+      for (const para of section.content) {
+        if (para.trim()) parts.push(`<p>${escapeHtml(para)}</p>`);
+      }
+    }
+
+    if (section.bullets) {
+      parts.push("<ul>");
+      for (const bullet of section.bullets) {
+        if (bullet.trim()) parts.push(`<li>${escapeHtml(bullet)}</li>`);
+      }
+      parts.push("</ul>");
+    }
+
+    if (section.numbered) {
+      parts.push("<ol>");
+      for (const item of section.numbered) {
+        if (item.trim()) parts.push(`<li>${escapeHtml(item)}</li>`);
+      }
+      parts.push("</ol>");
+    }
+
+    if (section.units) {
+      for (const unit of section.units) {
+        const unitTag = `h${Math.min(Math.max(section.level + 1, 3), 6)}`;
+        parts.push(
+          `<${unitTag} id="${escapeHtml(unit.id || "")}">${escapeHtml(unit.title)}</${unitTag}>`,
+        );
+
+        if (unit.content) {
+          for (const para of unit.content) {
+            if (para.trim()) parts.push(`<p>${escapeHtml(para)}</p>`);
+          }
+        }
+
+        if (unit.bullets) {
+          parts.push("<ul>");
+          for (const bullet of unit.bullets) {
+            if (bullet.trim()) parts.push(`<li>${escapeHtml(bullet)}</li>`);
+          }
+          parts.push("</ul>");
+        }
+
+        if (unit.numbered) {
+          parts.push("<ol>");
+          for (const item of unit.numbered) {
+            if (item.trim()) parts.push(`<li>${escapeHtml(item)}</li>`);
+          }
+          parts.push("</ol>");
+        }
+      }
+    }
+  }
+
+  return parts.join("\n");
+}
+
 function normalizeCourseCode(courseCode = "") {
   return String(courseCode || "").trim().toUpperCase();
 }
 
-function compactCourseCode(courseCode = "") {
-  return normalizeCourseCode(courseCode).replace(/\s+/g, "");
-}
-
-function stripUnitHours(title = "") {
-  return String(title || "").replace(/\s*\([^)]*\)\s*$/g, "").trim();
-}
-
-function normalizeUnitTitle(title = "", unitNumber = 1) {
-  const cleanedTitle = String(title || "").replace(/^unit\s*[ivxlcdm0-9]+\s*[:.-]?\s*/i, "").trim();
-  return `Unit ${unitNumber}: ${cleanedTitle || title}`.trim();
-}
-
-function makeUnitKeywords(semester, subjectArticle) {
-  const syllabusSection = (subjectArticle?.sections || []).find(
-    (section) => section.id === "syllabus-overview",
-  );
-  const units = syllabusSection?.units || [];
-  const keywords = [];
-
-  units.forEach((unit, index) => {
-    const unitNumber = index + 1;
-    const normalizedUnitTitle = normalizeUnitTitle(unit.title, unitNumber);
-    const unitTitleNoHours = stripUnitHours(normalizedUnitTitle);
-    const topic = unitTitleNoHours.replace(/^Unit\s*\d+\s*:\s*/i, "").trim();
-
-    keywords.push(
-      normalizedUnitTitle,
-      unitTitleNoHours,
-      `${unitTitleNoHours} PU notes`,
-      `${unitTitleNoHours} Pokhara University notes`,
-      `${topic} PU notes`,
-      `${topic} semester ${semester.semester} notes`,
-    );
-  });
-
-  return [...new Set(keywords.filter(Boolean))];
+function makeUnitKeywords() {
+  return [];
 }
 
 function makeSubjectKeywords(semester, subject, courseCode) {
-  const normalizedCode = normalizeCourseCode(courseCode);
-  const compactCode = compactCourseCode(normalizedCode);
   const keywords = [
-    "Pokhara University",
-    "BE Computer Engineering",
-    `semester ${semester.semester}`,
     subject.name,
     `${subject.name} notes`,
-    `${subject.name} unit wise notes`,
-    `${subject.name} chapter wise notes`,
-    `${subject.name} PU notes`,
+    `Pokhara University semester ${semester.semester}`,
+    `BE Computer Engineering`,
   ];
 
-  if (normalizedCode) {
-    keywords.push(
-      normalizedCode,
-      compactCode,
-      `${subject.name} ${normalizedCode}`,
-      `${normalizedCode} notes`,
-      `${compactCode} notes`,
-      `${normalizedCode} PU notes`,
-      `${compactCode} PU notes`,
-    );
+  if (courseCode) {
+    keywords.push(`${courseCode} notes`);
   }
-
-  const extraKeywords = SUBJECT_EXTRA_KEYWORDS[subject.slug] || [];
-  keywords.push(...extraKeywords);
 
   return [...new Set(keywords.filter(Boolean))];
 }
@@ -207,9 +214,11 @@ function pageTemplate({
   type = "website",
   jsonLd = [],
   noscriptLinks = [],
+  articleHtml = "",
 }) {
   const canonical = toAbsolute(canonicalPath);
   const image = makeMetaImage();
+  const hasPrerenderedContent = !!articleHtml;
 
   const jsonLdScripts = [...jsonLd, ORG_GRAPH]
     .map(
@@ -246,7 +255,7 @@ function pageTemplate({
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="192x192" href="/logo-512.png">
-  <style id="spa-hide">body{visibility:hidden!important}</style>
+  ${hasPrerenderedContent ? "" : '<style id="spa-hide">body{visibility:hidden!important}</style>'}
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <meta name="keywords" content="${escapeHtml(keywords)}">
@@ -266,9 +275,11 @@ function pageTemplate({
   <meta name="twitter:image" content="${escapeHtml(image)}">
 
   ${jsonLdScripts}
+  ${hasPrerenderedContent ? '<style>.prerendered-content h1,.prerendered-content h2,.prerendered-content h3{line-height:1.3}.prerendered-content p,.prerendered-content li{line-height:1.6}.prerendered-content{max-width:800px;margin:0 auto;padding:16px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:#222}.prerendered-content .prerendered-description{font-size:1.1em;color:#555}</style>' : ""}
 </head>
 <body>
   ${noscriptNav}
+  <div id="root">${hasPrerenderedContent ? `<article class="prerendered-content">${articleHtml}</article>` : ""}</div>
   <script src="/spa-loader.js" defer></script>
 </body>
 </html>`;
@@ -317,10 +328,20 @@ async function generateBlogPages() {
     { name: "Blog", url: `${BLOG_BASE_URL}/blog` },
   ]);
 
+  const blogIndexHtml = `<h1>StudyMate Blog &mdash; PU Computer Engineering Guides</h1>
+<p class="prerendered-description">Semester-wise tutorial guides for Pokhara University BE Computer Engineering students. Browse by semester below.</p>
+<h2>Semesters</h2>
+<ul>
+${BLOG_CURRICULUM.map(
+  (sem) =>
+    `  <li><a href="${escapeHtml(sem.urlPath)}">Semester ${sem.semester} (${sem.subjectCount} subjects)</a></li>`,
+).join("\n")}
+</ul>`;
+
   await writePage("/blog", {
     title: "StudyMate Blog - PU Computer Engineering Guides",
     description:
-      "Static semester-wise tutorials for Pokhara University BE Computer Engineering students.",
+      "Semester-wise static tutorial guides for Pokhara University BE Computer Engineering students.",
     keywords:
       "Pokhara University blog, BE Computer Engineering notes, semester guides, StudyMate blog",
     jsonLd: [blogBreadcrumbLd, blogCollectionLd],
@@ -328,6 +349,7 @@ async function generateBlogPages() {
       href: semester.urlPath,
       label: `Semester ${semester.semester}`,
     })),
+    articleHtml: blogIndexHtml,
   });
 
   for (const semester of BLOG_CURRICULUM) {
@@ -360,6 +382,25 @@ async function generateBlogPages() {
       },
     };
 
+    const semesterOverviewHtml = (semester.overviewParagraphs || [])
+      .filter(Boolean)
+      .map((p) => `<p>${escapeHtml(p)}</p>`)
+      .join("\n");
+
+    const semesterSubjectListHtml = `<h2>Subjects</h2>
+<ul>
+${semester.subjects
+  .map(
+    (subj) =>
+      `  <li><a href="${escapeHtml(subj.urlPath)}">${escapeHtml(subj.courseCode ? `${subj.name} (${subj.courseCode})` : subj.name)}</a></li>`,
+  )
+  .join("\n")}
+</ul>`;
+
+    const semesterPageHtml = `<h1>${escapeHtml(semesterTitle)}</h1>
+${semesterOverviewHtml}
+${semesterSubjectListHtml}`;
+
     await writePage(semester.urlPath, {
       title: semesterTitle,
       description: semesterDescription,
@@ -369,6 +410,7 @@ async function generateBlogPages() {
         href: subject.urlPath,
         label: subject.name,
       })),
+      articleHtml: semesterPageHtml,
     });
 
     for (const subject of semester.subjects) {
@@ -415,6 +457,13 @@ async function generateBlogPages() {
         keywords: subjectKeywords,
       };
 
+      const articleHtml = subjectArticle
+        ? renderArticleToHtml(subjectArticle)
+        : "";
+      const subjectPageHtml = articleHtml
+        ? `<h1>${escapeHtml(subjectTitle)}</h1>\n<p class="prerendered-description">${escapeHtml(subjectDescription)}</p>\n${articleHtml}`
+        : "";
+
       await writePage(subject.urlPath, {
         title: subjectTitle,
         description: subjectDescription,
@@ -425,6 +474,7 @@ async function generateBlogPages() {
           { href: semester.urlPath, label: `Back to Semester ${semester.semester}` },
           { href: "/blog", label: "Back to Blog" },
         ],
+        articleHtml: subjectPageHtml,
       });
     }
   }
