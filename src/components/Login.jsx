@@ -79,9 +79,9 @@ const Login = () => {
 
     try {
       await signInWithEmail(email)
-      setMessage({ 
-        type: 'success', 
-        text: 'Check your email for a magic link to sign in!' 
+      setMessage({
+        type: 'success',
+        text: 'Magic link sent! Check your email inbox to sign in.\nNot seeing it? Check your spam folder and mark as "Not spam".',
       })
       setEmail('')
     } catch (err) {
@@ -158,7 +158,9 @@ const Login = () => {
 
           {message.text && (
             <div className={`auth-message auth-message-${message.type}`}>
-              {message.text}
+              {message.text.split('\n').map((line, i) => (
+                <span key={i}>{i > 0 && <br />}{line}</span>
+              ))}
             </div>
           )}
 
