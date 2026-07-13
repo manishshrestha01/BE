@@ -52,7 +52,74 @@
   }
   </script>
 
-  <!-- JSON-LD: Organization + WebSite -->
+
+  <!-- FAQPage + Speakable schema (GEO + AEO) — injected by inject-college-faq-schema.js -->
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Where can I find PEC BE Computer Engineering notes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pokhara Engineering College (PEC) BE Computer Engineering notes are available for free at StudyMate (https://www.manishshrestha012.com.np/college/pec). The page provides semester-wise PDFs and study materials for all 8 semesters of the Pokhara University 2022 curriculum."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What subjects are taught at PEC in BE Computer Engineering?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pokhara Engineering College follows the Pokhara University BE Computer Engineering curriculum (2022). Subjects include: Semester 1 — Calculus I, Digital Logic, Programming in C, Basic Electrical Engineering; Semester 2 — Data Structure and Algorithm, OOP in C++; and advanced subjects in later semesters including DBMS, Operating Systems, Computer Networks, Software Engineering, Compiler Design, AI, and Machine Learning."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many semesters are there in PEC BE Computer Engineering?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pokhara Engineering College BE Computer Engineering is a 4-year program with 8 semesters, following the Pokhara University curriculum. StudyMate provides notes and PDFs for all 8 semesters at https://www.manishshrestha012.com.np/college/pec."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is PEC affiliated with Pokhara University?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, Pokhara Engineering College (PEC) is affiliated with Pokhara University (PU) for the BE Computer Engineering program. It is located in Pokhara, Kaski, Nepal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I download PEC notes for free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can download PEC BE Computer Engineering notes for free at StudyMate: https://www.manishshrestha012.com.np/college/pec. Select your semester to access semester-wise PDFs and study materials."
+      }
+    }
+  ]
+}
+  </script>
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [
+      "h1",
+      ".speakable-intro"
+    ]
+  },
+  "url": "https://www.manishshrestha012.com.np/college/pec"
+}
+  </script>
+    <!-- /FAQ schema injected by inject-college-faq-schema.js -->
+
+    <!-- JSON-LD: Organization + WebSite -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",

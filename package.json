@@ -11,7 +11,9 @@
     "fetch-adcash-lib": "node scripts/fetch-adcash-anti-adblock.js",
     "generate-blog-static": "node scripts/generate-blog-static.js",
     "inspect-seo": "node scripts/inspect-seo.js",
-    "inspect-live": "node scripts/inspect-seo.js https://www.manishshrestha012.com.np/colleges https://www.manishshrestha012.com.np/college/pec"
+    "inspect-live": "node scripts/inspect-seo.js https://www.manishshrestha012.com.np/colleges https://www.manishshrestha012.com.np/college/pec",
+    "inject-college-faq": "node scripts/inject-college-faq-schema.js",
+    "seo-all": "npm run generate-blog-static && npm run inject-college-faq"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.0",

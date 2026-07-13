@@ -4,7 +4,7 @@
   <!-- Landing Page - Main entry point -->
   <url>
     <loc>https://www.manishshrestha012.com.np/</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.00</priority>
   </url>
@@ -12,55 +12,55 @@
   <!-- Preferred top-level pages (signal to search engines) -->
   <url>
     <loc>https://www.manishshrestha012.com.np/dashboard</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/colleges</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/login</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/privacy-policy</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.55</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/about</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/contact</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.72</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/terms</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.55</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/disclaimer</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.50</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/terms-of-service</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.20</priority>
   </url>
@@ -68,85 +68,85 @@
   <!-- Per-college pages (directory follows) -->
   <url>
     <loc>https://www.manishshrestha012.com.np/college/nec</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/pec</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/lec</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/nast</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/ncit</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/cosmos</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/eec</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/pu</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/gces</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/utc</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/mbce</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/oxford</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/rec</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.manishshrestha012.com.np/college/uesc</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -154,7 +154,7 @@
   <!-- FAQ Page - Common questions answered -->
   <url>
     <loc>https://www.manishshrestha012.com.np/faq</loc>
-    <lastmod>2026-01-17</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
