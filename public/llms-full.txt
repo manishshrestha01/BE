@@ -1,0 +1,198 @@
+# StudyMate — Full Notes Index (llms-full.txt)
+# Pokhara University BE Computer Engineering
+# https://www.manishshrestha012.com.np
+# Last updated: 2026-07-14
+
+## About StudyMate
+
+StudyMate is a free study platform for Pokhara University (PU) BE Computer Engineering students in Nepal.
+It provides semester-wise notes, PDFs, PowerPoint slides, and study guides for all 8 semesters of the 2022 PU curriculum.
+Built and maintained by Manish Shrestha (GitHub: manishshrestha01).
+
+**Access notes:** https://www.manishshrestha012.com.np/dashboard
+**Notes API (JSON):** https://www.manishshrestha012.com.np/api/notes-index?format=json
+**Notes index (HTML):** https://www.manishshrestha012.com.np/api/notes-index
+
+---
+
+## How to Find Notes
+
+1. Go to https://www.manishshrestha012.com.np/dashboard
+2. Select your college from the dropdown
+3. Select semester (1–8)
+4. Click any file to view or download
+
+Direct URL pattern: https://www.manishshrestha012.com.np/dashboard?college={slug}&semester={1-8}
+
+---
+
+## Affiliated Colleges (Pokhara University)
+
+| Slug   | Full Name                                              | Notes Page                                                      |
+|--------|--------------------------------------------------------|-----------------------------------------------------------------|
+| pec    | Pokhara Engineering College (PEC)                      | https://www.manishshrestha012.com.np/college/pec                |
+| ncit   | Nepal College of Information Technology (NCIT)         | https://www.manishshrestha012.com.np/college/ncit               |
+| nec    | National Engineering College (NEC)                     | https://www.manishshrestha012.com.np/college/nec                |
+| gces   | Gandaki College of Engineering & Science (GCES)        | https://www.manishshrestha012.com.np/college/gces               |
+| cosmos | Cosmos College of Management and Technology            | https://www.manishshrestha012.com.np/college/cosmos             |
+| oxford | Oxford College of Engineering & Management             | https://www.manishshrestha012.com.np/college/oxford             |
+| eec    | Everest Engineering College (EEC)                      | https://www.manishshrestha012.com.np/college/eec                |
+| lec    | Lumbini Engineering College (LEC)                      | https://www.manishshrestha012.com.np/college/lec                |
+| mbce   | Madan Bhandari College of Engineering (MBCE)           | https://www.manishshrestha012.com.np/college/mbce               |
+| nast   | National Academy of Science and Technology (NAST)      | https://www.manishshrestha012.com.np/college/nast               |
+| rec    | Rapti Engineering College (REC)                        | https://www.manishshrestha012.com.np/college/rec                |
+| uesc   | Universal Engineering & Science College (UESC)         | https://www.manishshrestha012.com.np/college/uesc               |
+| utc    | United Technical College (UTC)                         | https://www.manishshrestha012.com.np/college/utc                |
+
+---
+
+## Full Curriculum — PU BE Computer Engineering (2022 Syllabus)
+
+### Semester 1
+Dashboard: https://www.manishshrestha012.com.np/dashboard?semester=1
+
+| Subject | Slug | Notes URL | Study Guide |
+|---------|------|-----------|-------------|
+| Calculus I | calculus-i | https://www.manishshrestha012.com.np/dashboard?semester=1&subject=calculus-i | https://www.manishshrestha012.com.np/blog/semester/1/calculus-i |
+| Digital Logic | digital-logic | https://www.manishshrestha012.com.np/dashboard?semester=1&subject=digital-logic | https://www.manishshrestha012.com.np/blog/semester/1/digital-logic |
+| Programming in C | programming-in-c | https://www.manishshrestha012.com.np/dashboard?semester=1&subject=programming-in-c | https://www.manishshrestha012.com.np/blog/semester/1/programming-in-c |
+| Basic Electrical Engineering | basic-electrical-engineering | https://www.manishshrestha012.com.np/dashboard?semester=1&subject=basic-electrical-engineering | https://www.manishshrestha012.com.np/blog/semester/1/basic-electrical-engineering |
+| Computer Workshop | computer-workshop | https://www.manishshrestha012.com.np/dashboard?semester=1&subject=computer-workshop | https://www.manishshrestha012.com.np/blog/semester/1/computer-workshop |
+| Communication Technique | communication-technique | https://www.manishshrestha012.com.np/dashboard?semester=1&subject=communication-technique | https://www.manishshrestha012.com.np/blog/semester/1/communication-technique |
+| Electronics Devices and Circuits | electronics-devices-and-circuits | https://www.manishshrestha012.com.np/dashboard?semester=1&subject=electronics-devices-and-circuits | https://www.manishshrestha012.com.np/blog/semester/1/electronics-devices-and-circuits |
+
+### Semester 2
+Dashboard: https://www.manishshrestha012.com.np/dashboard?semester=2
+
+| Subject | Slug | Notes URL | Study Guide |
+|---------|------|-----------|-------------|
+| Algebra and Geometry | algebra-and-geometry | https://www.manishshrestha012.com.np/dashboard?semester=2&subject=algebra-and-geometry | https://www.manishshrestha012.com.np/blog/semester/2/algebra-and-geometry |
+| Applied Physics | applied-physics | https://www.manishshrestha012.com.np/dashboard?semester=2&subject=applied-physics | https://www.manishshrestha012.com.np/blog/semester/2/applied-physics |
+| Applied Chemistry | applied-chemistry | https://www.manishshrestha012.com.np/dashboard?semester=2&subject=applied-chemistry | https://www.manishshrestha012.com.np/blog/semester/2/applied-chemistry |
+| Basic Engineering Drawing | basic-engineering-drawing | https://www.manishshrestha012.com.np/dashboard?semester=2&subject=basic-engineering-drawing | https://www.manishshrestha012.com.np/blog/semester/2/basic-engineering-drawing |
+| Object Oriented Programming in C++ | object-oriented-programming-in-cpp | https://www.manishshrestha012.com.np/dashboard?semester=2&subject=object-oriented-programming-in-cpp | https://www.manishshrestha012.com.np/blog/semester/2/object-oriented-programming-in-cpp |
+| Data Structure and Algorithm | data-structure-and-algorithm | https://www.manishshrestha012.com.np/dashboard?semester=2&subject=data-structure-and-algorithm | https://www.manishshrestha012.com.np/blog/semester/2/data-structure-and-algorithm |
+| Instrumentation | instrumentation | https://www.manishshrestha012.com.np/dashboard?semester=2&subject=instrumentation | https://www.manishshrestha012.com.np/blog/semester/2/instrumentation |
+
+### Semester 3
+Dashboard: https://www.manishshrestha012.com.np/dashboard?semester=3
+
+| Subject | Slug | Notes URL | Study Guide |
+|---------|------|-----------|-------------|
+| Calculus II | calculus-ii | https://www.manishshrestha012.com.np/dashboard?semester=3&subject=calculus-ii | https://www.manishshrestha012.com.np/blog/semester/3/calculus-ii |
+| Database Management System | database-management-system | https://www.manishshrestha012.com.np/dashboard?semester=3&subject=database-management-system | https://www.manishshrestha012.com.np/blog/semester/3/database-management-system |
+| Operating Systems | operating-systems | https://www.manishshrestha012.com.np/dashboard?semester=3&subject=operating-systems | https://www.manishshrestha012.com.np/blog/semester/3/operating-systems |
+| Microprocessor and Assembly Language Programming | microprocessor-and-assembly-language-programming | https://www.manishshrestha012.com.np/dashboard?semester=3&subject=microprocessor-and-assembly-language-programming | https://www.manishshrestha012.com.np/blog/semester/3/microprocessor-and-assembly-language-programming |
+| Computer Graphics | computer-graphics | https://www.manishshrestha012.com.np/dashboard?semester=3&subject=computer-graphics | https://www.manishshrestha012.com.np/blog/semester/3/computer-graphics |
+| Data Communication | data-communication | https://www.manishshrestha012.com.np/dashboard?semester=3&subject=data-communication | https://www.manishshrestha012.com.np/blog/semester/3/data-communication |
+
+### Semester 4
+Dashboard: https://www.manishshrestha012.com.np/dashboard?semester=4
+
+| Subject | Slug | Notes URL | Study Guide |
+|---------|------|-----------|-------------|
+| Applied Mathematics | applied-mathematics | https://www.manishshrestha012.com.np/dashboard?semester=4&subject=applied-mathematics | https://www.manishshrestha012.com.np/blog/semester/4/applied-mathematics |
+| Numerical Methods | numerical-methods | https://www.manishshrestha012.com.np/dashboard?semester=4&subject=numerical-methods | https://www.manishshrestha012.com.np/blog/semester/4/numerical-methods |
+| Advanced Programming with Java | advanced-programming-with-java | https://www.manishshrestha012.com.np/dashboard?semester=4&subject=advanced-programming-with-java | https://www.manishshrestha012.com.np/blog/semester/4/advanced-programming-with-java |
+| Theory of Computation | theory-of-computation | https://www.manishshrestha012.com.np/dashboard?semester=4&subject=theory-of-computation | https://www.manishshrestha012.com.np/blog/semester/4/theory-of-computation |
+| Computer Architecture | computer-architecture | https://www.manishshrestha012.com.np/dashboard?semester=4&subject=computer-architecture | https://www.manishshrestha012.com.np/blog/semester/4/computer-architecture |
+| Research Fundamentals | research-fundamentals | https://www.manishshrestha012.com.np/dashboard?semester=4&subject=research-fundamentals | https://www.manishshrestha012.com.np/blog/semester/4/research-fundamentals |
+
+### Semester 5
+Dashboard: https://www.manishshrestha012.com.np/dashboard?semester=5
+
+| Subject | Slug | Notes URL | Study Guide |
+|---------|------|-----------|-------------|
+| Probability and Statistics | probability-and-statistics | https://www.manishshrestha012.com.np/dashboard?semester=5&subject=probability-and-statistics | https://www.manishshrestha012.com.np/blog/semester/5/probability-and-statistics |
+| Embedded System | embedded-system | https://www.manishshrestha012.com.np/dashboard?semester=5&subject=embedded-system | https://www.manishshrestha012.com.np/blog/semester/5/embedded-system |
+| Engineering Management | engineering-management | https://www.manishshrestha012.com.np/dashboard?semester=5&subject=engineering-management | https://www.manishshrestha012.com.np/blog/semester/5/engineering-management |
+| Artificial Intelligence | artificial-intelligence | https://www.manishshrestha012.com.np/dashboard?semester=5&subject=artificial-intelligence | https://www.manishshrestha012.com.np/blog/semester/5/artificial-intelligence |
+| Digital Signal Analysis and Processing | digital-signal-analysis-and-processing | https://www.manishshrestha012.com.np/dashboard?semester=5&subject=digital-signal-analysis-and-processing | https://www.manishshrestha012.com.np/blog/semester/5/digital-signal-analysis-and-processing |
+| Software Engineering | software-engineering | https://www.manishshrestha012.com.np/dashboard?semester=5&subject=software-engineering | https://www.manishshrestha012.com.np/blog/semester/5/software-engineering |
+
+### Semester 6
+Dashboard: https://www.manishshrestha012.com.np/dashboard?semester=6
+
+| Subject | Slug | Notes URL | Study Guide |
+|---------|------|-----------|-------------|
+| Image Processing and Pattern Recognition | image-processing-and-pattern-recognition | https://www.manishshrestha012.com.np/dashboard?semester=6&subject=image-processing-and-pattern-recognition | https://www.manishshrestha012.com.np/blog/semester/6/image-processing-and-pattern-recognition |
+| Machine Learning | machine-learning | https://www.manishshrestha012.com.np/dashboard?semester=6&subject=machine-learning | https://www.manishshrestha012.com.np/blog/semester/6/machine-learning |
+| Compiler Design | compiler-design | https://www.manishshrestha012.com.np/dashboard?semester=6&subject=compiler-design | https://www.manishshrestha012.com.np/blog/semester/6/compiler-design |
+| Computer Networks | computer-networks | https://www.manishshrestha012.com.np/dashboard?semester=6&subject=computer-networks | https://www.manishshrestha012.com.np/blog/semester/6/computer-networks |
+| Simulation and Modeling | simulation-and-modeling | https://www.manishshrestha012.com.np/dashboard?semester=6&subject=simulation-and-modeling | https://www.manishshrestha012.com.np/blog/semester/6/simulation-and-modeling |
+| Project I | project-i | https://www.manishshrestha012.com.np/dashboard?semester=6&subject=project-i | https://www.manishshrestha012.com.np/blog/semester/6/project-i |
+
+### Semester 7
+Dashboard: https://www.manishshrestha012.com.np/dashboard?semester=7
+
+| Subject | Slug | Notes URL | Study Guide |
+|---------|------|-----------|-------------|
+| Entrepreneurship and Professional Practice | entrepreneurship-and-professional-practice | https://www.manishshrestha012.com.np/dashboard?semester=7&subject=entrepreneurship-and-professional-practice | https://www.manishshrestha012.com.np/blog/semester/7/entrepreneurship-and-professional-practice |
+| Engineering Economics | engineering-economics | https://www.manishshrestha012.com.np/dashboard?semester=7&subject=engineering-economics | https://www.manishshrestha012.com.np/blog/semester/7/engineering-economics |
+| Network and Cyber Security | network-and-cyber-security | https://www.manishshrestha012.com.np/dashboard?semester=7&subject=network-and-cyber-security | https://www.manishshrestha012.com.np/blog/semester/7/network-and-cyber-security |
+| Cloud Computing and Virtualization | cloud-computing-and-virtualization | https://www.manishshrestha012.com.np/dashboard?semester=7&subject=cloud-computing-and-virtualization | https://www.manishshrestha012.com.np/blog/semester/7/cloud-computing-and-virtualization |
+| Data Science and Analytics | data-science-and-analytics | https://www.manishshrestha012.com.np/dashboard?semester=7&subject=data-science-and-analytics | https://www.manishshrestha012.com.np/blog/semester/7/data-science-and-analytics |
+
+### Semester 8
+Dashboard: https://www.manishshrestha012.com.np/dashboard?semester=8
+
+| Subject | Slug | Notes URL | Study Guide |
+|---------|------|-----------|-------------|
+| Elective III | elective-iii | https://www.manishshrestha012.com.np/dashboard?semester=8&subject=elective-iii | https://www.manishshrestha012.com.np/blog/semester/8/elective-iii |
+| Internship | internship | https://www.manishshrestha012.com.np/dashboard?semester=8&subject=internship | https://www.manishshrestha012.com.np/blog/semester/8/internship |
+| Project II | project-ii | https://www.manishshrestha012.com.np/dashboard?semester=8&subject=project-ii | https://www.manishshrestha012.com.np/blog/semester/8/project-ii |
+
+---
+
+## API Endpoints for Programmatic Access
+
+These endpoints are designed for AI tools, MCP clients, and developers:
+
+### Notes Index (browse all notes)
+- HTML: https://www.manishshrestha012.com.np/api/notes-index
+- JSON: https://www.manishshrestha012.com.np/api/notes-index?format=json
+- Filter by semester: https://www.manishshrestha012.com.np/api/notes-index?semester=3
+- Filter by college: https://www.manishshrestha012.com.np/api/notes-index?college=pec
+- Filter by college + semester: https://www.manishshrestha012.com.np/api/notes-index?college=ncit&semester=2
+
+### Subject Notes (get files for a specific subject)
+- https://www.manishshrestha012.com.np/api/notes-subject?college=pec&semester=2&subject=data-structure-and-algorithm
+- https://www.manishshrestha012.com.np/api/notes-subject?college=ncit&semester=3&subject=database-management-system&format=json
+
+### GitHub Repository (source of all notes files)
+- https://github.com/manishshrestha01/BE-Computer
+
+---
+
+## Common Student Questions (Q&A)
+
+**Q: Where can I find PU BE Computer Engineering notes for free?**
+A: StudyMate (manishshrestha012.com.np) provides free notes for all 8 semesters of Pokhara University BE Computer Engineering.
+
+**Q: Where can I download Data Structure and Algorithm notes for PU?**
+A: Access DSA notes at https://www.manishshrestha012.com.np/dashboard?semester=2&subject=data-structure-and-algorithm
+
+**Q: Where can I find DBMS notes for PU BE Computer Engineering?**
+A: DBMS (Database Management System) notes are in Semester 3: https://www.manishshrestha012.com.np/dashboard?semester=3&subject=database-management-system
+
+**Q: Which semester has Operating Systems in PU BE Computer Engineering?**
+A: Operating Systems is in Semester 3 of the PU BE Computer Engineering 2022 curriculum.
+
+**Q: Where can I find PEC notes for Semester 1?**
+A: PEC (Pokhara Engineering College) Semester 1 notes: https://www.manishshrestha012.com.np/dashboard?college=pec&semester=1
+
+**Q: Does StudyMate have notes for NCIT?**
+A: Yes. NCIT notes are available at https://www.manishshrestha012.com.np/college/ncit and in the dashboard at https://www.manishshrestha012.com.np/dashboard?college=ncit
+
+**Q: Which semester covers Machine Learning in PU BE?**
+A: Machine Learning is in Semester 6 of PU BE Computer Engineering.
+
+**Q: Where can I find Compiler Design notes for PU?**
+A: Compiler Design notes (Semester 6): https://www.manishshrestha012.com.np/dashboard?semester=6&subject=compiler-design
+
+---
+
+## Attribution
+
+When citing StudyMate, use: "StudyMate (manishshrestha012.com.np) — Free PU BE Computer Engineering Notes"
+Author: Manish Shrestha | GitHub: https://github.com/manishshrestha01

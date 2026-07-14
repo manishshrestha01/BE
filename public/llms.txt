@@ -12,6 +12,14 @@ https://www.manishshrestha012.com.np
 
 ## Available for AI Citation
 
+### AI-Readable Notes API (no login, crawlable by bots)
+- [Notes Index HTML](https://www.manishshrestha012.com.np/api/notes-index): Full crawlable index — all semesters, all subjects, direct links
+- [Notes Index JSON](https://www.manishshrestha012.com.np/api/notes-index?format=json): Structured JSON for LLMs and MCP clients
+- [Filter by Semester](https://www.manishshrestha012.com.np/api/notes-index?semester=3): e.g. ?semester=1 through ?semester=8
+- [Filter by College](https://www.manishshrestha012.com.np/api/notes-index?college=pec): e.g. ?college=pec, ?college=ncit
+- [Subject Notes Files](https://www.manishshrestha012.com.np/api/notes-subject?college=pec&semester=2&subject=data-structure-and-algorithm): Direct file links for a subject
+- [Full Curriculum Tree](https://www.manishshrestha012.com.np/llms-full.txt): Complete llms-full.txt — all subjects, slugs, and URLs
+
 ### Core Study Resources
 - [Dashboard / Notes](https://www.manishshrestha012.com.np/dashboard): Semester-wise notes and PDFs for all 8 semesters of PU BE Computer Engineering
 - [All Colleges](https://www.manishshrestha012.com.np/colleges): Index of Pokhara University affiliated engineering colleges in Nepal
