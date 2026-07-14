@@ -176,6 +176,9 @@ function makeSubjectKeywords(semester, subject, courseCode) {
     `${subject.name} study guide`,
     `${subject.name} important topics`,
     `${subject.name} practice questions`,
+    `${subject.name} pdf notes`,
+    `${subject.name} question bank`,
+    `${subject.name} past questions`,
     `PU ${subject.name}`,
     `Pokhara University ${subject.name}`,
     `${subject.name} BE Computer semester ${semester.semester}`,
@@ -205,7 +208,7 @@ function makeSubjectFaqs(semester, subject, courseCode) {
     },
     {
       question: `Where can I find ${subject.name} notes for PU BE Computer Engineering?`,
-      answer: `You can download free ${subject.name} notes and study materials for Pokhara University BE Computer Engineering Semester ${semester.semester} on StudyMate (manishshrestha012.com.np). The platform provides PDF notes, syllabus breakdown, important topics, and practice questions.`,
+      answer: `Download free ${subject.name} notes and study materials for Pokhara University BE Computer Engineering Semester ${semester.semester} at <a href="/api/notes-subject?semester=${semester.semester}&subject=${subject.slug}">StudyMate notes page</a>. The platform provides PDF notes, syllabus breakdown, important topics, and practice questions — all free for PU BE Computer Engineering students.`,
     },
     {
       question: `What topics are covered in ${subject.name} Semester ${semester.semester}?`,
@@ -265,9 +268,19 @@ function buildSubjectFaqHtml(faqs) {
 ${faqs.map((f, i) => `<div itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
 <h3 itemprop="name">${escapeHtml(f.question)}</h3>
 <div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-<p itemprop="text">${escapeHtml(f.answer)}</p>
+<p itemprop="text">${f.answer}</p>
 </div>
 </div>`).join("\n")}
+</section>`;
+}
+
+function buildSubjectNotesHtml(semesterNum, subjectSlug, subjectName) {
+  const apiUrl = `/api/notes-subject?semester=${semesterNum}&subject=${subjectSlug}`;
+  return `<section id="subject-notes">
+<h2>${escapeHtml(subjectName)} Notes &amp; Study Materials</h2>
+<p>Access free <strong>${escapeHtml(subjectName)} notes</strong> for Pokhara University BE Computer Engineering Semester ${semesterNum}. These study materials include PDF notes, important questions, and syllabus breakdown curated for PU students.</p>
+<p><a href="${escapeHtml(apiUrl)}" target="_blank" rel="noopener noreferrer">Download ${escapeHtml(subjectName)} Notes</a></p>
+<p>For all subjects in this semester, visit the <a href="/blog/semester/${semesterNum}">Semester ${semesterNum} study guide</a>.</p>
 </section>`;
 }
 
@@ -280,6 +293,7 @@ function buildSubjectTocHtml() {
 <li><a href="#syllabus-overview">Syllabus Overview</a></li>
 <li><a href="#important-topics">Important Topics</a></li>
 <li><a href="#practice-questions">Practice Questions</a></li>
+<li><a href="#subject-notes">Notes &amp; Study Materials</a></li>
 <li><a href="#faq">FAQ</a></li>
 </ul>
 </nav>`;
@@ -597,11 +611,12 @@ ${semesterSubjectListHtml}`;
         ? renderArticleToHtml(subjectArticle)
         : "";
       const tocHtml = articleHtml ? buildSubjectTocHtml() : "";
+      const notesHtml = buildSubjectNotesHtml(semester.semester, subject.slug, subject.name);
       const faqHtml = articleHtml ? buildSubjectFaqHtml(subjectFaqs) : "";
 
       const subjectPageHtml = articleHtml
-        ? `<h1>${escapeHtml(subjectTitle)}</h1>\n<p class="prerendered-description">${escapeHtml(subjectDescriptionBare)}</p>\n${tocHtml}\n${articleHtml}\n${faqHtml}`
-        : "";
+        ? `<h1>${escapeHtml(subjectTitle)}</h1>\n<p class="prerendered-description">${escapeHtml(subjectDescriptionBare)}</p>\n${tocHtml}\n${articleHtml}\n${notesHtml}\n${faqHtml}`
+        : notesHtml;
 
       await writePage(subject.urlPath, {
         title: subjectTitle,
