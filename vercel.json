@@ -15,14 +15,6 @@
       "destination": "/api/indexnow/key?requestedKey=:indexnowKey"
     },
     {
-      "source": "/api/notes-index",
-      "destination": "/api/notes-index.js"
-    },
-    {
-      "source": "/api/notes-subject",
-      "destination": "/api/notes-subject.js"
-    },
-    {
       "source": "/((?!api(?:/|$)|blog(?:/|$)|college(?:/|$)|colleges(?:/|$)|about(?:/|$)|contact(?:/|$)|privacy-policy(?:/|$)|terms(?:/|$)|terms-of-service(?:/|$)|disclaimer(?:/|$)|favicon-48\\.png|logo-512\\.png|manifest\\.json|robots\\.txt|sitemap\\.xml|css(?:/|$)|assets(?:/|$)|_next(?:/|$)|.*\\.[^/]+$).*)",
       "destination": "/index.html"
     }
