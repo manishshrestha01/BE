@@ -168,18 +168,145 @@ function makeUnitKeywords() {
 }
 
 function makeSubjectKeywords(semester, subject, courseCode) {
+  const key = subject.name.toLowerCase();
   const keywords = [
     subject.name,
     `${subject.name} notes`,
-    `Pokhara University semester ${semester.semester}`,
-    `BE Computer Engineering`,
+    `${subject.name} syllabus`,
+    `${subject.name} study guide`,
+    `${subject.name} important topics`,
+    `${subject.name} practice questions`,
+    `PU ${subject.name}`,
+    `Pokhara University ${subject.name}`,
+    `${subject.name} BE Computer semester ${semester.semester}`,
+    `semester ${semester.semester} ${key} notes`,
+    `BE Computer Engineering semester ${semester.semester}`,
+    `Pokhara University semester ${semester.semester} study material`,
   ];
 
   if (courseCode) {
     keywords.push(`${courseCode} notes`);
+    keywords.push(`${subject.name} ${courseCode}`);
   }
 
   return [...new Set(keywords.filter(Boolean))];
+}
+
+function makeSubjectFaqs(semester, subject, courseCode) {
+  const track = detectSubjectTrack(subject.name);
+  const faqs = [
+    {
+      question: `What is ${subject.name} in Pokhara University BE Computer Engineering?`,
+      answer: `${subject.name}${courseCode ? ` (course code ${courseCode})` : ""} is a core subject in Pokhara University BE Computer Engineering Semester ${semester.semester}. It covers ${getTrackFocusLabel(track)} and is designed to build foundational knowledge required for advanced engineering courses.`,
+    },
+    {
+      question: `How many credits is ${subject.name} in PU BE Computer Engineering?`,
+      answer: `${subject.name} carries ${subject.credit || 3} credits in the Pokhara University BE Computer Engineering Semester ${semester.semester} curriculum${courseCode ? ` (course code ${courseCode})` : ""}.`,
+    },
+    {
+      question: `Where can I find ${subject.name} notes for PU BE Computer Engineering?`,
+      answer: `You can download free ${subject.name} notes and study materials for Pokhara University BE Computer Engineering Semester ${semester.semester} on StudyMate (manishshrestha012.com.np). The platform provides PDF notes, syllabus breakdown, important topics, and practice questions.`,
+    },
+    {
+      question: `What topics are covered in ${subject.name} Semester ${semester.semester}?`,
+      answer: `${subject.name} in PU BE Computer Engineering Semester ${semester.semester} covers core concepts including fundamental principles, analytical methods, practical applications, and exam-oriented problem solving techniques. The complete syllabus is available on StudyMate.`,
+    },
+  ];
+  return faqs;
+}
+
+function makeSubjectCourseSchema(semester, subject, courseCode) {
+  const credits = subject.credit || 3;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: `${subject.name}${courseCode ? ` (${courseCode})` : ""}`,
+    description: `Pokhara University BE Computer Engineering Semester ${semester.semester} — ${subject.name}${courseCode ? `, course code ${courseCode}` : ""}, ${credits} credits.`,
+    provider: {
+      "@type": "CollegeOrUniversity",
+      name: "Pokhara University",
+      sameAs: "https://pokharauniversity.edu.np",
+      address: { "@type": "PostalAddress", addressCountry: "NP" },
+    },
+    educationalCredentialAwarded: "BE Computer Engineering",
+    courseCode: courseCode || undefined,
+    numberOfCredits: credits,
+    inLanguage: "en-US",
+    timeRequired: "P4M",
+  };
+}
+
+function makeSubjectFaqSchema(faqs) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  };
+}
+
+function makeSpeakableSchema(url) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Study Guide",
+    url,
+    speakable: { "@type": "SpeakableSpecification", cssSelector: [".prerendered-content h1", ".prerendered-content h2"] },
+  };
+}
+
+function buildSubjectFaqHtml(faqs) {
+  if (!faqs || !faqs.length) return "";
+  return `<section id="faq">
+<h2>Frequently Asked Questions about ${escapeHtml(faqs[0].question.replace(/^What is /, "").replace(/\?.*$/, ""))}</h2>
+${faqs.map((f, i) => `<div itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+<h3 itemprop="name">${escapeHtml(f.question)}</h3>
+<div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p itemprop="text">${escapeHtml(f.answer)}</p>
+</div>
+</div>`).join("\n")}
+</section>`;
+}
+
+function buildSubjectTocHtml() {
+  return `<nav aria-label="Table of Contents" id="table-of-contents">
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#what-you-will-learn">What You Will Learn</a></li>
+<li><a href="#syllabus-overview">Syllabus Overview</a></li>
+<li><a href="#important-topics">Important Topics</a></li>
+<li><a href="#practice-questions">Practice Questions</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ul>
+</nav>`;
+}
+
+function detectSubjectTrack(name) {
+  const s = name.toLowerCase();
+  if (/calculus|algebra|mathematics|numerical|probability|statistics/.test(s)) return "math";
+  if (/digital logic|electrical|electronics|microprocessor|embedded|architecture|instrumentation/.test(s)) return "hardware";
+  if (/data communication|network|cyber security|cloud|virtualization/.test(s)) return "network";
+  if (/machine learning|artificial intelligence|image processing|pattern recognition|data science|analytics/.test(s)) return "intelligence";
+  if (/project|internship|research|management|economics|entrepreneurship|professional practice|communication technique/.test(s)) return "professional";
+  if (/compiler|database|operating systems|graphics|programming|java|c\+\+|data structure|theory of computation|software engineering/.test(s)) return "software";
+  return "general";
+}
+
+function getTrackFocusLabel(track) {
+  const labels = {
+    math: "mathematical modeling and problem solving",
+    hardware: "system-level hardware understanding",
+    network: "communication stack and infrastructure reasoning",
+    intelligence: "data-driven and intelligent decision systems",
+    professional: "project execution and professional engineering practice",
+    software: "algorithmic and software implementation thinking",
+    general: "core engineering reasoning",
+  };
+  return labels[track] || labels.general;
 }
 
 async function loadSubjectArticlesStore() {
@@ -420,13 +547,20 @@ ${semesterSubjectListHtml}`;
       const subjectLabel = subjectCourseCode
         ? `${subject.name} (${subjectCourseCode})`
         : subject.name;
+      const subjectUrl = toAbsolute(subject.urlPath);
       const subjectArticle = subjectArticlesStore?.[String(semester.semester)]?.[subject.slug] || null;
-      const subjectTitle = `${subjectLabel} Tutorial - Semester ${semester.semester} | StudyMate`;
-      const subjectDescription = buildSubjectDescription(semester, subject);
+      const subjectDescriptionBare = buildSubjectDescription(semester, subject);
+      const subjectTitle = `${subjectLabel} — Notes, Syllabus & Study Guide — PU BE Computer Engineering Semester ${semester.semester} | StudyMate`;
+      const subjectDescription = `Master ${subjectLabel} in Pokhara University BE Computer Engineering Semester ${semester.semester}. Download notes, get syllabus breakdown, important topics, practice questions, and exam tips — a complete free study guide.`;
       const subjectKeywords = [
         ...makeSubjectKeywords(semester, subject, subjectCourseCode),
         ...makeUnitKeywords(semester, subjectArticle),
       ];
+      const subjectFaqs = makeSubjectFaqs(semester, subject, subjectCourseCode);
+      const subjectCourseSchema = makeSubjectCourseSchema(semester, subject, subjectCourseCode);
+      const subjectFaqSchema = makeSubjectFaqSchema(subjectFaqs);
+      const subjectSpeakableSchema = makeSpeakableSchema(`${BLOG_BASE_URL}${subject.urlPath}`);
+
       const subjectBreadcrumbLd = buildBreadcrumbList([
         { name: "Home", url: `${BLOG_BASE_URL}/` },
         { name: "Blog", url: `${BLOG_BASE_URL}/blog` },
@@ -443,7 +577,7 @@ ${semesterSubjectListHtml}`;
       const subjectArticleLd = {
         "@context": "https://schema.org",
         "@type": "Article",
-        mainEntityOfPage: toAbsolute(subject.urlPath),
+        mainEntityOfPage: subjectUrl,
         headline: `${subjectLabel} — Semester ${semester.semester} Study Guide`,
         description: subjectDescription,
         inLanguage: "en-US",
@@ -462,8 +596,11 @@ ${semesterSubjectListHtml}`;
       const articleHtml = subjectArticle
         ? renderArticleToHtml(subjectArticle)
         : "";
+      const tocHtml = articleHtml ? buildSubjectTocHtml() : "";
+      const faqHtml = articleHtml ? buildSubjectFaqHtml(subjectFaqs) : "";
+
       const subjectPageHtml = articleHtml
-        ? `<h1>${escapeHtml(subjectTitle)}</h1>\n<p class="prerendered-description">${escapeHtml(subjectDescription)}</p>\n${articleHtml}`
+        ? `<h1>${escapeHtml(subjectTitle)}</h1>\n<p class="prerendered-description">${escapeHtml(subjectDescriptionBare)}</p>\n${tocHtml}\n${articleHtml}\n${faqHtml}`
         : "";
 
       await writePage(subject.urlPath, {
@@ -471,7 +608,7 @@ ${semesterSubjectListHtml}`;
         description: subjectDescription,
         keywords: subjectKeywords.join(", "),
         type: "article",
-        jsonLd: [subjectBreadcrumbLd, subjectArticleLd],
+        jsonLd: [subjectBreadcrumbLd, subjectArticleLd, subjectCourseSchema, subjectFaqSchema, subjectSpeakableSchema],
         noscriptLinks: [
           { href: semester.urlPath, label: `Back to Semester ${semester.semester}` },
           { href: "/blog", label: "Back to Blog" },
