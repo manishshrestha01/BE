@@ -62,6 +62,13 @@ function subjectToSlug(name) {
 
 // Maps subject slug → actual folder name in the BE-Computer GitHub repo.
 // The repo's folder names don't always match the curriculum subject names.
+// Extra non-subject folders per semester (e.g. curriculum, board exams, old questions)
+const EXTRA_SEMESTER_RESOURCES = {
+  1: [{ name: "2022 Course Curriculum", path: "Semester 1/2022 Course Curriculum", description: "Full PU BE Computer Engineering curriculum structure — all subjects across all 8 semesters" }],
+  6: [{ name: "Generative AI Syllabus (Elective I)", path: "Semester 6/Generative AI Syllabus (Elective I)", description: "Syllabus and resources for Elective I (Generative AI)" }],
+  7: [{ name: "Elective II", path: "Semester 7/Elective II", description: "Syllabus and resources for Elective II" }],
+};
+
 const SUBJECT_FOLDER_MAP = {
   "programming-in-c": "C Programming",
   "basic-electrical-engineering": "BEE - Class Materials",
@@ -120,9 +127,15 @@ function buildIndexJson(params) {
           slug: subjectToSlug(name),
           notesUrl: `${BASE_URL}/dashboard?semester=${sem.semester}&subject=${subjectToSlug(name)}`,
           blogUrl: `${BASE_URL}/blog/semester/${sem.semester}/${subjectToSlug(name)}`,
-          filesUrl: `${BASE_URL}/api/notes-subject?college=${college || "pec"}&semester=${sem.semester}&subject=${subjectToSlug(name)}`,
+          filesUrl: `${BASE_URL}/api/notes-subject?semester=${sem.semester}&subject=${subjectToSlug(name)}`,
           githubFolder: `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/tree/${GITHUB_BRANCH}/${college ? college.toUpperCase() : ""}`,
         })),
+      extraResources: (EXTRA_SEMESTER_RESOURCES[sem.semester] || []).map(e => ({
+        name: e.name,
+        path: e.path,
+        description: e.description,
+        url: `${BASE_URL}/api/notes-subject?path=${encodeURIComponent(e.path)}`,
+      })),
     })),
     howToAccess: {
       dashboard: `${BASE_URL}/dashboard`,
@@ -156,10 +169,17 @@ function buildIndexHtml(params) {
           <span class="links">
             [<a href="${BASE_URL}/dashboard?semester=${sem.semester}&subject=${slug}">📂 Open in Dashboard</a>]
             [<a href="${BASE_URL}/blog/semester/${sem.semester}/${slug}">📖 Study Guide</a>]
-            [<a href="${BASE_URL}/api/notes-subject?semester=${sem.semester}&subject=${slug}&college=${college || "pec"}">📄 Files</a>]
+            [<a href="${BASE_URL}/api/notes-subject?semester=${sem.semester}&subject=${slug}">📄 Files</a>]
           </span>
         </li>`;
     }).join("");
+
+    const extras = EXTRA_SEMESTER_RESOURCES[sem.semester] || [];
+    const extraLinks = extras.length > 0
+      ? `<p><strong>📎 Additional Resources:</strong></p><ul>${extras.map(e =>
+          `<li><a href="${BASE_URL}/api/notes-subject?path=${encodeURIComponent(e.path)}">${e.name}</a>${e.description ? ` <span style="color:#666;font-size:0.85rem">— ${e.description}</span>` : ""}</li>`
+        ).join("\n")}</ul>`
+      : "";
 
     return `
     <section id="semester-${sem.semester}">
@@ -167,6 +187,7 @@ function buildIndexHtml(params) {
       <p><a href="${BASE_URL}/dashboard?semester=${sem.semester}">→ Open Semester ${sem.semester} in Dashboard</a></p>
       <ul>${subjects}
       </ul>
+      ${extraLinks}
     </section>`;
   }).join("\n");
 
@@ -399,12 +420,37 @@ async function handleSubject(req, res, params, wantsJson) {
   // Direct path proxy mode
   if (directPath) {
     const result = await fetchGitHubPath(directPath);
-    return res.status(200).json({
-      success: !result.error,
-      path: directPath,
-      ...result,
-      _tip: `Access these files via the StudyMate dashboard at ${BASE_URL}/dashboard`,
-    });
+    if (wantsJson) {
+      return res.status(200).json({
+        success: !result.error,
+        path: directPath,
+        ...result,
+        _tip: `Access these files via the StudyMate dashboard at ${BASE_URL}/dashboard`,
+      });
+    }
+    // HTML response for browsers and crawlers
+    const title = `📁 ${decodeURIComponent(directPath.split("/").pop() || "")} — StudyMate Notes`;
+    const fileList = result.files.length > 0
+      ? result.files.map(f =>
+          `<li>📄 <a href="${f.rawUrl}">${f.name}</a> <span style="color:#888;font-size:0.85rem">[${f.type}, ${f.size ? Math.round(f.size / 1024) + " KB" : ""}]</span></li>`
+        ).join("\n")
+      : "";
+    const folderList = result.folders.length > 0
+      ? result.folders.map(f => {
+          const qs = new URLSearchParams({ path: f.path });
+          return `<li>📁 <a href="${BASE_URL}/api/notes-subject?${qs}">${f.name}</a></li>`;
+        }).join("\n")
+      : "";
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    return res.status(200).send(`<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${title}</title>
+<meta name="robots" content="index,follow"><link rel="canonical" href="${BASE_URL}/api/notes-subject?path=${encodeURIComponent(directPath)}">
+<style>body{font-family:system-ui,sans-serif;max-width:800px;margin:0 auto;padding:1.5rem;color:#111}a{color:#0066cc}ul{padding-left:1.2rem}li{margin:0.4rem 0}</style>
+</head><body><nav><a href="${BASE_URL}">Home</a> <a href="${BASE_URL}/api/notes-index">Notes Index</a></nav>
+<h1>${title}</h1>${folderList ? `<h2>📁 Folders</h2><ul>${folderList}</ul>` : ""}
+${fileList ? `<h2>📄 Files</h2><ul>${fileList}</ul>` : "<p><em>No files in this folder.</em></p>"}
+<p style="margin-top:2rem;font-size:0.85rem;color:#666;"><a href="${BASE_URL}/api/notes-subject?path=${encodeURIComponent(directPath)}&format=json">JSON</a></p>
+</body></html>`);
   }
 
   const subjectName = subject ? findSubjectName(semester, subject) : null;
