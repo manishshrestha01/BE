@@ -26,6 +26,7 @@ const GITHUB_REPO = "BE-Computer";
 const GITHUB_BRANCH = "main";
 const GITHUB_RAW = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}`;
 const GITHUB_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`;
+const SUPABASE_FUNCTION_URL = (process.env.VITE_SUPABASE_FUNCTION_URL || process.env.SUPABASE_FUNCTION_URL || "").replace(/\/$/, "");
 
 // Full 8-semester PU BE Computer Engineering curriculum (2022)
 const CURRICULUM = [
@@ -268,6 +269,43 @@ function getFileType(filename) {
 }
 
 async function fetchGitHubPath(path) {
+  // Use Supabase Edge Function as proxy (it has the GitHub token)
+  if (SUPABASE_FUNCTION_URL) {
+    try {
+      const url = `${SUPABASE_FUNCTION_URL}/list?path=${encodeURIComponent(path)}`;
+      const r = await fetch(url, { signal: AbortSignal.timeout(10000) });
+      if (!r.ok) {
+        const text = await r.text().catch(() => "");
+        return { error: `Supabase function error: ${r.status} ${text}`, files: [], folders: [] };
+      }
+      const json = await r.json();
+      if (!json.success) {
+        return { error: json.error || "Supabase function returned error", files: [], folders: [] };
+      }
+
+      const files = (json.data || [])
+        .filter(item => item.type === "file")
+        .map(item => ({
+          name: item.name,
+          path: item.path,
+          size: item.size || 0,
+          rawUrl: `${SUPABASE_FUNCTION_URL}/file?path=${encodeURIComponent(item.path)}`,
+          downloadUrl: `${SUPABASE_FUNCTION_URL}/file?path=${encodeURIComponent(item.path)}`,
+          htmlUrl: item.html_url || `${GITHUB_RAW}/${item.path}`,
+          type: item.fileType || getFileType(item.name),
+        }));
+
+      const folders = (json.data || [])
+        .filter(item => item.type === "folder")
+        .map(item => ({ name: item.name, path: item.path, htmlUrl: item.html_url || "" }));
+
+      return { files, folders, error: null };
+    } catch (err) {
+      return { error: err.message, files: [], folders: [] };
+    }
+  }
+
+  // Fallback: call GitHub API directly (requires token for private repos)
   const token = process.env.VITE_GITHUB_TOKEN || process.env.GITHUB_TOKEN || "";
   const headers = {
     "User-Agent": "StudyMate-Notes/1.0",
