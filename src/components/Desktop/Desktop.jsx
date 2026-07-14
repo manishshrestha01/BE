@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useBackground } from '../../context/BackgroundContext'
 import Finder from '../Finder/Finder'
 import Dock from '../Dock/Dock'
@@ -7,6 +8,30 @@ import Settings from '../Settings/Settings'
 import Notes from '../Notes/Notes'
 import ContactApp from '../Contact/ContactApp'
 import './Desktop.css'
+
+// Convert ?semester=3&subject=operating-systems&college=pec into a GitHub folder path.
+// Mirrors the folder structure in the manishshrestha01/BE-Computer repo.
+function buildInitialPathFromParams(searchParams) {
+  const college = searchParams.get('college')
+  const semester = searchParams.get('semester')
+  const subject = searchParams.get('subject')
+
+  const parts = []
+  if (college) parts.push(college.toUpperCase())
+  if (semester) parts.push(`Semester ${semester}`)
+  if (subject) {
+    // Convert slug back to title case folder name (best-effort; Finder will show contents if found)
+    const titleCase = subject
+      .split('-')
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ')
+      // restore C++ properly
+      .replace(/Cpp/gi, 'C++')
+    parts.push(titleCase)
+  }
+
+  return parts.length > 0 ? parts.join('/') : null
+}
 
 const DASHBOARD_UI_STATE_KEY = 'studymate:dashboard-ui:v1'
 const QUICKLOOK_STATE_KEY = 'studymate:quicklook:v1'
@@ -83,8 +108,20 @@ const readDashboardUiState = () => {
 
 const Desktop = () => {
   const { currentBg, customBg } = useBackground()
+  const location = useLocation()
   const restoredState = useMemo(() => readDashboardUiState(), [])
-  const [activeApp, setActiveApp] = useState(restoredState.activeApp)
+
+  // Derive initial Finder path from URL params (?college=pec&semester=3&subject=operating-systems)
+  const initialFinderPath = useMemo(() => {
+    const params = new URLSearchParams(location.search)
+    return buildInitialPathFromParams(params)
+  }, [location.search])
+
+  // If URL has navigation params, open Finder immediately; otherwise restore last state
+  const [activeApp, setActiveApp] = useState(() => {
+    if (initialFinderPath) return 'finder'
+    return restoredState.activeApp
+  })
   const [notesViewState, setNotesViewState] = useState(restoredState.notes)
   const [quickLookFile, setQuickLookFile] = useState(() => readQuickLookState())
   const quickLookFileRef = useRef(quickLookFile)
@@ -217,9 +254,10 @@ const Desktop = () => {
       {/* Main Content Area */}
       <div className="desktop-content">
         {showFinder && (
-          <Finder 
+          <Finder
             onQuickLook={handleQuickLook}
             onClose={closeFinder}
+            initialPath={initialFinderPath}
           />
         )}
         {showNotes && (

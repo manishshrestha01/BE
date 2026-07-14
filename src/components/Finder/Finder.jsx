@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useGitHubNotes } from '../../hooks/useGitHubNotes'
 import { useAuth } from '../../context/AuthContext'
 import useFolderColors from '../../hooks/useFolderColors'
@@ -41,7 +42,9 @@ const getColorFromMap = (colorMap, normalizedColorMap, candidate) => {
   )
 }
 
-const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
+const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
+  const location = useLocation()
+  const navigate = useNavigate()
   const {
     items,
     loading,
@@ -53,7 +56,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
     navigateToPathIndex,
     refresh,
     getFileUrl,
-  } = useGitHubNotes()
+  } = useGitHubNotes({ initialPath })
 
   const { user } = useAuth()
   const { folderColors } = useFolderColors()
@@ -115,6 +118,47 @@ const Finder = ({ onFileSelect, onQuickLook, onClose }) => {
       finderRef.current.focus()
     }
   }, [])
+
+  // Sync URL params as user navigates folders inside Finder.
+  // folderPath = [root, college, semester, subject, ...]
+  // We map back to ?college=pec&semester=3&subject=operating-systems
+  useEffect(() => {
+    if (folderPath.length <= 1) {
+      // Back at root — clear params without full reload
+      const params = new URLSearchParams(location.search)
+      if (params.has('college') || params.has('semester') || params.has('subject')) {
+        navigate('/dashboard', { replace: true })
+      }
+      return
+    }
+
+    const segments = folderPath.slice(1) // drop ROOT
+    const params = new URLSearchParams()
+
+    const collegeSeg = segments[0]
+    if (collegeSeg) params.set('college', collegeSeg.name.toLowerCase())
+
+    const semesterSeg = segments[1]
+    if (semesterSeg) {
+      const semNum = semesterSeg.name.replace(/semester\s*/i, '').trim()
+      if (semNum) params.set('semester', semNum)
+    }
+
+    const subjectSeg = segments[2]
+    if (subjectSeg) {
+      const slug = subjectSeg.name
+        .toLowerCase()
+        .replace(/c\+\+/gi, 'cpp')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+      params.set('subject', slug)
+    }
+
+    const newSearch = `?${params.toString()}`
+    if (location.search !== newSearch) {
+      navigate(`/dashboard${newSearch}`, { replace: true })
+    }
+  }, [folderPath])
 
   // Update displayed items based on active tab
   useEffect(() => {

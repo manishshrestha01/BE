@@ -57,8 +57,24 @@ const persistNotesPathState = (state) => {
   }
 }
 
-export function useGitHubNotes() {
-  const initialPathStateRef = useRef(readStoredNotesPathState())
+export function useGitHubNotes({ initialPath = null } = {}) {
+  // If an initialPath was provided via URL params, seed the path state from it
+  // instead of whatever was persisted in sessionStorage.
+  const resolveInitialState = () => {
+    if (initialPath) {
+      const segments = initialPath.split('/').filter(Boolean)
+      const folderPath = [ROOT_FOLDER]
+      let accumulated = ''
+      for (const segment of segments) {
+        accumulated = accumulated ? `${accumulated}/${segment}` : segment
+        folderPath.push({ id: accumulated, name: segment, path: accumulated })
+      }
+      return { currentPath: initialPath, folderPath }
+    }
+    return readStoredNotesPathState()
+  }
+
+  const initialPathStateRef = useRef(resolveInitialState())
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
