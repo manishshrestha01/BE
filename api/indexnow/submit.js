@@ -1,4 +1,4 @@
-import { loadIndexNowConfig, submitIndexNow } from '../_lib/indexnow.js'
+import { fetchSitemapUrls, loadIndexNowConfig, submitIndexNow } from '../_lib/indexnow.js'
 import {
   parseJsonBody,
   requireIndexNowAdminToken,
@@ -34,10 +34,33 @@ export default async function handler(req, res) {
     return
   }
 
+  const scope = body?.scope
+
+  if (scope === 'all') {
+    try {
+      const sitemapUrls = await fetchSitemapUrls()
+      const result = await submitIndexNow(sitemapUrls)
+
+      sendJson(res, 200, {
+        totalUrls: result.validUrls,
+        submittedCount: result.submittedCount,
+        submittedBatches: result.submittedBatches,
+        failedBatches: result.failedBatches,
+        invalidUrls: result.invalidUrls,
+      })
+    } catch (error) {
+      console.error('[IndexNow] submit-all failed', error)
+      sendJson(res, 500, {
+        error: error instanceof Error ? error.message : 'Failed to submit sitemap URLs',
+      })
+    }
+    return
+  }
+
   const urls = Array.isArray(body?.urls) ? body.urls : null
   if (!urls) {
     sendJson(res, 400, {
-      error: 'Request body must include urls: string[]',
+      error: 'Provide urls: string[] (or scope: "all" to submit all sitemap URLs)',
     })
     return
   }

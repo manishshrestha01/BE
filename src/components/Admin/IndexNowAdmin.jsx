@@ -429,7 +429,7 @@ const IndexNowAdmin = () => {
 
     setSubmitAllLoading(true)
     try {
-      const result = await callIndexNowApi('/api/indexnow/submit-all', {})
+      const result = await callIndexNowApi('/api/indexnow/submit', { scope: 'all' })
       setSubmitAllResult(result)
     } catch (error) {
       setSubmitAllError(error instanceof Error ? error.message : 'Submit-all failed')
