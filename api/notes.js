@@ -60,6 +60,30 @@ function subjectToSlug(name) {
   return name.toLowerCase().replace(/c\+\+/gi, "cpp").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
+// Maps subject slug → actual folder name in the BE-Computer GitHub repo.
+// The repo's folder names don't always match the curriculum subject names.
+const SUBJECT_FOLDER_MAP = {
+  "programming-in-c": "C Programming",
+  "basic-electrical-engineering": "BEE - Class Materials",
+  "electronics-devices-and-circuits": "E.D.C",
+  "object-oriented-programming-in-cpp": "C++",
+  "data-structure-and-algorithm": "DSA",
+  "basic-engineering-drawing": "Engineering Drawing",
+  "database-management-system": "DBMS",
+  "operating-systems": "OperatingSystem",
+  "microprocessor-and-assembly-language-programming": "MP and ALP",
+  "advanced-programming-with-java": "JAVA",
+  "theory-of-computation": "TOC",
+  "computer-architecture": "CA",
+  "research-fundamentals": "Research",
+  "digital-signal-analysis-and-processing": "DSAP",
+  "computer-networks": "Computer Network",
+  "simulation-and-modeling": "Simulation And Modeling",
+  "elective-i": "Generative AI Syllabus (Elective I)",
+  "entrepreneurship-and-professional-practice": "Entrepreneurship and Professional Pratice",
+  "numerical-methods": "Numerical Method GCES",
+};
+
 /* ------------------------------------------------------------------ *
  *  resource=index                                                     *
  * ------------------------------------------------------------------ */
@@ -346,23 +370,24 @@ async function fetchGitHubPath(path) {
   }
 }
 
-function buildRepoPaths(college, semester, subjectName) {
+function buildRepoPaths(college, semester, subjectName, subjectSlug) {
   const semStr = semester ? `Semester ${semester}` : null;
   const paths = [];
 
-  if (college && semStr && subjectName) {
-    paths.push(`${college.toUpperCase()}/${semStr}/${subjectName}`);
-    paths.push(`${college.toUpperCase()}/Semester_${semester}/${subjectName}`);
-    paths.push(`${college}/${semStr}/${subjectName}`);
-    paths.push(`${college}/Semester${semester}/${subjectName}`);
-  } else if (college && semStr) {
-    paths.push(`${college.toUpperCase()}/${semStr}`);
-    paths.push(`${college}/${semStr}`);
-  } else if (semStr && subjectName) {
+  // Use mapped folder name if available, otherwise use the curriculum subject name
+  const folderName = subjectSlug && SUBJECT_FOLDER_MAP[subjectSlug]
+    ? SUBJECT_FOLDER_MAP[subjectSlug]
+    : subjectName;
+
+  if (semStr && folderName) {
+    paths.push(`${semStr}/${folderName}`);
+  } else if (semStr) {
+    paths.push(semStr);
+  }
+
+  // If no mapped name and the curriculum name differs, also try the curriculum name
+  if (folderName !== subjectName && semStr && subjectName) {
     paths.push(`${semStr}/${subjectName}`);
-  } else if (college) {
-    paths.push(college.toUpperCase());
-    paths.push(college);
   }
 
   return paths;
@@ -383,7 +408,7 @@ async function handleSubject(req, res, params, wantsJson) {
   }
 
   const subjectName = subject ? findSubjectName(semester, subject) : null;
-  const paths = buildRepoPaths(college, semester, subjectName);
+  const paths = buildRepoPaths(college, semester, subjectName, subject);
 
   let result = { files: [], folders: [], error: "No path specified" };
   for (const p of paths) {
