@@ -65,8 +65,7 @@ function subjectToSlug(name) {
 // Extra non-subject folders per semester (e.g. curriculum, board exams, old questions)
 const EXTRA_SEMESTER_RESOURCES = {
   1: [{ name: "2022 Course Curriculum", path: "Semester 1/2022 Course Curriculum", description: "Full PU BE Computer Engineering curriculum structure — all subjects across all 8 semesters" }],
-  6: [{ name: "Generative AI Syllabus (Elective I)", path: "Semester 6/Generative AI Syllabus (Elective I)", description: "Syllabus and resources for Elective I (Generative AI)" }],
-  7: [{ name: "Elective II", path: "Semester 7/Elective II", description: "Syllabus and resources for Elective II" }],
+
 };
 
 const SUBJECT_FOLDER_MAP = {
