@@ -246,7 +246,7 @@ function makeSubjectFaqSchema(faqs) {
     mainEntity: faqs.map((f) => ({
       "@type": "Question",
       name: f.question,
-      acceptedAnswer: { "@type": "Answer", text: f.answer },
+      acceptedAnswer: { "@type": "Answer", text: f.answer.replace(/<[^>]*>/g, "") },
     })),
   };
 }
