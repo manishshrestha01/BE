@@ -9,6 +9,30 @@ import Notes from '../Notes/Notes'
 import ContactApp from '../Contact/ContactApp'
 import './Desktop.css'
 
+// Maps subject slug → actual folder name in the BE-Computer GitHub repo.
+// The repo's folder names don't always match the curriculum subject names.
+const SUBJECT_FOLDER_MAP = {
+  "programming-in-c": "C Programming",
+  "basic-electrical-engineering": "BEE - Class Materials",
+  "electronics-devices-and-circuits": "E.D.C",
+  "object-oriented-programming-in-cpp": "C++",
+  "data-structure-and-algorithm": "DSA",
+  "basic-engineering-drawing": "Engineering Drawing",
+  "database-management-system": "DBMS",
+  "operating-systems": "OperatingSystem",
+  "microprocessor-and-assembly-language-programming": "MP and ALP",
+  "advanced-programming-with-java": "JAVA",
+  "theory-of-computation": "TOC",
+  "computer-architecture": "CA",
+  "research-fundamentals": "Research",
+  "digital-signal-analysis-and-processing": "DSAP",
+  "computer-networks": "Computer Network",
+  "simulation-and-modeling": "Simulation And Modeling",
+  "elective-i": "Generative AI Syllabus (Elective I)",
+  "entrepreneurship-and-professional-practice": "Entrepreneurship and Professional Pratice",
+  "numerical-methods": "Numerical Method GCES",
+};
+
 // Convert ?semester=3&subject=operating-systems&college=pec into a GitHub folder path.
 // Mirrors the folder structure in the manishshrestha01/BE-Computer repo.
 function buildInitialPathFromParams(searchParams) {
@@ -17,17 +41,16 @@ function buildInitialPathFromParams(searchParams) {
   const subject = searchParams.get('subject')
 
   const parts = []
-  if (college) parts.push(college.toUpperCase())
   if (semester) parts.push(`Semester ${semester}`)
   if (subject) {
-    // Convert slug back to title case folder name (best-effort; Finder will show contents if found)
-    const titleCase = subject
-      .split('-')
-      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(' ')
-      // restore C++ properly
-      .replace(/Cpp/gi, 'C++')
-    parts.push(titleCase)
+    // Use mapped folder name if available, otherwise convert slug to title case
+    const folderName = SUBJECT_FOLDER_MAP[subject]
+      || subject
+        .split('-')
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ')
+        .replace(/Cpp/gi, 'C++')
+    parts.push(folderName)
   }
 
   return parts.length > 0 ? parts.join('/') : null
