@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useBackground } from '../../context/BackgroundContext'
+import { COLLEGES } from '../../lib/colleges'
 import Finder from '../Finder/Finder'
 import Dock from '../Dock/Dock'
 import QuickLook from '../QuickLook/QuickLook'
@@ -41,6 +42,22 @@ function buildInitialPathFromParams(searchParams) {
   const subject = searchParams.get('subject')
 
   const parts = []
+
+  if (college) {
+    // Resolve college slug/abbreviation to full folder name from COLLEGES list.
+    // Match against both the full value ("Pokhara Engineering College (PEC)")
+    // and the abbreviation in parentheses ("PEC").
+    const collegeLower = college.toLowerCase()
+    const match = COLLEGES.find(c => {
+      if (c.value.toLowerCase() === collegeLower) return true
+      const abbrMatch = c.value.match(/\(([^)]+)\)/)
+      return abbrMatch && abbrMatch[1].toLowerCase() === collegeLower
+    })
+    if (match) {
+      parts.push(match.value)
+    }
+  }
+
   if (semester) parts.push(`Semester ${semester}`)
   if (subject) {
     // Use mapped folder name if available, otherwise convert slug to title case

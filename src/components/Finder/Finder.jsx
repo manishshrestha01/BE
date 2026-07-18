@@ -157,12 +157,22 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
         params.set('subject', slug)
       }
     } else if (firstSeg) {
-      // No college — treat as semester
+      // No college — check if this segment is a semester folder
       const semNum = firstSeg.name.replace(/semester\s*/i, '').trim()
-      if (semNum) params.set('semester', semNum)
-      const subjectSeg = segments[1]
-      if (subjectSeg) {
-        const slug = subjectSeg.name
+      if (/^\d+$/.test(semNum)) {
+        params.set('semester', semNum)
+        const subjectSeg = segments[1]
+        if (subjectSeg) {
+          const slug = subjectSeg.name
+            .toLowerCase()
+            .replace(/c\+\+/gi, 'cpp')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '')
+          params.set('subject', slug)
+        }
+      } else if (semNum) {
+        // First segment doesn't look like a semester — treat it as subject
+        const slug = firstSeg.name
           .toLowerCase()
           .replace(/c\+\+/gi, 'cpp')
           .replace(/[^a-z0-9]+/g, '-')
