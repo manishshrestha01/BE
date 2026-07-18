@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 import useFolderColors from '../../hooks/useFolderColors'
 import FolderIcon from '../FolderIcon'
 import { toggleFavorite, getUserFavorites, getUserRecents, upsertRecentTab, removeFavorite } from '../../lib/database'
+import { COLLEGES } from '../../lib/colleges'
 import './Finder.css'
 
 // File type icons - returns emoji or JSX for custom icons
@@ -135,23 +136,39 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
     const segments = folderPath.slice(1) // drop ROOT
     const params = new URLSearchParams()
 
-    const collegeSeg = segments[0]
-    if (collegeSeg) params.set('college', collegeSeg.name.toLowerCase())
+    const firstSeg = segments[0]
+    const firstSegName = firstSeg?.name?.toLowerCase() || ''
+    const isCollege = COLLEGES.some(c => c.value.toLowerCase() === firstSegName)
 
-    const semesterSeg = segments[1]
-    if (semesterSeg) {
-      const semNum = semesterSeg.name.replace(/semester\s*/i, '').trim()
+    if (isCollege) {
+      params.set('college', firstSegName)
+      const semesterSeg = segments[1]
+      if (semesterSeg) {
+        const semNum = semesterSeg.name.replace(/semester\s*/i, '').trim()
+        if (semNum) params.set('semester', semNum)
+      }
+      const subjectSeg = segments[2]
+      if (subjectSeg) {
+        const slug = subjectSeg.name
+          .toLowerCase()
+          .replace(/c\+\+/gi, 'cpp')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '')
+        params.set('subject', slug)
+      }
+    } else if (firstSeg) {
+      // No college — treat as semester
+      const semNum = firstSeg.name.replace(/semester\s*/i, '').trim()
       if (semNum) params.set('semester', semNum)
-    }
-
-    const subjectSeg = segments[2]
-    if (subjectSeg) {
-      const slug = subjectSeg.name
-        .toLowerCase()
-        .replace(/c\+\+/gi, 'cpp')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '')
-      params.set('subject', slug)
+      const subjectSeg = segments[1]
+      if (subjectSeg) {
+        const slug = subjectSeg.name
+          .toLowerCase()
+          .replace(/c\+\+/gi, 'cpp')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '')
+        params.set('subject', slug)
+      }
     }
 
     const newSearch = `?${params.toString()}`
