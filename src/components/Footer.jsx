@@ -59,7 +59,7 @@ const Footer = () => {
                   <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                 </svg>
               </a>
-              <a href="mailto:contact@shresthamanish.info.np" className="social-link" aria-label="Email">
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@shresthamanish.info.np" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Email">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                   <polyline points="22,6 12,13 2,6"/>

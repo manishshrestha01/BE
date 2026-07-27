@@ -1,9 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import './Landing.css'
 import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../../lib/seo'
 import { COLLEGES } from '../../lib/colleges'
+import CircuitBoard from '../CircuitBoard/CircuitBoard'
+import '../CircuitBoard/CircuitBoard.css'
 
 const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.manish.studymate'
 
@@ -80,21 +82,6 @@ const Landing = () => {
     { quote: "From calculus to machine learning, every subject is covered thoroughly. StudyMate never disappoints.", author: "Sita Kafle", role: "5th Semester, Computer Engineering" },
     { quote: "I use the contact feature to send feedback and suggestions. The team actually listens to students.", author: "Amrit Karki", role: "2nd Semester, Computer Engineering" },
   ]
-
-  const [testimonialIndex, setTestimonialIndex] = useState(0)
-
-  const nextTestimonial = useCallback(() => {
-    setTestimonialIndex((prev) => (prev + 1) % testimonials.length)
-  }, [testimonials.length])
-
-  const prevTestimonial = useCallback(() => {
-    setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
-  }, [testimonials.length])
-
-  useEffect(() => {
-    const timer = setInterval(nextTestimonial, 5000)
-    return () => clearInterval(timer)
-  }, [nextTestimonial])
 
   const handleLogoClick = () => {
     setMobileMenuOpen(false)
@@ -337,17 +324,70 @@ const Landing = () => {
               From browsing to studying, everything is designed to be intuitive and fast.
             </p>
           </div>
-          <div className="steps-grid">
-            {steps.map((step, index) => (
-              <div key={index} className="step-card">
-                <div className="step-number-badge">{step.number}</div>
-                <span className="step-icon">{step.icon}</span>
-                <h3 className="step-title">{step.title}</h3>
-                <p className="step-description">{step.description}</p>
-                {index < steps.length - 1 && <div className="step-connector" />}
-              </div>
-            ))}
+
+          <div className="how-it-works-circuit-wrap">
+            <div className="circuit-bg">
+              <CircuitBoard
+                width={960}
+                height={340}
+                gridSize={16}
+                nodes={[
+                  /* Main step chips */
+                  { id: 's1', x: 100, y: 170, icon: '🔍', status: 'active', size: 'lg', shape: 'chip', label: 'U1', pins: 6 },
+                  { id: 's2', x: 360, y: 100, icon: '📖', status: 'active', size: 'lg', shape: 'chip', label: 'U2', pins: 8 },
+                  { id: 's3', x: 600, y: 240, icon: '📥', status: 'active', size: 'lg', shape: 'chip', label: 'U3', pins: 8 },
+                  { id: 's4', x: 860, y: 170, icon: '✏️', status: 'active', size: 'lg', shape: 'chip', label: 'U4', pins: 6 },
+                  /* Passive components (resistors, caps — smd rectangles) */
+                  { id: 'r1', x: 220, y: 60, status: 'inactive', size: 'sm', shape: 'chip', label: 'R1', pins: 2 },
+                  { id: 'r2', x: 480, y: 60, status: 'inactive', size: 'sm', shape: 'chip', label: 'R2', pins: 2 },
+                  { id: 'c1', x: 480, y: 280, status: 'inactive', size: 'sm', shape: 'chip', label: 'C1', pins: 2 },
+                  { id: 'r3', x: 730, y: 60, status: 'inactive', size: 'sm', shape: 'chip', label: 'R3', pins: 2 },
+                  { id: 'c2', x: 220, y: 280, status: 'inactive', size: 'sm', shape: 'chip', label: 'C2', pins: 2 },
+                  { id: 'c3', x: 730, y: 280, status: 'inactive', size: 'sm', shape: 'chip', label: 'C3', pins: 2 },
+                  /* Junction vias */
+                  { id: 'j1', x: 160, y: 110, status: 'inactive', size: 'sm' },
+                  { id: 'j2', x: 160, y: 230, status: 'inactive', size: 'sm' },
+                  { id: 'j3', x: 420, y: 170, status: 'inactive', size: 'sm' },
+                  { id: 'j4', x: 660, y: 170, status: 'inactive', size: 'sm' },
+                  { id: 'j5', x: 540, y: 100, status: 'inactive', size: 'sm' },
+                  { id: 'j6', x: 540, y: 240, status: 'inactive', size: 'sm' },
+                ]}
+                connections={[
+                  /* Main signal path: S1 → S2 → S3 → S4 */
+                  { from: 's1', to: 'r1', animated: true },
+                  { from: 'r1', to: 's2', animated: true },
+                  { from: 's2', to: 'r2', animated: true },
+                  { from: 'r2', to: 's3', animated: true },
+                  { from: 's3', to: 'r3', animated: true },
+                  { from: 'r3', to: 's4', animated: true },
+                  /* Ground/bypass path bottom */
+                  { from: 's1', to: 'c2', animated: true },
+                  { from: 'c2', to: 'c1', animated: true },
+                  { from: 'c1', to: 'c3', animated: true },
+                  { from: 'c3', to: 's4', animated: true },
+                  /* Cross-coupling top/bottom */
+                  { from: 's2', to: 'j5', animated: true },
+                  { from: 'j5', to: 's3', animated: true },
+                  { from: 's1', to: 'j2', animated: true },
+                  { from: 'j2', to: 's3', animated: true },
+                  { from: 's2', to: 'j6', animated: true },
+                  { from: 'j6', to: 's4', animated: true },
+                ]}
+              />
+            </div>
+
+            <div className="steps-overlay">
+              {steps.map((step, index) => (
+                <div key={index} className="step-overlay-card">
+                  <div className="step-overlay-number">{step.number}</div>
+                  <span className="step-overlay-emoji">{step.icon}</span>
+                  <h3 className="step-overlay-title">{step.title}</h3>
+                  <p className="step-overlay-desc">{step.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
+
           <div className="steps-highlight-grid">
             {highlights.map((highlight, index) => (
               <div key={index} className="highlight-card">
@@ -428,58 +468,29 @@ const Landing = () => {
               See what fellow Computer Engineering students have to say.
             </p>
           </div>
-          <div className="testimonial-carousel">
-            <button className="carousel-arrow carousel-prev" onClick={prevTestimonial} aria-label="Previous testimonial">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
-            <div className="testimonial-track">
-              <div className="testimonial-slide active">
-                <p className="testimonial-quote">"{testimonials[testimonialIndex].quote}"</p>
-                <div className="testimonial-author">
-                  <div className="author-avatar">
-                    {testimonials[testimonialIndex].author.charAt(0)}
-                  </div>
-                  <div className="author-info">
-                    <span className="author-name">{testimonials[testimonialIndex].author}</span>
-                    <span className="author-role">{testimonials[testimonialIndex].role}</span>
-                  </div>
+          <div className="wall-of-love testimonials-marquee">
+            {[
+              testimonials.slice(0, 17),
+              [...testimonials.slice(12), ...testimonials.slice(0, 12)],
+              [...testimonials.slice(6), ...testimonials.slice(0, 6)],
+            ].map((row, rowIdx) => (
+              <div className={`wol-row ${rowIdx % 2 === 1 ? 'wol-row--reverse' : ''}`} key={rowIdx}>
+                <div className="wol-track">
+                  {[...row, ...row].map((t, i) => (
+                    <div className="wol-card" key={i}>
+                      <p className="wol-quote">"{t.quote}"</p>
+                      <div className="wol-author">
+                        <div className="wol-avatar">{t.author.charAt(0)}</div>
+                        <div className="wol-info">
+                          <span className="wol-name">{t.author}</span>
+                          <span className="wol-role">{t.role}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
-            <button className="carousel-arrow carousel-next" onClick={nextTestimonial} aria-label="Next testimonial">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-            </button>
-          </div>
-          <div className="carousel-dots">
-            {(() => {
-              const total = testimonials.length
-              const windowSize = 7
-              const half = Math.floor(windowSize / 2)
-              let start = Math.max(0, testimonialIndex - half)
-              let end = start + windowSize
-              if (end > total) {
-                end = total
-                start = Math.max(0, end - windowSize)
-              }
-              const dots = []
-              if (start > 0) {
-                dots.push(<span key="start-ellipsis" className="dot-ellipsis">…</span>)
-              }
-              for (let i = start; i < end; i++) {
-                dots.push(
-                  <button
-                    key={i}
-                    className={`carousel-dot ${i === testimonialIndex ? 'active' : ''}`}
-                    onClick={() => setTestimonialIndex(i)}
-                    aria-label={`Go to testimonial ${i + 1}`}
-                  />
-                )
-              }
-              if (end < total) {
-                dots.push(<span key="end-ellipsis" className="dot-ellipsis">…</span>)
-              }
-              return dots
-            })()}
+            ))}
           </div>
         </div>
       </section>
@@ -494,15 +505,19 @@ const Landing = () => {
               StudyMate covers all Pokhara University affiliated colleges notes offering BE Computer Engineering.
             </p>
           </div>
-          <div className="colleges-marquee">
-            <div className="colleges-track">
-              {[...COLLEGES, ...COLLEGES].map((college, index) => (
-                <div key={index} className="college-pill">
-                  <img src={college.logo} alt={college.value} className="college-logo" onError={(e) => { e.target.style.display = 'none' }} />
-                  <span className="college-name">{college.value.split('(')[0].trim()}</span>
-                </div>
-              ))}
-            </div>
+          <div className="colleges-grid">
+            {COLLEGES.map((college, index) => {
+              const slug = (college.value.match(/\(([^)]+)\)/)?.[1] || '').toLowerCase()
+              return (
+                <Link to={`/college/${slug}`} key={index} className="college-card">
+                  <img src={college.logo} alt={college.value} className="college-card-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                  <div className="college-card-info">
+                    <span className="college-card-name">{college.value.split('(')[0].trim()}</span>
+                    <span className="college-card-abbr">({college.value.match(/\(([^)]+)\)/)?.[1]})</span>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
           <div className="colleges-cta">
             <Link to="/colleges" className="btn-secondary">
@@ -537,11 +552,6 @@ const Landing = () => {
                 <span className="play-store-big">Google Play</span>
               </div>
             </a>
-            <div className="app-download-meta">
-              <span className="app-meta-item">✅ Free to use</span>
-              <span className="app-meta-item">📱 Works offline</span>
-              <span className="app-meta-item">🔒 No ads</span>
-            </div>
           </div>
         </div>
       </section>
@@ -599,7 +609,7 @@ const Landing = () => {
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                   </svg>
                 </a>
-                <a href="mailto:contact@shresthamanish.info.np" className="social-link" aria-label="Email">
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@shresthamanish.info.np" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Email">
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                     <polyline points="22,6 12,13 2,6"/>

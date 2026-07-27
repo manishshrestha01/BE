@@ -1,0 +1,21 @@
+.pcb {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.pcb-svg {
+  display: block;
+}
+
+.pcb-trace-group {
+  opacity: 1;
+}
+
+.pcb-chip {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.06));
+}
+
+.pcb-node {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.04));
+}
