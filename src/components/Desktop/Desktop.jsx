@@ -421,8 +421,7 @@ const Desktop = () => {
               StudyMate is currently available only on Android. We're working on bringing it to iOS soon!
             </p>
             <p className="ios-dialog-text ios-dialog-hint">
-              In the meantime, you can access StudyMate from any browser at
-              <strong> studymate.shresthamanish.info.np</strong>
+              If you have an Android device, you can download it on the Play Store.
             </p>
             <button className="ios-dialog-btn" onClick={() => setIosDialogOpen(false)}>
               Got it
