@@ -150,6 +150,7 @@ const Desktop = () => {
   const { currentBg, customBg } = useBackground()
   const location = useLocation()
   const restoredState = useMemo(() => readDashboardUiState(), [])
+  const [iosDialogOpen, setIosDialogOpen] = useState(false)
 
   // Derive initial Finder path from URL params (?college=pec&semester=3&subject=operating-systems)
   const initialFinderPath = useMemo(() => {
@@ -193,6 +194,16 @@ const Desktop = () => {
 
   const closeSettings = () => {
     setActiveApp((prev) => (prev === 'settings' ? null : prev))
+  }
+
+  const handleGetApp = () => {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    if (isIOS) {
+      setIosDialogOpen(true)
+    } else {
+      window.open('https://play.google.com/store/apps/details?id=com.manish.studymate', '_blank', 'noopener,noreferrer')
+    }
   }
 
   // Open exactly one app at a time. If the requested app is already open, close it (toggle).
@@ -312,6 +323,23 @@ const Desktop = () => {
         )}
       </div>
 
+      {/* Get App – centered card (desktop) / sidebar icon (mobile) */}
+      <button
+        className={`get-app-card ${activeApp ? 'get-app-card--hidden' : ''}`}
+        onClick={handleGetApp}
+        title="Get StudyMate App"
+        aria-label="Get StudyMate App on Play Store"
+      >
+        <div className="get-app-card-inner">
+          <img src="/black.svg" alt="StudyMate" className="get-app-logo" />
+          <div className="get-app-text">
+            <span className="get-app-title">Get StudyMate</span>
+            <span className="get-app-sub">Available on Android</span>
+          </div>
+          <span className="get-app-badge">Play Store</span>
+        </div>
+      </button>
+
       {/* Desktop shortcuts (non-invasive) */}
       <div className="desktop-shortcuts" aria-hidden={false}>
         <button
@@ -348,6 +376,17 @@ const Desktop = () => {
           <div className="desktop-shortcut-icon"><span>⚙️</span></div>
           <div className="desktop-shortcut-label">Settings</div>
         </button>
+
+        {/* Mobile-only sidebar Get App icon */}
+        <button
+          className="desktop-shortcut get-app-sidebar"
+          title="Get StudyMate App"
+          aria-label="Get StudyMate App on Play Store"
+          onClick={handleGetApp}
+        >
+          <div className="desktop-shortcut-icon"><img src="/black.svg" alt="StudyMate" style={{ width: 36, height: 36 }} /></div>
+          <div className="desktop-shortcut-label">Get App</div>
+        </button>
       </div>
 
       {/* Dock */}
@@ -370,6 +409,26 @@ const Desktop = () => {
       {/* Settings Modal */}
       {showSettings && (
         <Settings onClose={closeSettings} />
+      )}
+
+      {/* iOS not-available dialog */}
+      {iosDialogOpen && (
+        <div className="ios-dialog-overlay" onClick={() => setIosDialogOpen(false)}>
+          <div className="ios-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="ios-dialog-icon">📱</div>
+            <h3 className="ios-dialog-title">StudyMate is not on the App Store</h3>
+            <p className="ios-dialog-text">
+              StudyMate is currently available only on Android. We're working on bringing it to iOS soon!
+            </p>
+            <p className="ios-dialog-text ios-dialog-hint">
+              In the meantime, you can access StudyMate from any browser at
+              <strong> studymate.shresthamanish.info.np</strong>
+            </p>
+            <button className="ios-dialog-btn" onClick={() => setIosDialogOpen(false)}>
+              Got it
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )

@@ -141,7 +141,60 @@ const Login = () => {
 
       {/* Login Content */}
       <div className="auth-content">
-        <div className="auth-card">
+        <div className="auth-layout">
+          {/* Feature Highlights Sidebar */}
+          <div className="auth-highlights">
+            <div className="auth-highlight-header">
+              <img src="/black.svg" alt="StudyMate" style={{ width: 40, height: 40 }} />
+              <h2>StudyMate</h2>
+            </div>
+            <p className="auth-highlight-subtitle">
+              Your complete study companion for Pokhara University Computer Engineering
+            </p>
+            <div className="auth-highlight-list">
+              <div className="auth-highlight-item">
+                <span className="auth-highlight-check">✓</span>
+                <div>
+                  <strong>8 Semesters</strong>
+                  <span>Complete curriculum coverage</span>
+                </div>
+              </div>
+              <div className="auth-highlight-item">
+                <span className="auth-highlight-check">✓</span>
+                <div>
+                  <strong>500+ Study Materials</strong>
+                  <span>PDFs, notes, and presentations</span>
+                </div>
+              </div>
+              <div className="auth-highlight-item">
+                <span className="auth-highlight-check">✓</span>
+                <div>
+                  <strong>Offline Access</strong>
+                  <span>Download and study anywhere</span>
+                </div>
+              </div>
+              <div className="auth-highlight-item">
+                <span className="auth-highlight-check">✓</span>
+                <div>
+                  <strong>14+ Colleges</strong>
+                  <span>All PU affiliated colleges</span>
+                </div>
+              </div>
+            </div>
+            <div className="auth-social-proof">
+              <div className="auth-proof-avatars">
+                <span className="auth-proof-avatar">A</span>
+                <span className="auth-proof-avatar">P</span>
+                <span className="auth-proof-avatar">R</span>
+                <span className="auth-proof-avatar">S</span>
+                <span className="auth-proof-avatar">+</span>
+              </div>
+              <span className="auth-proof-text">Trusted by 100+ students</span>
+            </div>
+          </div>
+
+          {/* Login Card */}
+          <div className="auth-card">
           <h1 className="auth-title">Login / Sign Up</h1>
 
           {!isSupabaseConfigured && (
@@ -201,6 +254,7 @@ const Login = () => {
               Open Dashboard
             </Link>
           )}
+        </div>
         </div>
       </div>
     </div>

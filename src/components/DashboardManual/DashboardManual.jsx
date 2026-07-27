@@ -632,6 +632,39 @@ const ManualPage = ({ location }) => {
         </div>
       </section>
 
+      {/* App Download Banner */}
+      <section className="app-download-banner">
+        <div className="app-download-container">
+          <div className="app-download-content">
+            <div className="app-download-icon">
+              <img src="/black.svg" alt="StudyMate" style={{ width: 56, height: 56 }} />
+            </div>
+            <div className="app-download-text">
+              <h3 className="app-download-title">Get StudyMate on your phone</h3>
+              <p className="app-download-subtitle">
+                Download notes offline, view PDFs, and access your study materials anytime — even without internet.
+              </p>
+            </div>
+          </div>
+          <div className="app-download-actions">
+            <a href="https://play.google.com/store/apps/details?id=com.manish.studymate" target="_blank" rel="noopener noreferrer" className="play-store-badge">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                <path d="M3.609 1.814L13.792 12 3.609 22.186a.996.996 0 01-.609-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302c.812.812.812 2.143 0 2.954l-2.302 2.302L15.396 12l2.302-2.492zM5.864 2.658L16.8 9.99l-2.302 2.302-8.634-8.634z"/>
+              </svg>
+              <div className="play-store-text">
+                <span className="play-store-small">GET IT ON</span>
+                <span className="play-store-big">Google Play</span>
+              </div>
+            </a>
+            <div className="app-download-meta">
+              <span className="app-meta-item">✅ Free to use</span>
+              <span className="app-meta-item">📱 Works offline</span>
+              <span className="app-meta-item">🔒 No ads</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="cta">
         <div className="cta-container">

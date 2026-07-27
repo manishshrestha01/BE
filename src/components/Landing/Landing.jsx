@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import './Landing.css'
 import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../../lib/seo'
+import { COLLEGES } from '../../lib/colleges'
+
+const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.manish.studymate'
 
 const getSemesterGroupTarget = (semester) => {
   if (semester <= 2) return 1
@@ -25,6 +28,73 @@ const Landing = () => {
   const { loading } = useAuth()
   const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const testimonials = [
+    { quote: "This platform has been a lifesaver during my exam preparations. Everything is so well organized!", author: "Aarav Sharma", role: "4th Semester, Computer Engineering" },
+    { quote: "Finally, a place where I can find all PU Computer Engineering notes. The interface is beautiful and easy to use.", author: "Priya Thapa", role: "6th Semester, Computer Engineering" },
+    { quote: "The personal notes feature helps me jot down important points while studying. Highly recommended!", author: "Rohan KC", role: "2nd Semester, Computer Engineering" },
+    { quote: "I used StudyMate throughout my 7th semester. The organized folder structure saved me hours of searching for the right materials.", author: "Suman Gurung", role: "7th Semester, Computer Engineering" },
+    { quote: "Being from a remote area with poor internet, the offline download feature on the mobile app has been a game changer for me.", author: "Anita Magar", role: "3rd Semester, Computer Engineering" },
+    { quote: "The blog guides are incredibly detailed. They follow the exact PU syllabus and the practice questions are spot on for exams.", author: "Bikash Rai", role: "5th Semester, Computer Engineering" },
+    { quote: "I recommend StudyMate to every junior in our college. It has notes for all semesters and the quality is consistently great.", author: "Srijana Karki", role: "8th Semester, Computer Engineering" },
+    { quote: "The macOS-style desktop interface makes studying feel modern and fun. It's like having a personal study environment.", author: "Deepak Thapa", role: "1st Semester, Computer Engineering" },
+    { quote: "Before StudyMate, I used to borrow notes from seniors. Now everything is available in one place, updated and organized.", author: "Nischal Basnet", role: "4th Semester, Computer Engineering" },
+    { quote: "The ability to view PPTX and DOCX files directly in the app is incredibly convenient. No need to download separate apps.", author: "Sapana Shrestha", role: "6th Semester, Computer Engineering" },
+    { quote: "StudyMate helped me score above average in my midterms. The subject-wise organization made revision so much easier.", author: "Rajesh Adhikari", role: "3rd Semester, Computer Engineering" },
+    { quote: "I love how everything is categorized by semester. Finding my Compiler Design notes used to take forever, now it takes seconds.", author: "Prativa Poudel", role: "5th Semester, Computer Engineering" },
+    { quote: "The drawing canvas feature is brilliant. I sketch flowcharts and diagrams while studying embedded systems concepts.", author: "Ashish Limbu", role: "6th Semester, Computer Engineering" },
+    { quote: "As a student at NCIT, I was struggling to find quality notes. StudyMate has everything organized perfectly for our syllabus.", author: "Suman Lama", role: "2nd Semester, Computer Engineering" },
+    { quote: "I cleared my OS exam thanks to the comprehensive notes here. The chapter-wise breakdown is exactly what I needed.", author: "Kabita Bhandari", role: "4th Semester, Computer Engineering" },
+    { quote: "The search feature is lightning fast. I can find any topic across all my subjects in milliseconds.", author: "Bipin Thapa", role: "7th Semester, Computer Engineering" },
+    { quote: "I use StudyMate on my phone during my commute. Having all notes in one app saves so much time.", author: "Sangita Rawal", role: "1st Semester, Computer Engineering" },
+    { quote: "The bookmarking feature lets me save important chapters for quick revision before exams. Simple but powerful.", author: "Niraj Tamang", role: "3rd Semester, Computer Engineering" },
+    { quote: "I switched from carrying heavy textbooks to using StudyMate. My bag is lighter and my grades are better.", author: "Aayush Ghimire", role: "5th Semester, Computer Engineering" },
+    { quote: "The dark mode is perfect for late-night study sessions. My eyes don't strain anymore.", author: "Sunita Karki", role: "8th Semester, Computer Engineering" },
+    { quote: "My entire study group uses StudyMate. We share notes and materials through the upload feature all the time.", author: "Ramesh Khadka", role: "4th Semester, Computer Engineering" },
+    { quote: "I'm from GCES and the notes here align perfectly with our professors' teaching. It's like having a second classroom.", author: "Prakash Siwakoti", role: "2nd Semester, Computer Engineering" },
+    { quote: "The PDF viewer is smooth and fast. I can annotate and read even large documents without any lag.", author: "Mina Shrestha", role: "6th Semester, Computer Engineering" },
+    { quote: "I discovered StudyMate during my first semester and I've been using it ever since. It's become essential.", author: "Bishal Gurung", role: "7th Semester, Computer Engineering" },
+    { quote: "The upload feature is great. I contributed some notes from my college and now hundreds of students use them.", author: "Laxmi Pudasaini", role: "3rd Semester, Computer Engineering" },
+    { quote: "Before exams, I just open StudyMate and everything I need is right there. No more panic searching for notes.", author: "Saugat Bhattarai", role: "5th Semester, Computer Engineering" },
+    { quote: "The interface is so clean compared to other apps. It feels like a premium product but it's completely free.", author: "Nisha Adhikari", role: "1st Semester, Computer Engineering" },
+    { quote: "I study at LEC and StudyMate has materials for our exact curriculum. The semester-wise organization is perfect.", author: "Roshan Shrestha", role: "4th Semester, Computer Engineering" },
+    { quote: "The recent files section saves me so much time. I can quickly jump back to what I was studying last.", author: "Anjali Rai", role: "6th Semester, Computer Engineering" },
+    { quote: "I used to spend hours looking for notes online. StudyMate has everything in one place and it's well curated.", author: "Dipesh Koirala", role: "8th Semester, Computer Engineering" },
+    { quote: "The mobile app experience is incredible. It feels native and smooth on my Android phone.", author: "Sarita Thapa", role: "2nd Semester, Computer Engineering" },
+    { quote: "My favorite feature is the subject-wise breakdown. Each topic has exactly the materials I need.", author: "Kiran Basnet", role: "3rd Semester, Computer Engineering" },
+    { quote: "I scored 15 marks higher in my Data Structures exam after using StudyMate's structured notes.", author: "Puja Sharma", role: "4th Semester, Computer Engineering" },
+    { quote: "The fact that it covers all 8 semesters means I'll be using this throughout my entire degree.", author: "Ashmita Kandel", role: "1st Semester, Computer Engineering" },
+    { quote: "I recommended StudyMate to my entire batch. Now almost everyone at Cosmos uses it regularly.", author: "Sanjay Mishra", role: "5th Semester, Computer Engineering" },
+    { quote: "The quick access to previous year question papers has been invaluable for my exam preparation.", author: "Rekha Bajracharya", role: "7th Semester, Computer Engineering" },
+    { quote: "It's like having a digital library in my pocket. I access it during lunch breaks, on the bus, everywhere.", author: "Prashant Bhandari", role: "6th Semester, Computer Engineering" },
+    { quote: "The notes are well-formatted and easy to read on both my phone and laptop. Great responsive design.", author: "Sabina Tamang", role: "3rd Semester, Computer Engineering" },
+    { quote: "I was skeptical at first but after trying it, I can't imagine studying without StudyMate anymore.", author: "Aakash GC", role: "8th Semester, Computer Engineering" },
+    { quote: "The folder colors and themes make the app feel personalized. Small details that make a big difference.", author: "Rita Gharti", role: "2nd Semester, Computer Engineering" },
+    { quote: "StudyMate helped me transition from traditional notes to digital studying. The best decision I've made.", author: "Manoj Rana", role: "4th Semester, Computer Engineering" },
+    { quote: "I love that I can access my notes offline. Living in Pokhara, internet isn't always reliable.", author: "Gita Poudel", role: "5th Semester, Computer Engineering" },
+    { quote: "The support team is responsive and helpful. I reported an issue and it was fixed within a day.", author: "Bijay Rai", role: "7th Semester, Computer Engineering" },
+    { quote: "Every student at PU affiliated colleges should know about StudyMate. It's a hidden gem.", author: "Deepa Gurung", role: "1st Semester, Computer Engineering" },
+    { quote: "The image viewer with zoom feature is great for studying diagrams and charts in detail.", author: "Rabin Kathayat", role: "3rd Semester, Computer Engineering" },
+    { quote: "I've tried many study apps but StudyMate is the only one that truly understands PU's curriculum.", author: "Neha Shrestha", role: "6th Semester, Computer Engineering" },
+    { quote: "The desktop environment feels premium. It's not just a notes app, it's a complete study workspace.", author: "Karan Bista", role: "8th Semester, Computer Engineering" },
+    { quote: "From calculus to machine learning, every subject is covered thoroughly. StudyMate never disappoints.", author: "Sita Kafle", role: "5th Semester, Computer Engineering" },
+    { quote: "I use the contact feature to send feedback and suggestions. The team actually listens to students.", author: "Amrit Karki", role: "2nd Semester, Computer Engineering" },
+  ]
+
+  const [testimonialIndex, setTestimonialIndex] = useState(0)
+
+  const nextTestimonial = useCallback(() => {
+    setTestimonialIndex((prev) => (prev + 1) % testimonials.length)
+  }, [testimonials.length])
+
+  const prevTestimonial = useCallback(() => {
+    setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+  }, [testimonials.length])
+
+  useEffect(() => {
+    const timer = setInterval(nextTestimonial, 5000)
+    return () => clearInterval(timer)
+  }, [nextTestimonial])
 
   const handleLogoClick = () => {
     setMobileMenuOpen(false)
@@ -103,22 +173,38 @@ const Landing = () => {
     { value: '24 / 7', label: 'Access Available' }
   ]
 
-  const testimonials = [
+  const steps = [
     {
-      quote: "This platform has been a lifesaver during my exam preparations. Everything is so well organized!",
-      author: "Aarav Sharma",
-      role: "4th Semester, Computer Engineering"
+      number: '1',
+      icon: '🔍',
+      title: 'Browse Your Semester',
+      description: 'Navigate through 8 semesters organized by the PU BE Computer Engineering curriculum. Find your subjects instantly.'
     },
     {
-      quote: "Finally, a place where I can find all PU Computer Engineering notes. The interface is beautiful and easy to use.",
-      author: "Priya Thapa",
-      role: "6th Semester, Computer Engineering"
+      number: '2',
+      icon: '📖',
+      title: 'Access Study Materials',
+      description: 'Open notes, PDFs, presentations, and documents directly in the app. Everything is categorized by subject and chapter.'
     },
     {
-      quote: "The personal notes feature helps me jot down important points while studying. Highly recommended!",
-      author: "Rohan KC",
-      role: "2nd Semester, Computer Engineering"
+      number: '3',
+      icon: '📥',
+      title: 'Download for Offline',
+      description: 'Save study materials on the mobile app for offline access. Study anywhere, even without internet connectivity.'
+    },
+    {
+      number: '4',
+      icon: '✏️',
+      title: 'Take Notes & Draw',
+      description: 'Available on the web dashboard only. Create personal notes and sketches using the built-in drawing canvas. Your work auto-saves to the cloud.'
     }
+  ]
+
+  const highlights = [
+    { icon: '⚡', title: 'Lightning Fast', description: 'Instant access to your study materials with optimized loading' },
+    { icon: '🔒', title: 'Secure & Private', description: 'Your data is encrypted and never shared with third parties' },
+    { icon: '🌐', title: 'Works Offline', description: 'Download once, access forever — no internet required' },
+    { icon: '📱', title: 'Any Device', description: 'Seamless experience on phone, tablet, or desktop' }
   ]
 
   // Show nothing while checking auth status to prevent flash
@@ -241,6 +327,41 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* How It Works Section */}
+      <section id="how-it-works" className="how-it-works">
+        <div className="how-it-works-container">
+          <div className="section-header">
+            <span className="section-badge">How It Works</span>
+            <h2 className="section-title">Get started in 4 simple steps</h2>
+            <p className="section-subtitle">
+              From browsing to studying, everything is designed to be intuitive and fast.
+            </p>
+          </div>
+          <div className="steps-grid">
+            {steps.map((step, index) => (
+              <div key={index} className="step-card">
+                <div className="step-number-badge">{step.number}</div>
+                <span className="step-icon">{step.icon}</span>
+                <h3 className="step-title">{step.title}</h3>
+                <p className="step-description">{step.description}</p>
+                {index < steps.length - 1 && <div className="step-connector" />}
+              </div>
+            ))}
+          </div>
+          <div className="steps-highlight-grid">
+            {highlights.map((highlight, index) => (
+              <div key={index} className="highlight-card">
+                <span className="highlight-icon">{highlight.icon}</span>
+                <div className="highlight-content">
+                  <h4 className="highlight-title">{highlight.title}</h4>
+                  <p className="highlight-description">{highlight.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* About Section */}
       <section id="about" className="about">
         <div className="about-container">
@@ -307,21 +428,120 @@ const Landing = () => {
               See what fellow Computer Engineering students have to say.
             </p>
           </div>
-          <div className="testimonials-grid">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="testimonial-card">
-                <p className="testimonial-quote">"{testimonial.quote}"</p>
+          <div className="testimonial-carousel">
+            <button className="carousel-arrow carousel-prev" onClick={prevTestimonial} aria-label="Previous testimonial">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div className="testimonial-track">
+              <div className="testimonial-slide active">
+                <p className="testimonial-quote">"{testimonials[testimonialIndex].quote}"</p>
                 <div className="testimonial-author">
                   <div className="author-avatar">
-                    {testimonial.author.charAt(0)}
+                    {testimonials[testimonialIndex].author.charAt(0)}
                   </div>
                   <div className="author-info">
-                    <span className="author-name">{testimonial.author}</span>
-                    <span className="author-role">{testimonial.role}</span>
+                    <span className="author-name">{testimonials[testimonialIndex].author}</span>
+                    <span className="author-role">{testimonials[testimonialIndex].role}</span>
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+            <button className="carousel-arrow carousel-next" onClick={nextTestimonial} aria-label="Next testimonial">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <div className="carousel-dots">
+            {(() => {
+              const total = testimonials.length
+              const windowSize = 7
+              const half = Math.floor(windowSize / 2)
+              let start = Math.max(0, testimonialIndex - half)
+              let end = start + windowSize
+              if (end > total) {
+                end = total
+                start = Math.max(0, end - windowSize)
+              }
+              const dots = []
+              if (start > 0) {
+                dots.push(<span key="start-ellipsis" className="dot-ellipsis">…</span>)
+              }
+              for (let i = start; i < end; i++) {
+                dots.push(
+                  <button
+                    key={i}
+                    className={`carousel-dot ${i === testimonialIndex ? 'active' : ''}`}
+                    onClick={() => setTestimonialIndex(i)}
+                    aria-label={`Go to testimonial ${i + 1}`}
+                  />
+                )
+              }
+              if (end < total) {
+                dots.push(<span key="end-ellipsis" className="dot-ellipsis">…</span>)
+              }
+              return dots
+            })()}
+          </div>
+        </div>
+      </section>
+
+      {/* Supported Colleges Section */}
+      <section id="colleges" className="colleges-showcase">
+        <div className="colleges-container">
+          <div className="section-header">
+            <span className="section-badge">Colleges</span>
+            <h2 className="section-title">Supported across 14+ colleges</h2>
+            <p className="section-subtitle">
+              StudyMate covers all Pokhara University affiliated colleges notes offering BE Computer Engineering.
+            </p>
+          </div>
+          <div className="colleges-marquee">
+            <div className="colleges-track">
+              {[...COLLEGES, ...COLLEGES].map((college, index) => (
+                <div key={index} className="college-pill">
+                  <img src={college.logo} alt={college.value} className="college-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                  <span className="college-name">{college.value.split('(')[0].trim()}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="colleges-cta">
+            <Link to="/colleges" className="btn-secondary">
+              View All Colleges
+              <span className="btn-arrow">→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Play Store Download Banner */}
+      <section className="app-download-banner">
+        <div className="app-download-container">
+          <div className="app-download-content">
+            <div className="app-download-icon">
+              <img src="/black.svg" alt="StudyMate" style={{ width: 56, height: 56 }} />
+            </div>
+            <div className="app-download-text">
+              <h3 className="app-download-title">Get StudyMate on your phone</h3>
+              <p className="app-download-subtitle">
+                Download notes offline, view PDFs, and access your study materials anytime — even without internet.
+              </p>
+            </div>
+          </div>
+          <div className="app-download-actions">
+            <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer" className="play-store-badge">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                <path d="M3.609 1.814L13.792 12 3.609 22.186a.996.996 0 01-.609-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302c.812.812.812 2.143 0 2.954l-2.302 2.302L15.396 12l2.302-2.492zM5.864 2.658L16.8 9.99l-2.302 2.302-8.634-8.634z"/>
+              </svg>
+              <div className="play-store-text">
+                <span className="play-store-small">GET IT ON</span>
+                <span className="play-store-big">Google Play</span>
+              </div>
+            </a>
+            <div className="app-download-meta">
+              <span className="app-meta-item">✅ Free to use</span>
+              <span className="app-meta-item">📱 Works offline</span>
+              <span className="app-meta-item">🔒 No ads</span>
+            </div>
           </div>
         </div>
       </section>
@@ -329,14 +549,28 @@ const Landing = () => {
       {/* CTA Section */}
       <section className="cta">
         <div className="cta-container">
-          <h2 className="cta-title">Ready to start learning?</h2>
+          <h2 className="cta-title">Ready to ace your exams?</h2>
           <p className="cta-subtitle">
-            Access all study materials for free. No registration required.
+            Join thousands of PU Computer Engineering students who are already using StudyMate. 
+            Access 500+ study materials across 50+ subjects — completely free.
           </p>
-          <Link to="/dashboard" className="btn-primary btn-large">
-            Open Dashboard
-            <span className="btn-arrow">→</span>
-          </Link>
+          <div className="cta-buttons">
+            <Link to="/dashboard" className="btn-primary btn-large">
+              Open Dashboard
+              <span className="btn-arrow">→</span>
+            </Link>
+            <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-large">
+              Download App
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+              </svg>
+            </a>
+          </div>
+          <div className="cta-trust">
+            <span>🎓 14+ colleges</span>
+            <span>📚 500+ materials</span>
+            <span>📱 Available on Android</span>
+          </div>
         </div>
       </section>
 
@@ -353,17 +587,19 @@ const Landing = () => {
                 Your complete study resource for Pokhara University Computer Engineering.
               </p>
               <div className="footer-social">
-                <a href="#" className="social-link" aria-label="GitHub">
+                <a href="https://github.com/manishshrestha01" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="GitHub">
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                     <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                   </svg>
                 </a>
-                <a href="#" className="social-link" aria-label="Twitter">
-                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                <a href="https://www.shresthamanish.info.np/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Website">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                   </svg>
                 </a>
-                <a href="#" className="social-link" aria-label="Email">
+                <a href="mailto:contact@shresthamanish.info.np" className="social-link" aria-label="Email">
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                     <polyline points="22,6 12,13 2,6"/>

@@ -1,10 +1,10 @@
 /* Full-bleed fallback for dark sections (CTA, Footer) to prevent white slivers at viewport edge */
-.cta, .footer {
+.cta, .footer, .app-download-banner {
   position: relative;
   z-index: 1;
   border-radius: 0 !important;
 }
-.cta::before, .footer::before {
+.cta::before, .footer::before, .app-download-banner::before {
   content: '';
   position: absolute;
   top: 0;
@@ -15,6 +15,331 @@
   z-index: -1;
   pointer-events: none;
 }
+/* ==================== HOW IT WORKS SECTION ==================== */
+.how-it-works {
+  padding: 120px 24px;
+  background: var(--landing-white);
+}
+
+.how-it-works-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 64px;
+  position: relative;
+}
+
+.step-card {
+  text-align: center;
+  padding: 32px 24px;
+  position: relative;
+}
+
+.step-number-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--landing-dark);
+  color: var(--landing-white);
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.step-icon {
+  font-size: 36px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.step-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--landing-dark);
+  margin-bottom: 8px;
+}
+
+.step-description {
+  font-size: 14px;
+  color: var(--landing-gray-500);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.step-connector {
+  display: none;
+}
+
+.steps-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.highlight-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+  background: var(--landing-gray-100);
+  border-radius: var(--landing-radius-lg);
+  transition: all 0.3s ease;
+}
+
+.highlight-card:hover {
+  background: var(--landing-white);
+  box-shadow: var(--landing-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.highlight-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.highlight-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.highlight-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--landing-dark);
+  margin: 0;
+}
+
+.highlight-description {
+  font-size: 13px;
+  color: var(--landing-gray-500);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ==================== COLLEGES SHOWCASE SECTION ==================== */
+.colleges-showcase {
+  padding: 100px 24px;
+}
+
+.colleges-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.colleges-marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  margin-bottom: 40px;
+}
+
+.colleges-track {
+  display: flex;
+  gap: 12px;
+  animation: marquee 40s linear infinite;
+  width: max-content;
+}
+
+.colleges-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.college-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: var(--landing-white);
+  border: 1px solid var(--landing-gray-200);
+  border-radius: 100px;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.college-pill:hover {
+  border-color: var(--landing-gray-300);
+  box-shadow: var(--landing-shadow);
+}
+
+.college-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.college-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--landing-gray-700);
+}
+
+.colleges-cta {
+  text-align: center;
+}
+
+/* ==================== APP DOWNLOAD BANNER ==================== */
+.app-download-banner {
+  padding: 80px 24px;
+  background: var(--landing-dark);
+  color: var(--landing-white);
+  position: relative;
+}
+
+.app-download-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(0, 102, 255, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.app-download-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+  position: relative;
+}
+
+.app-download-content {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+}
+
+.app-download-icon {
+  flex-shrink: 0;
+}
+
+.app-download-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--landing-white);
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+}
+
+.app-download-subtitle {
+  font-size: 16px;
+  color: var(--landing-gray-400);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 420px;
+}
+
+.app-download-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.play-store-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 28px;
+  background: var(--landing-white);
+  color: var(--landing-dark);
+  border-radius: var(--landing-radius-lg);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.play-store-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.play-store-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.play-store-small {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: var(--landing-gray-600);
+  line-height: 1.2;
+}
+
+.play-store-big {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--landing-dark);
+  line-height: 1.2;
+}
+
+.app-download-meta {
+  display: flex;
+  gap: 16px;
+}
+
+.app-meta-item {
+  font-size: 12px;
+  color: var(--landing-gray-400);
+  font-weight: 500;
+}
+
+/* ==================== ENHANCED CTA SECTION ==================== */
+.cta-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.cta .btn-secondary {
+  color: var(--landing-white);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.cta .btn-secondary:hover {
+  color: var(--landing-white);
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cta-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.cta-trust span {
+  font-size: 14px;
+  color: var(--landing-gray-400);
+  font-weight: 500;
+}
+
 /* ==================== LANDING PAGE STYLES ==================== */
 
 /* CSS Variables for Landing Page */
@@ -554,10 +879,130 @@
   margin: 0 auto;
 }
 
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+/* Testimonial Carousel */
+.testimonial-carousel {
+  display: flex;
+  align-items: center;
   gap: 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.carousel-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--landing-gray-200);
+  background: var(--landing-white);
+  color: var(--landing-dark);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.carousel-arrow:hover {
+  background: var(--landing-dark);
+  color: var(--landing-white);
+  border-color: var(--landing-dark);
+  transform: scale(1.08);
+}
+
+.testimonial-track {
+  flex: 1;
+  overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.testimonial-slide {
+  text-align: center;
+  padding: 40px 32px;
+  background: var(--landing-white);
+  border: 1px solid var(--landing-gray-200);
+  border-radius: var(--landing-radius-lg);
+  width: 100%;
+  animation: fadeSlide 0.4s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.testimonial-slide .testimonial-quote {
+  font-size: 18px;
+  color: var(--landing-gray-700);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  font-style: italic;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.testimonial-slide .testimonial-author {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.testimonial-slide .author-avatar {
+  width: 48px;
+  height: 48px;
+}
+
+.testimonial-slide .author-info {
+  text-align: left;
+}
+
+.testimonial-slide .author-name {
+  font-size: 15px;
+}
+
+.testimonial-slide .author-role {
+  font-size: 13px;
+}
+
+.carousel-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: var(--landing-gray-300);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.carousel-dot.active {
+  background: var(--landing-dark);
+  width: 24px;
+  border-radius: 4px;
+}
+
+.carousel-dot:hover {
+  background: var(--landing-gray-500);
+}
+
+.dot-ellipsis {
+  color: var(--landing-gray-400);
+  font-size: 16px;
+  user-select: none;
+  letter-spacing: 2px;
 }
 
 .testimonial-card {
@@ -688,6 +1133,46 @@
   display: flex;
   gap: 16px;
   margin-top: 8px;
+}
+
+.footer-play-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--landing-radius);
+  text-decoration: none;
+  color: var(--landing-white);
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.footer-play-badge:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.footer-play-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-play-small {
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.2;
+}
+
+.footer-play-big {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--landing-white);
+  line-height: 1.2;
 }
 
 .social-link {
@@ -978,10 +1463,6 @@
     gap: 60px;
   }
   
-  .testimonials-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 48px;
@@ -989,6 +1470,32 @@
   
   .footer-links-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .steps-highlight-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .app-download-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .app-download-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .app-download-subtitle {
+    max-width: 100%;
+  }
+  
+  .app-download-actions {
+    align-items: center;
   }
 }
 
@@ -1067,8 +1574,17 @@
     padding: 80px 24px;
   }
   
-  .testimonials-grid {
-    grid-template-columns: 1fr;
+  .testimonial-slide {
+    padding: 28px 20px;
+  }
+  
+  .testimonial-slide .testimonial-quote {
+    font-size: 16px;
+  }
+  
+  .carousel-arrow {
+    width: 38px;
+    height: 38px;
   }
   
   .cta {
@@ -1083,6 +1599,53 @@
   .footer-bottom {
     flex-direction: column;
     text-align: center;
+  }
+  
+  /* New sections responsive */
+  .how-it-works {
+    padding: 80px 24px;
+  }
+  
+  .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .step-connector {
+    display: none;
+  }
+  
+  .steps-highlight-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .colleges-showcase {
+    padding: 60px 24px;
+  }
+  
+  .app-download-banner {
+    padding: 60px 24px;
+  }
+  
+  .app-download-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .app-download-meta {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+  }
+  
+  .cta-trust {
+    flex-direction: column;
+    gap: 8px;
   }
 }
 
@@ -1146,8 +1709,18 @@
     padding: 64px 16px;
   }
   
-  .testimonial-card {
-    padding: 24px;
+  .testimonial-slide {
+    padding: 24px 16px;
+  }
+  
+  .testimonial-slide .testimonial-quote {
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .carousel-arrow {
+    width: 34px;
+    height: 34px;
   }
   
   .cta {
@@ -1156,6 +1729,55 @@
   
   .footer {
     padding: 48px 16px 32px;
+  }
+  
+  /* New sections mobile */
+  .how-it-works {
+    padding: 64px 16px;
+  }
+  
+  .step-card {
+    padding: 24px 16px;
+  }
+  
+  .step-title {
+    font-size: 16px;
+  }
+  
+  .colleges-showcase {
+    padding: 48px 16px;
+  }
+  
+  .college-pill {
+    padding: 10px 16px;
+  }
+  
+  .college-name {
+    font-size: 12px;
+  }
+  
+  .app-download-banner {
+    padding: 48px 16px;
+  }
+  
+  .app-download-title {
+    font-size: 22px;
+  }
+  
+  .play-store-badge {
+    padding: 12px 20px;
+  }
+  
+  .play-store-big {
+    font-size: 16px;
+  }
+  
+  .cta {
+    padding: 64px 16px;
+  }
+  
+  .cta-title {
+    font-size: 28px;
   }
 }
 
@@ -1262,7 +1884,8 @@
 /* Make hero/cta/footer full-bleed so dark backgrounds cover the full viewport width and avoid white slivers */
 .hero,
 .cta,
-.footer {
+.footer,
+.app-download-banner {
   position: relative;
   /* Use calc(50% - 50vw) to avoid subpixel issues and ensure full-bleed */
   width: calc(100vw + 2px);
@@ -1277,7 +1900,8 @@
 
 /* Add a pseudo-element fallback that guarantees full-bleed background coverage for dark sections */
 .cta::before,
-.footer::before {
+.footer::before,
+.app-download-banner::before {
   content: '';
   position: absolute;
   top: 0;
@@ -1290,6 +1914,7 @@
 /* Use matching background colors on the pseudo-elements for dark sections */
 .cta::before { background: var(--landing-dark); }
 .footer::before { background: var(--landing-dark); }
+.app-download-banner::before { background: var(--landing-dark); }
 
 /* Prevent tiny horizontal gaps caused by subpixel rounding on some browsers */
 @media (min-width: 0px) {

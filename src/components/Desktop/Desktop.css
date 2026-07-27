@@ -123,6 +123,180 @@
   text-align: center;
 }
 
+/* ==================== GET APP CARD (desktop centered) ==================== */
+.get-app-card {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .get-app-card {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    padding: 16px 24px;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.25s ease, filter 0.25s ease;
+    font-family: inherit;
+  }
+
+  .get-app-card:hover {
+    transform: translate(-50%, calc(-50% - 3px));
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .get-app-card--hidden {
+    opacity: 0;
+    filter: blur(12px);
+    pointer-events: none;
+    z-index: -1;
+    transition: opacity 0.25s ease, filter 0.25s ease;
+  }
+
+  .get-app-card-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .get-app-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+
+  .get-app-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+  }
+
+  .get-app-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .get-app-sub {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  .get-app-badge {
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    margin-left: 8px;
+  }
+}
+
+/* Hide centered card on mobile, show sidebar icon instead */
+@media (max-width: 767px) {
+  .get-app-card {
+    display: none !important;
+  }
+  .get-app-sidebar {
+    display: flex !important;
+  }
+}
+
+/* Hide sidebar icon on desktop (centered card is shown) */
+@media (min-width: 768px) {
+  .get-app-sidebar {
+    display: none !important;
+  }
+}
+
+/* ==================== iOS DIALOG ==================== */
+.ios-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ios-dialog {
+  background: #fff;
+  border-radius: 20px;
+  padding: 36px 32px 28px;
+  max-width: 380px;
+  width: calc(100% - 48px);
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: dialogSlideUp 0.3s ease;
+}
+
+@keyframes dialogSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ios-dialog-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.ios-dialog-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 10px;
+}
+
+.ios-dialog-text {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+
+.ios-dialog-hint {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.ios-dialog-btn {
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ios-dialog-btn:hover {
+  background: #333;
+}
+
 /* Mobile landscape mode: top horizontal shortcuts row + safe-area aware content */
 @media
   (orientation: landscape) and (any-pointer: coarse) and (max-width: 1366px),

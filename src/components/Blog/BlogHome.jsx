@@ -159,6 +159,28 @@ const BlogHome = () => {
         </div>
       </section>
 
+      <section className="blog-section blog-why-section">
+        <div className="blog-shell">
+          <div className="blog-why-grid">
+            <div className="blog-why-card">
+              <span className="blog-why-icon" aria-hidden="true">🎯</span>
+              <h3>Exam-Focused Content</h3>
+              <p>Every guide is structured around the PU exam pattern with key topics, concept explanations, and practice questions.</p>
+            </div>
+            <div className="blog-why-card">
+              <span className="blog-why-icon" aria-hidden="true">📐</span>
+              <h3>Syllabus-Aligned</h3>
+              <p>Content follows the official Pokhara University BE Computer Engineering curriculum — topic by topic, unit by unit.</p>
+            </div>
+            <div className="blog-why-card">
+              <span className="blog-why-icon" aria-hidden="true">🔄</span>
+              <h3>Always Updated</h3>
+              <p>New subject guides and tutorials are added regularly to keep up with curriculum changes and student feedback.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="blog-section" id="semester-guides">
         <div className="blog-shell">
           <div className="section-header blog-section-header">
