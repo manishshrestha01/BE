@@ -4,8 +4,7 @@ import { useAuth } from '../../context/AuthContext'
 import './Landing.css'
 import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../../lib/seo'
 import { COLLEGES } from '../../lib/colleges'
-import CircuitBoard from '../CircuitBoard/CircuitBoard'
-import '../CircuitBoard/CircuitBoard.css'
+
 
 const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.manish.studymate'
 
@@ -187,13 +186,6 @@ const Landing = () => {
     }
   ]
 
-  const highlights = [
-    { icon: '⚡', title: 'Lightning Fast', description: 'Instant access to your study materials with optimized loading' },
-    { icon: '🔒', title: 'Secure & Private', description: 'Your data is encrypted and never shared with third parties' },
-    { icon: '🌐', title: 'Works Offline', description: 'Download once, access forever — no internet required' },
-    { icon: '📱', title: 'Any Device', description: 'Seamless experience on phone, tablet, or desktop' }
-  ]
-
   // Show nothing while checking auth status to prevent flash
   if (loading) {
     return null
@@ -315,89 +307,78 @@ const Landing = () => {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="how-it-works">
-        <div className="how-it-works-container">
-          <div className="section-header">
-            <span className="section-badge">How It Works</span>
-            <h2 className="section-title">Get started in 4 simple steps</h2>
-            <p className="section-subtitle">
-              From browsing to studying, everything is designed to be intuitive and fast.
+      <section className="about" id="how-it-works">
+        <div className="about-container steps-layout">
+          <div className="about-content">
+            <span className="section-badge">Getting Started</span>
+            <h2 className="section-title">How It Works</h2>
+            <p className="about-text">
+              Getting started with StudyMate is easy. Follow these simple steps to begin your learning journey.
             </p>
-          </div>
-
-          <div className="how-it-works-circuit-wrap">
-            <div className="circuit-bg">
-              <CircuitBoard
-                width={960}
-                height={340}
-                gridSize={16}
-                nodes={[
-                  /* Main step chips */
-                  { id: 's1', x: 100, y: 170, icon: '🔍', status: 'active', size: 'lg', shape: 'chip', label: 'U1', pins: 6 },
-                  { id: 's2', x: 360, y: 100, icon: '📖', status: 'active', size: 'lg', shape: 'chip', label: 'U2', pins: 8 },
-                  { id: 's3', x: 600, y: 240, icon: '📥', status: 'active', size: 'lg', shape: 'chip', label: 'U3', pins: 8 },
-                  { id: 's4', x: 860, y: 170, icon: '✏️', status: 'active', size: 'lg', shape: 'chip', label: 'U4', pins: 6 },
-                  /* Passive components (resistors, caps — smd rectangles) */
-                  { id: 'r1', x: 220, y: 60, status: 'inactive', size: 'sm', shape: 'chip', label: 'R1', pins: 2 },
-                  { id: 'r2', x: 480, y: 60, status: 'inactive', size: 'sm', shape: 'chip', label: 'R2', pins: 2 },
-                  { id: 'c1', x: 480, y: 280, status: 'inactive', size: 'sm', shape: 'chip', label: 'C1', pins: 2 },
-                  { id: 'r3', x: 730, y: 60, status: 'inactive', size: 'sm', shape: 'chip', label: 'R3', pins: 2 },
-                  { id: 'c2', x: 220, y: 280, status: 'inactive', size: 'sm', shape: 'chip', label: 'C2', pins: 2 },
-                  { id: 'c3', x: 730, y: 280, status: 'inactive', size: 'sm', shape: 'chip', label: 'C3', pins: 2 },
-                  /* Junction vias */
-                  { id: 'j1', x: 160, y: 110, status: 'inactive', size: 'sm' },
-                  { id: 'j2', x: 160, y: 230, status: 'inactive', size: 'sm' },
-                  { id: 'j3', x: 420, y: 170, status: 'inactive', size: 'sm' },
-                  { id: 'j4', x: 660, y: 170, status: 'inactive', size: 'sm' },
-                  { id: 'j5', x: 540, y: 100, status: 'inactive', size: 'sm' },
-                  { id: 'j6', x: 540, y: 240, status: 'inactive', size: 'sm' },
-                ]}
-                connections={[
-                  /* Main signal path: S1 → S2 → S3 → S4 */
-                  { from: 's1', to: 'r1', animated: true },
-                  { from: 'r1', to: 's2', animated: true },
-                  { from: 's2', to: 'r2', animated: true },
-                  { from: 'r2', to: 's3', animated: true },
-                  { from: 's3', to: 'r3', animated: true },
-                  { from: 'r3', to: 's4', animated: true },
-                  /* Ground/bypass path bottom */
-                  { from: 's1', to: 'c2', animated: true },
-                  { from: 'c2', to: 'c1', animated: true },
-                  { from: 'c1', to: 'c3', animated: true },
-                  { from: 'c3', to: 's4', animated: true },
-                  /* Cross-coupling top/bottom */
-                  { from: 's2', to: 'j5', animated: true },
-                  { from: 'j5', to: 's3', animated: true },
-                  { from: 's1', to: 'j2', animated: true },
-                  { from: 'j2', to: 's3', animated: true },
-                  { from: 's2', to: 'j6', animated: true },
-                  { from: 'j6', to: 's4', animated: true },
-                ]}
-              />
-            </div>
-
-            <div className="steps-overlay">
+            <div className="about-features">
               {steps.map((step, index) => (
-                <div key={index} className="step-overlay-card">
-                  <div className="step-overlay-number">{step.number}</div>
-                  <span className="step-overlay-emoji">{step.icon}</span>
-                  <h3 className="step-overlay-title">{step.title}</h3>
-                  <p className="step-overlay-desc">{step.description}</p>
+                <div key={index} className="about-feature step-feature">
+                  <span className="step-number">{step.number}</span>
+                  <div className="step-content">
+                    <strong>{step.title}</strong>
+                    <p>{step.description}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-
-          <div className="steps-highlight-grid">
-            {highlights.map((highlight, index) => (
-              <div key={index} className="highlight-card">
-                <span className="highlight-icon">{highlight.icon}</span>
-                <div className="highlight-content">
-                  <h4 className="highlight-title">{highlight.title}</h4>
-                  <p className="highlight-description">{highlight.description}</p>
+          <div className="about-visual">
+            <div className="visual-box">
+              <div className="visual-header">
+                <span className="dot red"></span>
+                <span className="dot yellow"></span>
+                <span className="dot green"></span>
+              </div>
+              <div className="visual-content">
+                <div className="visual-folder">
+                  <span>📁</span> Semester 1
+                </div>
+                <div className="visual-subfolder">
+                  <span>📄</span> C Programming Notes.pdf
+                </div>
+                <div className="visual-subfolder">
+                  <span>📄</span> Calculus I.pdf
+                </div>
+                <div className="visual-folder">
+                  <span>📁</span> Semester 2
+                </div>
+                <div className="visual-subfolder">
+                  <span>📄</span> Data Structures and Algorithm.pdf
+                </div>
+                <div className="visual-subfolder">
+                  <span>📄</span> Algebra and Geometry.pdf
+                </div>
+                <div className="visual-folder">
+                  <span>📁</span> Semester 3
+                </div>
+                <div className="visual-subfolder">
+                  <span>📄</span> Operating Systems.pdf
+                </div>
+                <div className="visual-folder">
+                  <span>📁</span> Semester 4
+                </div>
+                <div className="visual-subfolder">
+                  <span>📄</span> Applied Mathematics.pdf
+                </div>
+                <div className="visual-folder">
+                  <span>📁</span> Semester 5
+                </div>
+                <div className="visual-subfolder">
+                  <span>📄</span> Artificial Intelligence.pdf
+                </div>
+                <div className="visual-folder">
+                  <span>📁</span> Semester 6
+                </div>
+                <div className="visual-subfolder">
+                  <span>📄</span> Machine Learning.pdf
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
