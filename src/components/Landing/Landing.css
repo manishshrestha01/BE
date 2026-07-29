@@ -2283,3 +2283,16 @@
 [data-theme="dark"] .cta::before { background: #0a0a0a; }
 [data-theme="dark"] .footer::before { background: #0a0a0a; }
 [data-theme="dark"] .app-download-banner::before { background: #0a0a0a; }
+
+[data-theme="dark"] .play-store-badge {
+  background: rgba(255,255,255,0.85);
+  color: #0a0a0a;
+}
+
+[data-theme="dark"] .play-store-big {
+  color: #0a0a0a;
+}
+
+[data-theme="dark"] .play-store-small {
+  color: rgba(0,0,0,0.5);
+}
