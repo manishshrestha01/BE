@@ -1190,11 +1190,11 @@
 }
 
 [data-theme="dark"] .dashboard-manual .footer-bottom p {
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.64);
 }
 
 [data-theme="dark"] .dashboard-manual .footer-bottom-links a {
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.64);
 }
 
 [data-theme="dark"] .dashboard-manual .footer-bottom-links a:hover {

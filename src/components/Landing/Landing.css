@@ -2249,7 +2249,7 @@
 
 [data-theme="dark"] .footer-tagline,
 [data-theme="dark"] .footer-bottom p {
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.64);
 }
 
 [data-theme="dark"] .footer-column h2 {
@@ -2257,7 +2257,7 @@
 }
 
 [data-theme="dark"] .footer-column a {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.64);
 }
 
 [data-theme="dark"] .footer-column a:hover {
@@ -2265,7 +2265,7 @@
 }
 
 [data-theme="dark"] .footer-bottom-links a {
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.64);
 }
 
 [data-theme="dark"] .footer-bottom-links a:hover {
@@ -2273,7 +2273,7 @@
 }
 
 [data-theme="dark"] .footer-social .social-link {
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.64);
 }
 
 [data-theme="dark"] .footer-social .social-link:hover {
