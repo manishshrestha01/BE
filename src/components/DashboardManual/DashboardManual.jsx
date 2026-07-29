@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Sun, Moon, Monitor } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import { useTheme } from '../../context/ThemeContext'
 import { useUserProfile } from '../../hooks/useUserProfile'
 import { BackgroundProvider } from '../../context/BackgroundContext'
 import Desktop from '../Desktop/Desktop'
@@ -32,6 +34,7 @@ const seoConfig = {
 }
 
 const DashboardManual = () => {
+  const { mode, setTheme, resolvedTheme } = useTheme()
   const { user, isAuthenticated, isAuthRequired, loading } = useAuth()
   const { profile, isSetupComplete, loading: profileLoading, profileInitialized } = useUserProfile()
   const navigate = useNavigate()
@@ -283,6 +286,7 @@ const DashboardManual = () => {
 
 // Separate component for the manual page content
 const ManualPage = ({ location }) => {
+  const { mode, setTheme, resolvedTheme } = useTheme()
   const handleLogoClick = () => {
     if (location.pathname === '/') {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
@@ -433,7 +437,7 @@ const ManualPage = ({ location }) => {
       <nav className="landing-nav">
         <div className="nav-container">
           <Link to="/" className="nav-logo" onClick={handleLogoClick}>
-            <img src="/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />
+            <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32 }} />
             <span className="logo-text">StudyMate</span>
           </Link>
           <div className="nav-links">
@@ -442,6 +446,14 @@ const ManualPage = ({ location }) => {
             <a href="#how-it-works">How It Works</a>
             <a href="#faq">FAQ</a>
             <Link to="/login" className="nav-cta">Get Started</Link>
+            <button
+              className="theme-toggle-btn"
+              onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
+              title={`Theme: ${mode}`}
+              aria-label="Toggle theme"
+            >
+              {mode === 'dark' ? <Moon size={18} /> : mode === 'light' ? <Sun size={18} /> : <Monitor size={18} />}
+            </button>
           </div>
         </div>
       </nav>
@@ -637,7 +649,7 @@ const ManualPage = ({ location }) => {
         <div className="app-download-container">
           <div className="app-download-content">
             <div className="app-download-icon">
-              <img src="/black.svg" alt="StudyMate" style={{ width: 56, height: 56 }} />
+              <img src="/white.svg" alt="StudyMate" style={{ width: 56, height: 56 }} />
             </div>
             <div className="app-download-text">
               <h3 className="app-download-title">Get StudyMate on your phone</h3>
@@ -656,11 +668,7 @@ const ManualPage = ({ location }) => {
                 <span className="play-store-big">Google Play</span>
               </div>
             </a>
-            <div className="app-download-meta">
-              <span className="app-meta-item">✅ Free to use</span>
-              <span className="app-meta-item">📱 Works offline</span>
-              <span className="app-meta-item">🔒 No ads</span>
-            </div>
+
           </div>
         </div>
       </section>

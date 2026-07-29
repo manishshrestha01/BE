@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import './UserInfo.css';
 import { COLLEGES } from '../lib/colleges';
 
 const UserInfo = () => {
+  const { resolvedTheme } = useTheme()
   const { profile, updateProfile, loading } = useUserProfile();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -111,7 +113,7 @@ const UserInfo = () => {
       <nav className="auth-nav">
         <div className="auth-nav-container">
           <Link to="/" className="auth-nav-logo" onClick={handleLogoClick}>
-            <img src="/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />
+            <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32 }} />
             <span className="auth-logo-text">StudyMate</span>
           </Link>
         </div>

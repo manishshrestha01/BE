@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { COLLEGES } from '../lib/colleges'
+import { useTheme } from '../context/ThemeContext'
 import './Landing/Landing.css'
 import './Colleges.css'
 import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../lib/seo'
@@ -20,6 +21,7 @@ const forceScrollTop = () => {
 }
 
 const Colleges = () => {
+  const { resolvedTheme } = useTheme()
   const [query, setQuery] = useState('')
 
   useLayoutEffect(() => {
@@ -99,7 +101,7 @@ const Colleges = () => {
             </div>
           </div>
           <div className="hero-visual">
-            <img src="/logo-512.png" alt="StudyMate" className="hero-logo" />
+            <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate" className="hero-logo" />
           </div>
         </div>
       </section>

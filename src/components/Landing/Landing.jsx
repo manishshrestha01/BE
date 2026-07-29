@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { useTheme } from '../../context/ThemeContext'
+import { Sun, Moon, Monitor } from 'lucide-react'
 import './Landing.css'
 import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../../lib/seo'
 import { COLLEGES } from '../../lib/colleges'
@@ -27,6 +29,7 @@ const landingSemesterLinks = Array.from({ length: 8 }, (_, index) => {
 
 const Landing = () => {
   const { loading } = useAuth()
+  const { mode, setTheme, resolvedTheme } = useTheme()
   const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -197,7 +200,7 @@ const Landing = () => {
       <nav className="landing-nav">
         <div className="nav-container">
           <Link to="/" className="nav-logo" onClick={handleLogoClick}>
-            <img src="/black.svg" alt="StudyMate Logo" style={{ height: 32, width: 32 }} />
+            <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32, width: 32 }} />
             <span className="logo-text">StudyMate</span>
           </Link>
           <div className="nav-links">
@@ -208,6 +211,14 @@ const Landing = () => {
             <Link to="/blog">Blog</Link>
             <Link to="/login" className="nav-login">Login</Link>
             <Link to="/dashboard" className="nav-cta">Open Dashboard</Link>
+            <button
+              className="theme-toggle-btn"
+              onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
+              title={`Theme: ${mode}`}
+              aria-label="Toggle theme"
+            >
+              {mode === 'dark' ? <Moon size={18} /> : mode === 'light' ? <Sun size={18} /> : <Monitor size={18} />}
+            </button>
           </div>
           <button className="mobile-menu-btn" aria-label="Menu" onClick={() => setMobileMenuOpen(true)}>
             <span></span>
@@ -226,6 +237,14 @@ const Landing = () => {
               <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
               <Link to="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
               <Link to="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
+              <button
+                className="theme-toggle-btn mobile-theme-toggle"
+                onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
+                title={`Theme: ${mode}`}
+                aria-label="Toggle theme"
+              >
+                {mode === 'dark' ? <Moon size={18} /> : mode === 'light' ? <Sun size={18} /> : <Monitor size={18} />}
+              </button>
             </div>
           </div>
         )}
@@ -514,7 +533,7 @@ const Landing = () => {
         <div className="app-download-container">
           <div className="app-download-content">
             <div className="app-download-icon">
-              <img src="/black.svg" alt="StudyMate" style={{ width: 56, height: 56 }} />
+              <img src="/white.svg" alt="StudyMate" style={{ width: 56, height: 56 }} />
             </div>
             <div className="app-download-text">
               <h3 className="app-download-title">Get StudyMate on your phone</h3>

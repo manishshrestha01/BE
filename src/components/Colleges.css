@@ -214,3 +214,78 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-gradient::after { animation: none; transform: scaleX(1); }
 }
+
+[data-theme="dark"] .colleges-page .colleges-hero {
+  background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .colleges-page .hero-sub {
+  color: rgba(255,255,255,0.65);
+}
+
+[data-theme="dark"] .colleges-page .college-search {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+[data-theme="dark"] .colleges-page .college-search::placeholder {
+  color: rgba(255,255,255,0.35);
+}
+
+[data-theme="dark"] .colleges-page .college-search:focus {
+  border-color: rgba(0,102,255,0.6);
+  box-shadow: 0 6px 20px rgba(0,102,255,0.15);
+}
+
+[data-theme="dark"] .colleges-page .clear-btn {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+[data-theme="dark"] .colleges-page .hero-visual .hero-logo {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+}
+
+[data-theme="dark"] .colleges-page .college-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .colleges-page .college-card:hover {
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .colleges-page .college-card-img {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+}
+
+[data-theme="dark"] .colleges-page .college-desc {
+  color: rgba(255,255,255,0.55);
+}
+
+[data-theme="dark"] .colleges-page .college-btn-primary {
+  background: #fff;
+  color: #000;
+}
+
+[data-theme="dark"] .colleges-page .college-btn-primary:hover {
+  background: rgba(255,255,255,0.85);
+}
+
+[data-theme="dark"] .colleges-page .college-btn-secondary {
+  color: #66b0ff;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+[data-theme="dark"] .colleges-page .colleges-footer {
+  background: rgba(255,255,255,0.02);
+}
+
+[data-theme="dark"] .colleges-page .footer-inner {
+  color: rgba(255,255,255,0.65);
+}

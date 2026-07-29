@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { Sun, Moon, Monitor } from 'lucide-react'
+import { useTheme } from '../../context/ThemeContext'
 import './Landing.css'
 import './FAQ.css'
 
 const FAQ = () => {
+  const { mode, setTheme, resolvedTheme } = useTheme()
   const [openIndex, setOpenIndex] = useState(null)
   const location = useLocation()
 
@@ -152,7 +155,7 @@ const FAQ = () => {
       <nav className="landing-nav">
         <div className="nav-container">
           <Link to="/" className="nav-logo" onClick={handleLogoClick}>
-            <img src="/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />
+            <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32 }} />
             <span className="logo-text">StudyMate</span>
           </Link>
           <div className="nav-links">
@@ -160,6 +163,14 @@ const FAQ = () => {
             <Link to="/dashboard">Dashboard</Link>
             <Link to="/login" className="nav-login">Login</Link>
             <Link to="/dashboard" className="nav-cta">Get Started</Link>
+            <button
+              className="theme-toggle-btn"
+              onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
+              title={`Theme: ${mode}`}
+              aria-label="Toggle theme"
+            >
+              {mode === 'dark' ? <Moon size={18} /> : mode === 'light' ? <Sun size={18} /> : <Monitor size={18} />}
+            </button>
           </div>
         </div>
       </nav>

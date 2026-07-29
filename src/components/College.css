@@ -130,6 +130,83 @@
   .hero-gradient::after { animation: none; transform: scaleX(1); }
 }
 
+[data-theme="dark"] .college-page .college-hero {
+  background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .college-page .meta-badge {
+  color: #fff;
+}
+
+[data-theme="dark"] .college-page .meta-item {
+  color: rgba(255,255,255,0.55);
+}
+
+[data-theme="dark"] .college-page .college-breadcrumbs {
+  color: rgba(255,255,255,0.5);
+}
+
+[data-theme="dark"] .college-page .college-logo {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+}
+
+[data-theme="dark"] .college-page .college-sub {
+  color: rgba(255,255,255,0.65);
+}
+
+[data-theme="dark"] .college-page .semesters {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .college-page .semester-item {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.85);
+}
+
+[data-theme="dark"] .college-page .semester-item:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.12);
+}
+
+[data-theme="dark"] .college-page .related-colleges {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .college-page .semester-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .college-page .semester-card:hover {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .college-page .semester-card-number {
+  background: rgba(255,255,255,0.06);
+}
+
+[data-theme="dark"] .college-page .popular-subjects .chip {
+  background: rgba(255,255,255,0.06);
+}
+
+[data-theme="dark"] .college-page .related-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .college-page .related-card img {
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .college-page .college-about p {
+  color: rgba(255,255,255,0.65);
+}
+
 .college-sub {
   color: #555;
   margin: 0 0 12px 0;

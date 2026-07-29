@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import AppRoutes from "./Routes";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import { Analytics } from "@vercel/analytics/react";
 import AdSenseRouteRefresh from "./AdSenseRouteRefresh";
 import ScrollToTop from "./components/ScrollToTop";
@@ -30,11 +31,13 @@ function App() {
 
   return (
     <AuthProvider>
-      <ScrollToTop />
-      <AdSenseRouteRefresh />
-      <AppRoutes />
-      <RouteAdvertisement />
-      <Analytics />
+      <ThemeProvider>
+        <ScrollToTop />
+        <AdSenseRouteRefresh />
+        <AppRoutes />
+        <RouteAdvertisement />
+        <Analytics />
+      </ThemeProvider>
     </AuthProvider>
   );
 }

@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Sun, Moon, Monitor } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../context/ThemeContext'
 import './Login.css'
 
 const Login = () => {
+  const { mode, setTheme, resolvedTheme } = useTheme()
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState({ type: '', text: '' })
@@ -117,7 +120,7 @@ const Login = () => {
       <nav className="auth-nav">
         <div className="auth-nav-container">
           <Link to="/" className="auth-nav-logo" onClick={handleLogoClick}>
-            <img src="/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />
+            <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32 }} />
             <span className="auth-logo-text">StudyMate</span>
           </Link>
           <div className={`auth-nav-links ${mobileMenuOpen ? 'active' : ''}`}>
@@ -126,6 +129,14 @@ const Login = () => {
             <a href="/#testimonials">Reviews</a>
             <Link to="/login" className="auth-nav-login">Login</Link>
             <Link to="/dashboard" className="auth-nav-cta">Open Dashboard</Link>
+            <button
+              className="theme-toggle-btn"
+              onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
+              title={`Theme: ${mode}`}
+              aria-label="Toggle theme"
+            >
+              {mode === 'dark' ? <Moon size={18} /> : mode === 'light' ? <Sun size={18} /> : <Monitor size={18} />}
+            </button>
           </div>
           <button 
             className={`auth-mobile-menu-btn ${mobileMenuOpen ? 'active' : ''}`} 
@@ -145,7 +156,7 @@ const Login = () => {
           {/* Feature Highlights Sidebar */}
           <div className="auth-highlights">
             <div className="auth-highlight-header">
-              <img src="/black.svg" alt="StudyMate" style={{ width: 40, height: 40 }} />
+              <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate" style={{ width: 40, height: 40 }} />
               <h2>StudyMate</h2>
             </div>
             <p className="auth-highlight-subtitle">

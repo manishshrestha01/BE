@@ -1312,3 +1312,130 @@
     transform: none !important;
   }
 }
+
+[data-theme="dark"] .blog-page {
+  --blog-surface: rgba(255,255,255,0.04);
+  --blog-surface-soft: rgba(255,255,255,0.04);
+  --blog-text: rgba(255,255,255,0.85);
+  --blog-text-soft: rgba(255,255,255,0.5);
+}
+[data-theme="dark"] .blog-page .blog-hero {
+  background: linear-gradient(180deg, rgba(15,23,42,0.6) 0%, var(--landing-bg) 100%);
+}
+[data-theme="dark"] .blog-page .blog-title {
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .blog-subtitle {
+  color: rgba(255,255,255,0.5);
+}
+[data-theme="dark"] .blog-page .section-subtitle {
+  color: rgba(255,255,255,0.5);
+}
+[data-theme="dark"] .blog-page .blog-why-card {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+}
+[data-theme="dark"] .blog-page .blog-why-card h3 {
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .blog-why-card p {
+  color: rgba(255,255,255,0.5);
+}
+[data-theme="dark"] .blog-page .blog-section-title {
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .semester-card {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+}
+[data-theme="dark"] .blog-page .semester-card:hover {
+  border-color: rgba(255,255,255,0.12);
+}
+[data-theme="dark"] .blog-page .semester-card-meta {
+  border-color: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .topic-item-card h3 {
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .topic-item-card p {
+  color: rgba(255,255,255,0.5);
+}
+[data-theme="dark"] .blog-page .subjects-table th {
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.04);
+}
+[data-theme="dark"] .blog-page .subjects-table td {
+  color: rgba(255,255,255,0.5);
+}
+[data-theme="dark"] .blog-page .prose-block p,
+[data-theme="dark"] .blog-page .subject-article p {
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .prose-block li,
+[data-theme="dark"] .blog-page .subject-article li {
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .subject-article h2,
+[data-theme="dark"] .blog-page .subject-article h3 {
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .subject-article ol.subject-bullet-list > li::marker {
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .subject-subpoint-index {
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .toc-card {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+}
+[data-theme="dark"] .blog-page .toc-card h2 {
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .toc-link {
+  color: rgba(255,255,255,0.5);
+}
+[data-theme="dark"] .blog-page .toc-link:hover {
+  color: rgba(255,255,255,0.85);
+  border-color: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+}
+[data-theme="dark"] .blog-page .toc-index {
+  border-color: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .toc-item.toc-sub .toc-link {
+  background: transparent;
+}
+[data-theme="dark"] .blog-page .toc-item.toc-sub .toc-link::before {
+  background: rgba(255,255,255,0.12);
+}
+[data-theme="dark"] .blog-page .toc-item.toc-sub .toc-index {
+  border-color: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
+}
+[data-theme="dark"] .blog-page .toc-empty {
+  color: rgba(255,255,255,0.5);
+}
+[data-theme="dark"] .blog-page .toc-mobile-toggle {
+  border-color: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .toc-mobile-toggle:hover {
+  border-color: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+}
+[data-theme="dark"] .blog-page .subject-article pre {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.08);
+}
+[data-theme="dark"] .blog-page .subject-article code {
+  color: rgba(255,255,255,0.85);
+}
+[data-theme="dark"] .blog-page .subject-cta {
+  background: rgba(255,255,255,0.04);
+}

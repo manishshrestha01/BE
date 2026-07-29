@@ -2,20 +2,31 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* UPDATED: Add safe area inset to the top padding */
-  padding: calc(1rem + env(safe-area-inset-top, 0px)) 2rem 1rem 2rem; 
-  background-color: #1a1a2e;
-  color: white;
+  padding: calc(1rem + env(safe-area-inset-top, 0px)) 2rem 1rem 2rem;
+  background: rgba(10,10,10,0.75);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  color: var(--app-text);
   position: sticky;
   top: 0;
   z-index: 1000;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="light"] .navbar {
+  background: rgba(255,255,255,0.9);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
 .navbar-brand a {
   font-size: 1.5rem;
   font-weight: bold;
-  color: white;
+  color: var(--app-text);
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .navbar-links {
@@ -28,82 +39,112 @@
 }
 
 .navbar-links li a {
-  color: white;
+  color: var(--app-text);
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.3s ease;
+  opacity: 0.7;
 }
 
 .navbar-links li a:hover {
-  color: #4a9eff;
+  opacity: 1;
+  color: var(--app-text);
 }
 
 .navbar-links .login-btn {
-  background-color: #4a9eff;
-  padding: 0.5rem 1.5rem;
-  border-radius: 5px;
-  color: white;
+  background: var(--app-accent);
+  padding: 8px 20px;
+  border-radius: 8px;
+  color: #fff !important;
+  opacity: 1;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .navbar-links .login-btn:hover {
-  background-color: #357abd;
-  color: white;
+  background: var(--app-accent-hover);
+  transform: translateY(-1px);
+  color: #fff !important;
 }
 
-/* ==================== RESPONSIVE DESIGN ==================== */
+.theme-toggle-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  color: var(--app-text);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  width: 34px;
+  height: 34px;
+  line-height: 0;
+}
 
-/* Tablets */
+.theme-toggle-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+[data-theme="light"] .theme-toggle-btn {
+  background: rgba(0,0,0,0.06);
+  border-color: rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .theme-toggle-btn:hover {
+  background: rgba(0,0,0,0.1);
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: max(0.75rem, env(safe-area-inset-top)) 1rem 0.75rem 1rem;
   }
-  
+
   .navbar-brand a {
     font-size: 1.25rem;
   }
-  
+
   .navbar-links {
     gap: 1rem;
   }
-  
+
   .navbar-links li a {
     font-size: 0.9rem;
   }
-  
+
   .navbar-links .login-btn {
     padding: 0.4rem 1rem;
     font-size: 0.9rem;
   }
 }
 
-/* Mobile devices */
 @media (max-width: 480px) {
   .navbar {
     padding: max(0.5rem, env(safe-area-inset-top)) 0.75rem 0.5rem 0.75rem;
     flex-wrap: wrap;
   }
-  
+
   .navbar-brand a {
     font-size: 1rem;
   }
-  
+
   .navbar-links {
     gap: 0.5rem;
     width: 100%;
     justify-content: flex-end;
   }
-  
+
   .navbar-links li {
     display: none;
   }
-  
+
   .navbar-links li:last-child {
     display: block;
   }
-  
+
   .navbar-links .login-btn {
     padding: 0.35rem 0.75rem;
     font-size: 0.8rem;
   }
 }
-

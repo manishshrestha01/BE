@@ -121,3 +121,31 @@
     font-size: 14px;
   }
 }
+
+[data-theme="dark"] .not-found-page {
+  background: #0a0a0a;
+}
+
+[data-theme="dark"] .not-found-code {
+  color: rgba(255,255,255,0.85);
+  background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.4) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+[data-theme="dark"] .not-found-title {
+  color: rgba(255,255,255,0.85);
+}
+
+[data-theme="dark"] .not-found-description {
+  color: rgba(255,255,255,0.5);
+}
+
+[data-theme="dark"] .not-found-button {
+  background: rgba(255,255,255,0.85);
+  color: #0a0a0a;
+}
+
+[data-theme="dark"] .not-found-button:hover {
+  background: rgba(255,255,255,0.7);
+}
