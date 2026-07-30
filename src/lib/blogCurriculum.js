@@ -162,7 +162,7 @@ const SUBJECT_CREDITS = {
   "Theory of Computation": 3,
   "Computer Architecture": 3,
   "Research Fundamentals": 2,
-  "Probability and Statistics": 3,
+  "Probability and Statistics": 2,
   "Embedded System": 2,
   "Engineering Management": 2,
   "Artificial Intelligence": 3,
