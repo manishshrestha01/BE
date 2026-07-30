@@ -328,11 +328,11 @@ const BlogSubject = () => {
 
   const mentions = useMemo(() => {
     const items = syllabusUnits.map((unit) => ({
-      "@type": "Thing" as const,
+      "@type": "Thing",
       name: unit.title,
     }));
     if (subjectCourseCode) {
-      items.push({ "@type": "Thing" as const, name: subjectCourseCode });
+      items.push({ "@type": "Thing", name: subjectCourseCode });
     }
     return items.length ? items : undefined;
   }, [syllabusUnits, subjectCourseCode]);
