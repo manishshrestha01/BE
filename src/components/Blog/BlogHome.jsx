@@ -112,10 +112,10 @@ const BlogHome = () => {
             topics, concept explanations, and practice questions.
           </p>
           <div className="hero-cta blog-hero-cta">
-            <Link to="/dashboard" className="btn-primary" onClick={forceScrollTop}>
-              Start Learning
+            <a href="#semester-guides" className="btn-primary">
+              Learn More
               <span className="btn-arrow">→</span>
-            </Link>
+            </a>
             <a href="#semester-guides" className="btn-secondary">
               Learn More
             </a>
