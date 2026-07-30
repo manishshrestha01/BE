@@ -1,6 +1,6 @@
 (function () {
   if (typeof window === 'undefined' || !('fetch' in window)) return;
-  if (document.getElementById('root')) return; // SPA already present
+  if (window.__spaLoaded) return;
 
   function whenAllSettledOrTimeout(promises, timeoutMs) {
     return Promise.race([
@@ -105,6 +105,7 @@
               var path = location.pathname + location.search + location.hash;
               location.replace('/?r=' + encodeURIComponent(path));
             };
+            window.__spaLoaded = true;
             document.body.appendChild(s);
           });
         } catch (err) {
