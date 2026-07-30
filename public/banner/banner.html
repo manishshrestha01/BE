@@ -23,6 +23,7 @@
 <meta name="twitter:image" content="https://manishshrestha012.com.np/og-banner.png">
 
 <link rel="canonical" href="https://manishshrestha012.com.np/banner">
+<style id="dynamic-page-size"></style>
 <style>
   :root{
     --navy:#0B1626;
@@ -45,7 +46,7 @@
     padding-top:64px;
   }
   #banner{
-    width:900px; height:2118px;
+    width:900px;
     position:relative;
     overflow:hidden;
     margin:0 auto;
@@ -77,7 +78,6 @@
     .toolbar{ display:none !important; }
     body{ padding-top:0; background:#fff; }
     #banner{ box-shadow:none; margin:0; }
-    @page{ size:238mm 560mm; margin:0; }
   }
 
   /* ---- background grid ---- */
@@ -113,7 +113,6 @@
 
   .content{
     position:relative; z-index:2;
-    height:100%;
     padding:64px 66px 50px;
     display:flex; flex-direction:column;
   }
@@ -193,7 +192,7 @@
 
   /* ---- spec sheet ---- */
   .specs{
-    margin-top:48px; border-top:1px solid var(--line);
+    margin-bottom:30px; border-top:1px solid var(--line);
   }
   .spec-row{
     display:flex; gap:26px; padding:18px 0; border-bottom:1px solid var(--line);
@@ -211,7 +210,6 @@
   }
   .colleges b{ color:var(--paper); }
 
-  .spacer{ flex:1; min-height:20px; }
 
   /* ---- QR scan panel ---- */
   .qr-panel{
@@ -268,7 +266,7 @@
 
   <div class="toolbar">
     <span>StudyMate banner &mdash;</span>
-    <button class="primary" onclick="window.print()">Print / Save as PDF</button>
+    <button class="primary" onclick="preparePrint()">Print / Save as PDF</button>
     <button onclick="downloadImage('png')">Download PNG</button>
     <button onclick="downloadImage('jpeg')">Download JPG</button>
     <button onclick="downloadHTML()">Download HTML</button>
@@ -377,13 +375,7 @@
         <div class="spec-key mono">Workspace</div>
         <div class="spec-val">Personal notes &amp; drawing canvas · dark / light / system theme</div>
       </div>
-      <div class="spec-row">
-        <div class="spec-key mono">Network</div>
-        <div class="spec-val"><b>14+ affiliated colleges</b> — PEC, NCIT, NEC, GCES, Cosmos &amp; more</div>
-      </div>
     </div>
-
-    <div class="spacer"></div>
 
     <!-- QR SCAN PANEL -->
     <div class="qr-panel">
@@ -436,6 +428,17 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
+    function preparePrint(){
+      var banner = document.getElementById('banner');
+      var rect = banner.getBoundingClientRect();
+      var pxToMm = 25.4 / 96;
+      var wMm = (rect.width * pxToMm).toFixed(2);
+      var hMm = (rect.height * pxToMm).toFixed(2);
+      var styleEl = document.getElementById('dynamic-page-size');
+      styleEl.textContent = '@page{ size:' + wMm + 'mm ' + hMm + 'mm; margin:0; }';
+      window.print();
+    }
+
     function downloadHTML(){
       var statusEl = document.getElementById('tb-status');
       try{
