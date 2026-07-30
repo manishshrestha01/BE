@@ -27,14 +27,62 @@ https://www.manishshrestha012.com.np
 
 ### Blog Subject Study Guides (detailed article per subject)
 - [Full Blog Index](https://www.manishshrestha012.com.np/blog): Browse all semester guides
-- [Semester 1 Guides](https://www.manishshrestha012.com.np/blog/semester/1): Calculus I, Digital Logic, C Programming, Basic Electrical Engineering, Computer Workshop, Communication Technique, Electronics Devices and Circuits
-- [Semester 2 Guides](https://www.manishshrestha012.com.np/blog/semester/2): Algebra and Geometry, Applied Physics, Applied Chemistry, Basic Engineering Drawing, OOP in C++, Data Structure and Algorithm, Instrumentation
-- [Semester 3 Guides](https://www.manishshrestha012.com.np/blog/semester/3): Calculus II, Database Management System, Operating Systems, Microprocessor and Assembly, Computer Graphics, Data Communication
-- [Semester 4 Guides](https://www.manishshrestha012.com.np/blog/semester/4): Applied Mathematics, Numerical Methods, Advanced Java, Theory of Computation, Computer Architecture, Research Fundamentals
-- [Semester 5 Guides](https://www.manishshrestha012.com.np/blog/semester/5): Probability and Statistics, Embedded System, Engineering Management, Artificial Intelligence, Digital Signal Analysis, Software Engineering
-- [Semester 6 Guides](https://www.manishshrestha012.com.np/blog/semester/6): Image Processing, Machine Learning, Compiler Design, Computer Networks, Simulation and Modeling, Elective I, Project I
-- [Semester 7 Guides](https://www.manishshrestha012.com.np/blog/semester/7): Entrepreneurship, Engineering Economics, Network and Cyber Security, Cloud Computing, Data Science and Analytics, Elective II
-- [Semester 8 Guides](https://www.manishshrestha012.com.np/blog/semester/8): Elective III, Internship, Project II
+- [Semester 1](https://www.manishshrestha012.com.np/blog/semester/1):
+  - [Calculus I](https://www.manishshrestha012.com.np/blog/semester/1/calculus-i)
+  - [Digital Logic](https://www.manishshrestha012.com.np/blog/semester/1/digital-logic)
+  - [Programming in C](https://www.manishshrestha012.com.np/blog/semester/1/programming-in-c)
+  - [Basic Electrical Engineering](https://www.manishshrestha012.com.np/blog/semester/1/basic-electrical-engineering)
+  - [Computer Workshop](https://www.manishshrestha012.com.np/blog/semester/1/computer-workshop)
+  - [Communication Technique](https://www.manishshrestha012.com.np/blog/semester/1/communication-technique)
+  - [Electronics Devices and Circuits](https://www.manishshrestha012.com.np/blog/semester/1/electronics-devices-and-circuits)
+- [Semester 2](https://www.manishshrestha012.com.np/blog/semester/2):
+  - [Algebra and Geometry](https://www.manishshrestha012.com.np/blog/semester/2/algebra-and-geometry)
+  - [Applied Physics](https://www.manishshrestha012.com.np/blog/semester/2/applied-physics)
+  - [Applied Chemistry](https://www.manishshrestha012.com.np/blog/semester/2/applied-chemistry)
+  - [Basic Engineering Drawing](https://www.manishshrestha012.com.np/blog/semester/2/basic-engineering-drawing)
+  - [Object Oriented Programming in C++](https://www.manishshrestha012.com.np/blog/semester/2/object-oriented-programming-in-cpp)
+  - [Data Structure and Algorithm](https://www.manishshrestha012.com.np/blog/semester/2/data-structure-and-algorithm)
+  - [Instrumentation](https://www.manishshrestha012.com.np/blog/semester/2/instrumentation)
+- [Semester 3](https://www.manishshrestha012.com.np/blog/semester/3):
+  - [Calculus II](https://www.manishshrestha012.com.np/blog/semester/3/calculus-ii)
+  - [Database Management System](https://www.manishshrestha012.com.np/blog/semester/3/database-management-system)
+  - [Operating Systems](https://www.manishshrestha012.com.np/blog/semester/3/operating-systems)
+  - [Microprocessor and Assembly Language Programming](https://www.manishshrestha012.com.np/blog/semester/3/microprocessor-and-assembly-language-programming)
+  - [Computer Graphics](https://www.manishshrestha012.com.np/blog/semester/3/computer-graphics)
+  - [Data Communication](https://www.manishshrestha012.com.np/blog/semester/3/data-communication)
+- [Semester 4](https://www.manishshrestha012.com.np/blog/semester/4):
+  - [Applied Mathematics](https://www.manishshrestha012.com.np/blog/semester/4/applied-mathematics)
+  - [Numerical Methods](https://www.manishshrestha012.com.np/blog/semester/4/numerical-methods)
+  - [Advanced Programming with Java](https://www.manishshrestha012.com.np/blog/semester/4/advanced-programming-with-java)
+  - [Theory of Computation](https://www.manishshrestha012.com.np/blog/semester/4/theory-of-computation)
+  - [Computer Architecture](https://www.manishshrestha012.com.np/blog/semester/4/computer-architecture)
+  - [Research Fundamentals](https://www.manishshrestha012.com.np/blog/semester/4/research-fundamentals)
+- [Semester 5](https://www.manishshrestha012.com.np/blog/semester/5):
+  - [Probability and Statistics](https://www.manishshrestha012.com.np/blog/semester/5/probability-and-statistics)
+  - [Embedded System](https://www.manishshrestha012.com.np/blog/semester/5/embedded-system)
+  - [Engineering Management](https://www.manishshrestha012.com.np/blog/semester/5/engineering-management)
+  - [Artificial Intelligence](https://www.manishshrestha012.com.np/blog/semester/5/artificial-intelligence)
+  - [Digital Signal Analysis and Processing](https://www.manishshrestha012.com.np/blog/semester/5/digital-signal-analysis-and-processing)
+  - [Software Engineering](https://www.manishshrestha012.com.np/blog/semester/5/software-engineering)
+- [Semester 6](https://www.manishshrestha012.com.np/blog/semester/6):
+  - [Image Processing and Pattern Recognition](https://www.manishshrestha012.com.np/blog/semester/6/image-processing-and-pattern-recognition)
+  - [Machine Learning](https://www.manishshrestha012.com.np/blog/semester/6/machine-learning)
+  - [Compiler Design](https://www.manishshrestha012.com.np/blog/semester/6/compiler-design)
+  - [Computer Networks](https://www.manishshrestha012.com.np/blog/semester/6/computer-networks)
+  - [Simulation and Modeling](https://www.manishshrestha012.com.np/blog/semester/6/simulation-and-modeling)
+  - [Elective I](https://www.manishshrestha012.com.np/blog/semester/6/elective-i)
+  - [Project I](https://www.manishshrestha012.com.np/blog/semester/6/project-i)
+- [Semester 7](https://www.manishshrestha012.com.np/blog/semester/7):
+  - [Entrepreneurship and Professional Practice](https://www.manishshrestha012.com.np/blog/semester/7/entrepreneurship-and-professional-practice)
+  - [Engineering Economics](https://www.manishshrestha012.com.np/blog/semester/7/engineering-economics)
+  - [Network and Cyber Security](https://www.manishshrestha012.com.np/blog/semester/7/network-and-cyber-security)
+  - [Cloud Computing and Virtualization](https://www.manishshrestha012.com.np/blog/semester/7/cloud-computing-and-virtualization)
+  - [Data Science and Analytics](https://www.manishshrestha012.com.np/blog/semester/7/data-science-and-analytics)
+  - [Elective II](https://www.manishshrestha012.com.np/blog/semester/7/elective-ii)
+- [Semester 8](https://www.manishshrestha012.com.np/blog/semester/8):
+  - [Elective III](https://www.manishshrestha012.com.np/blog/semester/8/elective-iii)
+  - [Internship](https://www.manishshrestha012.com.np/blog/semester/8/internship)
+  - [Project II](https://www.manishshrestha012.com.np/blog/semester/8/project-ii)
 
 ### Per-College Pages (AI may cite these for college-specific queries)
 - [PEC Notes](https://www.manishshrestha012.com.np/college/pec): Pokhara Engineering College BE Computer Engineering notes
