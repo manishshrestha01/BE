@@ -50,17 +50,23 @@
             }
           }
 
-          // Find the first <script type="module" src="..."></script>
-          var scriptRegex = /<script[^>]*type=["']module["'][^>]*src=["']([^"']+)["'][^>]*><\/script>/i;
-          var sMatch = html.match(scriptRegex);
-          if (!sMatch || !sMatch[1]) {
+          // Find the last <script type="module" src="..."></script>
+          // (Vite injects its HMR client /@vite/client before the app entry in dev,
+          //  so the first match is the wrong one — we always want the app entry)
+          var scriptRegex = /<script[^>]*type=["']module["'][^>]*src=["']([^"']+)["'][^>]*><\/script>/gi;
+          var lastScriptSrc = null;
+          var sm;
+          while ((sm = scriptRegex.exec(html)) !== null) {
+            lastScriptSrc = sm[1];
+          }
+          if (!lastScriptSrc) {
             // fallback: redirect to root preserving current path so SPA can handle routing
             var path = location.pathname + location.search + location.hash;
             location.replace('/?r=' + encodeURIComponent(path));
             return;
           }
 
-          var src = sMatch[1];
+          var src = lastScriptSrc;
 
           // Ensure a root element exists for React to mount
           if (!document.getElementById('root')) {
