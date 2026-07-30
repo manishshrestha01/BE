@@ -25,6 +25,17 @@ https://www.manishshrestha012.com.np
 - [All Colleges](https://www.manishshrestha012.com.np/colleges): Index of Pokhara University affiliated engineering colleges in Nepal
 - [Blog](https://www.manishshrestha012.com.np/blog): Subject-wise articles, guides, and exam preparation tips
 
+### Blog Subject Study Guides (detailed article per subject)
+- [Full Blog Index](https://www.manishshrestha012.com.np/blog): Browse all semester guides
+- [Semester 1 Guides](https://www.manishshrestha012.com.np/blog/semester/1): Calculus I, Digital Logic, C Programming, Basic Electrical Engineering, Computer Workshop, Communication Technique, Electronics Devices and Circuits
+- [Semester 2 Guides](https://www.manishshrestha012.com.np/blog/semester/2): Algebra and Geometry, Applied Physics, Applied Chemistry, Basic Engineering Drawing, OOP in C++, Data Structure and Algorithm, Instrumentation
+- [Semester 3 Guides](https://www.manishshrestha012.com.np/blog/semester/3): Calculus II, Database Management System, Operating Systems, Microprocessor and Assembly, Computer Graphics, Data Communication
+- [Semester 4 Guides](https://www.manishshrestha012.com.np/blog/semester/4): Applied Mathematics, Numerical Methods, Advanced Java, Theory of Computation, Computer Architecture, Research Fundamentals
+- [Semester 5 Guides](https://www.manishshrestha012.com.np/blog/semester/5): Probability and Statistics, Embedded System, Engineering Management, Artificial Intelligence, Digital Signal Analysis, Software Engineering
+- [Semester 6 Guides](https://www.manishshrestha012.com.np/blog/semester/6): Image Processing, Machine Learning, Compiler Design, Computer Networks, Simulation and Modeling, Elective I, Project I
+- [Semester 7 Guides](https://www.manishshrestha012.com.np/blog/semester/7): Entrepreneurship, Engineering Economics, Network and Cyber Security, Cloud Computing, Data Science and Analytics, Elective II
+- [Semester 8 Guides](https://www.manishshrestha012.com.np/blog/semester/8): Elective III, Internship, Project II
+
 ### Per-College Pages (AI may cite these for college-specific queries)
 - [PEC Notes](https://www.manishshrestha012.com.np/college/pec): Pokhara Engineering College BE Computer Engineering notes
 - [NCIT Notes](https://www.manishshrestha012.com.np/college/ncit): Nepal College of Information Technology notes

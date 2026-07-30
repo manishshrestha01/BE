@@ -592,6 +592,18 @@ ${semesterSubjectListHtml}`;
         },
       ]);
 
+      const syllabusUnits = subjectArticle?.sections
+        ?.filter((s) => s.id === "syllabus-overview")
+        ?.flatMap((s) => s.units || []) || [];
+
+      const subjectMentions = syllabusUnits.map((unit) => ({
+        "@type": "Thing",
+        name: unit.title,
+      }));
+      if (subjectCourseCode) {
+        subjectMentions.push({ "@type": "Thing", name: subjectCourseCode });
+      }
+
       const subjectArticleLd = {
         "@context": "https://schema.org",
         "@type": "Article",
@@ -606,6 +618,7 @@ ${semesterSubjectListHtml}`;
             name: `${subjectLabel} (BE Computer Engineering Semester ${semester.semester})`,
           },
         ],
+        mentions: subjectMentions.length ? subjectMentions : undefined,
         author: { "@type": "Organization", name: "StudyMate" },
         publisher: { "@id": `${BLOG_BASE_URL}/#organization` },
         keywords: subjectKeywords,

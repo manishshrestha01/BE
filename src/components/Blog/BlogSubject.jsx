@@ -318,6 +318,25 @@ const BlogSubject = () => {
     ],
   };
 
+  const syllabusUnits = useMemo(
+    () =>
+      (article?.sections || [])
+        .filter((s) => s.id === "syllabus-overview")
+        .flatMap((s) => s.units || []),
+    [article],
+  );
+
+  const mentions = useMemo(() => {
+    const items = syllabusUnits.map((unit) => ({
+      "@type": "Thing" as const,
+      name: unit.title,
+    }));
+    if (subjectCourseCode) {
+      items.push({ "@type": "Thing" as const, name: subjectCourseCode });
+    }
+    return items.length ? items : undefined;
+  }, [syllabusUnits, subjectCourseCode]);
+
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -338,6 +357,7 @@ const BlogSubject = () => {
         ...(subjectCourseCode ? { courseCode: subjectCourseCode } : {}),
       },
     ],
+    mentions,
     author: {
       "@type": "Organization",
       name: "StudyMate",
