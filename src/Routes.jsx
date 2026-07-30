@@ -14,6 +14,7 @@ import DashboardManual from './components/DashboardManual/DashboardManual'
 import Colleges from './components/Colleges'
 import College from './components/College'
 import OfficeViewer from './components/QuickLook/OfficeViewer'
+import Banner from './components/Banner/Banner'
 import BlogHome from './components/Blog/BlogHome'
 import BlogSemester from './components/Blog/BlogSemester'
 import BlogSubject from './components/Blog/BlogSubject'
@@ -26,6 +27,7 @@ const AppRoutes = () => (
     <Route path="/" element={<Landing />} />
     <Route path="/dashboard" element={<DashboardManual />} />
     <Route path="/office-viewer" element={<OfficeViewer />} />
+    <Route path="/banner" element={<Banner />} />
     <Route path="/home" element={<Home />} />
     <Route path="/about" element={<AboutPage />} />
     <Route path="/contact" element={<ContactPage />} />

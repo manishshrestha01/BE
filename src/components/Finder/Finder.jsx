@@ -6,6 +6,7 @@ import useFolderColors from '../../hooks/useFolderColors'
 import FolderIcon from '../FolderIcon'
 import { toggleFavorite, getUserFavorites, getUserRecents, upsertRecentTab, removeFavorite } from '../../lib/database'
 import { COLLEGES } from '../../lib/colleges'
+import { folderNameToSlug } from '../../lib/subjectMap'
 import './Finder.css'
 
 // File type icons - returns emoji or JSX for custom icons
@@ -149,12 +150,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
       }
       const subjectSeg = segments[2]
       if (subjectSeg) {
-        const slug = subjectSeg.name
-          .toLowerCase()
-          .replace(/c\+\+/gi, 'cpp')
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '')
-        params.set('subject', slug)
+        params.set('subject', folderNameToSlug(subjectSeg.name))
       }
     } else if (firstSeg) {
       // No college — check if this segment is a semester folder
@@ -163,21 +159,11 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
         params.set('semester', semNum)
         const subjectSeg = segments[1]
         if (subjectSeg) {
-          const slug = subjectSeg.name
-            .toLowerCase()
-            .replace(/c\+\+/gi, 'cpp')
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-|-$/g, '')
-          params.set('subject', slug)
+          params.set('subject', folderNameToSlug(subjectSeg.name))
         }
       } else if (semNum) {
         // First segment doesn't look like a semester — treat it as subject
-        const slug = firstSeg.name
-          .toLowerCase()
-          .replace(/c\+\+/gi, 'cpp')
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '')
-        params.set('subject', slug)
+        params.set('subject', folderNameToSlug(firstSeg.name))
       }
     }
 
