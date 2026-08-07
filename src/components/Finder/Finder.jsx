@@ -544,14 +544,15 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
           )}
 
           {/* Error message */}
-          {error && (
+          {error && activeTab === 'all' && (
             <div className="finder-error">
               <p>⚠️ {error}</p>
+              <button className="finder-retry" onClick={refresh}>Retry</button>
             </div>
           )}
 
           {/* Empty state */}
-          {!loading && displayedItems.length === 0 && (
+          {!loading && !error && displayedItems.length === 0 && (
             <div className="finder-empty">
               <span className="empty-icon">📂</span>
               <p>{activeTab === 'starred' ? 'No starred items' : activeTab === 'recent' ? 'No recent items' : 'This folder is empty'}</p>

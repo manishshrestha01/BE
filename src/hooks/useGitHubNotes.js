@@ -61,7 +61,21 @@ export function useGitHubNotes({ initialPath = null } = {}) {
   // If an initialPath was provided via URL params, seed the path state from it
   // instead of whatever was persisted in sessionStorage.
   const resolveInitialState = () => {
+    const stored = readStoredNotesPathState()
+
     if (initialPath) {
+      const isReload =
+        typeof performance !== 'undefined' &&
+        typeof performance.getEntriesByType === 'function' &&
+        performance.getEntriesByType('navigation')?.[0]?.type === 'reload'
+
+      // On a page reload, prefer the exact folder the user was browsing in this
+      // tab. URL params only encode college/semester/subject (max 3 levels) and
+      // can point at a moved/renamed folder, which would surface as empty.
+      if (isReload && stored.currentPath) {
+        return stored
+      }
+
       const segments = initialPath.split('/').filter(Boolean)
       const folderPath = [ROOT_FOLDER]
       let accumulated = ''
@@ -71,7 +85,8 @@ export function useGitHubNotes({ initialPath = null } = {}) {
       }
       return { currentPath: initialPath, folderPath }
     }
-    return readStoredNotesPathState()
+
+    return stored
   }
 
   const initialPathStateRef = useRef(resolveInitialState())
@@ -81,11 +96,13 @@ export function useGitHubNotes({ initialPath = null } = {}) {
   const [currentPath, setCurrentPath] = useState(initialPathStateRef.current.currentPath) // Current directory path
   const [folderPath, setFolderPath] = useState(initialPathStateRef.current.folderPath) // Breadcrumb
   const pathStateRef = useRef({ currentPath, folderPath })
+  const fetchSeqRef = useRef(0)
   
   const isConfigured = isGitHubConfigured()
 
   // Fetch items from current path
   const fetchItems = useCallback(async (path = '') => {
+    const seq = ++fetchSeqRef.current
     setLoading(true)
     setError(null)
     
@@ -101,24 +118,27 @@ export function useGitHubNotes({ initialPath = null } = {}) {
         { id: 'demo7', name: 'Semester 7', type: 'folder', path: 'semester-7' },
         { id: 'demo8', name: 'Semester 8', type: 'folder', path: 'semester-8' },
       ])
-      setLoading(false)
+      if (seq === fetchSeqRef.current) setLoading(false)
       return
     }
     
     try {
       const result = await fetchGitHubContents(path)
-      
+      if (seq !== fetchSeqRef.current) return // Stale response, ignore
+
       if (result.success) {
         setItems(result.data)
       } else {
+        // Keep previous items so a transient failure doesn't blank the folder.
         setError(result.error)
-        setItems([])
       }
     } catch (err) {
+      if (seq !== fetchSeqRef.current) return
       setError(err.message)
-      setItems([])
     } finally {
-      setLoading(false)
+      if (seq === fetchSeqRef.current) {
+        setLoading(false)
+      }
     }
   }, [isConfigured])
 
@@ -142,6 +162,10 @@ export function useGitHubNotes({ initialPath = null } = {}) {
       if (document.visibilityState === 'visible') {
         const restored = readStoredNotesPathState()
         const previous = pathStateRef.current
+
+        // Nothing was persisted — keep the in-memory state as-is.
+        if (!restored.currentPath && restored.folderPath.length <= 1) return
+
         const prevSerializedPath = JSON.stringify(previous.folderPath)
         const restoredSerializedPath = JSON.stringify(restored.folderPath)
 
