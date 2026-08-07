@@ -1,10 +1,12 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+
 // @ts-ignore
 declare const Deno: any
 
 console.info('get-notes function started');
 
+// Configuration from Environment Variables
 const GITHUB_TOKEN = Deno.env.get('GITHUB_TOKEN') || ''
 const OWNER = Deno.env.get('GITHUB_OWNER') || 'manishshrestha01'
 const REPO = Deno.env.get('GITHUB_REPO') || 'BE-Computer'
@@ -14,7 +16,27 @@ const BASE_PATH = Deno.env.get('GITHUB_BASE_PATH') || ''
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET,OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type,Authorization,x-client-info,apikey',
+}
+
+// Map extensions to correct Content-Types for browser viewing
+const MIME_TYPES: Record<string, string> = {
+  'pdf': 'application/pdf',
+  'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'doc': 'application/msword',
+  'odt': 'application/vnd.oasis.opendocument.text',
+  'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'ppt': 'application/vnd.ms-powerpoint',
+  'png': 'image/png',
+  'jpg': 'image/jpeg',
+  'jpeg': 'image/jpeg',
+  'gif': 'image/gif',
+  'webp': 'image/webp',
+  'svg': 'image/svg+xml',
+  'txt': 'text/plain; charset=utf-8',
+  'md': 'text/markdown; charset=utf-8',
+  'mp4': 'video/mp4',
+  'webm': 'video/webm'
 }
 
 function getFileType(filename: string) {
@@ -23,7 +45,7 @@ function getFileType(filename: string) {
   if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) return 'image'
   if (['pdf'].includes(ext)) return 'pdf'
   if (['pptx', 'ppt'].includes(ext)) return 'pptx'
-  if (['docx', 'doc'].includes(ext)) return 'docx'
+  if (['docx', 'doc', 'odt'].includes(ext)) return 'docx'
   if (['rtf'].includes(ext)) return 'rtf'
   if (['mp4', 'mov', 'webm'].includes(ext)) return 'video'
   if (['txt', 'md'].includes(ext)) return 'text'
@@ -33,6 +55,7 @@ function getFileType(filename: string) {
 Deno.serve(async (req: Request) => {
   const url = new URL(req.url)
 
+  // Handle CORS
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: CORS_HEADERS })
   }
@@ -40,12 +63,17 @@ Deno.serve(async (req: Request) => {
   const pathname = url.pathname
   const action = pathname.split('/').filter(Boolean).pop() || ''
   const pathParam = url.searchParams.get('path') || ''
+  
+  // Clean the path to avoid double slashes
   const ghPath = [BASE_PATH, pathParam].filter(Boolean).join('/')
 
-  const headers: Record<string, string> = { 'Accept': 'application/vnd.github.v3+json' }
+  const headers: Record<string, string> = { 
+    'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'Supabase-Edge-Function'
+  }
   if (GITHUB_TOKEN) headers['Authorization'] = `Bearer ${GITHUB_TOKEN}`
 
-  // LIST directory
+  // --- ACTION: LIST ---
   if (action === 'list') {
     const ghUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURI(ghPath)}?ref=${BRANCH}`
 
@@ -53,14 +81,20 @@ Deno.serve(async (req: Request) => {
       const r = await fetch(ghUrl, { headers })
       if (!r.ok) {
         if (r.status === 404) {
-          return new Response(JSON.stringify({ success: true, data: [] }), { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } })
+          return new Response(JSON.stringify({ success: true, data: [] }), { 
+            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } 
+          })
         }
         const text = await r.text()
-        return new Response(JSON.stringify({ success: false, error: text }), { status: r.status, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } })
+        return new Response(JSON.stringify({ success: false, error: text }), { 
+          status: r.status, 
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } 
+        })
       }
 
       const data = await r.json()
-
+      
+      // Construct the base URL for files dynamically
       const fileBase = `${url.origin}${url.pathname.replace(/\/list$/, '/file')}`
 
       const items = (Array.isArray(data) ? data : [data])
@@ -68,7 +102,7 @@ Deno.serve(async (req: Request) => {
           if (item.name.startsWith('.')) return false
           if (item.type === 'file') {
             const ext = item.name.split('.').pop()?.toLowerCase() || ''
-            const supportedExts = ['pdf', 'pptx', 'ppt', 'docx', 'doc', 'rtf', 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'heif', 'heic', 'mp4', 'mov', 'webm', 'txt', 'md']
+            const supportedExts = Object.keys(MIME_TYPES).concat(['heif', 'heic', 'mov', 'rtf'])
             return supportedExts.includes(ext)
           }
           return true
@@ -90,62 +124,69 @@ Deno.serve(async (req: Request) => {
           return a.name.localeCompare(b.name)
         })
 
-      return new Response(JSON.stringify({ success: true, data: items }), { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } })
+      return new Response(JSON.stringify({ success: true, data: items }), { 
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } 
+      })
     } catch (err: any) {
-      return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } })
+      return new Response(JSON.stringify({ success: false, error: err.message }), { 
+        status: 500, 
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } 
+      })
     }
   }
 
-  // FILE proxy
+  // --- ACTION: FILE PROXY ---
   if (action === 'file') {
     const ghUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURI(ghPath)}?ref=${BRANCH}`
     try {
-      const r = await fetch(ghUrl, { headers: { ...headers, 'Accept': 'application/vnd.github.v3.raw' } })
+      const r = await fetch(ghUrl, { 
+        headers: { ...headers, 'Accept': 'application/vnd.github.v3.raw' } 
+      })
+      
       if (!r.ok) {
         return new Response(null, { status: r.status, headers: CORS_HEADERS })
       }
 
-      const contentType = r.headers.get('content-type') || 'application/octet-stream'
-
-      // If GitHub returned JSON (base64) for some reason, decode it
-      if ((contentType || '').includes('application/json')) {
-        const json = await r.json()
-        if (json && json.content) {
-          try {
-            const decoded = Uint8Array.from(atob(json.content.replace(/\n/g, '')), c => c.charCodeAt(0))
-            const outHeaders = { ...CORS_HEADERS, 'Content-Type': getFileType(json.name) === 'image' ? (json.encoding === 'base64' ? ('image/' + (json.name.split('.').pop() || 'png')) : 'application/octet-stream') : 'application/octet-stream', 'Content-Length': String(decoded.byteLength), 'Cache-Control': 'public, max-age=60, s-maxage=300', 'Content-Disposition': `inline; filename="${json.name}"` }
-            console.info('Serving decoded JSON file', { path: ghPath, name: json.name, length: decoded.byteLength })
-            return new Response(decoded, { headers: outHeaders })
-          } catch (e) {
-            console.error('Failed to decode base64 content', e)
-            return new Response(null, { status: 500, headers: CORS_HEADERS })
-          }
-        }
-      }
-
+      const ext = pathParam.split('.').pop()?.toLowerCase() || ''
+      const contentType = MIME_TYPES[ext] || 'application/octet-stream'
       const buf = await r.arrayBuffer()
-      const len = buf.byteLength || 0
-      const outHeaders = { ...CORS_HEADERS, 'Content-Type': contentType, 'Cache-Control': 'public, max-age=60, s-maxage=300', 'Content-Length': String(len), 'Content-Disposition': `inline; filename="${pathParam.split('/').pop() || 'file'}"` }
-      console.info('Serving file', { path: ghPath, contentType, length: len })
-      return new Response(buf, { headers: outHeaders })
+
+      return new Response(buf, { 
+        headers: { 
+          ...CORS_HEADERS, 
+          'Content-Type': contentType, 
+          'Cache-Control': 'public, max-age=3600',
+          'Content-Disposition': `inline; filename="${encodeURIComponent(pathParam.split('/').pop() || 'file')}"`
+        } 
+      })
     } catch (err: any) {
-      console.error('File proxy error:', err)
       return new Response(null, { status: 500, headers: CORS_HEADERS })
     }
   }
 
-  // Repo info
+  // --- ACTION: REPO INFO ---
   if (action === 'repo') {
     const ghUrl = `https://api.github.com/repos/${OWNER}/${REPO}`
     try {
       const r = await fetch(ghUrl, { headers })
-      if (!r.ok) return new Response(JSON.stringify({ success: false }), { status: r.status, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } })
+      if (!r.ok) return new Response(JSON.stringify({ success: false }), { 
+        status: r.status, 
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } 
+      })
       const data = await r.json()
-      return new Response(JSON.stringify({ success: true, data }), { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } })
+      return new Response(JSON.stringify({ success: true, data }), { 
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } 
+      })
     } catch (err: any) {
-      return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } })
+      return new Response(JSON.stringify({ success: false, error: err.message }), { 
+        status: 500, 
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } 
+      })
     }
   }
 
-  return new Response(null, { status: 404, headers: CORS_HEADERS })
+  return new Response(JSON.stringify({ error: 'Not Found' }), { 
+    status: 404, 
+    headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } 
+  })
 })

@@ -8,7 +8,7 @@ import './ContactApp.css'
 
 const MAX_ATTACHMENTS = 3
 const MAX_FILE_BYTES = 25 * 1024 * 1024 // 25MB
-const ACCEPT = 'image/*,.pdf,.ppt,.pptx,.doc,.docx,.txt,.md'
+const ACCEPT = 'image/*,.pdf,.ppt,.pptx,.doc,.docx,.odt,.txt,.md'
 const LOCAL_KEY = 'study_contact_messages_v1'
 
 export default function ContactApp ({ onClose }) {

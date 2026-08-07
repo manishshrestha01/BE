@@ -305,7 +305,7 @@ function getFileType(filename) {
   const ext = (filename.split(".").pop() || "").toLowerCase();
   if (["pdf"].includes(ext)) return "pdf";
   if (["pptx", "ppt"].includes(ext)) return "presentation";
-  if (["docx", "doc"].includes(ext)) return "document";
+  if (["docx", "doc", "odt"].includes(ext)) return "document";
   if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) return "image";
   if (["mp4", "mov", "webm"].includes(ext)) return "video";
   if (["txt", "md"].includes(ext)) return "text";

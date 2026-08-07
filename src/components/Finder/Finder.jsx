@@ -11,7 +11,7 @@ import './Finder.css'
 
 // File type icons - returns emoji or JSX for custom icons
 const getFileIcon = (type) => {
-  if (type === 'docx') {
+  if (type === 'docx' || type === 'odt') {
     return <img src="/Word/icons8-microsoft-word-2025-24.svg" alt="Word" className="file-icon-svg" />
   }
   if (type === 'pptx') {

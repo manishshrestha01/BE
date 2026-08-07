@@ -30,7 +30,7 @@ const getFileType = (filename) => {
   if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) return 'image'
   if (['pdf'].includes(ext)) return 'pdf'
   if (['pptx', 'ppt'].includes(ext)) return 'pptx'
-  if (['docx', 'doc'].includes(ext)) return 'docx'
+  if (['docx', 'doc', 'odt'].includes(ext)) return 'docx'
   if (['rtf'].includes(ext)) return 'rtf'
   if (['mp4', 'mov', 'webm'].includes(ext)) return 'video'
   if (['txt', 'md'].includes(ext)) return 'text'
@@ -96,7 +96,7 @@ export async function fetchGitHubContents(path = '') {
         if (item.name.startsWith('.')) return false
         if (item.type === 'file') {
           const ext = item.name.split('.').pop().toLowerCase()
-          const supportedExts = ['pdf', 'pptx', 'ppt', 'docx', 'doc', 'rtf', 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'heif', 'heic', 'mp4', 'mov', 'webm', 'txt', 'md']
+          const supportedExts = ['pdf', 'pptx', 'ppt', 'docx', 'doc', 'odt', 'rtf', 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'heif', 'heic', 'mp4', 'mov', 'webm', 'txt', 'md']
           return supportedExts.includes(ext)
         }
         return true // Include folders

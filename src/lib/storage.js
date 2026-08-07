@@ -10,7 +10,7 @@ export const getFileType = (filename) => {
   if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) return 'image'
   if (['pdf'].includes(ext)) return 'pdf'
   if (['pptx', 'ppt'].includes(ext)) return 'pptx'
-  if (['docx', 'doc'].includes(ext)) return 'docx'
+  if (['docx', 'doc', 'odt'].includes(ext)) return 'docx'
   if (['mp4', 'mov', 'webm'].includes(ext)) return 'video'
   if (['txt', 'md'].includes(ext)) return 'text'
   return 'unknown'
@@ -135,7 +135,7 @@ export const getDownloadUrl = async (storagePath) => {
 // Check if file type is allowed
 export const isAllowedFileType = (filename) => {
   const allowedExtensions = [
-    'pdf', 'pptx', 'ppt', 'docx', 'doc',
+    'pdf', 'pptx', 'ppt', 'docx', 'doc', 'odt',
     'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg',
     'mp4', 'mov', 'webm',
     'txt', 'md'
