@@ -13,6 +13,7 @@ import {
   buildSemesterDescription,
   buildSubjectDescription,
   getAllBlogPaths,
+  SUBJECT_ABBREVIATIONS,
 } from "../src/lib/blogCurriculum.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -163,12 +164,41 @@ function normalizeCourseCode(courseCode = "") {
   return String(courseCode || "").trim().toUpperCase();
 }
 
-function makeUnitKeywords() {
-  return [];
+function makeUnitKeywords(semester, subjectArticle, subjectName) {
+  if (!subjectArticle) return [];
+  const abbr = SUBJECT_ABBREVIATIONS[subjectName] || "";
+  const syllabusSection = (subjectArticle.sections || []).find((s) => s.id === "syllabus-overview");
+  const units = syllabusSection?.units || [];
+  const keywords = [];
+
+  units.forEach((unit, index) => {
+    const unitNumber = index + 1;
+    const rawTitle = String(unit.title || "").replace(/\s*\([^)]*\)\s*$/g, "").trim();
+    const unitLabel = `Unit ${unitNumber}: ${rawTitle}`;
+    const topic = rawTitle.replace(/^Unit\s*\d+\s*[:.-]?\s*/i, "").trim();
+
+    keywords.push(
+      unitLabel,
+      `${unitLabel} PU notes`,
+      `${unitLabel} Pokhara University notes`,
+      `${topic} PU notes`,
+      `${topic} semester ${semester} notes`,
+      `${topic} chapter notes`,
+    );
+
+    if (abbr) {
+      keywords.push(`${abbr} ${topic} notes`, `${abbr} ${topic} PU`);
+    }
+  });
+
+  return [...new Set(keywords.filter(Boolean))];
 }
 
 function makeSubjectKeywords(semester, subject, courseCode) {
   const key = subject.name.toLowerCase();
+  const abbr = SUBJECT_ABBREVIATIONS[subject.name] || "";
+  const sem = semester.semester;
+
   const keywords = [
     subject.name,
     `${subject.name} notes`,
@@ -185,15 +215,57 @@ function makeSubjectKeywords(semester, subject, courseCode) {
     `${subject.name} PoU`,
     `PU ${subject.name}`,
     `Pokhara University ${subject.name}`,
-    `${subject.name} BE Computer semester ${semester.semester}`,
-    `semester ${semester.semester} ${key} notes`,
-    `BE Computer Engineering semester ${semester.semester}`,
-    `Pokhara University semester ${semester.semester} study material`,
+    `${subject.name} BE Computer semester ${sem}`,
+    `semester ${sem} ${key} notes`,
+    `BE Computer Engineering semester ${sem}`,
+    `Pokhara University semester ${sem} study material`,
+    `${subject.name} notes PU`,
+    `${subject.name} notes free download`,
+    `${subject.name} free notes PU`,
+    `${subject.name} topper notes`,
+    `${subject.name} notes BE Computer`,
+    `PU ${key} notes`,
+    `PU ${key}`,
+    `PU notes ${key}`,
+    `PU notes ${subject.name}`,
+    `PU topper notes ${subject.name}`,
+    `free ${key} notes PU`,
+    `${key} notes free download PU`,
+    `${key} notes BE Computer`,
+    `PU semester ${sem} ${key}`,
+    `Pokhara University ${key} notes`,
   ];
+
+  if (abbr && abbr.toLowerCase() !== key) {
+    keywords.push(
+      abbr,
+      `${abbr} notes`,
+      `${abbr} notes PU`,
+      `${abbr} PU notes`,
+      `${abbr} notes Pokhara University`,
+      `PU ${abbr} notes`,
+      `PU ${abbr}`,
+      `${abbr} BE Computer notes`,
+      `${abbr} semester ${sem} notes`,
+      `${abbr} free notes PU`,
+      `${abbr} topper notes`,
+      `${abbr} study guide`,
+      `${abbr} notes free download`,
+      `PU topper notes ${abbr}`,
+      `free ${abbr} notes PU`,
+      `${abbr} notes BE Computer`,
+      `PU notes ${abbr}`,
+      `${abbr} syllabus PU`,
+      `${abbr} important topics`,
+      `${abbr} practice questions`,
+    );
+  }
 
   if (courseCode) {
     keywords.push(`${courseCode} notes`);
     keywords.push(`${subject.name} ${courseCode}`);
+    keywords.push(`PU ${courseCode} notes`);
+    keywords.push(`${courseCode} notes PU`);
   }
 
   return [...new Set(keywords.filter(Boolean))];
@@ -201,24 +273,39 @@ function makeSubjectKeywords(semester, subject, courseCode) {
 
 function makeSubjectFaqs(semester, subject, courseCode) {
   const track = detectSubjectTrack(subject.name);
+  const abbr = SUBJECT_ABBREVIATIONS[subject.name] || "";
+  const abbrLine = abbr ? ` Also known as ${abbr}.` : "";
+
   const faqs = [
     {
       question: `What is ${subject.name} in Pokhara University BE Computer Engineering?`,
-      answer: `${subject.name}${courseCode ? ` (course code ${courseCode})` : ""} is a core subject in Pokhara University BE Computer Engineering Semester ${semester.semester}. It covers ${getTrackFocusLabel(track)} and is designed to build foundational knowledge required for advanced engineering courses.`,
+      answer: `${subject.name}${abbr ? ` (${abbr})` : ""}${courseCode ? ` (course code ${courseCode})` : ""} is a core subject in Pokhara University BE Computer Engineering Semester ${semester.semester}. It covers ${getTrackFocusLabel(track)} and is designed to build foundational knowledge required for advanced engineering courses.${abbrLine}`,
     },
     {
       question: `How many credits is ${subject.name} in PU BE Computer Engineering?`,
-      answer: `${subject.name} carries ${subject.credit || 3} credits in the Pokhara University BE Computer Engineering Semester ${semester.semester} curriculum${courseCode ? ` (course code ${courseCode})` : ""}.`,
+      answer: `${subject.name}${abbr ? ` (${abbr})` : ""} carries ${subject.credit || 3} credits in the Pokhara University BE Computer Engineering Semester ${semester.semester} curriculum${courseCode ? ` (course code ${courseCode})` : ""}.`,
     },
     {
       question: `Where can I find ${subject.name} notes for PU BE Computer Engineering?`,
-      answer: `Download free ${subject.name} notes and study materials for Pokhara University BE Computer Engineering Semester ${semester.semester} at <a href="/api/notes-subject?semester=${semester.semester}&subject=${subject.slug}">StudyMate notes page</a>. The platform provides PDF notes, syllabus breakdown, important topics, and practice questions — all free for PU BE Computer Engineering students.`,
+      answer: `Download free ${subject.name}${abbr ? ` (${abbr})` : ""} notes and study materials for Pokhara University BE Computer Engineering Semester ${semester.semester} at StudyMate. The platform provides PDF notes, syllabus breakdown, important topics, and practice questions — all free for PU BE Computer Engineering students.`,
     },
     {
       question: `What topics are covered in ${subject.name} Semester ${semester.semester}?`,
-      answer: `${subject.name} in PU BE Computer Engineering Semester ${semester.semester} covers core concepts including fundamental principles, analytical methods, practical applications, and exam-oriented problem solving techniques. The complete syllabus is available on StudyMate.`,
+      answer: `${subject.name}${abbr ? ` (${abbr})` : ""} in PU BE Computer Engineering Semester ${semester.semester} covers core concepts including fundamental principles, analytical methods, practical applications, and exam-oriented problem solving techniques. The complete syllabus is available on StudyMate.`,
     },
   ];
+
+  if (abbr && abbr.toLowerCase() !== subject.name.toLowerCase()) {
+    faqs.push({
+      question: `What is ${abbr} in PU BE Computer Engineering?`,
+      answer: `${abbr} stands for ${subject.name} in Pokhara University BE Computer Engineering Semester ${semester.semester}. It covers ${getTrackFocusLabel(track)} and is a core subject for BE Computer students.`,
+    });
+    faqs.push({
+      question: `Where can I download ${abbr} notes for free?`,
+      answer: `Free ${abbr} (${subject.name}) notes for Pokhara University BE Computer Engineering Semester ${semester.semester} are available at StudyMate. Download PDF notes, important questions, and syllabus breakdown for ${abbr} — all free for PU students.`,
+    });
+  }
+
   return faqs;
 }
 
@@ -267,12 +354,13 @@ function makeSpeakableSchema(url) {
 
 function buildSubjectFaqHtml(faqs) {
   if (!faqs || !faqs.length) return "";
+  const heading = faqs[0].question.replace(/^What is /, "").replace(/\?.*$/, "");
   return `<section id="faq">
-<h2>Frequently Asked Questions about ${escapeHtml(faqs[0].question.replace(/^What is /, "").replace(/\?.*$/, ""))}</h2>
-${faqs.map((f, i) => `<div itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+<h2>Frequently Asked Questions about ${escapeHtml(heading)}</h2>
+${faqs.map((f) => `<div itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
 <h3 itemprop="name">${escapeHtml(f.question)}</h3>
 <div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-<p itemprop="text">${f.answer}</p>
+<p itemprop="text">${escapeHtml(f.answer.replace(/<[^>]*>/g, ""))}</p>
 </div>
 </div>`).join("\n")}
 </section>`;
@@ -280,9 +368,11 @@ ${faqs.map((f, i) => `<div itemscope="" itemprop="mainEntity" itemtype="https://
 
 function buildSubjectNotesHtml(semesterNum, subjectSlug, subjectName) {
   const apiUrl = `/api/notes-subject?semester=${semesterNum}&subject=${subjectSlug}`;
+  const abbr = SUBJECT_ABBREVIATIONS[subjectName] || "";
+  const abbrLine = abbr ? ` This page also covers ${abbr} (${subjectName}) notes and study materials for PU BE Computer Engineering.` : "";
   return `<section id="subject-notes">
-<h2>${escapeHtml(subjectName)} Notes &amp; Study Materials</h2>
-<p>Access free <strong>${escapeHtml(subjectName)} notes</strong> for Pokhara University BE Computer Engineering Semester ${semesterNum}. These study materials include PDF notes, important questions, and syllabus breakdown curated for PU students.</p>
+<h2>${escapeHtml(subjectName)}${abbr ? ` (${abbr})` : ""} Notes &amp; Study Materials</h2>
+<p>Access free <strong>${escapeHtml(subjectName)}${abbr ? ` (${abbr})` : ""} notes</strong> for Pokhara University BE Computer Engineering Semester ${semesterNum}. These study materials include PDF notes, important questions, and syllabus breakdown curated for PU students.${escapeHtml(abbrLine)}</p>
 <p><a href="${escapeHtml(apiUrl)}" target="_blank" rel="noopener noreferrer">Download ${escapeHtml(subjectName)} Notes</a></p>
 <p>For all subjects in this semester, visit the <a href="/blog/semester/${semesterNum}">Semester ${semesterNum} study guide</a>.</p>
 </section>`;
@@ -565,14 +655,20 @@ ${semesterSubjectListHtml}`;
       const subjectLabel = subjectCourseCode
         ? `${subject.name} (${subjectCourseCode})`
         : subject.name;
+      const subjectAbbr = SUBJECT_ABBREVIATIONS[subject.name] || "";
+      const subjectAbbrLabel = subjectAbbr ? ` (${subjectAbbr})` : "";
       const subjectUrl = toAbsolute(subject.urlPath);
       const subjectArticle = subjectArticlesStore?.[String(semester.semester)]?.[subject.slug] || null;
       const subjectDescriptionBare = buildSubjectDescription(semester, subject);
-      const subjectTitle = `${subjectLabel} — Notes, Syllabus & Study Guide — PU BE Computer Engineering Semester ${semester.semester} | StudyMate`;
-      const subjectDescription = `Master ${subjectLabel} in Pokhara University BE Computer Engineering Semester ${semester.semester}. Download notes, get syllabus breakdown, important topics, practice questions, and exam tips — a complete free study guide.`;
+      const subjectTitle = subjectAbbr
+        ? `${subjectAbbr} Notes - ${subject.name} (${subjectCourseCode || subjectAbbr}) | PU BE Computer Engineering Semester ${semester.semester} | StudyMate`
+        : `${subjectLabel} — Notes, Syllabus & Study Guide — PU BE Computer Engineering Semester ${semester.semester} | StudyMate`;
+      const subjectDescription = subjectAbbr
+        ? `${subjectAbbr} (${subject.name}) notes for Pokhara University BE Computer Engineering Semester ${semester.semester}. Free PDF notes, syllabus, important topics, practice questions, and topper study materials — complete PU ${subjectAbbr} study guide.`
+        : `Free ${subjectLabel} notes for Pokhara University BE Computer Engineering Semester ${semester.semester}. Download PDF notes, get syllabus breakdown, important topics, practice questions, and topper study materials — a complete free study guide for PU students.`;
       const subjectKeywords = [
         ...makeSubjectKeywords(semester, subject, subjectCourseCode),
-        ...makeUnitKeywords(semester, subjectArticle),
+        ...makeUnitKeywords(semester.semester, subjectArticle, subject.name),
       ];
       const subjectFaqs = makeSubjectFaqs(semester, subject, subjectCourseCode);
       const subjectCourseSchema = makeSubjectCourseSchema(semester, subject, subjectCourseCode);

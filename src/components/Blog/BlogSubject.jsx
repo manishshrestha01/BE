@@ -18,8 +18,10 @@ import {
   buildSubjectIntro,
   buildSyllabusOverview,
   formatUpdatedDate,
+  getSubjectAbbreviation,
   getSubjectBySlug,
   getSubjectNeighbors,
+  SUBJECT_ABBREVIATIONS,
 } from "../../lib/blogCurriculum";
 import { setJSONLD, setMeta } from "../../lib/seo";
 import "./Blog.css";
@@ -143,15 +145,70 @@ const enrichDescriptionWithCourseCode = (baseDescription, courseCode) => {
 const buildSubjectSeoKeywords = (semesterData, subjectData, courseCode) => {
   const normalizedCode = normalizeCourseCode(courseCode);
   const compactCode = compactCourseCode(normalizedCode);
+  const abbr = getSubjectAbbreviation(subjectData.name);
+  const lowerName = subjectData.name.toLowerCase();
+  const sem = semesterData.semester;
 
   const keywords = [
-    "Pokhara University",
-    "BE Computer Engineering",
-    `semester ${semesterData.semester}`,
     subjectData.name,
     `${subjectData.name} notes`,
-    `${subjectData.name} semester ${semesterData.semester}`,
+    `${subjectData.name} notes PU`,
+    `${subjectData.name} notes Pokhara University`,
+    `${subjectData.name} PU notes`,
+    `${subjectData.name} semester ${sem} notes`,
+    `${subjectData.name} notes free download`,
+    `${subjectData.name} free notes PU`,
+    `${subjectData.name} topper notes`,
+    `${subjectData.name} study guide`,
+    `${subjectData.name} syllabus`,
+    `${subjectData.name} important topics`,
+    `${subjectData.name} practice questions`,
+    `${subjectData.name} question bank`,
+    `${subjectData.name} past questions`,
+    `${subjectData.name} PDF notes`,
+    `${subjectData.name} BE Computer notes`,
+    `${subjectData.name} BE Computer semester ${sem}`,
+    `PU ${subjectData.name}`,
+    `PU ${lowerName} notes`,
+    `PU ${lowerName}`,
+    `Pokhara University ${subjectData.name}`,
+    `Pokhara University ${lowerName} notes`,
+    `semester ${sem} ${lowerName} notes`,
+    `BE Computer Engineering semester ${sem}`,
+    `PU topper notes ${subjectData.name}`,
+    `free ${lowerName} notes PU`,
+    `${lowerName} notes free download PU`,
+    `${lowerName} notes BE Computer`,
+    `PU notes ${lowerName}`,
+    `PU notes ${subjectData.name}`,
+    `PU semester ${sem} ${lowerName}`,
+    `Pokhara University semester ${sem} study material`,
   ];
+
+  if (abbr && abbr.toLowerCase() !== lowerName.toLowerCase()) {
+    keywords.push(
+      abbr,
+      `${abbr} notes`,
+      `${abbr} notes PU`,
+      `${abbr} PU notes`,
+      `${abbr} notes Pokhara University`,
+      `PU ${abbr} notes`,
+      `PU ${abbr}`,
+      `${abbr} BE Computer notes`,
+      `${abbr} semester ${sem} notes`,
+      `${abbr} free notes PU`,
+      `${abbr} topper notes`,
+      `${abbr} study guide`,
+      `${abbr} notes free download`,
+      `PU topper notes ${abbr}`,
+      `free ${abbr} notes PU`,
+      `${abbr} notes BE Computer`,
+      `PU notes ${abbr}`,
+      `${abbr} syllabus PU`,
+      `${abbr} important topics`,
+      `${abbr} practice questions`,
+    );
+  }
 
   if (normalizedCode) {
     keywords.push(
@@ -161,6 +218,8 @@ const buildSubjectSeoKeywords = (semesterData, subjectData, courseCode) => {
       `${normalizedCode} notes`,
       `${compactCode} notes`,
       `${normalizedCode} Pokhara University`,
+      `PU ${normalizedCode} notes`,
+      `${normalizedCode} notes PU`,
     );
   }
 
@@ -169,9 +228,10 @@ const buildSubjectSeoKeywords = (semesterData, subjectData, courseCode) => {
 
 const stripUnitHours = (title = "") => String(title || "").replace(/\s*\([^)]*\)\s*$/g, "").trim();
 
-const buildSyllabusUnitSeoKeywords = (article, semesterData) => {
+const buildSyllabusUnitSeoKeywords = (article, semesterData, subjectData) => {
   const syllabusSection = (article.sections || []).find((section) => section.id === "syllabus-overview");
   const units = syllabusSection?.units || [];
+  const abbr = subjectData ? getSubjectAbbreviation(subjectData.name) : "";
   const keywords = [];
 
   units.forEach((unit, index) => {
@@ -190,6 +250,13 @@ const buildSyllabusUnitSeoKeywords = (article, semesterData) => {
       `${unitTopic} semester ${semesterData.semester} notes`,
       `${unitTopic} chapter notes`,
     );
+
+    if (abbr && abbr.toLowerCase() !== (subjectData?.name || "").toLowerCase()) {
+      keywords.push(
+        `${abbr} ${unitTopic} notes`,
+        `${abbr} ${unitTopic} PU`,
+      );
+    }
   });
 
   return [...new Set(keywords.filter(Boolean))];
@@ -237,14 +304,17 @@ const BlogSubject = () => {
     : subjectData.name;
   const rawDescription = article.description || buildSubjectDescription(semesterData, subjectData);
   const description = enrichDescriptionWithCourseCode(rawDescription, subjectCourseCode);
-  const title = `${subjectLabel} — Semester ${semesterData.semester} | StudyMate`;
+  const abbrLabel = getSubjectAbbreviation(subjectData.name);
+  const title = abbrLabel
+    ? `${abbrLabel} Notes - ${subjectData.name} (${subjectCourseCode || abbrLabel}) | PU BE Computer Engineering Semester ${semesterData.semester} | StudyMate`
+    : `${subjectLabel} — Semester ${semesterData.semester} | StudyMate`;
   const canonicalPath = `/blog/semester/${semesterData.semester}/${subjectData.slug}`;
   const canonical = `${BLOG_BASE_URL}${canonicalPath}`;
   const updatedDate = formatUpdatedDate(article.updatedAt || BLOG_LAST_UPDATED);
   const neighborInfo = getSubjectNeighbors(semesterData.semester, subjectData.slug);
   const seoKeywords = [
     ...buildSubjectSeoKeywords(semesterData, subjectData, subjectCourseCode),
-    ...buildSyllabusUnitSeoKeywords(article, semesterData),
+    ...buildSyllabusUnitSeoKeywords(article, semesterData, subjectData),
   ];
 
   const tocItems = useMemo(() => {

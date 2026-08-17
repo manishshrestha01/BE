@@ -240,6 +240,54 @@ const SEMESTER_TIPS = {
   ],
 };
 
+const SUBJECT_ABBREVIATIONS = {
+  "Calculus I": "MTH110",
+  "Digital Logic": "DL",
+  "Programming in C": "C Programming",
+  "Basic Electrical Engineering": "BEE",
+  "Computer Workshop": "CW",
+  "Communication Technique": "CT",
+  "Electronics Devices and Circuits": "EDC",
+  "Algebra and Geometry": "AG",
+  "Applied Physics": "AP",
+  "Applied Chemistry": "AC",
+  "Basic Engineering Drawing": "BED",
+  "Object Oriented Programming in C++": "OOP",
+  "Data Structure and Algorithm": "DSA",
+  "Instrumentation": "INS",
+  "Calculus II": "MTH210",
+  "Database Management System": "DBMS",
+  "Operating Systems": "OS",
+  "Microprocessor and Assembly Language Programming": "Microprocessor",
+  "Computer Graphics": "CG",
+  "Data Communication": "DC",
+  "Applied Mathematics": "AM",
+  "Numerical Methods": "NM",
+  "Advanced Programming with Java": "Java",
+  "Theory of Computation": "TOC",
+  "Computer Architecture": "CA",
+  "Research Fundamentals": "RF",
+  "Probability and Statistics": "PS",
+  "Embedded System": "ES",
+  "Engineering Management": "EM",
+  "Artificial Intelligence": "AI",
+  "Digital Signal Analysis and Processing": "DSAP",
+  "Software Engineering": "SE",
+  "Image Processing and Pattern Recognition": "IPPR",
+  "Machine Learning": "ML",
+  "Compiler Design": "CD",
+  "Computer Networks": "CN",
+  "Simulation and Modeling": "SM",
+  "Project I": "PRJ1",
+  "Entrepreneurship and Professional Practice": "EPP",
+  "Engineering Economics": "EE",
+  "Network and Cyber Security": "NCS",
+  "Cloud Computing and Virtualization": "CCV",
+  "Data Science and Analytics": "DSA2",
+  Internship: "INT",
+  "Project II": "PRJ2",
+};
+
 const FALLBACK_OVERVIEW =
   "This semester builds on previous fundamentals and prepares students for upcoming advanced courses. Focus on consistent revision, concept mapping, and applied practice to improve both exam performance and practical confidence in Pokhara University BE Computer Engineering.";
 
@@ -341,6 +389,7 @@ function makeSemesterPayload(semesterInfo) {
 
 export const BLOG_BASE_URL = BASE_URL;
 export const BLOG_LAST_UPDATED = "2026-02-19";
+export { SUBJECT_ABBREVIATIONS };
 
 export const BLOG_CURRICULUM = CURRICULUM.map(makeSemesterPayload);
 
@@ -389,17 +438,27 @@ export function getAllBlogPaths() {
 }
 
 export function buildSemesterDescription(semester) {
-  const subjectPreview = semester.subjects
-    .slice(0, 2)
-    .map((subject) => subject.name)
-    .join(", ");
+  const subjectNames = semester.subjects.map((s) => s.name);
+  const abbreviations = semester.subjects
+    .map((s) => SUBJECT_ABBREVIATIONS[s.name])
+    .filter(Boolean);
+  const subjectPreview = subjectNames.slice(0, 3).join(", ");
+  const abbrPreview = abbreviations.length ? ` (${abbreviations.join(", ")})` : "";
 
-  return `Pokhara University BE Computer Engineering Semester ${semester.semester} study guide with subject-wise articles, tips, and revision strategy. Includes ${subjectPreview}.`;
+  return `Free Pokhara University BE Computer Engineering Semester ${semester.semester} notes, study materials, and subject guides. Covers ${subjectPreview}${abbrPreview}. Download PDF notes, topper study materials, important topics, and practice questions for all PU semester ${semester.semester} subjects.`;
+}
+
+export function getSubjectAbbreviation(subjectName) {
+  return SUBJECT_ABBREVIATIONS[subjectName] || "";
 }
 
 export function buildSubjectDescription(semester, subject) {
-  const courseCodeLabel = subject.courseCode ? ` (course code ${subject.courseCode})` : "";
-  return `Pokhara University BE Computer Engineering semester ${semester.semester} tutorial for ${subject.name}${courseCodeLabel} with syllabus, key topics, concepts, and 5 practice questions.`;
+  const courseCodeLabel = subject.courseCode ? ` (${subject.courseCode})` : "";
+  const abbr = SUBJECT_ABBREVIATIONS[subject.name] || "";
+  if (abbr) {
+    return `${abbr} (${subject.name}) notes for Pokhara University BE Computer Engineering semester ${semester.semester}${courseCodeLabel}. Free PDF notes, syllabus breakdown, important topics, practice questions, and topper study materials. Complete PU ${abbr} study guide for BE Computer students.`;
+  }
+  return `Free ${subject.name}${courseCodeLabel} notes for Pokhara University BE Computer Engineering semester ${semester.semester}. Download PDF notes, syllabus, important topics, practice questions, and topper study materials. Complete study guide for PU students.`;
 }
 
 export function formatUpdatedDate(dateString = BLOG_LAST_UPDATED) {

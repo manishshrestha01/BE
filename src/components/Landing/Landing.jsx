@@ -96,19 +96,22 @@ const Landing = () => {
   useEffect(() => {
     setTitle('StudyMate — Computer Engineering Notes Pokhara University')
     // Update meta description
-    setMeta({ name: 'description', content: 'Pokhara University BE Computer Engineering notes — semester-wise PDFs for PEC, NCIT, NEC and other colleges.' })
+    setMeta({ name: 'description', content: 'Pokhara University BE Computer Engineering notes — free semester-wise PDFs for ML, DBMS, DSA, OS, CN, AI, Java, C Programming and all subjects. Download topper notes for PEC, NCIT, NEC and other PU colleges.' })
     setMeta({ name: 'robots', content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' })
     setLinkRel('canonical', 'https://www.manishshrestha012.com.np/')
 
+    // Comprehensive keywords covering all subjects with abbreviations
+    setMeta({ name: 'keywords', content: 'Pokhara University notes, BE Computer Engineering, StudyMate, PU engineering notes, PU topper notes, Machine Learning notes PU, ML notes PU, DBMS notes PU, DSA notes PU, OS notes PU, CN notes PU, Compiler Design notes PU, AI notes PU, Java notes PU, C Programming notes PU, Computer Graphics notes PU, free PU notes download, PU semester wise notes, Pokhara University BE Computer Engineering notes, PEC notes, NCIT notes, NEC notes, PU notes free download, BE Computer study materials' })
+
     // Open Graph / Twitter
     setMeta({ property: 'og:title', content: 'StudyMate — PU Notes for Computer Engineering' })
-    setMeta({ property: 'og:description', content: 'Access PU notes for BE Computer Engineering students. Download semester-wise notes, PDFs, and study materials.' })
+    setMeta({ property: 'og:description', content: 'Free PU notes for BE Computer Engineering. Download Pokhara University notes — ML, DBMS, DSA, OS, Compiler Design, AI, Java, C Programming, and all semester materials.' })
     setMeta({ property: 'og:image', content: 'https://www.manishshrestha012.com.np/logo-512.png' })
     setMeta({ property: 'og:url', content: 'https://www.manishshrestha012.com.np/' })
     setMeta({ property: 'og:site_name', content: 'StudyMate' })
 
     setMeta({ name: 'twitter:title', content: 'StudyMate — PU Notes for Computer Engineering' })
-    setMeta({ name: 'twitter:description', content: 'Access PU notes for BE Computer Engineering students. Download semester-wise notes, PDFs, and study materials.' })
+    setMeta({ name: 'twitter:description', content: 'Free PU notes for BE Computer Engineering. Download Pokhara University notes — ML, DBMS, DSA, OS, Compiler Design, AI, Java, C Programming, and all semester materials.' })
     setMeta({ name: 'twitter:image', content: 'https://www.manishshrestha012.com.np/logo-512.png' })
 
     // JSON-LD for homepage
@@ -118,7 +121,7 @@ const Landing = () => {
       '@id': 'https://www.manishshrestha012.com.np/#homepage',
       'url': 'https://www.manishshrestha012.com.np/',
       'name': 'StudyMate',
-      'description': 'Your Complete Study Resource Hub for Pokhara University Computer Engineering — notes, PDFs, and semester material.',
+      'description': 'Your Complete Study Resource Hub for Pokhara University Computer Engineering — free notes, PDFs, and semester material for ML, DBMS, DSA, OS, AI, and all subjects.',
       'isPartOf': { '@id': 'https://www.manishshrestha012.com.np/#website' }
     }
 
