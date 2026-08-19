@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useBackground } from '../../context/BackgroundContext'
 import { COLLEGES } from '../../lib/colleges'
 import { SUBJECT_FOLDER_MAP, slugToFolderName } from '../../lib/subjectMap'
@@ -119,6 +119,7 @@ const readDashboardUiState = () => {
 const Desktop = () => {
   const { currentBg, customBg } = useBackground()
   const location = useLocation()
+  const navigate = useNavigate()
   const restoredState = useMemo(() => readDashboardUiState(), [])
   const [iosDialogOpen, setIosDialogOpen] = useState(false)
 
@@ -345,6 +346,16 @@ const Desktop = () => {
         >
           <div className="desktop-shortcut-icon"><span>⚙️</span></div>
           <div className="desktop-shortcut-label">Settings</div>
+        </button>
+
+        <button
+          className="desktop-shortcut"
+          title="Banner"
+          aria-label="View Banner"
+          onClick={() => navigate('/banner')}
+        >
+          <div className="desktop-shortcut-png"><img src="/banner-icon.svg" alt="Banner" className="desktop-shortcut-img"/></div>
+          <div className="desktop-shortcut-label">Banner</div>
         </button>
 
         {/* Mobile-only sidebar Get App icon */}

@@ -58,6 +58,52 @@
   }
 }
 
+/* Mobile portrait: iPhone-style grid layout */
+@media (max-width: 480px) and (orientation: portrait) {
+  .desktop-shortcuts {
+    position: fixed;
+    top: auto;
+    right: auto;
+    bottom: max(80px, calc(env(safe-area-inset-bottom) + 72px));
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px 24px;
+    width: max(260px, calc(100vw - 48px));
+    justify-items: center;
+    align-items: start;
+  }
+
+  .desktop-shortcut {
+    width: auto;
+    padding: 4px;
+    gap: 6px;
+  }
+
+  .desktop-shortcut:hover {
+    transform: none;
+    background: transparent;
+  }
+
+  .desktop-shortcut-icon,
+  .desktop-shortcut-png {
+    width: 52px;
+    height: 52px;
+    font-size: 40px;
+  }
+
+  .desktop-shortcut-img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .desktop-shortcut-label {
+    font-size: 11px;
+    line-height: 1.2;
+  }
+}
+
 /* Small vertical shortcuts on the right side of the desktop */
 .desktop-shortcuts {
   position: fixed;
