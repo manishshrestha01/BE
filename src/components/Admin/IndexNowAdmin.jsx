@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { ArrowLeft, KeyRound, Shield, ShieldOff, FileDown, FileUp, Mail, Send, Globe, Link2, RefreshCw, Loader2 } from 'lucide-react'
 import SiteDisplayAdmin from './SiteDisplayAdmin'
 import './IndexNowAdmin.css'
 
@@ -528,20 +529,20 @@ const IndexNowAdmin = () => {
     <main className="indexnow-admin-page">
       <div className="indexnow-admin-shell">
         <header className="indexnow-admin-header">
-          <h1>IndexNow Admin</h1>
-          <p>Admin tools for search submission, route pop-up ads, Finder folder colors, and server-side site toggles.</p>
+          <h1>Admin Control Center</h1>
+          <p>Search submission, site toggles, folder colors, and server-side controls — all in one place.</p>
           <Link className="indexnow-back-link" to="/dashboard">
+            <ArrowLeft size={16} />
             Back to Dashboard
           </Link>
         </header>
 
         <section className="indexnow-card">
-          <h2>Admin Token</h2>
+          <h2><KeyRound size={18} style={{ verticalAlign: 'text-bottom', marginRight: '0.4rem' }} /> Admin Token</h2>
           <p>
             Token is kept in local browser storage only for this admin page and never hardcoded
             in the repo. It is used for IndexNow, route pop-up ads, folder colors, login-auth
-            toggle, PDF download toggle, and support-reply toggle
-            actions.
+            toggle, PDF download toggle, and support-reply toggle actions.
           </p>
           <input
             type="password"
@@ -555,7 +556,7 @@ const IndexNowAdmin = () => {
         <SiteDisplayAdmin token={token} />
 
         <section className="indexnow-card">
-          <h2>Login Authentication Toggle</h2>
+          <h2><Shield size={18} style={{ verticalAlign: 'text-bottom', marginRight: '0.4rem' }} /> Login Authentication Toggle</h2>
           <p>
             Use the same button to disable or re-enable login authentication for all visitors.
             Disable it when you want crawlers and bots to access site content directly.
@@ -580,10 +581,10 @@ const IndexNowAdmin = () => {
           <div className="indexnow-inline-controls">
             <button type="button" onClick={handleToggleAuthGate} disabled={authGateLoading || authGateUpdating}>
               {authGateUpdating
-                ? 'Updating login mode...'
+                ? <><Loader2 size={14} className="spin" /> Updating...</>
                 : authGateState.requireLogin
-                  ? 'Disable Login Authentication'
-                  : 'Enable Login Authentication'}
+                  ? <><ShieldOff size={14} /> Disable Login</>
+                  : <><Shield size={14} /> Enable Login</>}
             </button>
             <button
               type="button"
@@ -591,14 +592,14 @@ const IndexNowAdmin = () => {
               onClick={loadAuthGateStatus}
               disabled={authGateLoading || authGateUpdating}
             >
-              Refresh Status
+              <RefreshCw size={14} /> Refresh
             </button>
           </div>
           {authGateError && <p className="indexnow-error">{authGateError}</p>}
         </section>
 
         <section className="indexnow-card">
-          <h2>PDF Download Toggle (Mozilla PDF Viewer)</h2>
+          <h2><FileDown size={18} style={{ verticalAlign: 'text-bottom', marginRight: '0.4rem' }} /> PDF Download Toggle</h2>
           <p>
             Control whether the PDF.js toolbar download button is visible inside the QuickLook
             PDF viewer.
@@ -623,10 +624,10 @@ const IndexNowAdmin = () => {
           <div className="indexnow-inline-controls">
             <button type="button" onClick={handleTogglePdfGate} disabled={pdfGateLoading || pdfGateUpdating}>
               {pdfGateUpdating
-                ? 'Updating PDF download mode...'
+                ? <><Loader2 size={14} className="spin" /> Updating...</>
                 : pdfGateState.enabled
-                  ? 'Disable PDF Download'
-                  : 'Enable PDF Download'}
+                  ? <><FileUp size={14} /> Disable Download</>
+                  : <><FileDown size={14} /> Enable Download</>}
             </button>
             <button
               type="button"
@@ -634,20 +635,20 @@ const IndexNowAdmin = () => {
               onClick={loadPdfGateStatus}
               disabled={pdfGateLoading || pdfGateUpdating}
             >
-              Refresh Status
+              <RefreshCw size={14} /> Refresh
             </button>
           </div>
           {pdfGateError && <p className="indexnow-error">{pdfGateError}</p>}
         </section>
 
         <section className="indexnow-card">
-          <h2>Support Reply Toggle (Email Replies)</h2>
+          <h2><Mail size={18} style={{ verticalAlign: 'text-bottom', marginRight: '0.4rem' }} /> Support Reply Toggle</h2>
           <p>
-            Control whether backend support replies can send emails from `/api/support/reply`.
+            Control whether backend support replies can send emails from the API.
           </p>
           <div className="indexnow-status-line">
             <span className={`indexnow-status-pill ${supportReplyGateState.enabled ? 'open' : 'locked'}`}>
-              {supportReplyGateState.enabled ? 'Support Reply Enabled' : 'Support Reply Disabled'}
+              {supportReplyGateState.enabled ? 'Reply Enabled' : 'Reply Disabled'}
             </span>
             <span className="indexnow-status-meta">
               {supportReplyGateLoading
@@ -669,10 +670,10 @@ const IndexNowAdmin = () => {
               disabled={supportReplyGateLoading || supportReplyGateUpdating}
             >
               {supportReplyGateUpdating
-                ? 'Updating support reply mode...'
+                ? <><Loader2 size={14} className="spin" /> Updating...</>
                 : supportReplyGateState.enabled
-                  ? 'Disable Support Reply'
-                  : 'Enable Support Reply'}
+                  ? <><Mail size={14} /> Disable Reply</>
+                  : <><Mail size={14} /> Enable Reply</>}
             </button>
             <button
               type="button"
@@ -680,16 +681,16 @@ const IndexNowAdmin = () => {
               onClick={loadSupportReplyGateStatus}
               disabled={supportReplyGateLoading || supportReplyGateUpdating}
             >
-              Refresh Status
+              <RefreshCw size={14} /> Refresh
             </button>
           </div>
           {supportReplyGateError && <p className="indexnow-error">{supportReplyGateError}</p>}
         </section>
 
         <section className="indexnow-card">
-          <h2>Send Support Reply</h2>
+          <h2><Send size={18} style={{ verticalAlign: 'text-bottom', marginRight: '0.4rem' }} /> Send Support Reply</h2>
           <p>
-            Send email from admin without terminal. Use a message ID from `support_messages` or
+            Send email from admin without terminal. Use a message ID from support_messages or
             send directly to an email address.
           </p>
 
@@ -794,19 +795,19 @@ const IndexNowAdmin = () => {
         </section>
 
         <section className="indexnow-card">
-          <h2>Submit All URLs</h2>
+          <h2><Globe size={18} style={{ verticalAlign: 'text-bottom', marginRight: '0.4rem' }} /> Submit All URLs</h2>
           <p>Reads sitemap(s) from the server and submits all discovered URLs to IndexNow.</p>
           <button type="button" onClick={handleSubmitAll} disabled={submitAllLoading}>
             {submitAllLoading
-              ? 'Submitting all URLs...'
-              : 'Submit ALL URLs to Bing (IndexNow)'}
+              ? <><Loader2 size={14} className="spin" /> Submitting all URLs...</>
+              : <><Globe size={14} /> Submit ALL URLs to Bing (IndexNow)</>}
           </button>
           {submitAllError && <p className="indexnow-error">{submitAllError}</p>}
           <ResultPanel result={submitAllResult} title="Submit-all Result" />
         </section>
 
         <section className="indexnow-card">
-          <h2>Custom URL Submission</h2>
+          <h2><Link2 size={18} style={{ verticalAlign: 'text-bottom', marginRight: '0.4rem' }} /> Custom URL Submission</h2>
           <p>Submit specific URLs for created, updated, or deleted pages.</p>
           <textarea
             rows={7}
@@ -828,7 +829,7 @@ const IndexNowAdmin = () => {
             <span>{customUrls.length} URL(s) ready</span>
           </div>
           <button type="button" onClick={handleCustomSubmit} disabled={customLoading}>
-            {customLoading ? 'Submitting custom URLs...' : 'Submit Custom URLs'}
+            {customLoading ? <><Loader2 size={14} className="spin" /> Submitting...</> : <><Send size={14} /> Submit Custom URLs</>}
           </button>
           {customError && <p className="indexnow-error">{customError}</p>}
           <ResultPanel result={customResult} title="Custom Submission Result" />
