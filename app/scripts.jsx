@@ -12,28 +12,43 @@ export default function Scripts() {
         crossOrigin="anonymous"
       />
       <Script
+        id="ua-data-shim"
+        strategy="beforeInteractive"
+      >
+        {`
+          (function () {
+            try {
+              if (typeof navigator !== 'undefined' && !('userAgentData' in navigator)) {
+                Object.defineProperty(navigator, 'userAgentData', {
+                  configurable: true,
+                  value: {
+                    brands: [],
+                    mobile: false,
+                    platform: (navigator.platform || ''),
+                    getHighEntropyValues: function () {
+                      return Promise.resolve({
+                        architecture: '',
+                        bitness: '',
+                        model: '',
+                        platformVersion: '',
+                        uaFullVersion: '',
+                        fullVersionList: [],
+                        platform: (navigator.platform || ''),
+                      });
+                    },
+                    getBrands: function () { return []; },
+                  },
+                });
+              }
+            } catch (e) {}
+          })();
+        `}
+      </Script>
+      <Script
         id="aclib"
         strategy="afterInteractive"
         src="/aclib-anti-adblock.js"
         onReady={() => {
-          // Guard against third-party ad libs calling
-          // navigator.userAgentData.getHighEntropyValues() on browsers
-          // (and some in-app webviews) where userAgentData is undefined.
-          if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && !navigator.userAgentData) {
-            try {
-              Object.defineProperty(navigator, 'userAgentData', {
-                value: {
-                  brands: [],
-                  mobile: false,
-                  platform: navigator.platform || '',
-                  getHighEntropyValues: async () => ({ brands: [], mobile: false, platform: navigator.platform || '', version: '' }),
-                },
-                configurable: true,
-              })
-            } catch {
-              /* ignore shim failure */
-            }
-          }
           if (typeof window !== 'undefined' && window.aclib?.runAutoTag) {
             window.aclib.runAutoTag({ zoneId: 'sp6bdgcx0c' })
           }
