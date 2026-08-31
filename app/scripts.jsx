@@ -16,6 +16,24 @@ export default function Scripts() {
         strategy="afterInteractive"
         src="/aclib-anti-adblock.js"
         onReady={() => {
+          // Guard against third-party ad libs calling
+          // navigator.userAgentData.getHighEntropyValues() on browsers
+          // (and some in-app webviews) where userAgentData is undefined.
+          if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && !navigator.userAgentData) {
+            try {
+              Object.defineProperty(navigator, 'userAgentData', {
+                value: {
+                  brands: [],
+                  mobile: false,
+                  platform: navigator.platform || '',
+                  getHighEntropyValues: async () => ({ brands: [], mobile: false, platform: navigator.platform || '', version: '' }),
+                },
+                configurable: true,
+              })
+            } catch {
+              /* ignore shim failure */
+            }
+          }
           if (typeof window !== 'undefined' && window.aclib?.runAutoTag) {
             window.aclib.runAutoTag({ zoneId: 'sp6bdgcx0c' })
           }
