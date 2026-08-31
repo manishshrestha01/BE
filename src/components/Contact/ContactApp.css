@@ -283,6 +283,15 @@
   .contact-body { padding: 0 }
   .contact-shell { max-width: 100%; padding: 14px }
   .attachment-dropzone { padding: 12px 14px }
+
+  /* Keep traffic lights visible and separated on smaller screens */
+  .contact-titlebar .window-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--window-control-gap);
+    padding-right: 12px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
 }
 
 @media (max-width: 520px) {

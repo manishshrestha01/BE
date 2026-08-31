@@ -404,6 +404,16 @@
   .notes-toolbar {
     padding: 10px 12px;
     gap: 10px;
+    justify-content: space-between;
+  }
+
+  /* Keep traffic lights visible on small devices */
+  .window-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--window-control-gap);
+    padding-right: 12px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   .notes-layout {
