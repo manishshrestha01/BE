@@ -49,8 +49,17 @@ export default function Scripts() {
         strategy="afterInteractive"
         src="/aclib-anti-adblock.js"
         onReady={() => {
-          if (typeof window !== 'undefined' && window.aclib?.runAutoTag) {
-            window.aclib.runAutoTag({ zoneId: 'sp6bdgcx0c' })
+          try {
+            if (typeof window !== 'undefined' && window.aclib?.runAutoTag) {
+              window.aclib.runAutoTag({ zoneId: 'sp6bdgcx0c' })
+            }
+          } catch (err) {
+            // Third-party ad libs (Adcash/aclib) can throw on some browsers
+            // (e.g. navigator.userAgentData.getHighEntropyValues is missing).
+            // Never let an ad-network runtime error crash the page.
+            if (typeof console !== 'undefined' && typeof console.error === 'function') {
+              console.error('[aclib] runAutoTag failed:', err)
+            }
           }
         }}
       />
