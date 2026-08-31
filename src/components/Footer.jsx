@@ -1,4 +1,6 @@
-import { Link, useLocation } from 'react-router-dom'
+'use client'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import './Landing/Landing.css'
 
 const getSemesterGroupTarget = (semester) => {
@@ -19,10 +21,10 @@ const footerSemesterLinks = Array.from({ length: 8 }, (_, index) => {
 })
 
 const Footer = () => {
-  const location = useLocation()
+  const pathname = usePathname()
 
   const handleLogoClick = () => {
-    if (location.pathname === '/') {
+    if (pathname === '/') {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
   }
@@ -32,7 +34,7 @@ const Footer = () => {
       <div className="footer-container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <Link to="/" className="nav-logo" onClick={handleLogoClick}>
+            <Link href="/" className="nav-logo" onClick={handleLogoClick}>
               <img src="/white.svg" alt="StudyMate Logo" style={{ height: 32 }} />
               <span className="logo-text">StudyMate</span>
             </Link>
@@ -71,23 +73,23 @@ const Footer = () => {
           <div className="footer-links-grid">
             <div className="footer-column">
               <h2>Quick Links</h2>
-              <Link to="/dashboard">Dashboard</Link>
-              <Link to="/">Home</Link>
+              <Link href="/dashboard">Dashboard</Link>
+              <Link href="/">Home</Link>
               <a href="/colleges">Colleges</a>
               <a href="/blog">Blog</a>
             </div>
             <div className="footer-column">
               <h2>Semesters</h2>
               {footerSemesterLinks.map((semesterLink) => (
-                <Link key={semesterLink.label} to={semesterLink.to}>
+                <Link key={semesterLink.label} href={semesterLink.to}>
                   {semesterLink.label}
                 </Link>
               ))}
             </div>
             <div className="footer-column">
               <h2>Account</h2>
-              <Link to="/login">Login</Link>
-              <Link to="/login">Continue with Google</Link>
+              <Link href="/login">Login</Link>
+              <Link href="/login">Continue with Google</Link>
             </div>
           </div>
         </div>

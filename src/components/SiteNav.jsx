@@ -1,5 +1,7 @@
+'use client'
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Sun, Moon, Monitor } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 import './Landing/Landing.css'
@@ -7,11 +9,11 @@ import './Landing/Landing.css'
 const SiteNav = () => {
   const { mode, setTheme, resolvedTheme } = useTheme()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const location = useLocation()
+  const pathname = usePathname()
 
   const handleLogoClick = () => {
     setMobileMenuOpen(false)
-    if (location.pathname === '/') {
+    if (pathname === '/') {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
   }
@@ -19,16 +21,16 @@ const SiteNav = () => {
   return (
     <nav className="landing-nav">
       <div className="nav-container">
-        <Link to="/" className="nav-logo" onClick={handleLogoClick}>
+        <Link href="/" className="nav-logo" onClick={handleLogoClick}>
           <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32 }} />
           <span className="logo-text">StudyMate</span>
         </Link>
         <div className="nav-links">
-          <Link to="/">Home</Link>
-          <Link to="/colleges">Colleges</Link>
-          <Link to="/blog">Blog</Link>
-          <Link to="/login" className="nav-login">Login</Link>
-          <Link to="/dashboard" className="nav-cta">Open Dashboard</Link>
+          <Link href="/">Home</Link>
+          <Link href="/colleges">Colleges</Link>
+          <Link href="/blog">Blog</Link>
+          <Link href="/login" className="nav-login">Login</Link>
+          <Link href="/dashboard" className="nav-cta">Open Dashboard</Link>
           <button
             className="theme-toggle-btn"
             onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
@@ -50,11 +52,11 @@ const SiteNav = () => {
         <div className="mobile-nav-overlay" onClick={() => setMobileMenuOpen(false)}>
           <div className="mobile-nav" onClick={e => e.stopPropagation()}>
             <button className="mobile-nav-close" onClick={() => setMobileMenuOpen(false)}>&times;</button>
-            <Link to="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-            <Link to="/colleges" onClick={() => setMobileMenuOpen(false)}>Colleges</Link>
-            <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
-            <Link to="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
-            <Link to="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
+            <Link href="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+            <Link href="/colleges" onClick={() => setMobileMenuOpen(false)}>Colleges</Link>
+            <Link href="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
+            <Link href="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+            <Link href="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
             <button
               className="theme-toggle-btn mobile-theme-toggle"
               onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}

@@ -1,10 +1,10 @@
-import { useEffect, useLayoutEffect, useState, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+'use client'
+import { useState, useMemo } from 'react'
+import Link from 'next/link'
 import { COLLEGES } from '../lib/colleges'
 import { useTheme } from '../context/ThemeContext'
 import './Landing/Landing.css'
 import './Colleges.css'
-import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../lib/seo'
 import SiteNav from './SiteNav'
 import Footer from './Footer'
 
@@ -14,71 +14,9 @@ const makeSlug = (label) => {
   return label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 }
 
-const forceScrollTop = () => {
-  window.scrollTo(0, 0)
-  document.documentElement.scrollTop = 0
-  document.body.scrollTop = 0
-}
-
 const Colleges = () => {
   const { resolvedTheme } = useTheme()
   const [query, setQuery] = useState('')
-
-  useLayoutEffect(() => {
-    forceScrollTop()
-    const frame = window.requestAnimationFrame(() => {
-      forceScrollTop()
-    })
-    return () => window.cancelAnimationFrame(frame)
-  }, [])
-
-  useEffect(() => {
-    setTitle('Colleges — BE Computer Engineering Notes — StudyMate')
-    setMeta({ name: 'description', content: 'Find Pokhara University BE Computer Engineering notes — semester-wise PDFs for PEC, NCIT, NEC and other colleges.' })
-    setLinkRel('canonical', 'https://www.manishshrestha012.com.np/colleges')
-    setMeta({ property: 'og:title', content: 'Colleges — BE Computer Engineering Notes — StudyMate' })
-    setMeta({ property: 'og:description', content: 'Find Pokhara University BE Computer Engineering notes — semester-wise PDFs for PEC, NCIT, NEC and other colleges.' })
-    setMeta({ property: 'og:image', content: 'https://www.manishshrestha012.com.np/logo-512.png' })
-    setMeta({ name: 'twitter:card', content: 'summary_large_image' })
-    setMeta({ property: 'og:site_name', content: 'StudyMate' })
-
-    const collectionLD = {
-      '@context': 'https://schema.org',
-      '@type': 'CollectionPage',
-      'url': 'https://www.manishshrestha012.com.np/colleges',
-      'name': 'Colleges — BE Computer Engineering Notes — StudyMate',
-      'description': 'Find Pokhara University BE Computer Engineering notes — semester-wise PDFs for PEC, NCIT, NEC and other colleges.',
-      'isPartOf': { '@id': 'https://www.manishshrestha012.com.np/#website' },
-      'mainEntity': {
-        '@type': 'ItemList',
-        'itemListElement': COLLEGES.map((c, index) => ({
-          '@type': 'ListItem',
-          'position': index + 1,
-          'name': c.label,
-          'url': `https://www.manishshrestha012.com.np/college/${makeSlug(c.label)}`
-        }))
-      }
-    }
-
-    setJSONLD(collectionLD, 'json-ld-colleges')
-
-    // Make organization information available on client-rendered pages as well
-    const orgGraph = {
-      '@context': 'https://schema.org',
-      '@graph': [
-        { '@type': 'Organization', '@id': 'https://www.manishshrestha012.com.np/#organization', 'name': 'StudyMate', 'url': 'https://www.manishshrestha012.com.np/', 'logo': { '@type': 'ImageObject', 'url': 'https://www.manishshrestha012.com.np/logo-512.png' }, 'description': 'PU notes for BE Computer Engineering students.' },
-        { '@type': 'WebSite', '@id': 'https://www.manishshrestha012.com.np/#website', 'url': 'https://www.manishshrestha012.com.np/', 'name': 'StudyMate', 'publisher': { '@id': 'https://www.manishshrestha012.com.np/#organization' }, 'inLanguage': 'en-US' }
-      ]
-    }
-
-    setJSONLD(orgGraph, 'json-ld-org')
-
-    return () => {
-      setTitle('StudyMate')
-      removeElementById('json-ld-colleges')
-      removeElementById('json-ld-org')
-    }
-  }, [])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -117,7 +55,7 @@ const Colleges = () => {
                    <h3 className="college-title">{c.label}</h3>
                    <p className="college-desc">{c.label} — BE Computer Engineering notes for Pokhara University. Search: "{slug} BE computer notes"</p>
                    <div className="college-actions">
-                     <Link to={`/college/${slug}`} className="college-btn-primary" onClick={forceScrollTop}>Open Notes</Link>
+                     <Link href={`/college/${slug}`} className="college-btn-primary">Open Notes</Link>
                    </div>
                  </div>
                </article>

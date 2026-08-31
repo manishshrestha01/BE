@@ -99,7 +99,6 @@ export const useUserProfile = () => {
       setProfileInitialized(true);
     };
     fetchProfile();
-    // eslint-disable-next-line
   }, [user]);
 
   // Save profile to Supabase

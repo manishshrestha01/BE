@@ -24,6 +24,7 @@
   max-height: 85vh;
   display: flex;
   overflow: hidden;
+  border-radius: 16px;
   animation: slideUp 0.3s ease;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 500px;
@@ -62,6 +63,12 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
+.settings-minimized .minimized-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
 .settings-minimized:hover {
   transform: translateX(-50%) scale(1.05);
   background: rgba(40, 40, 40, 0.95);
@@ -69,7 +76,7 @@
 
 .settings-sidebar {
   width: 200px;
-  background: rgba(0, 0, 0, 0.3);
+  background: #000;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
@@ -100,20 +107,35 @@
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
   transition: all 0.15s ease;
   position: relative;
   transform: none;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.14),
+    0 1px 2px rgba(0, 0, 0, 0.18);
 }
 
 .window-btn span {
-  font-size: 10px;
-  line-height: 1;
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
   opacity: 0;
-  color: rgba(0, 0, 0, 0.6);
-  font-weight: bold;
+  color: rgba(0, 0, 0, 0.62);
+  transition: opacity 0.15s ease;
+}
+
+.window-btn svg {
+  width: 56%;
+  height: 56%;
+  display: block;
 }
 
 .window-controls:hover .window-btn span {
@@ -144,6 +166,10 @@
   background: #34c759;
 }
 
+.window-btn:active {
+  transform: scale(0.86);
+}
+
 .settings-sidebar-header h2 {
   color: var(--text-primary);
   font-size: 13px;
@@ -166,7 +192,7 @@
   gap: 10px;
   padding: 10px 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: transparent;
   color: var(--text-primary);
   font-size: 13px;
@@ -180,12 +206,23 @@
 }
 
 .settings-nav-item.active {
-  background: var(--accent-blue);
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
 .nav-icon {
-  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  transition: color 0.15s ease;
 }
+
+.settings-nav-item:hover .nav-icon { color: var(--text-primary); }
+.settings-nav-item.active .nav-icon { color: var(--accent-blue); }
 
 .nav-label {
   flex: 1;
@@ -380,7 +417,7 @@
 .btn-save-profile {
   width: 100%;
   padding: 12px;
-  background: var(--accent-blue);
+  background: #0A84FF;
   color: white;
   border: none;
   border-radius: 8px;
@@ -397,6 +434,32 @@
 
 .btn-save-profile:active {
   transform: translateY(0);
+}
+
+/* Keep the Save action pinned to the bottom of the window so it never
+   scrolls away and never drifts over the inputs (no glow, no hover-jump). */
+.profile-save {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin-top: 16px;
+  border: none;
+  box-shadow: none;
+  background: #0A84FF;
+}
+
+.profile-save:hover,
+.profile-save:active {
+  transform: none;
+  background: #0A84FF;
+}
+
+ .settings-window .profile-save,
+ .settings-window .profile-save:hover,
+ .settings-window .profile-save:active {
+  background: #0A84FF;
+  color: #ffffff;
+  border: 1px solid transparent;
 }
 
 .account-section {
@@ -504,6 +567,348 @@
   justify-content: center;
   font-size: 12px;
   color: white;
+}
+
+/* ==================== APPEARANCE (LIGHT/DARK MODE) ==================== */
+
+.theme-option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 460px;
+}
+
+.theme-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 10px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.theme-option:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.theme-option.active {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px var(--accent-blue);
+}
+
+.theme-option .bg-check {
+  top: 6px;
+  right: 6px;
+}
+
+.theme-preview {
+  width: 100%;
+  aspect-ratio: 16/10;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.theme-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.theme-option-grid-mobile {
+  max-width: 100%;
+}
+
+@media (max-width: 480px) {
+  .theme-option-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+/* ==================== DARK MODE (DEFAULT) ==================== */
+
+[data-theme="dark"] .settings-window,
+.settings-window {
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --text-tertiary: rgba(255, 255, 255, 0.45);
+  background: #1a1d24;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .settings-window .settings-sidebar,
+.settings-window .settings-sidebar {
+  background: #0f1117;
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .settings-window .settings-sidebar-header,
+[data-theme="dark"] .settings-window .settings-main-header,
+.settings-window .settings-sidebar-header,
+.settings-window .settings-main-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .settings-window .settings-nav-item:hover,
+.settings-window .settings-nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .settings-window .settings-nav-item.active,
+.settings-window .settings-nav-item.active {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+[data-theme="dark"] .settings-window .form-group input,
+[data-theme="dark"] .settings-window .form-group select,
+.settings-window .form-group input,
+.settings-window .form-group select {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .settings-window .form-group input::placeholder,
+.settings-window .form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .settings-window .form-group input:focus,
+[data-theme="dark"] .settings-window .form-group select:focus,
+.settings-window .form-group input:focus,
+.settings-window .form-group select:focus {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2);
+}
+
+[data-theme="dark"] .settings-window .btn-save-profile,
+.settings-window .btn-save-profile {
+  background: #0A84FF;
+  color: #ffffff;
+  border: 1px solid transparent;
+}
+
+[data-theme="dark"] .settings-window .btn-save-profile:hover,
+.settings-window .btn-save-profile:hover {
+  background: #0066d6;
+}
+
+[data-theme="dark"] .settings-window .profile-card,
+.settings-window .profile-card {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .settings-window .about-details,
+.settings-window .about-details {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .settings-window .about-credits p,
+[data-theme="dark"] .settings-window .about-details p,
+.settings-window .about-credits p,
+.settings-window .about-details p {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .settings-window .account-section,
+.settings-window .account-section {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .settings-window .mobile-group,
+.settings-window .mobile-group {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme="dark"] .settings-window .setting-row + .setting-row,
+.settings-window .setting-row + .setting-row {
+  border-top-color: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .settings-window .row-icon,
+.settings-window .row-icon {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .settings-window .settings-faq-item,
+.settings-window .settings-faq-item {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme="dark"] .settings-window .settings-faq-search input,
+.settings-window .settings-faq-search input {
+  background: rgba(0, 0, 0, 0.18);
+  border-color: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .settings-window .settings-faq-answer,
+.settings-window .settings-faq-answer {
+  border-top-color: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme="dark"] .settings-window .custom-bg-dropzone,
+.settings-window .custom-bg-dropzone {
+  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+[data-theme="dark"] .settings-window .profile-card-info-inner,
+.settings-window .profile-card-info-inner {
+  border-color: rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+}
+
+[data-theme="dark"] .settings-window .profile-edit-icon,
+.settings-window .profile-edit-icon {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ==================== LIGHT MODE OVERRIDES (SETTINGS WINDOW) ==================== */
+
+[data-theme="light"] .settings-window {
+  --text-primary: #1d1f27;
+  --text-secondary: #4b4f5a;
+  --text-tertiary: #6b7280;
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .settings-window .settings-sidebar {
+  background: #e9ebf1;
+  border-right-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .settings-window .settings-sidebar-header,
+[data-theme="light"] .settings-window .settings-main-header {
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .settings-window .settings-nav-item:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .settings-window .settings-nav-item.active {
+  background: rgba(0, 0, 0, 0.09);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+[data-theme="light"] .settings-window .form-group input,
+[data-theme="light"] .settings-window .form-group select {
+  background: #ffffff;
+  border-color: #d5dae3;
+  color: #1d1f27;
+}
+
+[data-theme="light"] .settings-window .form-group input::placeholder {
+  color: #8a94a6;
+}
+
+[data-theme="light"] .settings-window .form-group input:focus,
+[data-theme="light"] .settings-window .form-group select:focus {
+  background: #ffffff;
+  border-color: rgba(0, 122, 255, 0.6);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.18);
+}
+
+[data-theme="light"] .settings-window .btn-save-profile {
+  background: #0A84FF;
+  color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .settings-window .btn-save-profile:hover {
+  background: #0051d4;
+}
+
+[data-theme="light"] .settings-window .profile-card {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .settings-window .about-details {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .settings-window .about-credits p,
+[data-theme="light"] .settings-window .about-details p {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .settings-window .account-section {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .settings-window .mobile-group {
+  background: rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .settings-window .setting-row + .setting-row {
+  border-top-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .settings-window .row-icon {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .settings-window .settings-faq-item {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .settings-window .settings-faq-search input {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #1d1f27;
+}
+
+[data-theme="light"] .settings-window .settings-faq-answer {
+  border-top-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .settings-window .custom-bg-dropzone {
+  border-color: rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .settings-window .profile-card-info-inner {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.01));
+}
+
+[data-theme="light"] .settings-window .profile-card-info-inner::before {
+  background: linear-gradient(180deg, #0A84FF, rgba(10, 132, 255, 0.8));
+}
+
+[data-theme="light"] .settings-window .profile-edit-icon {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .settings-minimized {
+  background: rgba(240, 240, 245, 0.9);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .settings-minimized:hover {
+  background: rgba(235, 235, 240, 0.95);
 }
 
 .about-section {

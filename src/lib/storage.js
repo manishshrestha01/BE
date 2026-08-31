@@ -2,7 +2,7 @@ import { supabase, isSupabaseConfigured } from './supabase'
 // optionally create file records in DB if you want; currently not required for support attachments
 // import { createFileRecord, deleteFileRecord } from './database'
 
-const BUCKET_NAME = import.meta.env.VITE_SUPPORT_BUCKET || 'support-attachments'
+const BUCKET_NAME = process.env.NEXT_PUBLIC_SUPPORT_BUCKET || 'support-attachments'
 
 // Get file type from extension
 export const getFileType = (filename) => {
@@ -31,7 +31,7 @@ export const uploadFile = async (file, folderId = null) => {
       : `root/${timestamp}_${sanitizedName}`
 
     // Upload to storage
-    const { data: uploadData, error: uploadError } = await supabase
+    const { error: uploadError } = await supabase
       .storage
       .from(BUCKET_NAME)
       .upload(storagePath, file, {

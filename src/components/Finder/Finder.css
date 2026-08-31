@@ -5,10 +5,12 @@
   max-width: 1200px;
   height: calc(100vh - 120px);
   overflow: hidden;
+  border-radius: 16px;
   animation: slideUp 0.4s ease;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   outline: none;
   position: relative;
+  z-index: 2000;
 }
 
 .finder:focus {
@@ -25,9 +27,10 @@
   align-items: center;
   gap: 16px;
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.08);
+  background: #000;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px 12px 0 0;
+  border-radius: 16px 16px 0 0;
+  flex-wrap: nowrap;
 }
 
 /* Window Controls - macOS style */
@@ -51,24 +54,38 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
-  font-weight: bold;
-  color: transparent;
+  padding: 0;
   transition: all 0.15s ease;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.14),
+    0 1px 2px rgba(0, 0, 0, 0.18);
   transform: none;
 }
 
 .window-btn span {
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
   opacity: 0;
+  color: rgba(0, 0, 0, 0.62);
   transition: opacity 0.15s ease;
+}
+
+.window-btn svg {
+  width: 56%;
+  height: 56%;
+  display: block;
 }
 
 .window-controls:hover .window-btn span {
   opacity: 1;
-  color: rgba(0, 0, 0, 0.6);
 }
 
 .window-btn.close {
@@ -84,7 +101,11 @@
 }
 
 .window-btn:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.08);
+}
+
+.window-btn:active {
+  transform: scale(0.86);
 }
 
 .finder-controls {
@@ -195,7 +216,7 @@
 .finder-sidebar {
   width: 200px;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.15);
+  background: #000;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   overflow-y: auto;
 }
@@ -219,7 +240,7 @@
 
 .sidebar-section li {
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 10px;
   color: var(--text-secondary);
   cursor: pointer;
   font-size: 13px;
@@ -235,8 +256,9 @@
 }
 
 .sidebar-section li.active {
-  background: var(--accent-blue);
-  color: white;
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
 /* Content */
@@ -392,7 +414,7 @@
   display: flex;
   justify-content: space-between;
   padding: 8px 16px;
-  background: rgba(0, 0, 0, 0.15);
+  background: #000;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0 0 12px 12px;
   font-size: 12px;
@@ -597,7 +619,7 @@
   display: flex;
   flex-direction: column;
   /* Use the same glass-dark surface as other windows to avoid excessive transparency */
-  background: var(--glass-bg-dark);
+  background: #fff;
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   /* slightly stronger border when maximized to separate from wallpaper */
@@ -630,8 +652,10 @@
   cursor: pointer;
 }
 
-.finder-minimized span:first-child {
-  font-size: 18px;
+.finder-minimized .minimized-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
 .finder-minimized:hover {
@@ -647,649 +671,54 @@
 
 /* ==================== RESPONSIVE DESIGN ==================== */
 
-/* Tablets */
-@media (max-width: 1023px) {
-  .finder {
-    width: 95%;
-    height: calc(100vh - 100px);
-  }
-  
-  .finder-toolbar {
-    gap: 10px;
-    padding: 10px 12px;
-  }
-  
-  .finder-sidebar {
-    width: 180px;
-  }
-}
+/* Desktop (1024px and up) - Default styles already applied above */
 
-/* Mobile devices */
-@media (max-width: 768px) {
-  .finder {
-    width: 100%;
-    height: calc(100vh - 80px);
-    border-radius: 12px 12px 0 0;
-    max-width: none;
-  }
-  
-  .finder-toolbar {
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 10px;
-  }
-  
-  .window-controls {
-    padding-right: 8px;
-  }
-  
-  .finder-breadcrumb {
-    order: 5;
-    width: 100%;
-    margin-top: 4px;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  
-  .finder-layout {
-    flex-direction: column;
-  }
-  
-  .finder-sidebar {
-    width: 100%;
-    max-height: 120px;
-    overflow-y: auto;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .sidebar-section {
-    margin-bottom: 12px;
-  }
-  
-  .sidebar-section ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-  
-  .sidebar-section li {
-    padding: 6px 10px;
-    font-size: 12px;
-  }
-  
-  .finder-content {
-    padding: 12px;
-  }
-  
-  .finder-content.grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
-  
-  .finder-item {
-    padding: 10px 6px;
-    width: 100%;
-  }
-  
-  .item-icon {
-    font-size: 36px;
-    margin-bottom: 6px;
-  }
-  
-  .item-name {
-    font-size: 11px;
-  }
-  
-  .finder-statusbar {
-    padding: 6px 12px;
-    font-size: 11px;
-  }
-  
-  .finder-view-toggle {
-    display: none;
-  }
-  
-  /* Bring the finder above the dock so items at the bottom are tappable */
-  .finder {
-    z-index: 2000;
-    /* Make sure the last rows are not covered by the dock; leave room for dock + safe area */
-    padding-bottom: calc(80px + env(safe-area-inset-bottom));
-  }
-
-  /* When Finder is maximized on mobile, ensure it also stays above the dock */
-  .finder.maximized {
-    z-index: 2000;
-  }
-}
-
-/* Small mobile devices */
-@media (max-width: 480px) {
-  .finder {
-    height: calc(100vh - 70px);
-  }
-  
-  .finder-toolbar {
-    padding: 8px;
-  }
-  
-  .finder-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-  }
-  
-  .breadcrumb-item {
-    font-size: 12px;
-    padding: 3px 6px;
-  }
-  
-  .finder-content.grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    padding: 12px;
-  }
-  
-  .finder-item {
-    padding: 8px 4px;
-    width: 100%;
-  }
-  
-  .item-icon {
-    font-size: 36px;
-    height: 44px;
-  }
-  
-  .item-name {
-    font-size: 10px;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-  }
-  
-  .finder-sidebar {
-    max-height: 100px;
-    padding: 10px;
-  }
-  
-  .file-icon-svg {
-    width: 36px;
-    height: 36px;
-  }
-}
-
-/* Landscape mode on mobile */
-@media (max-height: 500px) and (orientation: landscape) {
-  .finder {
-    height: calc(100vh - 60px);
-  }
-  
-  .finder-sidebar {
-    max-height: 80px;
-  }
-  
-  .finder-toolbar {
-    padding: 6px 10px;
-  }
-}
-
-/* Tablet devices (768px to 1023px) */
-@media (min-width: 768px) and (max-width: 1023px) {
+/* Large Tablets (768px to 1023px) */
+@media (max-width: 1023px) and (min-width: 768px) {
   .finder {
     width: 95%;
     max-width: 900px;
+    height: calc(100vh - 100px);
   }
-  
-  .finder-toolbar { flex-wrap: wrap; gap: 8px; padding: 10px; }
-  .finder-layout { flex-direction: column; }
-  .finder-sidebar { width: 100%; max-height: 120px; overflow-y: auto; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
-  .sidebar-section ul { display: flex; flex-wrap: wrap; gap: 8px; }
-  .finder-content.grid { grid-template-columns: repeat(auto-fill, 100px); gap: 12px; }
-  .finder-item { width: 100px; }
-  .finder { z-index: 2000; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
-  .finder-view-toggle { display: none; }
-  .finder-statusbar { display: none; }
-}
 
-/* Small mobile devices (320px to 480px) - iPhone App Style */
-@media (max-width: 480px) {
-  .finder {
-    width: 100%;
-    max-width: none;
-    height: 100%;
-    height: 100dvh; /* Use dynamic viewport height for mobile browsers */
-    margin: 0;
-    border-radius: 0;
-    box-shadow: none;
-    flex-direction: column;
-    padding-bottom: 0;
-    background: #000;
-  }
-  
-  .finder:focus {
-    box-shadow: none;
-  }
-  
-  /* iPhone-style top bar */
   .finder-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0;
-    padding: max(8px, env(safe-area-inset-top)) 16px 8px 16px;
-    background: rgba(0, 0, 0, 0.8);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 0;
-    flex-wrap: nowrap;
-  }
-  
-  .window-controls {
-    display: none;
-  }
-  
-  .finder-controls {
-    display: flex;
-    gap: 4px;
-    order: 1;
-  }
-  
-  .finder-controls .finder-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-    padding: 0;
-  }
-  
-  .finder-breadcrumb {
-    flex: 1;
-    font-size: 13px;
-    font-weight: 600;
-    text-align: center;
-    color: var(--text-primary);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    order: 0;
-  }
-  
-  .finder-actions {
-    order: 2;
-    display: flex;
-    gap: 8px;
-  }
-  
-  .finder-actions .finder-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-  }
-  
-  .finder-view-toggle {
-    display: none;
-  }
-  
-  /* iPhone-style layout - content takes up most space */
-  .finder-layout {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-  }
-  
-  /* Bottom tab bar (like iOS) */
-  .finder-sidebar {
-    width: 100%;
-    height: auto;
-    max-height: none;
-    padding: 8px 0;
-    padding-bottom: max(8px, env(safe-area-inset-bottom));
-    border-right: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.8);
-    border-bottom: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    order: 2;
-    flex-shrink: 0;
-  }
-  
-  .sidebar-section {
-    margin-bottom: 0;
-    padding: 0 16px;
-  }
-  
-  .sidebar-section h3 {
-    display: none;
-  }
-  
-  .sidebar-section ul {
-    display: flex;
-    gap: 0;
-    justify-content: space-around;
-    flex-wrap: nowrap;
-  }
-  
-  .sidebar-section li {
-    flex: 1;
-    padding: 4px 0;
-    font-size: 10px;
-    white-space: nowrap;
-    text-align: center;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    min-height: 44px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .sidebar-section li:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
-  
-  .sidebar-section li.active {
-    background: rgba(0, 122, 255, 0.3);
-    color: var(--accent-blue);
-  }
-  
-  /* Main content - scrollable */
-  .finder-content {
-    flex: 1;
-    min-height: 0;
-    padding: 12px 8px;
-    padding-top: 8px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    order: 1;
-    background: #000;
-  }
-  
-  /* Grid layout for files - iPhone style */
-  .finder-content.grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
-    align-content: start;
-    padding: 8px 4px;
-  }
-  
-  /* iOS-style file item */
-  .finder-content.grid .finder-item {
-    flex-direction: column;
-    gap: 4px;
-    padding: 8px 4px;
-    border-radius: 8px;
-    transition: all 0.15s ease;
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 0;
-  }
-
-  .finder-content.list {
-    gap: 2px;
-    padding: 8px 12px 12px;
-  }
-
-  .finder-content.list .finder-item {
-    aspect-ratio: auto;
-    min-height: 52px;
-    padding: 10px 8px;
-    gap: 12px;
-    border-radius: 10px;
-  }
-  
-  .finder-item:active {
-    background: rgba(255, 255, 255, 0.08);
-    transform: scale(0.95);
-  }
-  
-  .finder-item.selected {
-    background: rgba(0, 122, 255, 0.2);
-  }
-  
-  .item-icon {
-    font-size: 28px;
-    line-height: 1;
-  }
-
-  .folder-icon-svg {
-    width: 34px;
-  }
-  
-  .item-name {
-    font-size: 9px;
-    text-align: center;
-    line-height: 1.2;
-    word-break: break-word;
-  }
-  
-  /* Bottom status bar - hidden on iPhone */
-  .finder-statusbar {
-    display: none;
-  }
-  
-  .demo-badge {
-    display: none;
-  }
-}
-
-/* Medium mobile devices (481px to 767px) - iPad/Tablet App Style */
-@media (min-width: 481px) and (max-width: 767px) {
-  .finder {
-    width: 100%;
-    max-width: none;
-    height: 100%;
-    height: 100dvh;
-    margin: 0;
-    border-radius: 0;
-    box-shadow: none;
-    background: #000;
-  }
-  
-  .finder:focus {
-    box-shadow: none;
-  }
-  
-  /* iPad-style top bar */
-  .finder-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: max(12px, env(safe-area-inset-top)) 16px 12px 16px;
-    background: rgba(0, 0, 0, 0.8);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 0;
-    flex-wrap: nowrap;
-  }
-  
-  .window-controls {
-    display: none;
-  }
-  
-  .finder-controls {
-    display: flex;
-    gap: 4px;
-    order: 1;
-    flex-shrink: 0;
-  }
-  
-  .finder-controls .finder-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
-  }
-  
-  .finder-breadcrumb {
-    flex: 1;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary);
-    order: 0;
-  }
-  
-  .finder-actions {
-    order: 2;
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-  
-  .finder-actions .finder-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
-  }
-  
-  .finder-view-toggle {
-    display: flex;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 4px;
-    border-radius: 6px;
-    gap: 2px;
-    order: 3;
-    flex-shrink: 0;
-  }
-  
-  .view-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
-  }
-  
-  /* Two-column layout for tablet */
-  .finder-layout {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    flex: 1;
-    overflow: hidden;
-  }
-  
-  /* iPad sidebar */
-  .finder-sidebar {
-    width: 220px;
-    padding: 12px;
-    padding-top: 8px;
-    background: rgba(0, 0, 0, 0.6);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  
-  .sidebar-section {
-    margin-bottom: 20px;
-  }
-  
-  .sidebar-section h3 {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-    margin-bottom: 8px;
-    letter-spacing: 0.5px;
-  }
-  
-  .sidebar-section ul {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-  
-  .sidebar-section li {
+    gap: 10px;
     padding: 10px 12px;
-    font-size: 13px;
-    border-radius: 6px;
-    transition: all 0.15s ease;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-wrap: nowrap;
   }
-  
-  .sidebar-section li:active {
-    background: rgba(255, 255, 255, 0.08);
-  }
-  
-  .sidebar-section li.active {
-    background: var(--accent-blue);
-    color: white;
-  }
-  
-  /* Main content - scrollable */
-  .finder-content {
-    flex: 1;
-    padding: 12px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    background: #000;
-  }
-  
-  /* Grid layout for tablet */
-  .finder-content.grid {
+
+  .finder-layout {
     display: grid;
+    grid-template-columns: 200px 1fr;
+  }
+
+  .finder-sidebar {
+    width: 200px;
+    max-height: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: none;
+  }
+
+  .finder-content.grid {
     grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
     gap: 12px;
-    align-content: start;
-  }
-  
-  .finder-item {
-    flex-direction: column;
-    gap: 6px;
-    padding: 10px;
-    border-radius: 8px;
-    transition: all 0.15s ease;
-    aspect-ratio: auto;
-  }
-  
-  .finder-item:active {
-    background: rgba(255, 255, 255, 0.08);
-    transform: scale(0.95);
-  }
-  
-  .finder-item.selected {
-    background: rgba(0, 122, 255, 0.2);
-  }
-  
-  .item-icon {
-    font-size: 32px;
   }
 
-  .folder-icon-svg {
-    width: 38px;
+  .finder-view-toggle {
+    display: flex;
   }
-  
-  .item-name {
-    font-size: 12px;
-    text-align: center;
-    line-height: 1.2;
+
+  .finder-pathbar {
+    display: flex;
+  }
+
+  .finder-statusbar {
+    display: flex;
   }
 }
 
-/* Toast / transient message */
-.toast {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(80px + env(safe-area-inset-bottom));
-  background: rgba(0,0,0,0.8);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 12px;
-  font-size: 13px;
-  z-index: 2200;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-}
-
-@media (min-width: 769px) {
-  .toast { bottom: 48px; }
-}
-
-/* Force tablet-style Finder for 481px-768px */
-@media (min-width: 481px) and (max-width: 768px) {
+/* Medium Tablets / Small Tablets (481px to 767px) */
+@media (max-width: 767px) and (min-width: 481px) {
   .finder {
     position: fixed;
     inset: 0;
@@ -1309,31 +738,40 @@
   }
 
   .finder-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: max(12px, env(safe-area-inset-top)) 16px 12px 16px;
     border-radius: 0;
-    gap: 10px;
     flex-wrap: nowrap;
-    padding: calc(env(safe-area-inset-top) + 10px) max(12px, env(safe-area-inset-right)) 10px max(12px, env(safe-area-inset-left));
   }
 
   .window-controls {
     display: flex !important;
+    padding-right: 8px;
+  }
+
+  .finder-title {
+    flex: 1;
+    text-align: center;
+    font-size: 14px;
   }
 
   .finder-layout {
     display: grid !important;
-    grid-template-columns: minmax(200px, 240px) 1fr;
+    grid-template-columns: 200px 1fr;
     flex: 1;
     min-height: 0;
     overflow: hidden;
   }
 
   .finder-sidebar {
-    width: auto !important;
-    max-height: none;
+    width: 200px !important;
+    max-height: none !important;
     padding: 12px;
     border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
     border-bottom: none !important;
-    background: rgba(0, 0, 0, 0.24);
     overflow-y: auto;
     overflow-x: hidden;
   }
@@ -1349,7 +787,7 @@
   }
 
   .sidebar-section li {
-    min-height: 38px;
+    min-height: 40px;
     padding: 8px 12px;
     font-size: 13px;
   }
@@ -1361,15 +799,35 @@
   }
 
   .finder-content.grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 12px;
     align-content: start;
   }
 
-  .finder-item,
-  .finder-content.grid .finder-item {
+  .finder-item {
     width: 100%;
     min-width: 0;
+    padding: 10px;
+  }
+
+  .item-icon {
+    font-size: 32px;
+  }
+
+  .folder-icon-svg {
+    width: 38px;
+  }
+
+  .item-name {
+    font-size: 12px;
+  }
+
+  .finder-view-toggle {
+    display: flex;
+  }
+
+  .finder-pathbar {
+    display: flex;
   }
 
   .finder-statusbar {
@@ -1379,10 +837,328 @@
   }
 }
 
-/* Mobile/tablet landscape overrides for real devices */
-@media
-  (orientation: landscape) and (any-pointer: coarse) and (max-width: 1024px),
-  (orientation: landscape) and (max-width: 1024px) and (max-height: 700px) {
+/* Mobile Devices (320px to 480px) - iPhone Style */
+@media (max-width: 480px) {
+  .finder {
+    position: fixed;
+    inset: 0;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    flex-direction: column;
+    padding-bottom: 0 !important;
+    overflow: hidden;
+  }
+
+  .finder:focus {
+    box-shadow: none;
+  }
+
+  /* iPhone-style top bar */
+  .finder-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: max(10px, env(safe-area-inset-top)) 12px 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    flex-wrap: nowrap;
+  }
+
+  .window-controls {
+    display: none !important;
+  }
+
+  .finder-controls {
+    display: flex;
+    gap: 6px;
+    order: 0;
+    flex-shrink: 0;
+  }
+
+  .finder-controls .finder-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    padding: 0;
+  }
+
+  .finder-title {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    order: 1;
+  }
+
+  .finder-toolbar-right {
+    order: 2;
+    flex-shrink: 0;
+  }
+
+  .finder-refresh {
+    width: 32px;
+    height: 32px;
+  }
+
+  .finder-view-toggle {
+    display: none !important;
+  }
+
+  /* iPhone-style layout - bottom navigation */
+  .finder-layout {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Main content - scrollable, order 1 */
+  .finder-content {
+    flex: 1;
+    min-height: 0;
+    padding: 10px 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    order: 1;
+  }
+
+  /* Grid layout for files */
+  .finder-content.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    align-content: start;
+    padding: 8px 6px;
+  }
+
+  /* iOS-style file item */
+  .finder-content.grid .finder-item {
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 4px;
+    border-radius: 10px;
+    transition: all 0.15s ease;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+  }
+
+  .finder-content.list {
+    gap: 2px;
+    padding: 8px;
+  }
+
+  .finder-content.list .finder-item {
+    aspect-ratio: auto;
+    min-height: 56px;
+    padding: 10px 12px;
+    gap: 12px;
+    border-radius: 10px;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .finder-item:active {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(0.97);
+  }
+
+  .finder-item.selected {
+    background: rgba(0, 122, 255, 0.25);
+  }
+
+  .item-icon {
+    font-size: 32px;
+    line-height: 1;
+    margin-bottom: 0;
+  }
+
+  .folder-icon-svg {
+    width: 36px;
+  }
+
+  .file-icon-svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .finder-content.list .file-icon-svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .finder-content.list .folder-icon-svg {
+    width: 32px;
+  }
+
+  .item-name {
+    font-size: 10px;
+    text-align: center;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  .finder-content.list .item-name {
+    font-size: 14px;
+    text-align: left;
+  }
+
+  /* Bottom tab bar (like iOS), order 2 */
+  .finder-sidebar {
+    width: 100% !important;
+    height: auto;
+    max-height: none !important;
+    padding: 6px 0;
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+    border-right: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    order: 2;
+    flex-shrink: 0;
+  }
+
+  .sidebar-section {
+    margin-bottom: 0;
+    padding: 0 12px;
+  }
+
+  .sidebar-section h3 {
+    display: none;
+  }
+
+  .sidebar-section ul {
+    display: flex;
+    gap: 0;
+    justify-content: space-around;
+    flex-wrap: nowrap;
+  }
+
+  .sidebar-section li {
+    flex: 1;
+    padding: 6px 4px;
+    font-size: 10px;
+    white-space: nowrap;
+    text-align: center;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .sidebar-icon {
+    font-size: 20px;
+  }
+
+  .sidebar-section li:active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .sidebar-section li.active {
+    background: rgba(255, 255, 255, 0.14);
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* Hide pathbar and statusbar on mobile */
+  .finder-pathbar {
+    display: none !important;
+  }
+
+  .finder-statusbar {
+    display: none !important;
+  }
+
+  .demo-badge {
+    display: none;
+  }
+
+  /* Hide list view column headers */
+  .finder-list-header {
+    display: none !important;
+  }
+
+  .finder-content.list .item-meta {
+    display: none !important;
+  }
+}
+
+/* Very Small Mobile (max 375px) - Compact Layout */
+@media (max-width: 375px) {
+  .finder-toolbar {
+    padding: max(8px, env(safe-area-inset-top)) 10px 8px 10px;
+  }
+
+  .finder-title {
+    font-size: 15px;
+  }
+
+  .finder-controls .finder-btn,
+  .finder-refresh {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .finder-content.grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 6px 4px;
+  }
+
+  .finder-content.grid .finder-item {
+    padding: 6px 2px;
+  }
+
+  .item-icon {
+    font-size: 28px;
+  }
+
+  .folder-icon-svg {
+    width: 32px;
+  }
+
+  .file-icon-svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .item-name {
+    font-size: 9px;
+  }
+
+  .sidebar-section li {
+    padding: 4px 2px;
+    font-size: 9px;
+    min-height: 44px;
+  }
+
+  .sidebar-icon {
+    font-size: 18px;
+  }
+}
+
+/* Landscape Mode on Touch Devices (tablets/phones) */
+@media (orientation: landscape) and (any-pointer: coarse) and (max-width: 1024px) and (min-width: 481px) {
   .finder {
     position: fixed;
     inset: 0;
@@ -1406,7 +1182,7 @@
     flex-wrap: nowrap;
     gap: 8px;
     padding: calc(env(safe-area-inset-top) + 8px) max(10px, env(safe-area-inset-right)) 8px max(10px, env(safe-area-inset-left));
-    min-height: 46px;
+    min-height: 50px;
   }
 
   .window-controls {
@@ -1415,7 +1191,7 @@
 
   .finder-layout {
     display: grid !important;
-    grid-template-columns: minmax(150px, 34vw) 1fr;
+    grid-template-columns: minmax(160px, 30vw) 1fr;
     flex: 1;
     min-height: 0;
     overflow: hidden;
@@ -1429,7 +1205,6 @@
     border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
     border-bottom: none !important;
     padding: 8px;
-    background: rgba(0, 0, 0, 0.26);
   }
 
   .sidebar-section {
@@ -1442,7 +1217,7 @@
   }
 
   .sidebar-section li {
-    min-height: 34px;
+    min-height: 36px;
     padding: 6px 10px;
     font-size: 12px;
   }
@@ -1454,24 +1229,23 @@
   }
 
   .finder-content.grid {
-    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: 8px;
     align-content: start;
   }
 
-  .finder-item,
-  .finder-content.grid .finder-item {
+  .finder-item {
     width: 100%;
     min-width: 0;
     padding: 8px 6px;
   }
 
   .item-icon {
-    font-size: 30px;
+    font-size: 32px;
   }
 
   .folder-icon-svg {
-    width: 34px;
+    width: 36px;
   }
 
   .item-name {
@@ -1481,12 +1255,16 @@
   .finder-statusbar {
     display: none;
   }
+
+  .finder-pathbar {
+    display: none;
+  }
 }
 
-/* Very short landscape phones */
-@media (orientation: landscape) and (max-width: 900px) and (max-height: 460px) {
+/* Very Short Landscape (phone landscape) */
+@media (orientation: landscape) and (max-width: 900px) and (max-height: 500px) {
   .finder-layout {
-    grid-template-columns: minmax(130px, 32vw) 1fr !important;
+    grid-template-columns: minmax(140px, 28vw) 1fr !important;
   }
 
   .finder-content {
@@ -1494,65 +1272,511 @@
   }
 
   .finder-content.grid {
-    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     gap: 6px;
   }
 
-  .finder-item,
-  .finder-content.grid .finder-item {
+  .finder-item {
     padding: 6px 4px;
   }
 
   .item-icon {
-    font-size: 24px;
+    font-size: 28px;
   }
 
   .folder-icon-svg {
-    width: 28px;
+    width: 32px;
   }
 
   .item-name {
     font-size: 10px;
   }
+
+  .finder-toolbar {
+    min-height: 44px;
+    padding: calc(env(safe-area-inset-top) + 6px) max(8px, env(safe-area-inset-right)) 6px max(8px, env(safe-area-inset-left));
+  }
 }
 
-/* Final mobile list guard: keep folder/file rows compact even when later device overrides apply. */
-@media (max-width: 768px) {
-  .finder-layout,
-  .finder-content {
-    min-height: 0;
+/* ==========================================================================
+   macOS Finder – Apple HIG refinements
+   Materials: windowBackground (content), titlebar (toolbar), sidebar,
+   selection (active rows), headerView (column headers)
+   ========================================================================== */
+
+/* Window chrome */
+.finder {
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
+}
+
+.finder:focus {
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight), 0 0 0 2px var(--accent-blue);
+}
+
+/* Toolbar = solid black to match the dark Finder window */
+.finder-toolbar {
+  gap: 14px;
+  padding: 12px 16px;
+  background: #000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.finder .window-controls {
+  border-right: none;
+  padding-right: 0;
+  flex-shrink: 0;
+}
+
+.finder-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* Current location title (macOS-style) */
+.finder-title {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 10px;
+}
+
+/* Toolbar buttons (SF-symbol-like, macOS round hover) */
+.finder-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: inherit;
+  transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+.finder-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--text-primary);
+}
+
+.finder-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.finder-refresh {
+  width: 26px;
+  height: 26px;
+  color: var(--text-tertiary);
+}
+
+/* View toggle = segmented control */
+.finder-view-toggle {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+.view-btn {
+  width: 26px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.view-btn:hover {
+  color: var(--text-primary);
+}
+
+.view-btn.active {
+  background: rgba(255, 255, 255, 0.22);
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Sidebar = sidebar material (distinct translucent) */
+.finder-sidebar {
+  width: 208px;
+  padding: 16px 10px;
+  background: rgba(0, 0, 0, 0.22);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-section {
+  margin-bottom: 20px;
+}
+
+.sidebar-section h3 {
+  margin: 0 0 4px;
+  padding: 0 10px;
+}
+
+.sidebar-section li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  margin: 1px 0;
+  border-radius: 7px;
+  font-size: 13px;
+}
+
+.sidebar-icon {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.sidebar-section li.active .sidebar-icon {
+  opacity: 1;
+}
+
+/* Item name cell – flex wrapper shared by grid + list */
+.finder-item-name-cell {
+  display: flex;
+  min-width: 0;
+}
+
+.finder-content.grid .finder-item-name-cell {
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.finder-content.list .finder-item-name-cell {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.finder-content .item-icon {
+  margin-bottom: 0;
+}
+
+/* List view – column headers + rows (desktop) */
+@media (min-width: 769px) {
+  .finder-content.list {
+    gap: 2px;
   }
 
-  .finder-content.list {
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+  .finder-list-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px 90px 110px;
+    gap: 12px;
+    padding: 6px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--text-tertiary);
+    flex: 0 0 auto;
   }
 
   .finder-content.list .finder-item {
-    flex: 0 0 56px;
-    width: 100%;
-    height: 56px;
-    min-height: 56px;
-    max-height: 56px;
-    aspect-ratio: auto !important;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 8px 10px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px 90px 110px;
     gap: 12px;
+    align-items: center;
+    width: 100%;
+    padding: 4px 16px;
+    border-radius: 7px;
   }
 
-  .finder-content.list .item-icon {
-    flex: 0 0 32px;
-    width: 32px;
-    height: 32px;
-    margin-bottom: 0;
+  .finder-content.list .finder-item.selected {
+    background: rgba(10, 132, 255, 0.35);
+    outline: none;
   }
 
-  .finder-content.list .folder-icon-svg {
-    width: 30px;
+  .item-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+
+  .item-meta.item-date { color: var(--text-tertiary); }
+}
+
+/* Path bar (macOS) */
+.finder-pathbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px 16px;
+  background: #000;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  color: var(--text-tertiary);
+  overflow-x: auto;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.pathbar-root {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 2px;
+  opacity: 0.8;
+}
+
+.pathbar-segment {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.pathbar-sep {
+  opacity: 0.55;
+  flex-shrink: 0;
+}
+
+.pathbar-label {
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 4px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.pathbar-label:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+/* Status bar – macOS quiet */
+.finder-statusbar {
+  background: #000;
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Hide column header + meta columns on touch layouts */
+@media (max-width: 768px) {
+  .finder-list-header,
+  .finder-content.list .item-meta {
+    display: none !important;
+  }
+
+  .finder-pathbar {
+    display: none;
+  }
+}
+
+/* ==================== DARK MODE (DEFAULT) ==================== */
+
+[data-theme="dark"] .finder,
+.finder {
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --text-tertiary: rgba(255, 255, 255, 0.45);
+  background: #1a1d24;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .finder.maximized,
+.finder.maximized {
+  background: #1a1d24 !important;
+}
+
+[data-theme="dark"] .finder-toolbar,
+.finder-toolbar {
+  background: #0f1117;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .finder-sidebar,
+.finder-sidebar {
+  background: rgba(0, 0, 0, 0.22);
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .finder-btn:hover:not(:disabled),
+[data-theme="dark"] .sidebar-section li:hover,
+[data-theme="dark"] .pathbar-label:hover,
+.finder-btn:hover:not(:disabled),
+.sidebar-section li:hover,
+.pathbar-label:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+[data-theme="dark"] .sidebar-section li.active,
+.sidebar-section li.active {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+[data-theme="dark"] .finder-view-toggle,
+.finder-view-toggle {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .view-btn.active,
+.view-btn.active {
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .finder-item:hover,
+.finder-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .finder-list-header,
+.finder-list-header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .finder-pathbar,
+.finder-pathbar {
+  background: #0f1117;
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .finder-statusbar,
+.finder-statusbar {
+  background: #0f1117;
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .finder-minimized,
+.finder-minimized {
+  background: rgba(18, 22, 30, 0.9);
+  border-color: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 20px 60px rgba(2, 6, 20, 0.6);
+}
+
+[data-theme="dark"] .finder-minimized:hover,
+.finder-minimized:hover {
+  transform: translateX(-50%) translateY(-4px);
+}
+
+[data-theme="dark"] .new-folder-input,
+.new-folder-input {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .new-folder-input input,
+.new-folder-input input {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .new-folder-input input:focus,
+.new-folder-input input:focus {
+  border-color: var(--accent-blue);
+}
+
+/* ==================== LIGHT MODE OVERRIDES (FINDER WINDOW) ==================== */
+
+[data-theme="light"] .finder {
+  --text-primary: #1d1f27;
+  --text-secondary: #444a57;
+  --text-tertiary: #7a8190;
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.16);
+}
+
+[data-theme="light"] .finder.maximized {
+  background: #fff !important;
+}
+
+[data-theme="light"] .finder-toolbar {
+  background: #f5f5f7;
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .finder-sidebar {
+  background: #f2f2f7;
+  border-right-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .finder-btn:hover:not(:disabled),
+[data-theme="light"] .sidebar-section li:hover,
+[data-theme="light"] .pathbar-label:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .sidebar-section li.active {
+  background: rgba(0, 0, 0, 0.09);
+  color: #1d1f27;
+  font-weight: 700;
+}
+
+[data-theme="light"] .finder-view-toggle {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .view-btn.active {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16);
+}
+
+[data-theme="light"] .finder-item:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .finder-list-header {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .finder-pathbar {
+  background: #f5f5f7;
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .finder-statusbar {
+  background: #f5f5f7;
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .finder-minimized {
+  background: rgba(240, 240, 245, 0.9);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .finder-minimized:hover {
+  transform: translateX(-50%) translateY(-4px);
+  background: rgba(235, 235, 240, 0.95);
+}
+
+[data-theme="light"] .new-folder-input {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .new-folder-input input {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #1d1f27;
+}
+
+[data-theme="light"] .new-folder-input input:focus {
+  border-color: var(--accent-blue);
 }

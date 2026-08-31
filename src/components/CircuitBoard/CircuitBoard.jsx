@@ -1,7 +1,27 @@
-import { useMemo, useId } from 'react'
+import { useMemo, useId, useState } from 'react'
 import { motion } from 'motion/react'
 
 const NODE_SIZES = { sm: 18, md: 28, lg: 40 }
+
+function PulseDot({ index, path, uid }) {
+  const [transition] = useState(() => ({
+    duration: 2 + Math.random() * 1.5,
+    repeat: Infinity,
+    ease: 'linear',
+    delay: index * 0.3,
+  }))
+
+  return (
+    <motion.circle
+      r="4" fill="var(--landing-accent, #0066ff)" filter={`url(#${uid}-glow)`}
+      opacity="0.9"
+      initial={{ offsetDistance: '0%' }}
+      animate={{ offsetDistance: '100%' }}
+      transition={transition}
+      style={{ offsetPath: `path('${path}')` }}
+    />
+  )
+}
 
 function CircuitBoard({
   nodes = [],
@@ -131,19 +151,7 @@ function CircuitBoard({
 
               {/* Animated data pulse */}
               {conn.animated !== false && (
-                <motion.circle
-                  r="4" fill="var(--landing-accent, #0066ff)" filter={`url(#${uid}-glow)`}
-                  opacity="0.9"
-                  initial={{ offsetDistance: '0%' }}
-                  animate={{ offsetDistance: '100%' }}
-                  transition={{
-                    duration: 2 + Math.random() * 1.5,
-                    repeat: Infinity,
-                    ease: 'linear',
-                    delay: i * 0.3,
-                  }}
-                  style={{ offsetPath: `path('${d}')` }}
-                />
+                <PulseDot index={i} path={d} uid={uid} />
               )}
             </g>
           )
@@ -153,7 +161,6 @@ function CircuitBoard({
         {nodes.map((node, i) => {
           const rawSize = NODE_SIZES[node.size] || NODE_SIZES.md
           const isChip = node.shape === 'chip' || node.shape === 'rect'
-          const isCircle = node.shape === 'circle'
 
           if (isChip) {
             const chipW = rawSize * 1.8

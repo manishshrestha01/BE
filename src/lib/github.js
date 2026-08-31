@@ -10,8 +10,8 @@ const GITHUB_CONFIG = {
 
 // You can set a personal access token for higher rate limits (optional)
 // For public repos, no token is needed
-const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN || ''
-const FUNCTION_URL = import.meta.env.VITE_SUPABASE_FUNCTION_URL || ''
+const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || ''
+const FUNCTION_URL = process.env.NEXT_PUBLIC_SUPABASE_FUNCTION_URL || ''
 
 const headers = GITHUB_TOKEN 
   ? { 'Authorization': `token ${GITHUB_TOKEN}` }

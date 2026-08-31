@@ -1,8 +1,13 @@
 :root {
-  --app-bg: #0a0a0a;
+  --app-bg: #000;
   --app-text: #ffffff;
   --app-accent: #3b82f6;
   --app-accent-hover: #2563eb;
+  --accent-blue: #0A84FF;
+
+  /* macOS traffic-light controls (fallback so windows render on any page) */
+  --window-control-size: clamp(12px, calc(0.62rem + 0.25vmin), 14px);
+  --window-control-gap: clamp(7px, calc(0.36rem + 0.22vmin), 10px);
 }
 
 [data-theme="light"] {

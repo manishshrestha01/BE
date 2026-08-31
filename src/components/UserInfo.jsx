@@ -1,17 +1,20 @@
+'use client'
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import './UserInfo.css';
 import { COLLEGES } from '../lib/colleges';
+import { writeLocationState } from '../lib/originState';
 
 const UserInfo = () => {
   const { resolvedTheme } = useTheme()
   const { profile, updateProfile, loading } = useUserProfile();
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
   const [formData, setFormData] = useState({
     full_name: '',
     semester: '',
@@ -23,16 +26,16 @@ const UserInfo = () => {
   const [saving, setSaving] = useState(false);
 
   const handleLogoClick = () => {
-    if (location.pathname === '/') {
+    if (pathname === '/') {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }
   };
 
   useEffect(() => {
     if (!user) {
-      navigate('/login');
+      router.push('/login');
     }
-  }, [user, navigate]);
+  }, [user, router]);
 
   // Ensure auth pages set a light background while mounted
   useEffect(() => {
@@ -97,7 +100,8 @@ const UserInfo = () => {
 
       // Proceed to dashboard even if DB did not flip setupComplete (we have the latest values in-memory)
       console.log('Profile updated successfully, navigating to dashboard...');
-      navigate('/dashboard', { state: { profileJustCompleted: true } });
+      writeLocationState({ profileJustCompleted: true });
+      router.push('/dashboard');
     } catch (err) {
       const message = err?.message || err?.error?.message || JSON.stringify(err)
       setError(message || 'Failed to save profile. Please try again.')
@@ -112,7 +116,7 @@ const UserInfo = () => {
       {/* Navigation - Same as Login */}
       <nav className="auth-nav">
         <div className="auth-nav-container">
-          <Link to="/" className="auth-nav-logo" onClick={handleLogoClick}>
+          <Link href="/" className="auth-nav-logo" onClick={handleLogoClick}>
             <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32 }} />
             <span className="auth-logo-text">StudyMate</span>
           </Link>

@@ -61,6 +61,12 @@ const ZoomableImage = ({
     )
   }, [isZoomed])
 
+  const cursorClass = isPanning ? 'ql-cursor-grabbing' : (isZoomed ? 'ql-cursor-zoom-out' : 'ql-cursor-zoom-in')
+  const wrapperProps = useMemo(() => {
+    if (isMobile) return {}
+    return { onClick: handleToggleZoom }
+  }, [handleToggleZoom, isMobile])
+
   if (useNativeMobileImage) {
     return (
       <img
@@ -72,12 +78,6 @@ const ZoomableImage = ({
       />
     )
   }
-
-  const cursorClass = isPanning ? 'ql-cursor-grabbing' : (isZoomed ? 'ql-cursor-zoom-out' : 'ql-cursor-zoom-in')
-  const wrapperProps = useMemo(() => {
-    if (isMobile) return {}
-    return { onClick: handleToggleZoom }
-  }, [handleToggleZoom, isMobile])
 
   return (
     <TransformWrapper

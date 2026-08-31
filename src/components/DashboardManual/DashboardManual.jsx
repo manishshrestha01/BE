@@ -1,53 +1,32 @@
+'use client'
 import { useEffect, useRef } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
 import { Sun, Moon, Monitor } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
 import { useUserProfile } from '../../hooks/useUserProfile'
+import { readLocationState } from '../../lib/originState'
 import { BackgroundProvider } from '../../context/BackgroundContext'
 import Desktop from '../Desktop/Desktop'
 import DashboardOnlyProtection from './DashboardOnlyProtection'
 import './DashboardManual.css'
 
-// SEO configurations for different sections
-const seoConfig = {
-  default: {
-    title: 'PU Notes Dashboard - Pokhara University Computer Engineering Notes',
-    description: 'Access PU notes for BE Computer Engineering. Download Pokhara University notes for Compiler Design, C Programming, DBMS, DSA, OS.',
-    keywords: 'PU notes, Pokhara University notes, BE Computer notes, computer engineering notes, PU computer engineering, compiler notes, C notes, DBMS notes, DSA notes, NCIT notes, CCRC notes, engineering notes Nepal'
-  },
-  'how-it-works': {
-    title: 'How to Access PU Notes - Pokhara University Study Materials Guide',
-    description: 'Step-by-step guide to accessing Pokhara University notes. Download BE Computer Engineering notes, compiler design, C programming, DBMS and more.',
-    keywords: 'PU notes download, how to get PU notes, Pokhara University notes, BE computer notes download, engineering notes PDF'
-  },
-  'features': {
-    title: 'PU Notes Features - All Semester Computer Engineering Notes',
-    description: 'Access all 8 semesters of Pokhara University BE Computer Engineering notes. Compiler, C programming, DBMS, DSA, Operating System notes with PDF download.',
-    keywords: 'PU notes all semester, computer engineering notes PDF, semester 1-8 notes, PU syllabus notes, engineering exam notes'
-  },
-  'faq': {
-    title: 'PU Notes FAQ - Pokhara University Study Materials Questions',
-    description: 'FAQs about PU notes. Access notes for BE Computer, IT, Software Engineering. NCIT, CCRC and all PU affiliated college notes available.',
-    keywords: 'PU notes FAQ, BE IT notes, software engineering notes, civil engineering notes, NCIT notes, CCRC notes, PU affiliated college notes'
-  }
-}
-
 const DashboardManual = () => {
   const { mode, setTheme, resolvedTheme } = useTheme()
   const { user, isAuthenticated, isAuthRequired, loading } = useAuth()
   const { profile, isSetupComplete, loading: profileLoading, profileInitialized } = useUserProfile()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const router = useRouter()
+  const pathname = usePathname()
   const justCompletedProfile = useRef(false)
   const devtoolsLockedRef = useRef(false)
   const dashboardScopeRef = useRef(null)
 
   // Check if profile was just completed
   useEffect(() => {
-    if (location.state?.profileJustCompleted) {
+    const locationState = readLocationState()
+    if (locationState?.profileJustCompleted) {
       justCompletedProfile.current = true
-      window.history.replaceState({}, document.title)
     }
 
     // Check localStorage bypass to handle refreshes immediately after completing profile
@@ -65,7 +44,7 @@ const DashboardManual = () => {
     } catch (e) {
       console.warn('Failed to read profileJustCompletedUntil from localStorage', e)
     }
-  }, [location.state])
+  }, [])
 
   // Redirect to user-info if profile not complete (for logged-in users)
   // Only redirect when required profile fields are actually missing to avoid false redirects on refresh
@@ -77,103 +56,9 @@ const DashboardManual = () => {
 
     // Redirect if required fields are missing
     if (missingRequired) {
-      setTimeout(() => navigate('/user-info'), 200)
+      setTimeout(() => router.push('/user-info'), 200)
     }
-  }, [isAuthenticated, isSetupComplete, profileInitialized, profile, user, navigate])
-
-  // SEO - Update document title and meta tags based on hash (only for non-authenticated)
-  useEffect(() => {
-    if (isAuthenticated && user) return // Skip SEO for authenticated users
-    
-    // Get current section from hash (remove the #)
-    const currentSection = location.hash.replace('#', '') || 'default'
-    const seo = seoConfig[currentSection] || seoConfig.default
-
-    // Set page title
-    document.title = seo.title
-    
-    // Helper function to set or create meta tag
-    const setMetaTag = (selector, attribute, value) => {
-      let meta = document.querySelector(selector)
-      if (meta) {
-        meta.setAttribute('content', value)
-      } else {
-        meta = document.createElement('meta')
-        if (selector.includes('property=')) {
-          meta.setAttribute('property', attribute)
-        } else {
-          meta.name = attribute
-        }
-        meta.content = value
-        document.head.appendChild(meta)
-      }
-    }
-
-    // Set meta description
-    setMetaTag('meta[name="description"]', 'description', seo.description)
-
-    // Set meta keywords
-    setMetaTag('meta[name="keywords"]', 'keywords', seo.keywords)
-
-    // Set Open Graph tags for social sharing
-    const ogTags = {
-      'og:title': seo.title.replace(' | StudyMate', ''),
-      'og:description': seo.description,
-      'og:type': 'website',
-      'og:url': window.location.href,
-      'og:site_name': 'StudyMate'
-    }
-
-    Object.entries(ogTags).forEach(([property, content]) => {
-      setMetaTag(`meta[property="${property}"]`, property, content)
-    })
-
-    // Set Twitter Card tags
-    const twitterTags = {
-      'twitter:card': 'summary_large_image',
-      'twitter:title': seo.title.replace(' | StudyMate', ''),
-      'twitter:description': seo.description
-    }
-
-    Object.entries(twitterTags).forEach(([name, content]) => {
-      setMetaTag(`meta[name="${name}"]`, name, content)
-    })
-
-    // Set canonical URL (without hash for SEO best practice)
-    let canonical = document.querySelector('link[rel="canonical"]')
-    const canonicalUrl = window.location.origin + '/dashboard'
-    if (canonical) {
-      canonical.href = canonicalUrl
-    } else {
-      canonical = document.createElement('link')
-      canonical.rel = 'canonical'
-      canonical.href = canonicalUrl
-      document.head.appendChild(canonical)
-    }
-
-    // Handle hash navigation - scroll to section if hash exists
-    // Skip if hash contains OAuth tokens (access_token, refresh_token, etc.)
-    if (location.hash && !location.hash.includes('access_token') && !location.hash.includes('token_type')) {
-      try {
-        const element = document.querySelector(location.hash)
-        if (element) {
-          setTimeout(() => {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-          }, 100)
-        }
-      } catch {
-        // Invalid selector, ignore
-        window.scrollTo(0, 0)
-      }
-    } else {
-      window.scrollTo(0, 0)
-    }
-
-    // Cleanup function to reset title when leaving page
-    return () => {
-      document.title = 'StudyMate'
-    }
-  }, [isAuthenticated, location.hash, user])
+  }, [isAuthenticated, isSetupComplete, profileInitialized, profile, user, router])
 
   // If devtools is open on dashboard, force-exit the dashboard session.
   useEffect(() => {
@@ -247,7 +132,7 @@ const DashboardManual = () => {
 
   // NOT LOGGED IN: Show the manual/guide page immediately
   if (!isAuthenticated) {
-    return <ManualPage location={location} />
+    return <ManualPage pathname={pathname} />
   }
 
   // LOGGED IN but profile still loading - show spinner
@@ -285,10 +170,10 @@ const DashboardManual = () => {
 }
 
 // Separate component for the manual page content
-const ManualPage = ({ location }) => {
+const ManualPage = ({ pathname }) => {
   const { mode, setTheme, resolvedTheme } = useTheme()
   const handleLogoClick = () => {
-    if (location.pathname === '/') {
+    if (pathname === '/') {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
   }
@@ -305,7 +190,7 @@ const ManualPage = ({ location }) => {
       ]
     },
     {
-      icon: '📁',
+      icon: '/icons/finder.webp',
       title: 'Finder - File Browser',
       description: 'Browse through all your study materials organized by semester and subject. Find PDFs, notes, and documents easily.',
       tips: [
@@ -316,7 +201,7 @@ const ManualPage = ({ location }) => {
       ]
     },
     {
-      icon: '📝',
+      icon: '/icons/notes.webp',
       title: 'Draw App',
       description: 'Create, edit, and save your personal notes while studying. Perfect for jotting down important concepts and formulas.',
       tips: [
@@ -325,19 +210,18 @@ const ManualPage = ({ location }) => {
       ]
     },
        {
-      // Use gedit.png as the icon for the Contact App
-      icon: <img src="/gedit.png" alt="Contact App" className="feature-icon-img" />, 
-       title: 'Contact App',
-       description: 'Send messages to the StudyMate team — upload study materials or report issues and feature requests.',
-       tips: [
-         'Upload notes and supporting files (up to 25 MB)',
-         'Report app problems with screenshots and a clear description',
-         'You can upload the notes through google drive link as well',
-         'Use it for feature requests, bug reports, and general feedback'
-       ]
-     },
+      icon: '/icons/contacts.webp',
+      title: 'Contact App',
+      description: 'Send messages to the StudyMate team — upload study materials or report issues and feature requests.',
+      tips: [
+        'Upload notes and supporting files (up to 25 MB)',
+        'Report app problems with screenshots and a clear description',
+        'You can upload the notes through google drive link as well',
+        'Use it for feature requests, bug reports, and general feedback'
+      ]
+    },
     {
-      icon: '⚙️',
+      icon: '/icons/settings.webp',
       title: 'Settings',
       description: 'Customize your dashboard experience. Change backgrounds, manage your profile, and configure preferences.',
       tips: [
@@ -347,7 +231,7 @@ const ManualPage = ({ location }) => {
       ]
     },
     {
-      icon: '🚀',
+      icon: '/icons/dock.webp',
       title: 'The Dock',
       description: 'Your quick access toolbar at the bottom of the screen. Launch apps with a single click.',
       tips: [
@@ -436,16 +320,16 @@ const ManualPage = ({ location }) => {
       {/* Navigation */}
       <nav className="landing-nav">
         <div className="nav-container">
-          <Link to="/" className="nav-logo" onClick={handleLogoClick}>
+          <Link href="/" className="nav-logo" onClick={handleLogoClick}>
             <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32 }} />
             <span className="logo-text">StudyMate</span>
           </Link>
           <div className="nav-links">
-            <Link to="/">Home</Link>
+            <Link href="/">Home</Link>
             <a href="#features">Features</a>
             <a href="#how-it-works">How It Works</a>
             <a href="#faq">FAQ</a>
-            <Link to="/login" className="nav-cta">Get Started</Link>
+            <Link href="/login" className="nav-cta">Get Started</Link>
             <button
               className="theme-toggle-btn"
               onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
@@ -474,7 +358,7 @@ const ManualPage = ({ location }) => {
             This guide will walk you through all the features available.
           </p>
           <div className="hero-cta">
-            <Link to="/login" className="btn-primary">
+            <Link href="/login" className="btn-primary">
               Login to Get Started
               <span className="btn-arrow">→</span>
             </Link>
@@ -484,19 +368,19 @@ const ManualPage = ({ location }) => {
           </div>
           <div className="hero-visual">
             <div className="visual-card card-1">
-              <span className="card-icon">📁</span>
+              <span className="card-icon"><img src="/icons/finder.webp" alt="Finder" /></span>
               <span className="card-text">Finder</span>
             </div>
             <div className="visual-card card-2">
-              <span className="card-icon">📝</span>
+              <span className="card-icon"><img src="/icons/notes.webp" alt="Draw" /></span>
               <span className="card-text">Draw</span>
             </div>
               <div className="visual-card card-3">
-              <span className="card-icon"><img src="/gedit.png" alt="Contact" className="hero-card-icon" /></span>
+              <span className="card-icon"><img src="/icons/contacts.webp" alt="Contact" /></span>
               <span className="card-text">Contact</span>
             </div>
             <div className="visual-card card-4">
-              <span className="card-icon">⚙️</span>
+              <span className="card-icon"><img src="/icons/settings.webp" alt="Settings" /></span>
               <span className="card-text">Settings</span>
             </div>
           </div>
@@ -529,7 +413,13 @@ const ManualPage = ({ location }) => {
           <div className="features-grid">
             {manualSections.map((section, index) => (
               <div key={index} className="feature-card">
-                <span className="feature-icon">{section.icon}</span>
+                <span className="feature-icon">
+                  {section.icon.startsWith('/') ? (
+                    <img src={section.icon} alt={section.title} />
+                  ) : (
+                    section.icon
+                  )}
+                </span>
                 <h3 className="feature-title">{section.title}</h3>
                 <p className="feature-description">{section.description}</p>
                 <div className="feature-tips">
@@ -680,7 +570,7 @@ const ManualPage = ({ location }) => {
           <p className="cta-subtitle">
             Join thousands of students who are already using StudyMate to ace their exams.
           </p>
-          <Link to="/login" className="btn-primary">
+          <Link href="/login" className="btn-primary">
             Login Now
             <span className="btn-arrow">→</span>
           </Link>
@@ -692,7 +582,7 @@ const ManualPage = ({ location }) => {
         <div className="footer-container">
           <div className="footer-grid">
             <div className="footer-brand">
-              <Link to="/" className="nav-logo" onClick={handleLogoClick}>
+              <Link href="/" className="nav-logo" onClick={handleLogoClick}>
                 <img src="/white.svg" alt="StudyMate Logo" style={{ height: 32 }} />
                 <span className="logo-text">StudyMate</span>
               </Link>
@@ -721,23 +611,23 @@ const ManualPage = ({ location }) => {
             <div className="footer-links-grid">
               <div className="footer-column">
                 <h2>Quick Links</h2>
-                <Link to="/">Home</Link>
-                <Link to="/colleges">Colleges</Link>
+                <Link href="/">Home</Link>
+                <Link href="/colleges">Colleges</Link>
                 <a href="#features">Features</a>
                 <a href="#how-it-works">How It Works</a>
                 <a href="#faq">FAQ</a>
               </div>
               <div className="footer-column">
                 <h2>Semesters</h2>
-                <Link to="/">Semester 1-2</Link>
-                <Link to="/">Semester 3-4</Link>
-                <Link to="/">Semester 5-6</Link>
-                <Link to="/">Semester 7-8</Link>
+                <Link href="/">Semester 1-2</Link>
+                <Link href="/">Semester 3-4</Link>
+                <Link href="/">Semester 5-6</Link>
+                <Link href="/">Semester 7-8</Link>
               </div>
               <div className="footer-column">
                 <h2>Account</h2>
-                <Link to="/login">Login</Link>
-                <Link to="/login">Continue with Google</Link>
+                <Link href="/login">Login</Link>
+                <Link href="/login">Continue with Google</Link>
               </div>
             </div>
           </div>

@@ -1,7 +1,13 @@
 import { useEffect, useState, useRef } from "react";
+import dynamic from "next/dynamic";
+import { X, Minus, Plus } from "lucide-react";
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
-import { ExcalidrawCanvas } from "./ExcalidrawCanvas";
 import "./Notes.css";
+
+const ExcalidrawCanvas = dynamic(
+  () => import("./ExcalidrawCanvas").then((mod) => mod.ExcalidrawCanvas),
+  { ssr: false }
+);
 
 const DEFAULT_NOTES_STATE = {
   noteId: null,
@@ -82,7 +88,7 @@ const Notes = ({ onClose, initialState = DEFAULT_NOTES_STATE, onStateChange }) =
   if (windowState === "minimized") {
     return (
       <div className="notes-minimized" onClick={() => setWindowState("normal")} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setWindowState('normal')}>
-        <span>📝</span>
+        <img src="/icons/notes.webp" alt="Draw" className="minimized-icon" />
         <span>Draw</span>
       </div>
     );
@@ -92,9 +98,15 @@ const Notes = ({ onClose, initialState = DEFAULT_NOTES_STATE, onStateChange }) =
     <div ref={containerRef} className={`${getWindowClassName()} glass-dark`} tabIndex={-1}>
       <div className="notes-toolbar">
         <div className="window-controls">
-          <button className="window-btn close" onClick={onClose} title="Close">×</button>
-          <button className="window-btn minimize" onClick={handleMinimize} title="Minimize">−</button>
-          <button className="window-btn maximize" onClick={handleMaximize} title={windowState === 'maximized' ? 'Restore' : 'Maximize'}>+</button>
+          <button className="window-btn close" onClick={onClose} title="Close" aria-label="Close">
+            <span><X strokeWidth={2.4} /></span>
+          </button>
+          <button className="window-btn minimize" onClick={handleMinimize} title="Minimize" aria-label="Minimize">
+            <span><Minus strokeWidth={2.4} /></span>
+          </button>
+          <button className="window-btn maximize" onClick={handleMaximize} title={windowState === 'maximized' ? 'Restore' : 'Maximize'} aria-label="Maximize">
+            <span><Plus strokeWidth={2.4} /></span>
+          </button>
         </div>
         <div className="notes-title">Draw</div>
         <div className="notes-toolbar-spacer" aria-hidden="true" />

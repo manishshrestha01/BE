@@ -1,15 +1,19 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { gooeyToast } from 'goey-toast'
+import { useRouter } from 'next/navigation'
 import { useBackground } from '../../context/BackgroundContext'
 import { useUserProfile } from '../../hooks/useUserProfile'
 import { useAuth } from '../../context/AuthContext'
+import { useTheme } from '../../context/ThemeContext'
 import SettingRow from './SettingRow'
+import { X, Minus, Plus, Sun, Moon, Monitor, User, Image as ImageIcon, Palette, Info, HelpCircle, LogOut } from 'lucide-react'
 import './Settings.css'
 import { COLLEGES } from '../../lib/colleges'
 
 const Settings = ({ onClose, initialSection = 'profile' }) => {
-  const navigate = useNavigate()
+  const router = useRouter()
   const { backgrounds, currentBg, changeBackground, customBg, setCustomBackground, removeCustomBackground } = useBackground()
+  const { mode, resolvedTheme, setTheme } = useTheme()
   const { profile, updateProfile, getInitials, error: profileError } = useUserProfile()
   const { user, signOut, isAuthenticated } = useAuth()
   const [activeSection, setActiveSection] = useState(initialSection)
@@ -35,13 +39,15 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   const [openFaq, setOpenFaq] = useState(null)
 
   const settingsFaqs = [
-    { id: 'q1', question: 'How do I change my wallpaper?', answer: 'Open Settings → Wallpaper. Select a built-in background or upload a custom image (max 100 MB).' },
+    { id: 'q1', question: 'How do I change my wallpaper?', answer: 'Open Settings → Wallpaper. Choose from 14 built-in backgrounds or upload a custom image (max 100 MB).' },
     { id: 'q2', question: 'How do I update my profile?', answer: 'Go to Settings → Profile. Update your full name, semester, and college, then click Save.' },
     { id: 'q3', question: 'How do I sign out?', answer: 'Open Settings → Profile → Account and click Sign Out, or use the Sign Out row in mobile Settings.' },
     { id: 'q4', question: 'Can I upload my own background image?', answer: 'Yes — use the Wallpaper section to upload or drag & drop an image. Supported files are images only.' },
-    { id: 'q5', question: 'Where can I find the app version?', answer: 'Open Settings → About to see the current version.' },
+    { id: 'q5', question: 'Where can I find the app version?', answer: 'Open Settings → About to see the current version (now 2.0.0).' },
     { id: 'q6', question: 'What is the Dashboard?', answer: 'The Dashboard is the main hub of StudyMate — it surfaces curated semester-wise resources, featured notes, and quick links (Draw, Contact, and other apps) so you can quickly find study materials.' },
-    { id: 'q7', question: 'How can I upload notes or report bugs?', answer: 'Use the Contact app (accessible from the Dashboard) to upload study materials. If you need to report bugs, request features, or share files directly, use the Contact app — attach screenshots or files (common formats supported) and send a message. Contact attachments are limited to ~25 MB per file.' }
+    { id: 'q7', question: 'How can I upload notes or report bugs?', answer: 'Use the Contact app (accessible from the Dashboard) to upload study materials. If you need to report bugs, request features, or share files directly, use the Contact app — attach screenshots or files (common formats supported) and send a message. Contact attachments are limited to ~25 MB per file.' },
+    { id: 'q8', question: "What's new in version 2.0?", answer: 'Version 2.0 adds 14 built-in wallpapers, polished window controls across Finder, Draw, Settings, and Contact, plus refreshed About and FAQ sections.' },
+    { id: 'q9', question: 'How do I switch between light and dark mode?', answer: 'Open Settings → Appearance. Pick Dark, Light, or Auto (System) to follow your device preference.' }
   ]
 
   const toggleFaq = (id) => setOpenFaq(prev => prev === id ? null : id)
@@ -82,10 +88,20 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     const isComplete = Boolean(formData.full_name && formData.semester && formData.college)
     try {
       await updateProfile({ ...formData, setup_complete: isComplete })
+      gooeyToast.success(isComplete ? 'Profile saved' : 'Profile updated', {
+        description: 'Your changes have been synced.',
+        showTimestamp: false,
+        spring: false,
+      })
       console.log('Profile saved')
     } catch (err) {
       console.error('Failed to save profile:', err)
       setSaveError('Failed to save profile. Please try again.')
+      gooeyToast.error('Failed to save profile', {
+        description: 'Please try again.',
+        showTimestamp: false,
+        spring: false,
+      })
     }
   }
 
@@ -94,7 +110,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     try {
       await signOut()
       onClose()
-      navigate('/')
+      router.push('/')
     } catch (err) {
       console.error('Sign out error:', err)
     }
@@ -172,11 +188,20 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   }
 
   const sections = [
-    { id: 'profile', icon: '👤', label: profile.full_name || 'Profile' },
-    { id: 'wallpaper', icon: '🖼️', label: 'Wallpaper' },
-    { id: 'about', icon: 'ℹ️', label: 'About' },
-    { id: 'faq', icon: '❓', label: 'FAQ' }
+    { id: 'profile', icon: User, label: profile.full_name || 'Profile' },
+    { id: 'wallpaper', icon: ImageIcon, label: 'Wallpaper' },
+    { id: 'appearance', icon: Palette, label: 'Appearance' },
+    { id: 'about', icon: Info, label: 'About' },
+    { id: 'faq', icon: HelpCircle, label: 'FAQ' }
   ]
+
+  const themeOptions = [
+    { id: 'dark', label: 'Dark', icon: Moon, preview: 'linear-gradient(135deg, #1c1f26, #2d323b)' },
+    { id: 'light', label: 'Light', icon: Sun, preview: 'linear-gradient(135deg, #f6f7fb, #dde1e8)' },
+    { id: 'system', label: 'Auto (System)', icon: Monitor, preview: 'linear-gradient(135deg, #667eea, #764ba2)' }
+  ]
+
+  const themeLabel = mode === 'dark' ? 'Dark' : mode === 'light' ? 'Light' : 'Auto (System)'
 
   const handleMinimize = () => {
     setWindowState('minimized')
@@ -215,7 +240,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   if (windowState === 'minimized') {
     return (
       <div className="settings-minimized" onClick={() => setWindowState('normal')}>
-        <span>⚙️</span>
+        <img src="/icons/settings.webp" alt="Settings" className="minimized-icon" />
         <span>Settings</span>
       </div>
     )
@@ -228,14 +253,14 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
         <div className="settings-sidebar">
           <div className="settings-sidebar-header">
             <div className="window-controls">
-              <button className="window-btn close" onClick={onClose} title="Close">
-                <span>×</span>
+              <button className="window-btn close" onClick={onClose} title="Close" aria-label="Close">
+                <span><X strokeWidth={2.4} /></span>
               </button>
-              <button className="window-btn minimize" onClick={handleMinimize} title="Minimize">
-                <span>−</span>
+              <button className="window-btn minimize" onClick={handleMinimize} title="Minimize" aria-label="Minimize">
+                <span><Minus strokeWidth={2.4} /></span>
               </button>
-              <button className="window-btn maximize" onClick={handleMaximize} title={windowState === 'maximized' ? 'Restore' : 'Maximize'}>
-                <span>+</span>
+              <button className="window-btn maximize" onClick={handleMaximize} title={windowState === 'maximized' ? 'Restore' : 'Maximize'} aria-label="Maximize">
+                <span><Plus strokeWidth={2.4} /></span>
               </button>
             </div>
             <h2>Settings</h2>
@@ -247,7 +272,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                 className={`settings-nav-item ${activeSection === section.id ? 'active' : ''}`}
                 onClick={() => setActiveSection(section.id)}
               >
-                <span className="nav-icon">{section.icon}</span>
+                <span className="nav-icon"><section.icon size={16} strokeWidth={2} /></span>
                 <span className="nav-label">{section.label}</span>
               </button>
             ))}
@@ -293,24 +318,30 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
 
                   <div className="mobile-group">
                     <SettingRow
-                      icon={<span>🖼️</span>}
+                      icon={<ImageIcon size={17} />}
                       title="Wallpaper"
                       subtitle="Choose a wallpaper for your desktop"
                       onClick={() => setMobileView('wallpaper')}
                     />
                     <SettingRow
-                      icon={<span>ℹ️</span>}
+                      icon={<Palette size={17} />}
+                      title="Appearance"
+                      subtitle={themeLabel}
+                      onClick={() => setMobileView('appearance')}
+                    />
+                    <SettingRow
+                      icon={<Info size={17} />}
                       title="About"
                       onClick={() => setMobileView('about')}
                     />
                     <SettingRow
-                      icon={<span>❓</span>}
+                      icon={<HelpCircle size={17} />}
                       title="FAQ"
                       onClick={() => setMobileView('faq')}
                     />
                     {user && (
                       <SettingRow
-                        icon={<span>🚪</span>}
+                        icon={<LogOut size={17} />}
                         title="Sign Out"
                         onClick={handleSignOut}
                         danger
@@ -384,7 +415,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                               ))}
                             </select>
                           </div>
-                          <button className="btn-save-profile" onClick={handleSaveProfile}>
+                          <button className="btn-save-profile profile-save" onClick={handleSaveProfile}>
                             Save
                           </button>
                           {saveError && <div style={{ color: 'red', marginTop: 8 }}>{saveError}</div>}
@@ -439,19 +470,45 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                         </div>
                       </div>
                     )}
+                    {mobileView === 'appearance' && (
+                      <div className="appearance-section">
+                        <p className="section-description">Choose the look of your interface</p>
+                        <div className="theme-option-grid theme-option-grid-mobile">
+                          {themeOptions.map(opt => {
+                            const Icon = opt.icon
+                            const active = mode === opt.id
+                            return (
+                              <button
+                                key={opt.id}
+                                className={`theme-option ${active ? 'active' : ''}`}
+                                onClick={() => setTheme(opt.id)}
+                                aria-pressed={active}
+                              >
+                                <span className="theme-preview" style={{ background: opt.preview }}>
+                                  <Icon size={20} strokeWidth={2} />
+                                </span>
+                                <span className="theme-label">{opt.label}</span>
+                                {active && <span className="bg-check">✓</span>}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )}
                     {mobileView === 'about' && (
                       <div className="about-section">
                         <div className="about-app-icon">
-                          <picture>
-                            <source srcSet="/white.svg" media="(prefers-color-scheme: dark)" />
-                            <img src="/black.svg" alt="StudyMate logo" className="about-app-icon-img" />
-                          </picture>
+                          <img
+                            src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'}
+                            alt="StudyMate logo"
+                            className="about-app-icon-img"
+                          />
                         </div>
                         <h4>StudyMate</h4>
-                        <p className="about-version">Version 1.0.0</p>
+                        <p className="about-version">Version 2.0.0</p>
                         <div className="about-details">
-                          <p>Your study companion — organized notes, past papers, and semester-wise resources for PU students.</p>
-                          <p>Discover curated materials and helpful guides to support your learning across all semesters.</p>
+                          <p>StudyMate 2.0 — your study companion with organized notes, past papers, and semester-wise resources for PU Computer Engineering students.</p>
+                          <p>Personalize your dashboard with 14 built-in wallpapers, custom uploads, and a polished window experience.</p>
                         </div>
                       </div>
                     )}
@@ -474,7 +531,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                           ))}
                         </div>
                         <div className="settings-faq-footer" style={{ marginTop: 12 }}>
-                          <button className="settings-faq-link" onClick={() => { onClose(); navigate('/faq') }}>Open full FAQ</button>
+                          <button className="settings-faq-link" onClick={() => { onClose(); router.push('/faq') }}>Open full FAQ</button>
                         </div>
                       </div>
                     )}
@@ -591,7 +648,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                      />
                    </div>
 
-                  <button className="btn-save-profile" onClick={handleSaveProfile}>
+                  <button className="btn-save-profile profile-save" onClick={handleSaveProfile}>
                     Save Profile
                   </button>
                   {saveError && <div style={{ color: 'red', marginTop: 8 }}>{saveError}</div>}
@@ -670,23 +727,54 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
               </div>
             )}
 
+            {/* Appearance Section (desktop) */}
+            {activeSection === 'appearance' && (
+              <div className="appearance-section">
+                <p className="section-description">Choose the look of your interface</p>
+                <div className="theme-option-grid">
+                  {themeOptions.map(opt => {
+                    const Icon = opt.icon
+                    const active = mode === opt.id
+                    return (
+                      <button
+                        key={opt.id}
+                        className={`theme-option ${active ? 'active' : ''}`}
+                        onClick={() => setTheme(opt.id)}
+                        aria-pressed={active}
+                      >
+                        <span className="theme-preview" style={{ background: opt.preview }}>
+                          <Icon size={20} strokeWidth={2} />
+                        </span>
+                        <span className="theme-label">{opt.label}</span>
+                        {active && <span className="bg-check">✓</span>}
+                      </button>
+                    )
+                  })}
+                </div>
+                <p className="section-description" style={{ marginTop: 16 }}>
+                  Your choice is saved automatically and synced across pages.
+                </p>
+              </div>
+            )}
+
             {/* About Section */}
             {activeSection === 'about' && (
               <div className="about-section">
                 <div className="about-app-icon">
-                  <picture>
-                    <source srcSet="/white.svg" media="(prefers-color-scheme: dark)" />
-                    <img src="/black.svg" alt="StudyMate logo" className="about-app-icon-img" />
-                  </picture>
+                  <img
+                    src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'}
+                    alt="StudyMate logo"
+                    className="about-app-icon-img"
+                  />
                 </div>
                 <h4>StudyMate</h4>
-                <p className="about-version">Version 1.0.0</p>
+                <p className="about-version">Version 2.0.0</p>
                 <div className="about-details">
-                  <p>Your study companion — organized notes, past papers, and semester-wise resources for PU students.</p>
-                  <p>Discover curated materials and helpful guides to support your learning across all semesters.</p>
+                  <p>StudyMate 2.0 — your study companion with organized notes, past papers, and semester-wise resources for PU Computer Engineering students.</p>
+                  <p>Personalize your dashboard with 14 built-in wallpapers, custom uploads, and a polished window experience.</p>
                 </div>
                 <div className="about-credits">
-                  <p>Built with React</p>
+                  <p>Built with Next.js & React</p>
                   <p>© 2026 StudyMate</p>
                 </div>
               </div>
@@ -711,7 +799,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                   ))}
                 </div>
                 <div className="settings-faq-footer" style={{ marginTop: 12 }}>
-                  <button className="settings-faq-link" onClick={() => { onClose(); navigate('/faq') }}>Open full FAQ</button>
+                  <button className="settings-faq-link" onClick={() => { onClose(); router.push('/faq') }}>Open full FAQ</button>
                 </div>
               </div>
             )}

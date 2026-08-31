@@ -1,5 +1,6 @@
+'use client'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useRouter, useSearchParams } from 'next/navigation'
 import './QuickLook.css'
 
 const QUICKLOOK_STATE_KEY = 'studymate:quicklook:v1'
@@ -10,8 +11,8 @@ const getOfficeFullViewerUrl = (url) => {
 }
 
 const OfficeViewer = () => {
-  const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const [iframeLoaded, setIframeLoaded] = useState(false)
   const [fallbackTriggered, setFallbackTriggered] = useState(false)
   const fallbackTimerRef = useRef(null)
@@ -35,10 +36,10 @@ const OfficeViewer = () => {
   const closeViewer = () => {
     clearQuickLookState()
     if (backUrl) {
-      navigate(backUrl, { replace: true })
+      router.replace(backUrl)
       return
     }
-    navigate(-1)
+    router.back()
   }
 
   useEffect(() => {

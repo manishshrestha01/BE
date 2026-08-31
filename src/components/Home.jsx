@@ -1,16 +1,17 @@
+'use client'
 import { useEffect, useRef } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { useUserProfile } from '../hooks/useUserProfile'
 import { BackgroundProvider } from '../context/BackgroundContext'
 import Desktop from './Desktop/Desktop'
+import { readLocationState } from '../lib/originState'
 import '../styles/glass.css'
 
 const Home = () => {
   const { user, isAuthenticated, isAuthRequired, loading } = useAuth()
   const { profile, isSetupComplete, loading: profileLoading, profileInitialized } = useUserProfile()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const router = useRouter()
   const justCompletedProfile = useRef(false)
 
   useEffect(() => {
@@ -23,16 +24,14 @@ const Home = () => {
 
   useEffect(() => {
     if (!loading && isAuthRequired && !isAuthenticated) {
-      navigate('/login')
+      router.push('/login')
     }
-  }, [isAuthRequired, isAuthenticated, loading, navigate])
+  }, [isAuthRequired, isAuthenticated, loading, router])
 
   useEffect(() => {
-    // Check if we just completed the profile
-    if (location.state?.profileJustCompleted) {
+    // Check if we just completed the profile (passed via sessionStorage from UserInfo)
+    if (readLocationState()?.profileJustCompleted) {
       justCompletedProfile.current = true;
-      // Clear the state so it doesn't persist on refresh
-      window.history.replaceState({}, document.title);
     }
 
     // Also check localStorage for a short-lived bypass (survives refresh)
@@ -50,7 +49,7 @@ const Home = () => {
     } catch (e) {
       console.warn('Failed to read profileJustCompletedUntil from localStorage', e)
     }
-  }, [location.state])
+  }, [])
 
   useEffect(() => {
     console.log('Home component check:', { 
@@ -73,9 +72,9 @@ const Home = () => {
     const missingRequired = !profile || !profile.full_name || !profile.semester || !profile.college
     if (missingRequired) {
       console.log('Profile incomplete or missing required fields, redirecting to user-info', { missingRequired, isSetupComplete })
-      setTimeout(() => navigate('/user-info'), 200)
+      setTimeout(() => router.push('/user-info'), 200)
     }
-  }, [isAuthenticated, isSetupComplete, profileLoading, profileInitialized, navigate, profile, user])
+  }, [isAuthenticated, isSetupComplete, profileLoading, profileInitialized, router, profile, user])
 
   if (loading || (Boolean(user) && profileLoading)) return null
 

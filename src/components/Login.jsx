@@ -1,5 +1,7 @@
+'use client'
 import { useState, useEffect } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
 import { Sun, Moon, Monitor } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
@@ -11,8 +13,9 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState({ type: '', text: '' })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const navigate = useNavigate()
-  const location = useLocation()
+  const [mounted, setMounted] = useState(false)
+  const router = useRouter()
+  const pathname = usePathname()
   const {
     signInWithEmail,
     signInWithGoogle,
@@ -23,40 +26,15 @@ const Login = () => {
 
   const handleLogoClick = () => {
     setMobileMenuOpen(false)
-    if (location.pathname === '/') {
+    if (pathname === '/') {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
   }
 
-  // Ensure login page is not indexed by search engines
+  // Prevent hydration mismatch
   useEffect(() => {
-    document.title = 'Login - StudyMate | PU Notes for Computer Engineering'
-
-    const metaRobots = document.querySelector('meta[name="robots"]')
-    if (metaRobots) metaRobots.setAttribute('content', 'noindex, nofollow')
-
-    // Keep description in case of client-side sharing; do NOT add JSON-LD or OG tags for login
-    const metaDescription = document.querySelector('meta[name="description"]')
-    const descContent = 'Sign in to StudyMate to access Pokhara University notes for BE Computer Engineering.'
-    if (metaDescription) {
-      metaDescription.setAttribute('content', descContent)
-    }
-
-    return () => {
-      document.title = 'StudyMate'
-      const restoreRobots = document.querySelector('meta[name="robots"]')
-      if (restoreRobots) {
-        restoreRobots.setAttribute('content', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1')
-      }
-    }
+    setMounted(true)
   }, [])
-
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/dashboard')
-    }
-  }, [isAuthenticated, navigate])
 
   // Ensure auth pages set a light background while mounted
   useEffect(() => {
@@ -65,6 +43,13 @@ const Login = () => {
       document.body.classList.remove('auth-theme')
     }
   }, [])
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/dashboard')
+    }
+  }, [isAuthenticated, router])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -75,7 +60,7 @@ const Login = () => {
       // Demo mode - just redirect
       setTimeout(() => {
         setIsLoading(false)
-        navigate('/dashboard')
+        router.push('/dashboard')
       }, 1000)
       return
     }
@@ -99,7 +84,7 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     if (!isSupabaseConfigured) {
-      navigate('/dashboard')
+      router.push('/dashboard')
       return
     }
 
@@ -119,24 +104,28 @@ const Login = () => {
       {/* Navigation - Same as Landing */}
       <nav className="auth-nav">
         <div className="auth-nav-container">
-          <Link to="/" className="auth-nav-logo" onClick={handleLogoClick}>
-            <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32 }} />
+          <Link href="/" className="auth-nav-logo" onClick={handleLogoClick}>
+            {mounted
+              ? <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32 }} />
+              : <img src="/black.svg" alt="StudyMate Logo" style={{ height: 32 }} />}
             <span className="auth-logo-text">StudyMate</span>
           </Link>
           <div className={`auth-nav-links ${mobileMenuOpen ? 'active' : ''}`}>
             <a href="/#features">Features</a>
             <a href="/#about">About</a>
             <a href="/#testimonials">Reviews</a>
-            <Link to="/login" className="auth-nav-login">Login</Link>
-            <Link to="/dashboard" className="auth-nav-cta">Open Dashboard</Link>
-            <button
-              className="theme-toggle-btn"
-              onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
-              title={`Theme: ${mode}`}
-              aria-label="Toggle theme"
-            >
-              {mode === 'dark' ? <Moon size={18} /> : mode === 'light' ? <Sun size={18} /> : <Monitor size={18} />}
-            </button>
+            <Link href="/login" className="auth-nav-login">Login</Link>
+            <Link href="/dashboard" className="auth-nav-cta">Open Dashboard</Link>
+            {mounted && (
+              <button
+                className="theme-toggle-btn"
+                onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
+                title={`Theme: ${mode}`}
+                aria-label="Toggle theme"
+              >
+                {mode === 'dark' ? <Moon size={18} /> : mode === 'light' ? <Sun size={18} /> : <Monitor size={18} />}
+              </button>
+            )}
           </div>
           <button 
             className={`auth-mobile-menu-btn ${mobileMenuOpen ? 'active' : ''}`} 
@@ -156,7 +145,9 @@ const Login = () => {
           {/* Feature Highlights Sidebar */}
           <div className="auth-highlights">
             <div className="auth-highlight-header">
-              <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate" style={{ width: 40, height: 40 }} />
+              {mounted
+                ? <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate" style={{ width: 40, height: 40 }} />
+                : <img src="/black.svg" alt="StudyMate" style={{ width: 40, height: 40 }} />}
               <h2>StudyMate</h2>
             </div>
             <p className="auth-highlight-subtitle">
@@ -261,7 +252,7 @@ const Login = () => {
               </button>
             </>
           ) : (
-            <Link to="/dashboard" className="auth-btn-primary" style={{ display: 'inline-flex', justifyContent: 'center' }}>
+            <Link href="/dashboard" className="auth-btn-primary" style={{ display: 'inline-flex', justifyContent: 'center' }}>
               Open Dashboard
             </Link>
           )}

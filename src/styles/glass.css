@@ -1,25 +1,26 @@
 :root {
-  /* Glass effect colors */
-  --glass-bg: rgba(255, 255, 255, 0.15);
-  --glass-bg-dark: rgba(0, 0, 0, 0.25);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  --glass-blur: blur(20px);
+  /* Dark theme: solid black surfaces, no glass/blur */
+  --glass-bg: #000000;
+  --glass-bg-dark: #000;
+  --glass-border: rgba(255, 255, 255, 0.16);
+  --glass-shadow: 0 24px 70px rgba(0, 0, 0, 0.5), 0 4px 18px rgba(0, 0, 0, 0.28);
+  --glass-blur: none;
+  --glass-inner-highlight: none;
   
   /* macOS colors */
-  --accent-blue: #007AFF;
+  --accent-blue: #0A84FF;
   --accent-purple: #AF52DE;
   --accent-pink: #FF2D55;
-  --accent-red: #FF3B30;
-  --accent-orange: #FF9500;
-  --accent-yellow: #FFCC00;
-  --accent-green: #34C759;
-  --accent-teal: #5AC8FA;
+  --accent-red: #FF453A;
+  --accent-orange: #FF9F0A;
+  --accent-yellow: #FFD60A;
+  --accent-green: #32D74B;
+  --accent-teal: #64D2FF;
   
   /* Text colors */
   --text-primary: rgba(255, 255, 255, 0.95);
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --text-tertiary: rgba(255, 255, 255, 0.45);
   
   /* Sidebar */
   --sidebar-width: 240px;
@@ -39,6 +40,18 @@
   /* macOS traffic-light controls */
   --window-control-size: clamp(12px, calc(0.62rem + 0.25vmin), 14px);
   --window-control-gap: clamp(7px, calc(0.36rem + 0.22vmin), 10px);
+}
+
+/* Light theme: readable ink + frosted light surfaces */
+[data-theme="light"] {
+  --text-primary: rgba(28, 30, 34, 0.95);
+  --text-secondary: rgba(28, 30, 34, 0.68);
+  --text-tertiary: rgba(28, 30, 34, 0.48);
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-bg-dark: #ffffff;
+  --glass-border: rgba(0, 0, 0, 0.12);
+  --glass-inner-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 24px 70px rgba(0, 0, 0, 0.18), 0 4px 18px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsive adjustments for tablets */
@@ -86,21 +99,21 @@ body.desktop-theme {
   background: #000;
 }
 
-/* Glass Panel Base */
+/* Glass Panel Base (macOS frosted window chrome) */
 .glass {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
-  border-radius: 12px;
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
 }
 
 .glass-dark {
   background: var(--glass-bg-dark);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow), var(--glass-inner-highlight);
 }
 
 /* Scrollbar styling */

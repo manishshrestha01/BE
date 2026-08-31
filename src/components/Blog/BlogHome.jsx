@@ -1,97 +1,12 @@
-import { useEffect, useLayoutEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { BookOpen } from "lucide-react";
 
 import Footer from "../Footer";
 import SiteNav from "../SiteNav";
-import { applyMetadata, applyOrganizationGraph, buildMetadata, clearSeoScripts } from "../../lib/blogSeo";
-import {
-  BLOG_BASE_URL,
-  BLOG_CURRICULUM,
-  buildSemesterDescription,
-} from "../../lib/blogCurriculum";
-import { setJSONLD, setMeta } from "../../lib/seo";
+import { BLOG_CURRICULUM } from "../../lib/blogCurriculum";
 import "./Blog.css";
 
-const forceScrollTop = () => {
-  window.scrollTo(0, 0);
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
-};
-
-const pageTitle = "StudyMate Blog - PU Computer Engineering Guides";
-const pageDescription =
-  "StudyMate Blog offers semester-wise Pokhara University BE Computer Engineering tutorials, subject guides, and exam-focused learning paths.";
-const canonical = `${BLOG_BASE_URL}/blog`;
-
-const breadcrumbLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Home",
-      item: `${BLOG_BASE_URL}/`,
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Blog",
-      item: canonical,
-    },
-  ],
-};
-
-const collectionLd = {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  name: pageTitle,
-  description: pageDescription,
-  url: canonical,
-  isPartOf: { "@id": `${BLOG_BASE_URL}/#website` },
-  mainEntity: {
-    "@type": "ItemList",
-    itemListElement: BLOG_CURRICULUM.map((semester, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: `Semester ${semester.semester}`,
-      url: `${BLOG_BASE_URL}${semester.urlPath}`,
-      description: buildSemesterDescription(semester),
-    })),
-  },
-};
-
 const BlogHome = () => {
-  useLayoutEffect(() => {
-    forceScrollTop();
-    const frame = window.requestAnimationFrame(forceScrollTop);
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
-
-  useEffect(() => {
-    const metadata = buildMetadata({
-      title: pageTitle,
-      description: pageDescription,
-      canonicalPath: "/blog",
-      type: "website",
-    });
-
-    applyMetadata(metadata);
-    applyOrganizationGraph();
-    setMeta({
-      name: "keywords",
-      content:
-        "StudyMate blog, Pokhara University BE Computer Engineering, semester guides, subject tutorials, PU notes",
-    });
-    setJSONLD(breadcrumbLd, "json-ld-blog-home-breadcrumb");
-    setJSONLD(collectionLd, "json-ld-blog-home-collection");
-
-    return () => {
-      clearSeoScripts(["json-ld-blog-home-breadcrumb", "json-ld-blog-home-collection"]);
-    };
-  }, []);
-
   return (
     <div className="landing blog-page blog-home-page">
       <SiteNav />
@@ -201,9 +116,8 @@ const BlogHome = () => {
                   {semester.subjectCount} Subjects
                 </span>
                 <Link
-                  to={semester.urlPath}
+                  href={semester.urlPath}
                   className="blog-btn semester-card-btn"
-                  onClick={forceScrollTop}
                 >
                   Browse Semester
                   <span className="semester-btn-arrow">→</span>

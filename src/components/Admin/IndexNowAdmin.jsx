@@ -1,5 +1,6 @@
+'use client'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { useAuth } from '../../context/AuthContext'
 import { ArrowLeft, KeyRound, Shield, ShieldOff, FileDown, FileUp, Mail, Send, Globe, Link2, RefreshCw, Loader2 } from 'lucide-react'
 import SiteDisplayAdmin from './SiteDisplayAdmin'
@@ -531,7 +532,7 @@ const IndexNowAdmin = () => {
         <header className="indexnow-admin-header">
           <h1>Admin Control Center</h1>
           <p>Search submission, site toggles, folder colors, and server-side controls — all in one place.</p>
-          <Link className="indexnow-back-link" to="/dashboard">
+          <Link className="indexnow-back-link" href="/dashboard">
             <ArrowLeft size={16} />
             Back to Dashboard
           </Link>

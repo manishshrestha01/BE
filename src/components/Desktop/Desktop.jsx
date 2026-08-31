@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useBackground } from '../../context/BackgroundContext'
 import { COLLEGES } from '../../lib/colleges'
 import { SUBJECT_FOLDER_MAP, slugToFolderName } from '../../lib/subjectMap'
@@ -14,6 +14,7 @@ import './Desktop.css'
 // Convert ?semester=3&subject=operating-systems&college=pec into a GitHub folder path.
 // Mirrors the folder structure in the manishshrestha01/BE-Computer repo.
 function buildInitialPathFromParams(searchParams) {
+  if (!searchParams) return null
   const college = searchParams.get('college')
   const semester = searchParams.get('semester')
   const subject = searchParams.get('subject')
@@ -118,16 +119,15 @@ const readDashboardUiState = () => {
 
 const Desktop = () => {
   const { currentBg, customBg } = useBackground()
-  const location = useLocation()
-  const navigate = useNavigate()
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const restoredState = useMemo(() => readDashboardUiState(), [])
   const [iosDialogOpen, setIosDialogOpen] = useState(false)
 
   // Derive initial Finder path from URL params (?college=pec&semester=3&subject=operating-systems)
   const initialFinderPath = useMemo(() => {
-    const params = new URLSearchParams(location.search)
-    return buildInitialPathFromParams(params)
-  }, [location.search])
+    return buildInitialPathFromParams(searchParams)
+  }, [searchParams])
 
   // If URL has navigation params, open Finder immediately; otherwise restore last state
   const [activeApp, setActiveApp] = useState(() => {
@@ -319,7 +319,7 @@ const Desktop = () => {
           aria-label="Open Finder"
           onClick={() => openApp('finder')}
         >
-          <div className="desktop-shortcut-icon"><span>📁</span></div>
+          <div className="desktop-shortcut-png"><img src="/icons/finder.webp" alt="Finder" className="desktop-shortcut-img"/></div>
           <div className="desktop-shortcut-label">Finder</div>
         </button>
 
@@ -329,12 +329,12 @@ const Desktop = () => {
           aria-label="Open Draw"
           onClick={() => openApp('notes')}
         >
-          <div className="desktop-shortcut-icon"><span>📝</span></div>
+          <div className="desktop-shortcut-png"><img src="/icons/notes.webp" alt="Draw" className="desktop-shortcut-img"/></div>
           <div className="desktop-shortcut-label">Draw</div>
         </button>
         
         <button className="desktop-shortcut" onClick={() => openApp('contact')} title="Contact Me" aria-label="Open Contact">
-          <div className="desktop-shortcut-png"><img src="/gedit.png" alt="Contact" className="desktop-shortcut-img"/></div>
+          <div className="desktop-shortcut-png"><img src="/icons/contacts.webp" alt="Contact" className="desktop-shortcut-img"/></div>
           <div className="desktop-shortcut-label">Contact</div>
         </button>
 
@@ -344,7 +344,7 @@ const Desktop = () => {
           aria-label="Open Settings"
           onClick={() => openApp('settings')}
         >
-          <div className="desktop-shortcut-icon"><span>⚙️</span></div>
+          <div className="desktop-shortcut-png"><img src="/icons/settings.webp" alt="Settings" className="desktop-shortcut-img"/></div>
           <div className="desktop-shortcut-label">Settings</div>
         </button>
 
@@ -352,22 +352,12 @@ const Desktop = () => {
           className="desktop-shortcut"
           title="Banner"
           aria-label="View Banner"
-          onClick={() => navigate('/banner')}
+          onClick={() => router.push('/banner')}
         >
-          <div className="desktop-shortcut-png"><img src="/banner-icon.svg" alt="Banner" className="desktop-shortcut-img"/></div>
+          <div className="desktop-shortcut-png"><img src="/icons/photos.webp" alt="Banner" className="desktop-shortcut-img"/></div>
           <div className="desktop-shortcut-label">Banner</div>
         </button>
 
-        {/* Mobile-only sidebar Get App icon */}
-        <button
-          className="desktop-shortcut get-app-sidebar"
-          title="Get StudyMate App"
-          aria-label="Get StudyMate App on Play Store"
-          onClick={handleGetApp}
-        >
-          <div className="desktop-shortcut-icon"><img src="/black.svg" alt="StudyMate" style={{ width: 36, height: 36 }} /></div>
-          <div className="desktop-shortcut-label">Get App</div>
-        </button>
       </div>
 
       {/* Dock */}

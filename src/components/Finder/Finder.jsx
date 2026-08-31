@@ -1,5 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
+import { gooeyToast } from 'goey-toast'
+import {
+  X, Minus, Plus,
+  ChevronLeft, ChevronRight,
+  RotateCw, LayoutGrid, List,
+  BookOpen, Star, Clock, Folder
+} from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useGitHubNotes } from '../../hooks/useGitHubNotes'
 import { useAuth } from '../../context/AuthContext'
 import useFolderColors from '../../hooks/useFolderColors'
@@ -45,8 +52,8 @@ const getColorFromMap = (colorMap, normalizedColorMap, candidate) => {
 }
 
 const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
-  const location = useLocation()
-  const navigate = useNavigate()
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const {
     items,
     loading,
@@ -68,9 +75,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
   const [activeTab, setActiveTab] = useState('all')
   const [favorites, setFavorites] = useState([])
   const [recents, setRecents] = useState([])
-  const [displayedItems, setDisplayedItems] = useState([])
-  const [toastMessage, setToastMessage] = useState(null)
-  const toastTimerRef = useRef(null)
   const longPressTimeoutRef = useRef(null)
   const longPressActiveRef = useRef(false)
   const longPressStartPos = useRef({ x: 0, y: 0 })
@@ -127,9 +131,9 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
   useEffect(() => {
     if (folderPath.length <= 1) {
       // Back at root — clear params without full reload
-      const params = new URLSearchParams(location.search)
+      const params = new URLSearchParams(searchParams.toString())
       if (params.has('college') || params.has('semester') || params.has('subject')) {
-        navigate('/dashboard', { replace: true })
+        router.replace('/dashboard')
       }
       return
     }
@@ -168,43 +172,74 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
     }
 
     const newSearch = `?${params.toString()}`
-    if (location.search !== newSearch) {
-      navigate(`/dashboard${newSearch}`, { replace: true })
+    if (searchParams.toString() !== newSearch) {
+      router.replace(`/dashboard${newSearch}`)
     }
-  }, [folderPath])
+  }, [folderPath, searchParams])
 
-  // Update displayed items based on active tab
-  useEffect(() => {
-    if (activeTab === 'all') {
-      setDisplayedItems(items)
-    } else if (activeTab === 'starred') {
-      setDisplayedItems(favorites)
-    } else if (activeTab === 'recent') {
-      setDisplayedItems(recents)
-    }
+  // Derive displayed items from the active tab
+  const displayedItems = useMemo(() => {
+    if (activeTab === 'starred') return favorites
+    if (activeTab === 'recent') return recents
+    return items
   }, [activeTab, items, favorites, recents])
 
-  // Fetch favorites and recents when user changes
-  useEffect(() => {
-    if (user?.id) {
-      fetchFavoritesAndRecents()
+  // Current location title shown at the top of the toolbar (macOS-style)
+  const currentTitle = useMemo(() => {
+    if (activeTab === 'starred') return 'Starred'
+    if (activeTab === 'recent') return 'Recent'
+    if (activeTab === 'all' && folderPath.length > 1) {
+      return folderPath[folderPath.length - 1].name
     }
-  }, [user?.id])
+    return 'All Notes'
+  }, [activeTab, folderPath])
+
+  const formatItemSize = (item) => {
+    const size = Number(item?.size || item?.item_size)
+    if (!Number.isFinite(size) || size <= 0) return '—'
+    if (size < 1024) return `${size} B`
+    if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`
+    return `${(size / (1024 * 1024)).toFixed(1)} MB`
+  }
+
+  const formatItemDate = (item) => {
+    const raw = item?.date || item?.modified || item?.created_at
+    if (!raw) return '—'
+    const d = new Date(raw)
+    if (Number.isNaN(d.getTime())) return '—'
+    return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+  }
+
+  const getItemKind = (item) => {
+    const type = item?.type || item?.item_type
+    if (type === 'folder') return 'Folder'
+    const ft = (item?.fileType || item?.file_type || 'Document').toUpperCase()
+    return ft === 'PDF' ? 'PDF' : ft.slice(0, 12)
+  }
 
   const fetchFavoritesAndRecents = async () => {
     if (!user?.id) return
-    
+
     const favResult = await getUserFavorites(user.id)
     const recResult = await getUserRecents(user.id)
-    
+
     if (favResult.data) setFavorites(favResult.data)
     if (recResult.data) setRecents(recResult.data)
   }
 
-  const showToast = (msg, timeout = 1400) => {
-    setToastMessage(msg)
-    clearTimeout(toastTimerRef.current)
-    toastTimerRef.current = setTimeout(() => setToastMessage(null), timeout)
+  // Fetch favorites and recents when user changes
+  useEffect(() => {
+    if (user?.id) {
+      Promise.resolve().then(fetchFavoritesAndRecents)
+    }
+  }, [user?.id])
+
+  const showToast = (msg, type = 'default') => {
+    const opts = { showTimestamp: false, spring: false, timing: { displayDuration: 1600 } }
+    if (type === 'success') gooeyToast.success(msg, opts)
+    else if (type === 'error') gooeyToast.error(msg, opts)
+    else if (type === 'warning') gooeyToast.warning(msg, opts)
+    else gooeyToast(msg, opts)
   }
 
   // Long-press handlers for touch devices
@@ -219,7 +254,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
       suppressClickRef.current = true
       setPressedItemId(item.id)
       // light haptic feedback when long-press action fires
-      try { navigator.vibrate?.(12) } catch (e) {}
+      try { navigator.vibrate?.(12) } catch {}
       await toggleFavoriteForItem(item)
       // brief pressed visual
       setTimeout(() => setPressedItemId(null), 600)
@@ -249,19 +284,19 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
   // Centralized favorite toggle helper (used by Spacebar and long-press)
   const toggleFavoriteForItem = async (item) => {
     if (!user?.id) {
-      showToast('Sign in to add favorites')
+      showToast('Sign in to add favorites', 'warning')
       return
     }
 
     // Normalize item
     let itemToProcess = item
     if (item.item_data && typeof item.item_data === 'string') {
-      try { itemToProcess = JSON.parse(item.item_data) } catch (e) { itemToProcess = item }
+      try { itemToProcess = JSON.parse(item.item_data) } catch { itemToProcess = item }
     }
 
     const itemType = itemToProcess.type || item.type || item.item_type
     if (itemType === 'folder') {
-      showToast('Folders cannot be added to favorites')
+      showToast('Folders cannot be added to favorites', 'warning')
       return
     }
 
@@ -274,9 +309,9 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
         const result = await removeFavorite(user.id, itemPath)
         if (!result.error) {
           await fetchFavoritesAndRecents()
-          showToast('Removed from favorites')
+          showToast('Removed from favorites', 'success')
         } else {
-          showToast('Failed to remove favorite')
+          showToast('Failed to remove favorite', 'error')
         }
       } else {
         const favoriteItem = {
@@ -297,14 +332,14 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
         const result = await toggleFavorite({ userId: user.id, item: favoriteItem })
         if (!result.error) {
           await fetchFavoritesAndRecents()
-          showToast('Added to favorites')
+          showToast('Added to favorites', 'success')
         } else {
-          showToast('Failed to add favorite')
+          showToast('Failed to add favorite', 'error')
         }
       }
     } catch (err) {
       console.error('Favorite error:', err)
-      showToast('Failed to update favorite')
+      showToast('Failed to update favorite', 'error')
     }
   }
 
@@ -332,6 +367,14 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
     setWindowState('minimized')
   }
 
+  // All Notes – return to root level and clear any selected tab
+  const handleAllNotes = () => {
+    setActiveTab('all')
+    if (folderPath.length > 1) {
+      navigateToPathIndex(0)
+    }
+  }
+
   const handleMaximize = () => {
     setWindowState(prev => prev === 'maximized' ? 'normal' : 'maximized')
   }
@@ -347,7 +390,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
   if (windowState === 'minimized') {
     return (
       <div className="finder-minimized" onClick={() => setWindowState('normal')}>
-        <span>📁</span>
+        <img src="/icons/finder.webp" alt="Finder" className="minimized-icon" />
         <span>Finder</span>
       </div>
     )
@@ -393,7 +436,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
     if (item.item_data && typeof item.item_data === 'string') {
       try {
         itemToProcess = JSON.parse(item.item_data)
-      } catch (e) {
+      } catch {
         itemToProcess = item
       }
     }
@@ -433,14 +476,14 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
       <div className="finder-toolbar">
         {/* Window Controls */}
         <div className="window-controls">
-          <button className="window-btn close" onClick={onClose} title="Close">
-            <span>×</span>
+          <button className="window-btn close" onClick={onClose} title="Close" aria-label="Close">
+            <span><X strokeWidth={2.4} /></span>
           </button>
-          <button className="window-btn minimize" onClick={handleMinimize} title="Minimize">
-            <span>−</span>
+          <button className="window-btn minimize" onClick={handleMinimize} title="Minimize" aria-label="Minimize">
+            <span><Minus strokeWidth={2.4} /></span>
           </button>
-          <button className="window-btn maximize" onClick={handleMaximize} title="Maximize">
-            <span>+</span>
+          <button className="window-btn maximize" onClick={handleMaximize} title="Maximize" aria-label="Maximize">
+            <span><Plus strokeWidth={2.4} /></span>
           </button>
         </div>
 
@@ -450,49 +493,45 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
             onClick={navigateBack}
             disabled={folderPath.length <= 1}
             title="Back"
+            aria-label="Back"
           >
-            ←
+            <ChevronLeft size={18} strokeWidth={2.2} />
           </button>
-          <button className="finder-btn" disabled title="Forward">→</button>
-        </div>
-        
-        <div className="finder-breadcrumb">
-          {folderPath.map((folder, index) => (
-            <span key={folder.id || 'root'}>
-              <button 
-                className="breadcrumb-item"
-                onClick={() => navigateToPathIndex(index)}
-              >
-                {index === 0 ? 'Finder' : folder.name}
-              </button>
-              {index < folderPath.length - 1 && <span className="breadcrumb-sep">/</span>}
-            </span>
-          ))}
+          <button className="finder-btn" disabled title="Forward" aria-label="Forward">
+            <ChevronRight size={18} strokeWidth={2.2} />
+          </button>
         </div>
 
-        <div className="finder-actions">
-          <button 
-            className="finder-btn action-btn"
+        <div className="finder-title" title={currentTitle}>{currentTitle}</div>
+
+        <div className="finder-toolbar-right">
+          <button
+            className="finder-btn finder-refresh"
             onClick={refresh}
             title="Refresh"
+            aria-label="Refresh"
           >
-            🔄
+            <RotateCw size={14} strokeWidth={2.2} />
           </button>
-        </div>
 
-        <div className="finder-view-toggle">
-          <button 
-            className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-            onClick={() => setViewMode('grid')}
-          >
-            ⊞
-          </button>
-          <button 
-            className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
-            onClick={() => setViewMode('list')}
-          >
-            ☰
-          </button>
+          <div className="finder-view-toggle">
+            <button 
+              className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+              onClick={() => setViewMode('grid')}
+              title="Icon view"
+              aria-label="Icon view"
+            >
+              <LayoutGrid size={15} strokeWidth={2} />
+            </button>
+            <button 
+              className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+              onClick={() => setViewMode('list')}
+              title="List view"
+              aria-label="List view"
+            >
+              <List size={16} strokeWidth={2} />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -505,25 +544,28 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
             <ul>
               <li 
                 className={activeTab === 'all' ? 'active' : ''}
-                onClick={() => setActiveTab('all')}
+                onClick={handleAllNotes}
               >
-                📚 All Notes
+                <BookOpen size={15} className="sidebar-icon" />
+                <span>All Notes</span>
               </li>
               <li 
                 className={activeTab === 'starred' ? 'active' : ''}
                 onClick={() => setActiveTab('starred')}
               >
-                ⭐ Starred {favorites.length > 0 && `(${favorites.length})`}
+                <Star size={15} className="sidebar-icon" />
+                <span>Starred {favorites.length > 0 && `(${favorites.length})`}</span>
               </li>
               <li 
                 className={activeTab === 'recent' ? 'active' : ''}
                 onClick={() => setActiveTab('recent')}
               >
-                🕐 Recent {recents.length > 0 && `(${recents.length})`}
+                <Clock size={15} className="sidebar-icon" />
+                <span>Recent {recents.length > 0 && `(${recents.length})`}</span>
               </li>
             </ul>
           </div>
-          
+
           {!isConfigured && (
             <div className="sidebar-section">
               <div className="demo-badge">
@@ -551,6 +593,16 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
             </div>
           )}
 
+          {/* Column headers (list view, macOS style) */}
+          {!loading && viewMode === 'list' && (
+            <div className="finder-list-header" aria-hidden>
+              <span className="list-col list-col-name">Name</span>
+              <span className="list-col list-col-date">Date Modified</span>
+              <span className="list-col list-col-size">Size</span>
+              <span className="list-col list-col-kind">Kind</span>
+            </div>
+          )}
+
           {/* Empty state */}
           {!loading && !error && displayedItems.length === 0 && (
             <div className="finder-empty">
@@ -566,7 +618,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
             if (item.item_data && typeof item.item_data === 'string') {
               try {
                 displayItem = JSON.parse(item.item_data)
-              } catch (e) {
+              } catch {
                 displayItem = item
               }
             }
@@ -582,35 +634,61 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
                 onTouchEnd={endTouch}
                 onTouchCancel={cancelLongPress}
               >
-                 <div className="item-icon">
-                   {(displayItem.type || item.type || item.item_type) === 'folder' 
-                     ? (
-                         <FolderIcon
-                           className="folder-icon-svg"
-                           color={getFolderColor(displayItem)}
-                           title={displayItem.name || item.name || item.item_name || 'Folder'}
-                         />
-                       )
-                     : getFileIcon(displayItem.fileType || item.fileType || item.file_type)
-                   }
+                 <div className="finder-item-name-cell">
+                   <div className="item-icon">
+                     {(displayItem.type || item.type || item.item_type) === 'folder' 
+                       ? (
+                           <FolderIcon
+                             className="folder-icon-svg"
+                             color={getFolderColor(displayItem)}
+                             title={displayItem.name || item.name || item.item_name || 'Folder'}
+                           />
+                         )
+                       : getFileIcon(displayItem.fileType || item.fileType || item.file_type)
+                     }
+                   </div>
+                   {/* show full name on hover via title and aria-label for accessibility */}
+                   <span
+                     className="item-name"
+                     title={displayItem.name || item.name || item.item_name}
+                     aria-label={displayItem.name || item.name || item.item_name}
+                   >
+                     {displayItem.name || item.name || item.item_name}
+                   </span>
                  </div>
-                 {/* show full name on hover via title and aria-label for accessibility */}
-                 <span
-                   className="item-name"
-                   title={displayItem.name || item.name || item.item_name}
-                   aria-label={displayItem.name || item.name || item.item_name}
-                 >
-                   {displayItem.name || item.name || item.item_name}
-                 </span>
+                 {viewMode === 'list' && (
+                   <>
+                     <span className="item-meta item-date">{formatItemDate(displayItem)}</span>
+                     <span className="item-meta item-size">{formatItemSize(displayItem)}</span>
+                     <span className="item-meta item-kind">{getItemKind(displayItem)}</span>
+                   </>
+                 )}
                </div>
              )
           })}
         </div>
       </div>
 
+      {/* Path bar (macOS) */}
+      <div className="finder-pathbar" aria-label="Path bar">
+        <span className="pathbar-root"><Folder size={12} /></span>
+        {folderPath.map((folder, index) => (
+          <span className="pathbar-segment" key={folder.id || 'root'}>
+            {index > 0 && <ChevronRight size={10} className="pathbar-sep" aria-hidden />}
+            <button
+              className="pathbar-label"
+              onClick={() => navigateToPathIndex(index)}
+              title={index === 0 ? 'Home' : folder.name}
+            >
+              {index === 0 ? 'Finder' : folder.name}
+            </button>
+          </span>
+        ))}
+      </div>
+
       {/* Status bar */}
       <div className="finder-statusbar">
-        <span>{displayedItems.length} items</span>
+        <span>{displayedItems.length} {displayedItems.length === 1 ? 'item' : 'items'}</span>
         {selectedItem && (() => {
           const item = items.find(i => i.id === selectedItem) || displayedItems.find(i => i.id === selectedItem)
           if (item?.type === 'folder') {
@@ -627,13 +705,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
         {!isConfigured && <span className="demo-notice">Demo Mode - Configure GitHub repo</span>}
       </div>
 
-      {/* Toast message */}
-      {toastMessage && (
-        <div className="toast">
-          {toastMessage}
-        </div>
-      )}
-    </div>
+      </div>
   )
 }
 

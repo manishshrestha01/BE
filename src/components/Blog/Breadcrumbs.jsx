@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const Breadcrumbs = ({ items, onNavigate }) => (
   <nav className="blog-breadcrumb" aria-label="Breadcrumb">
@@ -9,7 +9,7 @@ const Breadcrumbs = ({ items, onNavigate }) => (
       return (
         <Fragment key={`${item.label}-${index}`}>
           {item.to && !isLast ? (
-            <Link to={item.to} onClick={onNavigate}>
+            <Link href={item.to} onClick={onNavigate}>
               {item.label}
             </Link>
           ) : (

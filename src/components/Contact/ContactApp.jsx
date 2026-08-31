@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { gooeyToast } from 'goey-toast'
 import { useAuth } from '../../context/AuthContext'
 import { useUserProfile } from '../../hooks/useUserProfile'
 import { createSupportMessage } from '../../lib/database'
 import { uploadFile, isAllowedFileType } from '../../lib/storage'
 import { isSupabaseConfigured } from '../../lib/supabase'
+import { X, Minus, Plus } from 'lucide-react'
 import './ContactApp.css'
 
 const MAX_ATTACHMENTS = 3
@@ -93,6 +95,7 @@ export default function ContactApp ({ onClose }) {
   const send = useCallback(async () => {
     if (!message.trim()) {
       setStatusMsg('Please enter a message before sending.')
+      gooeyToast.warning('Message cannot be empty', { showTimestamp: false, spring: false })
       msgRef.current?.focus()
       return
     }
@@ -131,14 +134,25 @@ export default function ContactApp ({ onClose }) {
       const res = await createSupportMessage(payload)
       if (res?.error) {
         setStatusMsg('Saved locally (server unavailable)')
+        gooeyToast.warning('Saved locally (server unavailable)', { showTimestamp: false, spring: false })
       } else {
         setStatusMsg('Message sent successfully — thank you!')
+        gooeyToast.success('Message sent successfully', {
+          description: 'Thank you for reaching out!',
+          showTimestamp: false,
+          spring: false,
+        })
         setMessage('')
         setAttachments([])
       }
     } catch (err) {
       console.error(err)
       setStatusMsg('Saved locally (failed to send)')
+      gooeyToast.error('Failed to send message', {
+        description: 'Saved locally — try again later.',
+        showTimestamp: false,
+        spring: false,
+      })
     } finally {
       setSending(false)
       setTimeout(() => setStatusMsg(''), 3000)
@@ -159,7 +173,7 @@ export default function ContactApp ({ onClose }) {
   const handleMaximize = () => {
     setWindowState(prev => prev === 'maximized' ? 'normal' : 'maximized')
     // focus window so keyboard shortcuts (Esc, Cmd+Enter) continue to work
-    setTimeout(() => { try { windowRef.current?.focus() } catch (e) {} }, 60)
+    setTimeout(() => { try { windowRef.current?.focus() } catch {} }, 60)
   }
 
   const getWindowClassName = () => {
@@ -171,8 +185,8 @@ export default function ContactApp ({ onClose }) {
 
   if (windowState === 'minimized') {
     return (
-      <div className="contact-minimized" onClick={() => { setWindowState('normal'); setTimeout(() => { try { windowRef.current?.focus() } catch (e) {} }, 60) }}>
-        <img src="/gedit.png" alt="Contact" className="contact-minimized-img" />
+      <div className="contact-minimized" onClick={() => { setWindowState('normal'); setTimeout(() => { try { windowRef.current?.focus() } catch {} }, 60) }}>
+        <img src="/icons/contacts.webp" alt="Contact" className="contact-minimized-img" />
         <span>Contact</span>
       </div>
     )
@@ -180,98 +194,88 @@ export default function ContactApp ({ onClose }) {
 
   return (
     <div className="contact-overlay" onClick={onClose}>
-      <div ref={windowRef} className={getWindowClassName()} role="dialog" aria-label="Contact" tabIndex={-1} onMouseDown={() => { try { windowRef.current?.focus() } catch (e) {} }} onClick={(e) => e.stopPropagation()}>
+      <div ref={windowRef} className={getWindowClassName()} role="dialog" aria-label="Contact" tabIndex={-1} onMouseDown={() => { try { windowRef.current?.focus() } catch {} }} onClick={(e) => e.stopPropagation()}>
         <div className="contact-titlebar">
           <div className="window-controls">
-            <button className="window-btn close" onClick={onClose} title="Close">×</button>
-            <button className="window-btn minimize" onClick={handleMinimize} title="Minimize">−</button>
+            <button className="window-btn close" onClick={onClose} title="Close" aria-label="Close">
+              <span><X strokeWidth={2.4} /></span>
+            </button>
+            <button className="window-btn minimize" onClick={handleMinimize} title="Minimize" aria-label="Minimize">
+              <span><Minus strokeWidth={2.4} /></span>
+            </button>
             <button
               className="window-btn maximize"
               onClick={handleMaximize}
               title={windowState === 'maximized' ? 'Restore' : 'Maximize'}
               aria-label={windowState === 'maximized' ? 'Restore' : 'Maximize'}
-            >+</button>
+            ><span><Plus strokeWidth={2.4} /></span></button>
           </div>
           <div className="contact-title">Contact</div>
         </div>
 
         <div className="contact-body" onDragOver={(e) => e.preventDefault()}>
           <div className="contact-shell">
-            <div className="contact-grid">
-              <div className="contact-left" aria-hidden>
-                <div className="contact-step"><div className="step-num">1</div><div className="step-label">Your name</div></div>
-                <div className="contact-step"><div className="step-num">2</div><div className="step-label">Your email</div></div>
-                <div className="contact-step"><div className="step-num">3</div><div className="step-label">Message</div></div>
+            <div className="contact-fields">
+              <div className="field-row">
+                <input
+                  className={`contact-input ${nameLocked ? 'locked' : ''}`}
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  placeholder="Full name"
+                  aria-label="Your name"
+                  readOnly={nameLocked}
+                />
               </div>
 
-              <div className="contact-right">
-                <div className="field-row">
-                  <input
-                    className={`contact-input ${nameLocked ? 'locked' : ''}`}
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    placeholder="Full name"
-                    aria-label="Your name"
-                    readOnly={nameLocked}
-                  />
-                </div>
+              <div className="field-row">
+                <input
+                  className={`contact-input ${emailLocked ? 'locked' : ''}`}
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  aria-label="Your email"
+                  readOnly={emailLocked}
+                />
+              </div>
 
-                <div className="field-row">
-                  <input
-                    className={`contact-input ${emailLocked ? 'locked' : ''}`}
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    aria-label="Your email"
-                    readOnly={emailLocked}
-                  />
-                </div>
-
-                <div className="field-row">
-                  <textarea
-                    ref={msgRef}
-                    className="contact-textarea"
-                    value={message}
-                    onChange={e => setMessage(e.target.value)}
-                    placeholder="Write your message..."
-                    aria-label="Message"
-                    aria-required={true}
-                  />
-                </div>
-
-                <div className="contact-status" aria-live="polite">{statusMsg && <div>{statusMsg}</div>}</div>
+              <div className="field-row">
+                <textarea
+                  ref={msgRef}
+                  className="contact-textarea"
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
+                  placeholder="Write your message..."
+                  aria-label="Message"
+                  aria-required={true}
+                />
               </div>
             </div>
 
-            <div className="contact-footer" onDrop={handleDrop} onDragOver={(e) => { e.preventDefault(); setDropActive(true) }} onDragLeave={() => setDropActive(false)}>
-              <div style={{ display: 'flex', gap: 12, alignItems: 'center', flex: 1 }}>
-                <input ref={fileInputRef} className="hidden-file-input" type="file" accept={ACCEPT} onChange={handleFileInput} multiple={false} />
+            <div className="contact-attach" onDrop={handleDrop} onDragOver={(e) => { e.preventDefault(); setDropActive(true) }} onDragLeave={() => setDropActive(false)}>
+              <input ref={fileInputRef} className="hidden-file-input" type="file" accept={ACCEPT} onChange={handleFileInput} multiple={false} />
 
-                <div className={`attachment-dropzone ${dropActive ? 'active' : ''}`} onClick={() => fileInputRef.current?.click()} role="button" tabIndex={0} aria-describedby="contact-attachment-hint">
-                  <div className="attachment-placeholder">Attach file or drag &amp; drop (PNG/JPG/PDF, max 25 MB)</div>
-                </div>
+              <div className={`attachment-dropzone ${dropActive ? 'active' : ''}`} onClick={() => fileInputRef.current?.click()} role="button" tabIndex={0} aria-describedby="contact-attachment-hint">
+                <div className="attachment-placeholder">Attach file or drag &amp; drop (PNG/JPG/PDF, max 25 MB)</div>
+              </div>
 
-                <div className="attachments-col" style={{ marginLeft: 8 }}>
-                  <div id="contact-attachment-hint" className="inline-attach-meta">{attachments.length > 0 ? `${attachments.length} attached` : 'No attachments'}</div>
-                  {attachments.length > 0 && (
-                    <div className="attachment-list">
-                      {attachments.map(a => (
-                        <div key={a.id} className="attachment-item">
-                          <div className="attachment-thumb">{a.type.startsWith('image/') ? <img src={a.dataUrl} alt={a.name} /> : <div className="attachment-icon">📄</div>}</div>
-                          <div className="attachment-meta"><div className="attachment-name">{a.name}</div><div className="attachment-size">{formatFileSize(a.size)}</div></div>
-                          <button className="attachment-remove" onClick={() => removeAttachment(a.id)} aria-label={`Remove ${a.name}`}>✕</button>
-                        </div>
-                      ))}
+              <div id="contact-attachment-hint" className="inline-attach-meta">{attachments.length > 0 ? `${attachments.length} attached` : 'No attachments'}</div>
+
+              {attachments.length > 0 && (
+                <div className="attachment-list">
+                  {attachments.map(a => (
+                    <div key={a.id} className="attachment-item">
+                      <div className="attachment-thumb">{a.type.startsWith('image/') ? <img src={a.dataUrl} alt={a.name} /> : <div className="attachment-icon">📄</div>}</div>
+                      <div className="attachment-meta"><div className="attachment-name">{a.name}</div><div className="attachment-size">{formatFileSize(a.size)}</div></div>
+                      <button className="attachment-remove" onClick={() => removeAttachment(a.id)} aria-label={`Remove ${a.name}`}>✕</button>
                     </div>
-                  )}
+                  ))}
                 </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                <div style={{ color: 'var(--text-tertiary)', fontSize: 13 }} />
-                <button className="btn-send" onClick={send} disabled={sending || !message.trim()} aria-disabled={sending || !message.trim()}>{sending ? 'Sending…' : 'Send Message'}</button>
-              </div>
+              )}
             </div>
+
+            <div className="contact-status" aria-live="polite">{statusMsg && <div>{statusMsg}</div>}</div>
+
+            <button className="btn-send" onClick={send} disabled={sending || !message.trim()} aria-disabled={sending || !message.trim()}>{sending ? 'Sending…' : 'Send Message'}</button>
           </div>
         </div>
       </div>

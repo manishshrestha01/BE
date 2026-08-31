@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+'use client'
+import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Sun, Moon, Monitor } from 'lucide-react'
 import { useTheme } from '../../context/ThemeContext'
 import './Landing.css'
@@ -8,91 +10,13 @@ import './FAQ.css'
 const FAQ = () => {
   const { mode, setTheme, resolvedTheme } = useTheme()
   const [openIndex, setOpenIndex] = useState(null)
-  const location = useLocation()
+  const pathname = usePathname()
 
   const handleLogoClick = () => {
-    if (location.pathname === '/') {
+    if (pathname === '/') {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
   }
-
-  // SEO - Update document title and meta tags
-  useEffect(() => {
-    // Set page title
-    document.title = 'PU Notes FAQ - Pokhara University Computer Engineering Notes Questions'
-    
-    // Set meta description
-    const metaDescription = document.querySelector('meta[name="description"]')
-    const descriptionContent = 'FAQs about PU notes. Pokhara University notes for BE Computer Engineering, IT, Software Engineering. Compiler notes, C programming, DBMS, DSA.'
-    
-    if (metaDescription) {
-      metaDescription.setAttribute('content', descriptionContent)
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'description'
-      meta.content = descriptionContent
-      document.head.appendChild(meta)
-    }
-
-    // Set meta keywords
-    const metaKeywords = document.querySelector('meta[name="keywords"]')
-    const keywordsContent = 'PU notes FAQ, Pokhara University notes, BE computer notes, computer engineering notes FAQ, PU syllabus, NCIT notes, CCRC notes, compiler notes, C programming notes, DBMS notes, BE IT notes, software engineering notes, engineering notes Nepal'
-    
-    if (metaKeywords) {
-      metaKeywords.setAttribute('content', keywordsContent)
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'keywords'
-      meta.content = keywordsContent
-      document.head.appendChild(meta)
-    }
-
-    // Set Open Graph tags
-    const ogTags = {
-      'og:title': 'PU Notes FAQ - Pokhara University Computer Engineering Notes',
-      'og:description': 'FAQs about PU notes for BE Computer Engineering. Compiler, C programming, DBMS, DSA notes for NCIT, CCRC students.',
-      'og:type': 'website',
-      'og:url': window.location.href,
-      'og:site_name': 'StudyMate - PU Notes'
-    }
-
-    Object.entries(ogTags).forEach(([property, content]) => {
-      let meta = document.querySelector(`meta[property="${property}"]`)
-      if (meta) {
-        meta.setAttribute('content', content)
-      } else {
-        meta = document.createElement('meta')
-        meta.setAttribute('property', property)
-        meta.content = content
-        document.head.appendChild(meta)
-      }
-    })
-
-    // FAQ page should be crawlable and indexable
-    const metaRobots = document.querySelector('meta[name="robots"]')
-    if (metaRobots) {
-      metaRobots.setAttribute('content', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1')
-    }
-
-    // Set canonical URL
-    let canonical = document.querySelector('link[rel="canonical"]')
-    if (canonical) {
-      canonical.href = window.location.origin + '/faq'
-    } else {
-      canonical = document.createElement('link')
-      canonical.rel = 'canonical'
-      canonical.href = window.location.origin + '/faq'
-      document.head.appendChild(canonical)
-    }
-
-    // Scroll to top
-    window.scrollTo(0, 0)
-
-    // Cleanup
-    return () => {
-      document.title = 'StudyMate'
-    }
-  }, [])
 
   const faqs = [
     {
@@ -102,6 +26,10 @@ const FAQ = () => {
     {
       question: 'Is StudyMate free to use?',
       answer: 'Yes! StudyMate is completely free for all students. We believe education resources should be accessible to everyone.'
+    },
+    {
+      question: "What's new in version 2.0?",
+      answer: 'StudyMate 2.0 brings 14 built-in wallpapers, custom wallpaper uploads, and a polished window experience across the Dashboard. You also get refreshed About and FAQ pages so it\'s easier to get help.'
     },
     {
       question: 'Can I access the syllabus for each subject?',
@@ -154,15 +82,15 @@ const FAQ = () => {
       {/* Navigation */}
       <nav className="landing-nav">
         <div className="nav-container">
-          <Link to="/" className="nav-logo" onClick={handleLogoClick}>
+          <Link href="/" className="nav-logo" onClick={handleLogoClick}>
             <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32 }} />
             <span className="logo-text">StudyMate</span>
           </Link>
           <div className="nav-links">
-            <Link to="/">Home</Link>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/login" className="nav-login">Login</Link>
-            <Link to="/dashboard" className="nav-cta">Get Started</Link>
+            <Link href="/">Home</Link>
+            <Link href="/dashboard">Dashboard</Link>
+            <Link href="/login" className="nav-login">Login</Link>
+            <Link href="/dashboard" className="nav-cta">Get Started</Link>
             <button
               className="theme-toggle-btn"
               onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
@@ -225,11 +153,11 @@ const FAQ = () => {
           <h2>Still have questions?</h2>
           <p>Check out our dashboard or get started with StudyMate today.</p>
           <div className="faq-cta-buttons">
-            <Link to="/dashboard" className="btn-primary">
+            <Link href="/dashboard" className="btn-primary">
               Dashboard
               <span className="btn-arrow">→</span>
             </Link>
-            <Link to="/login" className="btn-secondary">
+            <Link href="/login" className="btn-secondary">
               Get Started
             </Link>
           </div>
@@ -242,9 +170,9 @@ const FAQ = () => {
           <div className="footer-bottom">
             <p>© {new Date().getFullYear()} StudyMate. Made with ❤️ for PU Students</p>
             <div className="footer-bottom-links">
-              <Link to="/faq">FAQ</Link>
-              <Link to="/privacy-policy">Privacy Policy</Link>
-              <Link to="/terms">Terms</Link>
+              <Link href="/faq">FAQ</Link>
+              <Link href="/privacy-policy">Privacy Policy</Link>
+              <Link href="/terms">Terms</Link>
             </div>
           </div>
         </div>

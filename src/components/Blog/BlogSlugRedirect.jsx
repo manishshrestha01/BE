@@ -1,19 +1,16 @@
-import { Navigate, useParams } from "react-router-dom";
+import { notFound, permanentRedirect } from "next/navigation";
 import { BLOG_CURRICULUM } from "../../lib/blogCurriculum";
-import NotFound from "../Landing/NotFound";
 
-const BlogSlugRedirect = () => {
-  const { subjectSlug } = useParams();
-
+const BlogSlugRedirect = ({ subjectSlug }) => {
   const match = BLOG_CURRICULUM.find((semester) =>
     semester.subjects.some((subject) => subject.slug === subjectSlug),
   );
 
   if (!match) {
-    return <NotFound />;
+    notFound();
   }
 
-  return <Navigate to={`/blogs/semester/${match.semester}/${subjectSlug}`} replace />;
+  permanentRedirect(`/blog/semester/${match.semester}/${subjectSlug}`);
 };
 
 export default BlogSlugRedirect;

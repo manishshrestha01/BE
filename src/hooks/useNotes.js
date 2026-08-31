@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { getItemsInFolder, createFolder, deleteFolder, getFolders } from '../lib/database'
+import { getItemsInFolder, createFolder, deleteFolder } from '../lib/database'
 import { uploadFile, uploadFiles, deleteFile } from '../lib/storage'
 import { isSupabaseConfigured } from '../lib/supabase'
 

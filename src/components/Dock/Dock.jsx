@@ -5,10 +5,10 @@ const Dock = ({ onFinderClick, onNotesClick, onSettingsClick, onContactClick, ac
   const [hoveredIndex, setHoveredIndex] = useState(null)
 
   const apps = [
-    { id: 'finder', name: 'Finder', icon: '📁', action: onFinderClick },
-    { id: 'notes', name: 'Draw', icon: '📝', action: onNotesClick },
-    { id: 'contact', name: 'Contact', isImage: true, icon: '/gedit.png', action: onContactClick },
-    { id: 'settings', name: 'Settings', icon: '⚙️', action: onSettingsClick },
+    { id: 'finder', name: 'Finder', icon: '/icons/finder.webp', action: onFinderClick },
+    { id: 'notes', name: 'Draw', icon: '/icons/notes.webp', action: onNotesClick },
+    { id: 'contact', name: 'Contact', icon: '/icons/contacts.webp', action: onContactClick },
+    { id: 'settings', name: 'Settings', icon: '/icons/settings.webp', action: onSettingsClick },
   ]
 
   const getScale = (index) => {
@@ -32,11 +32,7 @@ const Dock = ({ onFinderClick, onNotesClick, onSettingsClick, onContactClick, ac
             onMouseLeave={() => setHoveredIndex(null)}
             onClick={app.action}
           >
-            {app.isImage ? (
-              <img src={app.icon} alt={app.name} className="dock-icon dock-icon-img" />
-            ) : (
-              <span className="dock-icon">{app.icon}</span>
-            )}
+            <img src={app.icon} alt={app.name} className="dock-icon dock-icon-img" />
             <span className="dock-tooltip">{app.name}</span>
             {activeApp === app.id && <span className="dock-indicator" />}
           </div>

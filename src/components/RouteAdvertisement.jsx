@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { usePathname, useRouter } from 'next/navigation'
 import useSiteAd from '../hooks/useSiteAd'
 import './RouteAdvertisement.css'
 
@@ -32,12 +32,12 @@ const persistDismissedState = (key) => {
 }
 
 const RouteAdvertisement = () => {
-  const location = useLocation()
-  const navigate = useNavigate()
+  const pathname = usePathname()
+  const router = useRouter()
   const { ad, loading } = useSiteAd()
   const [dismissed, setDismissed] = useState(false)
 
-  const canRenderOnRoute = ROUTE_TARGETS.has(location.pathname)
+  const canRenderOnRoute = ROUTE_TARGETS.has(pathname)
   const dismissKey = useMemo(() => buildDismissKey(ad), [ad])
   const imageAspectRatio = useMemo(
     () => (
@@ -94,7 +94,7 @@ const RouteAdvertisement = () => {
     if (!ad?.targetUrl) return
 
     if (ad.targetUrl.startsWith('/')) {
-      navigate(ad.targetUrl)
+      router.push(ad.targetUrl)
       return
     }
 

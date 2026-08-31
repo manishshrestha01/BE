@@ -714,6 +714,12 @@
   font-size: 20px;
 }
 
+.card-icon-img {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+}
+
 .card-1 { animation-delay: 0s; }
 .card-2 { animation-delay: 0.5s; }
 .card-3 { animation-delay: 1s; }
@@ -826,6 +832,12 @@
   font-size: 40px;
   display: block;
   margin-bottom: 20px;
+}
+
+.feature-icon-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
 }
 
 .feature-title {
@@ -1956,6 +1968,11 @@
   
   .feature-icon {
     font-size: 32px;
+  }
+
+  .feature-icon-img {
+    width: 32px;
+    height: 32px;
   }
   
   .about {

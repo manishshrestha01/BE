@@ -3,6 +3,7 @@ import { Excalidraw } from "@excalidraw/excalidraw";
 import "@excalidraw/excalidraw/index.css";
 
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
+import { useTheme } from "../../context/ThemeContext";
 
 const LOCAL_STORAGE_KEY = "excalidraw-data";
 
@@ -104,6 +105,7 @@ const readLocalSnapshot = () => {
 };
 
 export const ExcalidrawCanvas = () => {
+  const { resolvedTheme } = useTheme();
   const localSnapshotRef = useRef(readLocalSnapshot());
   const [mounted, setMounted] = useState(false);
   const [initialData, setInitialData] = useState(localSnapshotRef.current?.scene ?? null);
@@ -474,6 +476,7 @@ export const ExcalidrawCanvas = () => {
         }}
         initialData={initialData}
         onChange={handleChange}
+        theme={resolvedTheme === 'light' ? 'light' : 'dark'}
         style={{ width: "100%", height: "100%" }}
       />
     </div>

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { usePathname } from "next/navigation";
 
 const COPY_KEY_COMBOS = new Set(["a", "c", "x"]);
 
@@ -20,12 +20,12 @@ const isInsideScope = (scopeEl, event) => {
 };
 
 const DashboardOnlyProtection = ({ enabled, scopeRef }) => {
-  const location = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     const scopeEl = scopeRef?.current;
 
-    if (!enabled || !location.pathname.startsWith("/dashboard") || !scopeEl) {
+    if (!enabled || !pathname.startsWith("/dashboard") || !scopeEl) {
       return undefined;
     }
 
@@ -63,7 +63,7 @@ const DashboardOnlyProtection = ({ enabled, scopeRef }) => {
       document.removeEventListener("contextmenu", blockScopedEvent, true);
       document.removeEventListener("dragstart", blockScopedEvent, true);
     };
-  }, [enabled, location.pathname, scopeRef]);
+  }, [enabled, pathname, scopeRef]);
 
   return null;
 };

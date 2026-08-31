@@ -1,19 +1,19 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { usePathname } from "next/navigation";
 
 export default function AdSenseRouteRefresh() {
-  const location = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       try {
         window.adsbygoogle = window.adsbygoogle || [];
         window.adsbygoogle.push({});
-      } catch (e) {}
+      } catch {}
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [location.pathname]);
+  }, [pathname]);
 
   return null;
 }

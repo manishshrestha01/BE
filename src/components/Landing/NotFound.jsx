@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import './NotFound.css'
 
 const NotFound = () => {
@@ -15,7 +15,7 @@ const NotFound = () => {
         </p>
 
         {/* Back to Home Button */}
-        <Link to="/" className="not-found-button">
+        <Link href="/" className="not-found-button">
           <span>BACK TO HOME</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="5" y1="12" x2="19" y2="12"></line>

@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import ZoomableImage from './ZoomableImage'
+import dynamic from 'next/dynamic'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import './QuickLook.css'
+
+const ZoomableImage = dynamic(() => import('./ZoomableImage'), { ssr: false })
 
 const QUICKLOOK_STATE_KEY = 'studymate:quicklook:v1'
 const PDF_DOWNLOAD_GATE_ENDPOINT = '/api/pdf-download-gate'
@@ -55,8 +57,9 @@ const QuickLook = ({ file, onClose }) => {
   const [pdfGateLoaded, setPdfGateLoaded] = useState(false)
   const [pdfDownloading, setPdfDownloading] = useState(false)
   const mobileOfficeRedirectAttemptRef = useRef('')
-  const navigate = useNavigate()
-  const location = useLocation()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const isMobileDevice = () => {
     if (typeof navigator === 'undefined') return false
@@ -218,7 +221,8 @@ const QuickLook = ({ file, onClose }) => {
     }
     mobileOfficeRedirectAttemptRef.current = attemptKey
 
-    const backUrl = `${location.pathname}${location.search}${location.hash}`
+    const searchString = searchParams.toString()
+    const backUrl = `${pathname}${searchString ? `?${searchString}` : ''}${window.location.hash}`
     const params = new URLSearchParams({
       src: file.url,
       name: file.name || 'Document',
@@ -227,8 +231,8 @@ const QuickLook = ({ file, onClose }) => {
     const officeViewerRoute = `/office-viewer?${params.toString()}`
     clearQuickLookState()
     onClose?.()
-    navigate(officeViewerRoute)
-  }, [file, isMobile, location.hash, location.pathname, location.search, navigate, onClose])
+    router.push(officeViewerRoute)
+  }, [file, isMobile, pathname, searchParams, router, onClose])
 
   useEffect(() => {
     if (!file || file.fileType !== 'pdf' || !isMobile) {

@@ -1,49 +1,12 @@
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+'use client'
+import Link from 'next/link'
+import LegalTheme from './LegalTheme'
 import './Landing.css'
 
 const PrivacyPolicy = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0)
-    
-    // SEO meta tags
-    document.title = 'Privacy Policy - StudyMate | PU Notes Platform'
-    
-    const metaDescription = document.querySelector('meta[name="description"]')
-    const descContent = 'Privacy Policy for StudyMate - Pokhara University notes platform. Learn how we protect your data and privacy while providing BE Computer Engineering study materials.'
-    if (metaDescription) {
-      metaDescription.setAttribute('content', descContent)
-    }
-
-    const metaKeywords = document.querySelector('meta[name="keywords"]')
-    const keywordsContent = 'StudyMate privacy policy, PU notes privacy, Pokhara University notes data protection, student data privacy Nepal'
-    if (metaKeywords) {
-      metaKeywords.setAttribute('content', keywordsContent)
-    }
-
-    // Privacy policy should be crawlable and indexable
-    const metaRobots = document.querySelector('meta[name="robots"]')
-    if (metaRobots) {
-      metaRobots.setAttribute('content', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1')
-    }
-
-    // Set canonical URL
-    const canonical = document.querySelector('link[rel="canonical"]')
-    if (canonical) {
-      canonical.setAttribute('href', 'https://www.manishshrestha012.com.np/privacy-policy')
-    }
-
-    // Apply body legal-theme so page background covers full viewport
-    document.body.classList.add('legal-theme')
-
-    return () => {
-      document.title = 'StudyMate'
-      document.body.classList.remove('legal-theme')
-    }
-  }, [])
-
   return (
     <div className="legal-page landing legal-dark">
+      <LegalTheme />
       <div className="legal-container">
         <div className="legal-content">
           <h1 className="terms-title">Privacy Policy</h1>
@@ -85,11 +48,11 @@ const PrivacyPolicy = () => {
             If you have questions about this policy, would like to report a privacy-related
             issue, or request data removal, please contact us using the Contact app within
             the desktop environment or email the site maintainer. You can also review our
-            <Link to="/terms"> Terms of Service</Link> for related information.
+            <Link href="/terms"> Terms of Service</Link> for related information.
           </p>
 
           <div className="legal-actions">
-            <Link to="/" className="btn-secondary">Back to Home</Link>
+            <Link href="/" className="btn-secondary">Back to Home</Link>
           </div>
         </div>
       </div>
@@ -100,9 +63,9 @@ const PrivacyPolicy = () => {
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} StudyMate. Made with ❤️ for PU Students</p>
           <div className="footer-bottom-links">
-            <Link to="/faq">FAQ</Link>
-            <Link to="/privacy-policy">Privacy Policy</Link>
-            <Link to="/terms">Terms of Service</Link>
+            <Link href="/faq">FAQ</Link>
+            <Link href="/privacy-policy">Privacy Policy</Link>
+            <Link href="/terms">Terms of Service</Link>
           </div>
         </div>
       </div>

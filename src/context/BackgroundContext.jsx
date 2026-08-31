@@ -50,6 +50,42 @@ const backgrounds = [
     name: 'Sunset',
     type: 'gradient',
     value: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+  },
+  {
+    id: 'nord',
+    name: 'Nord',
+    type: 'gradient',
+    value: 'linear-gradient(135deg, #2e3440 0%, #4c566a 100%)'
+  },
+  {
+    id: 'forest',
+    name: 'Forest',
+    type: 'gradient',
+    value: 'linear-gradient(135deg, #134e5e 0%, #71b280 100%)'
+  },
+  {
+    id: 'lavender',
+    name: 'Lavender',
+    type: 'gradient',
+    value: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'
+  },
+  {
+    id: 'mint',
+    name: 'Mint',
+    type: 'gradient',
+    value: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)'
+  },
+  {
+    id: 'peach',
+    name: 'Peach',
+    type: 'gradient',
+    value: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)'
+  },
+  {
+    id: 'slate',
+    name: 'Slate',
+    type: 'gradient',
+    value: 'linear-gradient(135deg, #485563 0%, #29323c 100%)'
   }
 ]
 
@@ -58,18 +94,27 @@ export const BackgroundProvider = ({ children }) => {
   const [customBg, setCustomBg] = useState(null)
 
   useEffect(() => {
-    // If a custom background was set previously, restore it first
-    const custom = localStorage.getItem('notesAppCustomBackground')
-    if (custom) {
-      setCustomBg(custom)
-      return
+    // Restore the saved background after mount. Reading localStorage
+    // here (rather than via a lazy initializer) avoids SSR/hydration
+    // mismatches for users with a saved custom background.
+    const restoreSavedBackground = () => {
+      try {
+        const custom = localStorage.getItem('notesAppCustomBackground')
+        if (custom) {
+          setCustomBg(custom)
+          return
+        }
+
+        const saved = localStorage.getItem('notesAppBackground')
+        const found = saved ? backgrounds.find(bg => bg.id === saved) : undefined
+        if (found) setCurrentBg(found)
+      } catch {
+        // ignore storage access errors
+      }
     }
 
-    const saved = localStorage.getItem('notesAppBackground')
-    if (saved) {
-      const found = backgrounds.find(bg => bg.id === saved)
-      if (found) setCurrentBg(found)
-    }
+    const rafId = requestAnimationFrame(restoreSavedBackground)
+    return () => cancelAnimationFrame(rafId)
   }, [])
 
   const changeBackground = (bgId) => {
@@ -82,10 +127,10 @@ export const BackgroundProvider = ({ children }) => {
           if (prev && typeof prev === 'string' && prev.startsWith('blob:')) {
             URL.revokeObjectURL(prev)
           }
-        } catch (err) { /* ignore */ }
+        } catch { /* ignore */ }
         return null
       })
-      try { localStorage.removeItem('notesAppCustomBackground') } catch (err) { /* ignore */ }
+      try { localStorage.removeItem('notesAppCustomBackground') } catch { /* ignore */ }
       localStorage.setItem('notesAppBackground', bgId)
     }
   }
@@ -97,7 +142,7 @@ export const BackgroundProvider = ({ children }) => {
         if (prev && typeof prev === 'string' && prev.startsWith('blob:') && prev !== url) {
           URL.revokeObjectURL(prev)
         }
-      } catch (err) {
+      } catch {
         // ignore
       }
       return url
@@ -112,7 +157,7 @@ export const BackgroundProvider = ({ children }) => {
         console.warn('Failed to persist custom background', err)
       }
     } else {
-      try { localStorage.removeItem('notesAppCustomBackground') } catch (err) { /* ignore */ }
+      try { localStorage.removeItem('notesAppCustomBackground') } catch { /* ignore */ }
     }
 
     // clear chosen built-in background when using custom
@@ -126,12 +171,12 @@ export const BackgroundProvider = ({ children }) => {
         if (prev && typeof prev === 'string' && prev.startsWith('blob:')) {
           URL.revokeObjectURL(prev)
         }
-      } catch (err) {
+      } catch {
         // ignore
       }
       return null
     })
-    try { localStorage.removeItem('notesAppCustomBackground') } catch (err) { /* ignore */ }
+    try { localStorage.removeItem('notesAppCustomBackground') } catch { /* ignore */ }
     // restore selected built-in if present, otherwise fallback to default
     const saved = localStorage.getItem('notesAppBackground')
     if (saved) {

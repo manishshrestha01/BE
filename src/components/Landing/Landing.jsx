@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+'use client'
+import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Sun, Moon, Monitor } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
-import { Sun, Moon, Monitor } from 'lucide-react'
 import './Landing.css'
-import { setTitle, setMeta, setLinkRel, setJSONLD, removeElementById } from '../../lib/seo'
 import { COLLEGES } from '../../lib/colleges'
 
 
@@ -30,7 +31,7 @@ const landingSemesterLinks = Array.from({ length: 8 }, (_, index) => {
 const Landing = () => {
   const { loading } = useAuth()
   const { mode, setTheme, resolvedTheme } = useTheme()
-  const location = useLocation()
+  const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const testimonials = [
@@ -87,72 +88,31 @@ const Landing = () => {
 
   const handleLogoClick = () => {
     setMobileMenuOpen(false)
-    if (location.pathname === '/') {
+    if (pathname === '/') {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
   }
-
-  // Set page title and meta for SEO
-  useEffect(() => {
-    setTitle('StudyMate — Computer Engineering Notes Pokhara University')
-    // Update meta description
-    setMeta({ name: 'description', content: 'Pokhara University BE Computer Engineering notes — free semester-wise PDFs for ML, DBMS, DSA, OS, CN, AI, Java, C Programming and all subjects. Download topper notes for PEC, NCIT, NEC and other PU colleges.' })
-    setMeta({ name: 'robots', content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' })
-    setLinkRel('canonical', 'https://www.manishshrestha012.com.np/')
-
-    // Comprehensive keywords covering all subjects with abbreviations
-    setMeta({ name: 'keywords', content: 'Pokhara University notes, BE Computer Engineering, StudyMate, PU engineering notes, PU topper notes, Machine Learning notes PU, ML notes PU, DBMS notes PU, DSA notes PU, OS notes PU, CN notes PU, Compiler Design notes PU, AI notes PU, Java notes PU, C Programming notes PU, Computer Graphics notes PU, free PU notes download, PU semester wise notes, Pokhara University BE Computer Engineering notes, PEC notes, NCIT notes, NEC notes, PU notes free download, BE Computer study materials' })
-
-    // Open Graph / Twitter
-    setMeta({ property: 'og:title', content: 'StudyMate — PU Notes for Computer Engineering' })
-    setMeta({ property: 'og:description', content: 'Free PU notes for BE Computer Engineering. Download Pokhara University notes — ML, DBMS, DSA, OS, Compiler Design, AI, Java, C Programming, and all semester materials.' })
-    setMeta({ property: 'og:image', content: 'https://www.manishshrestha012.com.np/logo-512.png' })
-    setMeta({ property: 'og:url', content: 'https://www.manishshrestha012.com.np/' })
-    setMeta({ property: 'og:site_name', content: 'StudyMate' })
-
-    setMeta({ name: 'twitter:title', content: 'StudyMate — PU Notes for Computer Engineering' })
-    setMeta({ name: 'twitter:description', content: 'Free PU notes for BE Computer Engineering. Download Pokhara University notes — ML, DBMS, DSA, OS, Compiler Design, AI, Java, C Programming, and all semester materials.' })
-    setMeta({ name: 'twitter:image', content: 'https://www.manishshrestha012.com.np/logo-512.png' })
-
-    // JSON-LD for homepage
-    const homeLD = {
-      '@context': 'https://schema.org',
-      '@type': 'WebPage',
-      '@id': 'https://www.manishshrestha012.com.np/#homepage',
-      'url': 'https://www.manishshrestha012.com.np/',
-      'name': 'StudyMate',
-      'description': 'Your Complete Study Resource Hub for Pokhara University Computer Engineering — free notes, PDFs, and semester material for ML, DBMS, DSA, OS, AI, and all subjects.',
-      'isPartOf': { '@id': 'https://www.manishshrestha012.com.np/#website' }
-    }
-
-    setJSONLD(homeLD, 'json-ld-home')
-
-    return () => {
-      setTitle('StudyMate')
-      removeElementById('json-ld-home')
-    }
-  }, [])
 
   // No global body theme manipulation here; full-bleed CSS handles edge cases
 
   const features = [
     {
-      icon: '📚',
+      icon: '/icons/books.webp',
       title: 'Comprehensive Notes',
       description: 'Access complete study materials for all semesters of Computer Engineering at Pokhara University.'
     },
     {
-      icon: '🎯',
+      icon: '/icons/finder.webp',
       title: 'Organized by Subject',
       description: 'Find exactly what you need with our intuitive folder structure organized by semester and subject.'
     },
     {
-      icon: '📱',
+      icon: '/icons/mobile.webp',
       title: 'Access Anywhere',
       description: 'Study on any device - desktop, tablet, or mobile. Your notes are always within reach.'
     },
     {
-      icon: '✏️',
+      icon: '/icons/notes.webp',
       title: 'Personal Notes',
       description: 'Create and save your own notes while studying. Keep track of important concepts.'
     }
@@ -168,7 +128,7 @@ const Landing = () => {
   const steps = [
     {
       number: '1',
-      icon: '🔍',
+      icon: '/icons/finder.webp',
       title: 'Browse Your Semester',
       description: 'Navigate through 8 semesters organized by the PU BE Computer Engineering curriculum. Find your subjects instantly.'
     },
@@ -186,7 +146,7 @@ const Landing = () => {
     },
     {
       number: '4',
-      icon: '✏️',
+      icon: '/icons/notes.webp',
       title: 'Take Notes & Draw',
       description: 'Available on the web dashboard only. Create personal notes and sketches using the built-in drawing canvas. Your work auto-saves to the cloud.'
     }
@@ -202,7 +162,7 @@ const Landing = () => {
       {/* Navigation */}
       <nav className="landing-nav">
         <div className="nav-container">
-          <Link to="/" className="nav-logo" onClick={handleLogoClick}>
+          <Link href="/" className="nav-logo" onClick={handleLogoClick}>
             <img src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'} alt="StudyMate Logo" style={{ height: 32, width: 32 }} />
             <span className="logo-text">StudyMate</span>
           </Link>
@@ -210,10 +170,10 @@ const Landing = () => {
             <a href="#features">Features</a>
             <a href="#about">About</a>
             <a href="#testimonials">Reviews</a>
-            <Link to="/colleges">Colleges</Link>
-            <Link to="/blog">Blog</Link>
-            <Link to="/login" className="nav-login">Login</Link>
-            <Link to="/dashboard" className="nav-cta">Open Dashboard</Link>
+            <Link href="/colleges">Colleges</Link>
+            <Link href="/blog">Blog</Link>
+            <Link href="/login" className="nav-login">Login</Link>
+            <Link href="/dashboard" className="nav-cta">Open Dashboard</Link>
             <button
               className="theme-toggle-btn"
               onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
@@ -236,10 +196,10 @@ const Landing = () => {
               <a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
               <a href="#about" onClick={() => setMobileMenuOpen(false)}>About</a>
               <a href="#testimonials" onClick={() => setMobileMenuOpen(false)}>Reviews</a>
-              <Link to="/colleges" onClick={() => setMobileMenuOpen(false)}>Colleges</Link>
-              <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
-              <Link to="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
-              <Link to="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
+              <Link href="/colleges" onClick={() => setMobileMenuOpen(false)}>Colleges</Link>
+              <Link href="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
+              <Link href="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+              <Link href="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
               <button
                 className="theme-toggle-btn mobile-theme-toggle"
                 onClick={() => setTheme(mode === 'dark' ? 'light' : mode === 'light' ? 'system' : 'dark')}
@@ -269,7 +229,7 @@ const Landing = () => {
             of Computer Engineering. Organized, accessible, and always free.
           </p>
           <div className="hero-cta">
-            <Link to="/dashboard" className="btn-primary">
+            <Link href="/dashboard" className="btn-primary">
               Start Learning
               <span className="btn-arrow">→</span>
             </Link>
@@ -279,15 +239,15 @@ const Landing = () => {
           </div>
           <div className="hero-visual">
             <div className="visual-card card-1">
-              <span className="card-icon">📁</span>
+              <img src="/icons/finder.webp" alt="Finder" className="card-icon card-icon-img" />
               <span className="card-text">Semester 1-8</span>
             </div>
             <div className="visual-card card-2">
-              <span className="card-icon">📝</span>
+              <img src="/icons/notes.webp" alt="Notes" className="card-icon card-icon-img" />
               <span className="card-text">Notes & PDFs</span>
             </div>
             <div className="visual-card card-3">
-              <span className="card-icon">💡</span>
+              <img src="/icons/tips.webp" alt="Quick Access" className="card-icon card-icon-img" />
               <span className="card-text">Quick Access</span>
             </div>
           </div>
@@ -319,7 +279,11 @@ const Landing = () => {
           <div className="features-grid">
             {features.map((feature, index) => (
               <div key={index} className="feature-card">
-                <span className="feature-icon">{feature.icon}</span>
+                {feature.icon.startsWith('/') ? (
+                  <img src={feature.icon} alt={feature.title} className="feature-icon feature-icon-img" />
+                ) : (
+                  <span className="feature-icon">{feature.icon}</span>
+                )}
                 <h3 className="feature-title">{feature.title}</h3>
                 <p className="feature-description">{feature.description}</p>
               </div>
@@ -418,8 +382,8 @@ const Landing = () => {
             </p>
             <p className="about-text">
               Our materials are carefully organized by semester and subject, making it easy to find 
-              exactly what you're looking for. Whether you're preparing for exams or catching up on 
-              lectures, we've got you covered.
+              exactly what you're looking for. StudyMate 2.0 adds a personalized Dashboard with 14 
+              built-in wallpapers, custom uploads, and a polished window experience.
             </p>
             <div className="about-features">
               <div className="about-feature">
@@ -433,6 +397,10 @@ const Landing = () => {
               <div className="about-feature">
                 <span className="check-icon">✓</span>
                 <span>Community driven</span>
+              </div>
+              <div className="about-feature">
+                <span className="check-icon">✓</span>
+                <span>Customizable dashboard</span>
               </div>
             </div>
           </div>
@@ -512,7 +480,7 @@ const Landing = () => {
             {COLLEGES.map((college, index) => {
               const slug = (college.value.match(/\(([^)]+)\)/)?.[1] || '').toLowerCase()
               return (
-                <Link to={`/college/${slug}`} key={index} className="college-card">
+                <Link href={`/college/${slug}`} key={index} className="college-card">
                   <img src={college.logo} alt={college.value} className="college-card-logo" onError={(e) => { e.target.style.display = 'none' }} />
                   <div className="college-card-info">
                     <span className="college-card-name">{college.value.split('(')[0].trim()}</span>
@@ -523,7 +491,7 @@ const Landing = () => {
             })}
           </div>
           <div className="colleges-cta">
-            <Link to="/colleges" className="btn-secondary">
+            <Link href="/colleges" className="btn-secondary">
               View All Colleges
               <span className="btn-arrow">→</span>
             </Link>
@@ -568,7 +536,7 @@ const Landing = () => {
             Access 500+ study materials across 50+ subjects — completely free.
           </p>
           <div className="cta-buttons">
-            <Link to="/dashboard" className="btn-primary btn-large">
+            <Link href="/dashboard" className="btn-primary btn-large">
               Open Dashboard
               <span className="btn-arrow">→</span>
             </Link>
@@ -592,7 +560,7 @@ const Landing = () => {
         <div className="footer-container">
           <div className="footer-grid">
             <div className="footer-brand">
-              <Link to="/" className="nav-logo" onClick={handleLogoClick}>
+              <Link href="/" className="nav-logo" onClick={handleLogoClick}>
                 <img src="/white.svg" alt="StudyMate Logo" style={{ height: 32, width: 32 }} />
                 <span className="logo-text">StudyMate</span>
               </Link>
@@ -623,9 +591,9 @@ const Landing = () => {
             <div className="footer-links-grid">
               <div className="footer-column">
                 <h2>Quick Links</h2>
-                <Link to="/dashboard">Dashboard</Link>
-                <Link to="/colleges">Colleges</Link>
-                <Link to="/blog">Blog</Link>
+                <Link href="/dashboard">Dashboard</Link>
+                <Link href="/colleges">Colleges</Link>
+                <Link href="/blog">Blog</Link>
                 <a href="#features">Features</a>
                 <a href="#about">About</a>
                 <a href="#testimonials">Reviews</a>
@@ -633,15 +601,15 @@ const Landing = () => {
               <div className="footer-column">
                 <h2>Semesters</h2>
                 {landingSemesterLinks.map((semesterLink) => (
-                  <Link key={semesterLink.label} to={semesterLink.to}>
+                  <Link key={semesterLink.label} href={semesterLink.to}>
                     {semesterLink.label}
                   </Link>
                 ))}
               </div>
               <div className="footer-column">
                 <h2>Account</h2>
-                <Link to="/login">Login</Link>
-                <Link to="/login">Continue with Google</Link>
+                <Link href="/login">Login</Link>
+                <Link href="/login">Continue with Google</Link>
               </div>
             </div>
           </div>

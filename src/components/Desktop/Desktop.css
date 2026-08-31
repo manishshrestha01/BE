@@ -161,6 +161,7 @@
   height: 86px;
   object-fit: contain;
   display: block;
+  border-radius: 15px;
 }
 
 .desktop-shortcut-label {
@@ -250,21 +251,93 @@
   }
 }
 
-/* Hide centered card on mobile, show sidebar icon instead */
+/* Mobile get-app banner (compact pill, centered above dock) */
 @media (max-width: 767px) {
   .get-app-card {
-    display: none !important;
-  }
-  .get-app-sidebar {
     display: flex !important;
+    align-items: center;
+    position: fixed;
+    bottom: calc(88px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto;
+    width: auto;
+    max-width: calc(100% - 24px);
+    padding: 6px 12px 6px 8px;
+    gap: 8px;
+    z-index: 800;
+    border-radius: 100px;
+    background: rgba(18, 22, 30, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    font-family: inherit;
+  }
+
+  .get-app-card:hover {
+    transform: translateX(-50%) translateY(-1px);
+  }
+
+  .get-app-card--hidden {
+    opacity: 0;
+    filter: blur(10px);
+    pointer-events: none;
+    z-index: -1;
+    transition: opacity 0.25s ease, filter 0.25s ease;
+  }
+
+  .get-app-card-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .get-app-logo {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .get-app-text {
+    display: none;
+  }
+
+  .get-app-badge {
+    background: #fff;
+    color: #1a1a1a;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 }
 
-/* Hide sidebar icon on desktop (centered card is shown) */
-@media (min-width: 768px) {
-  .get-app-sidebar {
-    display: none !important;
-  }
+/* Light mode mobile banner */
+[data-theme="light"] .get-app-card {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .get-app-card:hover {
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] .get-app-title {
+  color: #1a1a1a;
+}
+
+[data-theme="light"] .get-app-sub {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] .get-app-badge {
+  background: #1a1a1a;
+  color: #fff;
 }
 
 /* ==================== iOS DIALOG ==================== */

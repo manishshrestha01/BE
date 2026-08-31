@@ -1,5 +1,6 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+'use client'
+import { useMemo, useState } from "react";
+import Link from "next/link";
 import { ArrowLeft, ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 
 import Footer from "../Footer";
@@ -7,9 +8,7 @@ import SiteNav from "../SiteNav";
 import Breadcrumbs from "./Breadcrumbs";
 import TableOfContents from "./TableOfContents";
 import { getSubjectArticle } from "../../data/subjectArticles";
-import { applyMetadata, applyOrganizationGraph, buildMetadata, clearSeoScripts } from "../../lib/blogSeo";
 import {
-  BLOG_BASE_URL,
   BLOG_LAST_UPDATED,
   buildImportantTopics,
   buildLearningOutcomes,
@@ -18,19 +17,10 @@ import {
   buildSubjectIntro,
   buildSyllabusOverview,
   formatUpdatedDate,
-  getSubjectAbbreviation,
   getSubjectBySlug,
   getSubjectNeighbors,
-  SUBJECT_ABBREVIATIONS,
 } from "../../lib/blogCurriculum";
-import { setJSONLD, setMeta } from "../../lib/seo";
 import "./Blog.css";
-
-const forceScrollTop = () => {
-  window.scrollTo(0, 0);
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
-};
 
 const buildFallbackSubjectArticle = (semesterData, subjectData) => ({
   title: subjectData.name,
@@ -110,18 +100,6 @@ const formatUnitTitle = (title = "", unitNumber) => {
   return `Unit ${unitNumber}: ${cleanedTitle || title}`;
 };
 
-const renderSyllabusSubpoints = (items = [], keyPrefix, unitNumber) =>
-  items.length ? (
-    <ol className="subject-subpoint-list">
-      {items.map((item, index) => (
-        <li key={`${keyPrefix}-sp-${index}`}>
-          <span className="subject-subpoint-index">{`${unitNumber}.${index + 1}`}</span>
-          <span>{item}</span>
-        </li>
-      ))}
-    </ol>
-  ) : null;
-
 const normalizeCourseCode = (courseCode = "") => String(courseCode || "").trim().toUpperCase();
 
 const compactCourseCode = (courseCode = "") => normalizeCourseCode(courseCode).replace(/\s+/g, "");
@@ -142,142 +120,23 @@ const enrichDescriptionWithCourseCode = (baseDescription, courseCode) => {
   return `${description} Course code: ${normalizedCode}.`;
 };
 
-const buildSubjectSeoKeywords = (semesterData, subjectData, courseCode) => {
-  const normalizedCode = normalizeCourseCode(courseCode);
-  const compactCode = compactCourseCode(normalizedCode);
-  const abbr = getSubjectAbbreviation(subjectData.name);
-  const lowerName = subjectData.name.toLowerCase();
-  const sem = semesterData.semester;
+const renderSyllabusSubpoints = (items = [], keyPrefix, unitNumber) =>
+  items.length ? (
+    <ol className="subject-subpoint-list">
+      {items.map((item, index) => (
+        <li key={`${keyPrefix}-sp-${index}`}>
+          <span className="subject-subpoint-index">{`${unitNumber}.${index + 1}`}</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ol>
+  ) : null;
 
-  const keywords = [
-    subjectData.name,
-    `${subjectData.name} notes`,
-    `${subjectData.name} notes PU`,
-    `${subjectData.name} notes Pokhara University`,
-    `${subjectData.name} PU notes`,
-    `${subjectData.name} semester ${sem} notes`,
-    `${subjectData.name} notes free download`,
-    `${subjectData.name} free notes PU`,
-    `${subjectData.name} topper notes`,
-    `${subjectData.name} study guide`,
-    `${subjectData.name} syllabus`,
-    `${subjectData.name} important topics`,
-    `${subjectData.name} practice questions`,
-    `${subjectData.name} question bank`,
-    `${subjectData.name} past questions`,
-    `${subjectData.name} PDF notes`,
-    `${subjectData.name} BE Computer notes`,
-    `${subjectData.name} BE Computer semester ${sem}`,
-    `PU ${subjectData.name}`,
-    `PU ${lowerName} notes`,
-    `PU ${lowerName}`,
-    `Pokhara University ${subjectData.name}`,
-    `Pokhara University ${lowerName} notes`,
-    `semester ${sem} ${lowerName} notes`,
-    `BE Computer Engineering semester ${sem}`,
-    `PU topper notes ${subjectData.name}`,
-    `free ${lowerName} notes PU`,
-    `${lowerName} notes free download PU`,
-    `${lowerName} notes BE Computer`,
-    `PU notes ${lowerName}`,
-    `PU notes ${subjectData.name}`,
-    `PU semester ${sem} ${lowerName}`,
-    `Pokhara University semester ${sem} study material`,
-  ];
-
-  if (abbr && abbr.toLowerCase() !== lowerName.toLowerCase()) {
-    keywords.push(
-      abbr,
-      `${abbr} notes`,
-      `${abbr} notes PU`,
-      `${abbr} PU notes`,
-      `${abbr} notes Pokhara University`,
-      `PU ${abbr} notes`,
-      `PU ${abbr}`,
-      `${abbr} BE Computer notes`,
-      `${abbr} semester ${sem} notes`,
-      `${abbr} free notes PU`,
-      `${abbr} topper notes`,
-      `${abbr} study guide`,
-      `${abbr} notes free download`,
-      `PU topper notes ${abbr}`,
-      `free ${abbr} notes PU`,
-      `${abbr} notes BE Computer`,
-      `PU notes ${abbr}`,
-      `${abbr} syllabus PU`,
-      `${abbr} important topics`,
-      `${abbr} practice questions`,
-    );
-  }
-
-  if (normalizedCode) {
-    keywords.push(
-      normalizedCode,
-      compactCode,
-      `${subjectData.name} ${normalizedCode}`,
-      `${normalizedCode} notes`,
-      `${compactCode} notes`,
-      `${normalizedCode} Pokhara University`,
-      `PU ${normalizedCode} notes`,
-      `${normalizedCode} notes PU`,
-    );
-  }
-
-  return [...new Set(keywords.filter(Boolean))];
-};
-
-const stripUnitHours = (title = "") => String(title || "").replace(/\s*\([^)]*\)\s*$/g, "").trim();
-
-const buildSyllabusUnitSeoKeywords = (article, semesterData, subjectData) => {
-  const syllabusSection = (article.sections || []).find((section) => section.id === "syllabus-overview");
-  const units = syllabusSection?.units || [];
-  const abbr = subjectData ? getSubjectAbbreviation(subjectData.name) : "";
-  const keywords = [];
-
-  units.forEach((unit, index) => {
-    const unitNumber = index + 1;
-    const unitLabelWithHours = formatUnitTitle(unit.title, unitNumber);
-    const unitLabel = stripUnitHours(unitLabelWithHours);
-    const unitTopic = unitLabel.replace(/^Unit\s*\d+\s*:\s*/i, "").trim();
-
-    keywords.push(
-      unitLabelWithHours,
-      unitLabel,
-      `${unitLabel} PU notes`,
-      `${unitLabel} Pokhara University notes`,
-      `${unitLabel} semester ${semesterData.semester}`,
-      `${unitTopic} PU notes`,
-      `${unitTopic} semester ${semesterData.semester} notes`,
-      `${unitTopic} chapter notes`,
-    );
-
-    if (abbr && abbr.toLowerCase() !== (subjectData?.name || "").toLowerCase()) {
-      keywords.push(
-        `${abbr} ${unitTopic} notes`,
-        `${abbr} ${unitTopic} PU`,
-      );
-    }
-  });
-
-  return [...new Set(keywords.filter(Boolean))];
-};
-
-const BlogSubject = () => {
-  const { semesterId, subjectSlug } = useParams();
+const BlogSubject = ({ semesterId, subjectSlug }) => {
   const semesterNumber = Number(semesterId);
   const result = getSubjectBySlug(semesterNumber, subjectSlug || "");
-  const semesterData = result?.semester || null;
-  const subjectData = result?.subject || null;
 
-  const [mobileTocOpen, setMobileTocOpen] = useState(false);
-
-  useLayoutEffect(() => {
-    forceScrollTop();
-    const frame = window.requestAnimationFrame(forceScrollTop);
-    return () => window.cancelAnimationFrame(frame);
-  }, [semesterNumber, subjectSlug]);
-
-  if (!semesterData || !subjectData) {
+  if (!result?.semester || !result?.subject) {
     return (
       <div className="landing blog-page">
         <SiteNav />
@@ -285,7 +144,7 @@ const BlogSubject = () => {
           <div className="blog-shell">
             <h1 className="blog-title">Subject not found</h1>
             <p className="blog-subtitle">The requested subject is not available in this semester.</p>
-            <Link className="blog-btn" to="/blog" onClick={forceScrollTop}>
+            <Link className="blog-btn" href="/blog">
               Back to Blog
             </Link>
           </div>
@@ -294,6 +153,12 @@ const BlogSubject = () => {
       </div>
     );
   }
+
+  return <BlogSubjectContent semesterData={result.semester} subjectData={result.subject} />;
+};
+
+const BlogSubjectContent = ({ semesterData, subjectData }) => {
+  const [mobileTocOpen, setMobileTocOpen] = useState(false);
 
   const storedArticle = getSubjectArticle(semesterData.semester, subjectData.slug);
   const article = storedArticle || buildFallbackSubjectArticle(semesterData, subjectData);
@@ -304,18 +169,8 @@ const BlogSubject = () => {
     : subjectData.name;
   const rawDescription = article.description || buildSubjectDescription(semesterData, subjectData);
   const description = enrichDescriptionWithCourseCode(rawDescription, subjectCourseCode);
-  const abbrLabel = getSubjectAbbreviation(subjectData.name);
-  const title = abbrLabel
-    ? `${abbrLabel} Notes - ${subjectData.name} (${subjectCourseCode || abbrLabel}) | PU BE Computer Engineering Semester ${semesterData.semester} | StudyMate`
-    : `${subjectLabel} — Semester ${semesterData.semester} | StudyMate`;
-  const canonicalPath = `/blog/semester/${semesterData.semester}/${subjectData.slug}`;
-  const canonical = `${BLOG_BASE_URL}${canonicalPath}`;
   const updatedDate = formatUpdatedDate(article.updatedAt || BLOG_LAST_UPDATED);
   const neighborInfo = getSubjectNeighbors(semesterData.semester, subjectData.slug);
-  const seoKeywords = [
-    ...buildSubjectSeoKeywords(semesterData, subjectData, subjectCourseCode),
-    ...buildSyllabusUnitSeoKeywords(article, semesterData, subjectData),
-  ];
 
   const tocItems = useMemo(() => {
     const items = [];
@@ -357,127 +212,13 @@ const BlogSubject = () => {
     { label: subjectLabel },
   ];
 
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: `${BLOG_BASE_URL}/`,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Blog",
-        item: `${BLOG_BASE_URL}/blog`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: `Semester ${semesterData.semester}`,
-        item: `${BLOG_BASE_URL}${semesterData.urlPath}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 4,
-        name: subjectLabel,
-        item: canonical,
-      },
-    ],
-  };
-
-  const syllabusUnits = useMemo(
-    () =>
-      (article?.sections || [])
-        .filter((s) => s.id === "syllabus-overview")
-        .flatMap((s) => s.units || []),
-    [article],
-  );
-
-  const mentions = useMemo(() => {
-    const items = syllabusUnits.map((unit) => ({
-      "@type": "Thing",
-      name: unit.title,
-    }));
-    if (subjectCourseCode) {
-      items.push({ "@type": "Thing", name: subjectCourseCode });
-    }
-    return items.length ? items : undefined;
-  }, [syllabusUnits, subjectCourseCode]);
-
-  const articleLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: title,
-    description,
-    mainEntityOfPage: canonical,
-    dateModified: article.updatedAt || BLOG_LAST_UPDATED,
-    datePublished: article.updatedAt || BLOG_LAST_UPDATED,
-    inLanguage: "en-US",
-    about: [
-      {
-        "@type": "CollegeOrUniversity",
-        name: "Pokhara University",
-      },
-      {
-        "@type": "Course",
-        name: subjectLabel,
-        ...(subjectCourseCode ? { courseCode: subjectCourseCode } : {}),
-      },
-    ],
-    mentions,
-    author: {
-      "@type": "Organization",
-      name: "StudyMate",
-    },
-    publisher: {
-      "@id": `${BLOG_BASE_URL}/#organization`,
-    },
-    articleSection: tocItems.map((item) => item.text),
-    keywords: seoKeywords,
-  };
-
-  useEffect(() => {
-    if (!semesterData || !subjectData) {
-      return undefined;
-    }
-
-    const metadata = buildMetadata({
-      title,
-      description,
-      canonicalPath,
-      type: "article",
-    });
-
-    applyMetadata(metadata);
-    applyOrganizationGraph();
-    setMeta({ name: "keywords", content: seoKeywords.join(", ") });
-    setJSONLD(breadcrumbLd, "json-ld-blog-subject-breadcrumb");
-    setJSONLD(articleLd, "json-ld-blog-subject-article");
-
-    return () => {
-      clearSeoScripts(["json-ld-blog-subject-breadcrumb", "json-ld-blog-subject-article"]);
-    };
-  }, [
-    semesterData,
-    subjectData,
-    title,
-    description,
-    canonicalPath,
-    seoKeywords,
-    breadcrumbLd,
-    articleLd,
-  ]);
-
   return (
     <div className="landing blog-page">
       <SiteNav />
 
       <section className="blog-hero subject-hero">
         <div className="blog-shell">
-          <Breadcrumbs items={breadcrumbItems} onNavigate={forceScrollTop} />
+          <Breadcrumbs items={breadcrumbItems} />
 
           <div className="hero-badge blog-badge">
             <GraduationCap className="blog-inline-icon" aria-hidden="true" />
@@ -555,7 +296,7 @@ const BlogSubject = () => {
             <section className="subject-cta">
               {renderHeading("dashboard-cta", "Get Notes in StudyMate Dashboard", 2)}
               <p>Notes are organized inside the dashboard.</p>
-              <Link to="/dashboard" className="blog-btn subject-cta-btn" onClick={forceScrollTop}>
+              <Link href="/dashboard" className="blog-btn subject-cta-btn">
                 Open Dashboard
                 <ArrowRight className="subject-nav-icon" aria-hidden="true" />
               </Link>
@@ -566,10 +307,7 @@ const BlogSubject = () => {
                 className={`blog-btn subject-nav-btn ${
                   !neighborInfo.previous ? "blog-btn-muted disabled-link" : ""
                 }`}
-                to={neighborInfo.previous ? neighborInfo.previous.urlPath : "#"}
-                onClick={
-                  neighborInfo.previous ? forceScrollTop : (event) => event.preventDefault()
-                }
+                href={neighborInfo.previous ? neighborInfo.previous.urlPath : "#"}
               >
                 <ArrowLeft className="subject-nav-icon" aria-hidden="true" />
                 Previous Subject
@@ -577,8 +315,7 @@ const BlogSubject = () => {
 
               <Link
                 className="blog-btn subject-nav-btn subject-nav-center"
-                to={semesterData.urlPath}
-                onClick={forceScrollTop}
+                href={semesterData.urlPath}
               >
                 <BookOpen className="subject-nav-icon" aria-hidden="true" />
                 Back to Semester
@@ -588,8 +325,7 @@ const BlogSubject = () => {
                 className={`blog-btn subject-nav-btn ${
                   !neighborInfo.next ? "blog-btn-muted disabled-link" : ""
                 }`}
-                to={neighborInfo.next ? neighborInfo.next.urlPath : "#"}
-                onClick={neighborInfo.next ? forceScrollTop : (event) => event.preventDefault()}
+                href={neighborInfo.next ? neighborInfo.next.urlPath : "#"}
               >
                 Next Subject
                 <ArrowRight className="subject-nav-icon" aria-hidden="true" />
