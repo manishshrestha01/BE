@@ -22,7 +22,15 @@ export function buildMetadata({
       type,
       url: canonical,
       siteName: "StudyMate",
-      images: [{ url: image, alt: `${title} banner` }],
+      locale: "en_US",
+      images: [
+        {
+          url: image,
+          width: 512,
+          height: 512,
+          alt: "StudyMate logo — Pokhara University Computer Engineering Notes",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -46,6 +54,9 @@ export function applyMetadata(metadata) {
   setMeta({ property: "og:site_name", content: metadata.openGraph.siteName });
   setMeta({ property: "og:image", content: metadata.openGraph.images[0].url });
   setMeta({ property: "og:image:alt", content: metadata.openGraph.images[0].alt });
+  setMeta({ property: "og:image:width", content: metadata.openGraph.images[0].width });
+  setMeta({ property: "og:image:height", content: metadata.openGraph.images[0].height });
+  setMeta({ property: "og:locale", content: metadata.openGraph.locale });
 
   setMeta({ name: "twitter:card", content: metadata.twitter.card });
   setMeta({ name: "twitter:title", content: metadata.twitter.title });

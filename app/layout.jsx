@@ -26,7 +26,16 @@ export const metadata = {
     nocache: false,
     googleBot: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large', 'max-video-preview': -1 },
   },
-  verification: { yandex: '464a14ed2069c072' },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    yandex: process.env.YANDEX_SITE_VERIFICATION || '464a14ed2069c072',
+    other: {
+      'msvalidate.01': process.env.BING_SITE_VERIFICATION,
+      'baidu-site-verification': process.env.BAIDU_SITE_VERIFICATION,
+      'naver-site-verification': process.env.NAVER_SITE_VERIFICATION,
+      'seznam-wmt': process.env.SEZNAM_SITE_VERIFICATION,
+    },
+  },
   manifest: '/manifest.json',
   icons: {
     icon: [
@@ -50,7 +59,14 @@ export const metadata = {
     title: 'PU Notes - Pokhara University Computer Engineering Notes',
     description:
       'Free PU notes for BE Computer Engineering. Download Pokhara University notes — ML, DBMS, DSA, OS, Compiler Design, AI, Java, C Programming, and all semester materials.',
-    images: [{ url: `${SITE_URL}/logo-512.png` }],
+    images: [
+      {
+        url: `${SITE_URL}/logo-512.png`,
+        width: 512,
+        height: 512,
+        alt: 'StudyMate logo — Pokhara University Computer Engineering Notes',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',

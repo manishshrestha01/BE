@@ -105,6 +105,12 @@ const IndexNowAdmin = () => {
   const [submitAllError, setSubmitAllError] = useState('')
   const [submitAllResult, setSubmitAllResult] = useState(null)
 
+  const [baiduPingLoading, setBaiduPingLoading] = useState(false)
+  const [enginePingError, setEnginePingError] = useState('')
+  const [enginePingResult, setEnginePingResult] = useState(null)
+  const [engineStatusLoading, setEngineStatusLoading] = useState(false)
+  const [engineStatus, setEngineStatus] = useState(null)
+
   const [customUrlsRaw, setCustomUrlsRaw] = useState('')
   const [customMode, setCustomMode] = useState('updated')
   const [customLoading, setCustomLoading] = useState(false)
@@ -417,6 +423,48 @@ const IndexNowAdmin = () => {
       setSupportReplyGateError(error instanceof Error ? error.message : 'Failed to toggle support reply mode')
     } finally {
       setSupportReplyGateUpdating(false)
+    }
+  }
+
+  const handlePingBaidu = async () => {
+    setEnginePingError('')
+    setEnginePingResult(null)
+
+    if (!token.trim()) {
+      setEnginePingError('Enter the admin token first.')
+      return
+    }
+
+    setBaiduPingLoading(true)
+    try {
+      const result = await callIndexNowApi('/api/engines/ping', { baidu: true })
+      setEnginePingResult(result)
+    } catch (error) {
+      setEnginePingError(error instanceof Error ? error.message : 'Baidu ping failed')
+    } finally {
+      setBaiduPingLoading(false)
+    }
+  }
+
+  const loadEngineStatus = async () => {
+    setEnginePingError('')
+    setEngineStatus(null)
+    setEngineStatusLoading(true)
+    try {
+      const response = await fetch('/api/engines/status', {
+        method: 'GET',
+        headers: { accept: 'application/json' },
+        cache: 'no-store',
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(data?.error || `Request failed (${response.status})`)
+      }
+      setEngineStatus(data)
+    } catch (error) {
+      setEnginePingError(error instanceof Error ? error.message : 'Failed to load engine status')
+    } finally {
+      setEngineStatusLoading(false)
     }
   }
 
@@ -805,6 +853,55 @@ const IndexNowAdmin = () => {
           </button>
           {submitAllError && <p className="indexnow-error">{submitAllError}</p>}
           <ResultPanel result={submitAllResult} title="Submit-all Result" />
+        </section>
+
+        <section className="indexnow-card">
+          <h2><Globe size={18} style={{ verticalAlign: 'text-bottom', marginRight: '0.4rem' }} /> Engine Sitemap Pings</h2>
+          <p>
+            IndexNow already notifies Bing, Naver, Yandex, Seznam.cz, Yep and DuckDuckGo
+            (Bing-powered). Baidu uses its own public sitemap ping that you can trigger here.
+          </p>
+          <div className="indexnow-inline-controls">
+            <button type="button" onClick={handlePingBaidu} disabled={baiduPingLoading}>
+              {baiduPingLoading
+                ? <><Loader2 size={14} className="spin" /> Pinging Baidu...</>
+                : <><Globe size={14} /> Ping Baidu Sitemap</>}
+            </button>
+            <button
+              type="button"
+              className="indexnow-secondary-btn"
+              onClick={loadEngineStatus}
+              disabled={engineStatusLoading}
+            >
+              <RefreshCw size={14} /> Check Engine Status
+            </button>
+          </div>
+          {enginePingError && <p className="indexnow-error">{enginePingError}</p>}
+          {enginePingResult && (
+            <div className="indexnow-result-card" aria-live="polite">
+              <h3>Ping Result</h3>
+              {enginePingResult.results?.map((result) => (
+                <p key={result.engine}>
+                  <strong>{result.engine}:</strong> {result.ok ? `OK (${result.status})` : `Failed — ${result.error || result.status}`}
+                </p>
+              ))}
+            </div>
+          )}
+          {engineStatus && (
+            <div className="indexnow-result-card" aria-live="polite">
+              <h3>Engine Coverage</h3>
+              <p><strong>Sitemap:</strong> {engineStatus.sitemapUrl}</p>
+              <p><strong>IndexNow key:</strong> {engineStatus.indexNow?.keyLocation || 'not configured'}</p>
+              <ul className="engine-status-list">
+                {engineStatus.indexNow?.coveredEngines?.map((engine) => (
+                  <li key={engine.id}>{engine.name} — {engine.note}</li>
+                ))}
+                {Object.entries(engineStatus.pingEndpoints || {}).map(([id, ep]) => (
+                  <li key={id}>{ep.name} — {ep.note}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
 
         <section className="indexnow-card">
