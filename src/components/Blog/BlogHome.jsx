@@ -20,26 +20,27 @@ const BlogHome = () => {
           <h1 className="hero-title blog-title">
             StudyMate Blog
             <br />
-            <span className="hero-highlight">PU Computer Engineering Guides</span>
+            <span className="hero-highlight">PU Computer Engineering Syllabus &amp; Notes</span>
           </h1>
           <p className="hero-subtitle blog-subtitle">
-            Semester-first learning layout, then subject-wise tutorials with syllabus, key
-            topics, concept explanations, and practice questions.
+            Full Pokhara University BE Computer Engineering syllabus, subject-by-subject notes,
+            important topics, and practice questions. Open the StudyMate dashboard to access every
+            note and previous past paper in one place.
           </p>
           <div className="hero-cta blog-hero-cta">
-            <a href="#semester-guides" className="btn-primary">
-              Learn More
+            <Link href="/dashboard" className="btn-primary">
+              Open StudyMate Dashboard
               <span className="btn-arrow">→</span>
-            </a>
-            <a href="#semester-guides" className="btn-secondary">
-              Learn More
+            </Link>
+            <a href="#semester-syllabus" className="btn-secondary">
+              Browse Syllabus
             </a>
           </div>
 
           <div className="hero-visual blog-hero-visual">
             <div className="visual-card card-1">
               <span className="card-icon" aria-hidden="true">📁</span>
-              <span className="card-text">Semester Guides</span>
+              <span className="card-text">Semester Notes</span>
             </div>
             <div className="visual-card card-2">
               <span className="card-icon" aria-hidden="true">📝</span>
@@ -47,7 +48,7 @@ const BlogHome = () => {
             </div>
             <div className="visual-card card-3">
               <span className="card-icon" aria-hidden="true">💡</span>
-              <span className="card-text">Subject Tutorials</span>
+              <span className="card-text">Past Papers</span>
             </div>
           </div>
         </div>
@@ -61,11 +62,11 @@ const BlogHome = () => {
           </div>
           <div className="stat-item">
             <span className="stat-value">50+</span>
-            <span className="stat-label">Subject Guides</span>
+            <span className="stat-label">Subject Syllabi</span>
           </div>
           <div className="stat-item">
             <span className="stat-value">500+</span>
-            <span className="stat-label">Study Resources</span>
+            <span className="stat-label">Notes &amp; Past Papers</span>
           </div>
           <div className="stat-item">
             <span className="stat-value">24 / 7</span>
@@ -80,29 +81,30 @@ const BlogHome = () => {
             <div className="blog-why-card">
               <span className="blog-why-icon" aria-hidden="true">🎯</span>
               <h3>Exam-Focused Content</h3>
-              <p>Every guide is structured around the PU exam pattern with key topics, concept explanations, and practice questions.</p>
+              <p>Every subject page is built around the PU exam pattern with the full syllabus, key topics, concept explanations, and practice questions.</p>
             </div>
             <div className="blog-why-card">
               <span className="blog-why-icon" aria-hidden="true">📐</span>
               <h3>Syllabus-Aligned</h3>
-              <p>Content follows the official Pokhara University BE Computer Engineering curriculum — topic by topic, unit by unit.</p>
+              <p>Content follows the official Pokhara University BE Computer Engineering curriculum — topic by topic, unit by unit, semester by semester.</p>
             </div>
             <div className="blog-why-card">
               <span className="blog-why-icon" aria-hidden="true">🔄</span>
-              <h3>Always Updated</h3>
-              <p>New subject guides and tutorials are added regularly to keep up with curriculum changes and student feedback.</p>
+              <h3>Notes &amp; Past Papers in One Dashboard</h3>
+              <p>Use the StudyMate dashboard to open every note and previous past paper directly — all in one place.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="blog-section" id="semester-guides">
+      <section className="blog-section" id="semester-syllabus">
         <div className="blog-shell">
           <div className="section-header blog-section-header">
-            <span className="section-badge">Guides</span>
-            <h2 className="section-title">Semester Guides</h2>
+            <span className="section-badge">Syllabus</span>
+            <h2 className="section-title">Semester-wise Syllabus</h2>
             <p className="section-subtitle">
-              Start from your current semester and open subject-wise article pages.
+              Pick your semester, open the subject syllabus, notes, and past papers — or jump
+              straight into the StudyMate dashboard.
             </p>
           </div>
           <div className="semester-grid">

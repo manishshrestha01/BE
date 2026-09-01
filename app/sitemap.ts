@@ -1,6 +1,9 @@
 import type { MetadataRoute } from 'next'
+
+export const dynamic = 'force-static'
 import { COLLEGES } from '@/lib/colleges'
 import { BLOG_CURRICULUM, BLOG_LAST_UPDATED } from '@/lib/blogCurriculum'
+import { getAllChapterPaths } from '@/lib/subjectChapters'
 
 const SITE_URL = 'https://www.manishshrestha012.com.np'
 
@@ -53,5 +56,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ),
   ]
 
-  return [...staticRoutes, ...collegeRoutes, ...blogRoutes]
+  const chapterPaths = getAllChapterPaths()
+  const chapterRoutes: MetadataRoute.Sitemap = chapterPaths.map(({ semesterId, subjectSlug, chapterSlug }) => ({
+    url: `${SITE_URL}/blog/semester/${semesterId}/${subjectSlug}/chapter/${chapterSlug}`,
+    lastModified,
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }))
+
+  return [...staticRoutes, ...collegeRoutes, ...blogRoutes, ...chapterRoutes]
 }

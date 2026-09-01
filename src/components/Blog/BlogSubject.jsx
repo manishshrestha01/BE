@@ -9,6 +9,7 @@ import Breadcrumbs from "./Breadcrumbs";
 import TableOfContents from "./TableOfContents";
 import { setJSONLD } from "../../lib/seo";
 import { getSubjectArticle } from "../../data/subjectArticles";
+import { getSubjectChapters } from "../../lib/subjectChapters";
 import {
   BLOG_BASE_URL,
   BLOG_LAST_UPDATED,
@@ -296,12 +297,27 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
                     const isSyllabusOverview = section.id === "syllabus-overview";
                     const unitNumber = unitIndex + 1;
                     const unitHeading = isSyllabusOverview
-                      ? formatUnitTitle(unit.title, unitNumber)
-                      : `${sectionNumber}.${unitNumber} ${unit.title}`;
+? formatUnitTitle(unit.title, unitNumber)
+                          : `${sectionNumber}.${unitNumber} ${unit.title}`;
+
+                    const isSyllabusUnit = isSyllabusOverview;
+                    const unitChapterLink = isSyllabusOverview
+                      ? getSubjectChapters(semesterData.semester, subjectData.slug).find(
+                          (item) => item.id === unit.id
+                        ) || null
+                      : null;
 
                     return (
                       <div key={unit.id} className="subject-unit">
                         {renderHeading(unit.id, unitHeading, 3)}
+                        {isSyllabusUnit && unitChapterLink ? (
+                          <div className="chapter-inline-link">
+                            <Link href={unitChapterLink.urlPath} className="blog-btn chapter-inline-btn">
+                              Open Chapter {unitChapterLink.number}: {unitChapterLink.title}
+                              <ArrowRight className="subject-nav-icon" aria-hidden="true" />
+                            </Link>
+                          </div>
+                        ) : null}
                         {renderParagraphs(unit.content || [], unit.id)}
                         {isSyllabusOverview
                           ? renderSyllabusSubpoints(unit.bullets || [], unit.id, unitNumber)

@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
   if (!semester) return {}
 
   return buildMetadata({
-    title: `Semester ${semester.semester} Notes - PU Computer Engineering`,
+    title: `PU Semester ${semester.semester} Syllabus & Notes - Computer Engineering`,
     description: buildSemesterDescription(semester),
     canonicalPath: semester.urlPath,
   })

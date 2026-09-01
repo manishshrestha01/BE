@@ -445,7 +445,7 @@ export function buildSemesterDescription(semester) {
   const subjectPreview = subjectNames.slice(0, 3).join(", ");
   const abbrPreview = abbreviations.length ? ` (${abbreviations.join(", ")})` : "";
 
-  return `Free Pokhara University BE Computer Engineering Semester ${semester.semester} notes, study materials, and subject guides. Covers ${subjectPreview}${abbrPreview}. Download PDF notes, topper study materials, important topics, and practice questions for all PU semester ${semester.semester} subjects.`;
+  return `Free Pokhara University BE Computer Engineering Semester ${semester.semester} notes, study materials, and subject syllabi. Covers ${subjectPreview}${abbrPreview}. PDF notes, topper study materials, important topics, and practice questions for all PU semester ${semester.semester} subjects — also available inside the StudyMate dashboard.`;
 }
 
 export function getSubjectAbbreviation(subjectName) {
@@ -456,9 +456,9 @@ export function buildSubjectDescription(semester, subject) {
   const courseCodeLabel = subject.courseCode ? ` (${subject.courseCode})` : "";
   const abbr = SUBJECT_ABBREVIATIONS[subject.name] || "";
   if (abbr) {
-    return `${abbr} (${subject.name}) notes for Pokhara University BE Computer Engineering semester ${semester.semester}${courseCodeLabel}. Free PDF notes, syllabus breakdown, important topics, practice questions, and topper study materials. Complete PU ${abbr} study guide for BE Computer students.`;
+    return `${abbr} (${subject.name}) notes for Pokhara University BE Computer Engineering semester ${semester.semester}${courseCodeLabel}. Free PDF notes, syllabus breakdown, important topics, practice questions, and topper study materials. Access all notes and past papers inside the StudyMate dashboard.`;
   }
-  return `Free ${subject.name}${courseCodeLabel} notes for Pokhara University BE Computer Engineering semester ${semester.semester}. Download PDF notes, syllabus, important topics, practice questions, and topper study materials. Complete study guide for PU students.`;
+  return `Free ${subject.name}${courseCodeLabel} notes for Pokhara University BE Computer Engineering semester ${semester.semester}. PDF notes, syllabus, important topics, practice questions, and topper study materials. Access all notes and past papers inside the StudyMate dashboard.`;
 }
 
 export function formatUpdatedDate(dateString = BLOG_LAST_UPDATED) {

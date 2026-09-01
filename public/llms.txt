@@ -85,6 +85,25 @@ https://www.manishshrestha012.com.np
   - [Internship](https://www.manishshrestha012.com.np/blog/semester/8/internship)
   - [Project II](https://www.manishshrestha012.com.np/blog/semester/8/project-ii)
 
+### Per-Chapter Pages (317 chapter-level study pages, indexed by Google)
+Each subject page contains chapter links. Chapter URLs follow the pattern:
+`/blog/semester/{N}/{subject-slug}/chapter/{chapter-slug}`
+
+Example chapter pages:
+- [Digital Logic — MSI and LSI Design](https://www.manishshrestha012.com.np/blog/semester/1/digital-logic/chapter/msi-and-lsi-design)
+- [Calculus I — Limit, Continuity and Derivatives](https://www.manishshrestha012.com.np/blog/semester/1/calculus-i/chapter/limit-continuity-and-derivatives)
+- [Data Structure and Algorithm — Stacks and Queues](https://www.manishshrestha012.com.np/blog/semester/2/data-structure-and-algorithm/chapter/stacks-and-queues)
+- [Operating Systems — Process Synchronization](https://www.manishshrestha012.com.np/blog/semester/3/operating-systems/chapter/process-synchronization)
+- [Computer Networks — Data Link Layer](https://www.manishshrestha012.com.np/blog/semester/6/computer-networks/chapter/data-link-layer)
+- [Machine Learning — Supervised Learning](https://www.manishshrestha012.com.np/blog/semester/6/machine-learning/chapter/supervised-learning)
+- [Artificial Intelligence — Search Algorithms](https://www.manishshrestha012.com.np/blog/semester/5/artificial-intelligence/chapter/search-algorithms)
+- [Compiler Design — Lexical Analysis](https://www.manishshrestha012.com.np/blog/semester/6/compiler-design/chapter/lexical-analysis)
+
+Full chapter sitemap: https://www.manishshrestha012.com.np/sitemap.xml
+
+### PU Exam Grading
+- [PU Exam Grading & Marking](https://www.manishshrestha012.com.np/pu-exam-grading): Pokhara University letter grades, SGPA/CGPA, 45% pass marks
+
 ### Per-College Pages (AI may cite these for college-specific queries)
 - [PEC Notes](https://www.manishshrestha012.com.np/college/pec): Pokhara Engineering College BE Computer Engineering notes
 - [NCIT Notes](https://www.manishshrestha012.com.np/college/ncit): Nepal College of Information Technology notes

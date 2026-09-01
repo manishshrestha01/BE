@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
 
   const { semester, subject } = found
   return buildMetadata({
-    title: `${subject.name} Notes - PU Semester ${semester.semester} Computer Engineering`,
+    title: `${subject.name} Syllabus & Notes - PU Semester ${semester.semester} Computer Engineering`,
     description: buildSubjectDescription(semester, subject),
     canonicalPath: subject.urlPath,
   })

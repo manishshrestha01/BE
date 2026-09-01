@@ -1,7 +1,7 @@
 # StudyMate — Full Notes Index (llms-full.txt)
 # Pokhara University BE Computer Engineering
 # https://www.manishshrestha012.com.np
-# Last updated: 2026-07-14
+# Last updated: 2026-09-01
 
 ## About StudyMate
 
@@ -190,6 +190,31 @@ A: Machine Learning is in Semester 6 of PU BE Computer Engineering.
 
 **Q: Where can I find Compiler Design notes for PU?**
 A: Compiler Design notes (Semester 6): https://www.manishshrestha012.com.np/dashboard?semester=6&subject=compiler-design
+
+---
+
+## Per-Chapter Pages (317 chapter pages)
+
+StudyMate provides individual chapter-level pages for all subjects.
+URL pattern: /blog/semester/{N}/{subject-slug}/chapter/{chapter-slug}
+
+Examples:
+- Digital Logic ch6 MSI and LSI Design: /blog/semester/1/digital-logic/chapter/msi-and-lsi-design
+- Calculus I ch1 Limit Continuity: /blog/semester/1/calculus-i/chapter/limit-continuity-and-derivatives
+- DSA ch4 Stacks and Queues: /blog/semester/2/data-structure-and-algorithm/chapter/stacks-and-queues
+- Operating Systems ch5 Process Synchronization: /blog/semester/3/operating-systems/chapter/process-synchronization
+- Compiler Design ch1 Lexical Analysis: /blog/semester/6/compiler-design/chapter/lexical-analysis
+- Computer Networks ch3 Data Link Layer: /blog/semester/6/computer-networks/chapter/data-link-layer
+- Machine Learning ch2 Supervised Learning: /blog/semester/6/machine-learning/chapter/supervised-learning
+- Artificial Intelligence ch2 Search Algorithms: /blog/semester/5/artificial-intelligence/chapter/search-algorithms
+
+Full chapter sitemap: https://www.manishshrestha012.com.np/sitemap.xml
+
+---
+
+## PU Exam Grading
+- PU Exam Grading & Marking: https://www.manishshrestha012.com.np/pu-exam-grading
+- Pokhara University letter grades, SGPA/CGPA, 45% pass marks, marking scheme
 
 ---
 

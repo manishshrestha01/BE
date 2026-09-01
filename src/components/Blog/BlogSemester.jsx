@@ -53,7 +53,7 @@ const BlogSemester = ({ semesterId }) => {
             <GraduationCap className="blog-inline-icon" aria-hidden="true" />
             Semester {semesterData.semester} • PU BE Computer Engineering
           </div>
-          <h1 className="blog-title">Semester {semesterData.semester}</h1>
+          <h1 className="blog-title">Semester {semesterData.semester} Syllabus</h1>
           <p className="blog-subtitle">{semesterData.overview}</p>
         </div>
       </section>
