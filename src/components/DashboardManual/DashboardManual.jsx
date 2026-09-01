@@ -209,7 +209,7 @@ const ManualPage = ({ pathname }) => {
         'Use the drawing canvas for diagrams and sketches'
       ]
     },
-       {
+    {
       icon: '/icons/contacts.webp',
       title: 'Contact App',
       description: 'Send messages to the StudyMate team — upload study materials or report issues and feature requests.',

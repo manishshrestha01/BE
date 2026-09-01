@@ -9,6 +9,7 @@ import QuickLook from '../QuickLook/QuickLook'
 import Settings from '../Settings/Settings'
 import Notes from '../Notes/Notes'
 import ContactApp from '../Contact/ContactApp'
+import SpotifyApp from '../Spotify/SpotifyApp'
 import './Desktop.css'
 
 // Convert ?semester=3&subject=operating-systems&college=pec into a GitHub folder path.
@@ -46,7 +47,7 @@ function buildInitialPathFromParams(searchParams) {
 
 const DASHBOARD_UI_STATE_KEY = 'studymate:dashboard-ui:v1'
 const QUICKLOOK_STATE_KEY = 'studymate:quicklook:v1'
-const VALID_ACTIVE_APPS = ['finder', 'notes', 'settings', 'contact']
+const VALID_ACTIVE_APPS = ['finder', 'notes', 'settings', 'contact', 'spotify']
 const DEFAULT_NOTES_VIEW_STATE = {
   noteId: null,
   chapterId: null,
@@ -122,7 +123,6 @@ const Desktop = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const restoredState = useMemo(() => readDashboardUiState(), [])
-  const [iosDialogOpen, setIosDialogOpen] = useState(false)
 
   // Derive initial Finder path from URL params (?college=pec&semester=3&subject=operating-systems)
   const initialFinderPath = useMemo(() => {
@@ -137,14 +137,21 @@ const Desktop = () => {
   const [notesViewState, setNotesViewState] = useState(restoredState.notes)
   const [quickLookFile, setQuickLookFile] = useState(() => readQuickLookState())
   const quickLookFileRef = useRef(quickLookFile)
+  const [spotifyMounted, setSpotifyMounted] = useState(restoredState.activeApp === 'spotify')
 
   const showFinder = activeApp === 'finder'
   const showNotes = activeApp === 'notes'
   const showSettings = activeApp === 'settings'
   const showContact = activeApp === 'contact'
+  const showSpotify = activeApp === 'spotify'
 
-  const backgroundStyle = customBg 
+    // Live wallpapers: gradient is the base layer, animated ::before sits on top
+  // Video wallpapers use a <video> element instead
+  const isVideoWallpaper = currentBg.type === 'video'
+  const backgroundStyle = customBg
     ? { backgroundImage: `url(${customBg})`, backgroundSize: 'cover' }
+    : isVideoWallpaper
+    ? { background: 'transparent' }
     : { background: currentBg.value }
 
   const handleQuickLook = (file) => {
@@ -167,14 +174,13 @@ const Desktop = () => {
     setActiveApp((prev) => (prev === 'settings' ? null : prev))
   }
 
-  const handleGetApp = () => {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
-    if (isIOS) {
-      setIosDialogOpen(true)
-    } else {
-      window.open('https://play.google.com/store/apps/details?id=com.manish.studymate', '_blank', 'noopener,noreferrer')
-    }
+  const closeSpotify = () => {
+    setActiveApp((prev) => (prev === 'spotify' ? null : prev))
+  }
+
+  const openSpotify = () => {
+    setSpotifyMounted(true)
+    openApp('spotify')
   }
 
   // Open exactly one app at a time. If the requested app is already open, close it (toggle).
@@ -272,7 +278,18 @@ const Desktop = () => {
   }, [])
 
   return (
-    <div className="desktop" style={backgroundStyle}>
+    <div className={`desktop${currentBg.live ? ' desktop-live desktop-live-' + currentBg.id : ''}`} style={backgroundStyle}>
+      {/* Video wallpaper background */}
+      {isVideoWallpaper && (
+        <video
+          className="desktop-video-bg"
+          autoPlay
+          loop
+          muted
+          playsInline
+          src={currentBg.value}
+        />
+      )}
       {/* Main Content Area */}
       <div className="desktop-content">
         {showFinder && (
@@ -294,23 +311,6 @@ const Desktop = () => {
         )}
       </div>
 
-      {/* Get App – centered card (desktop) / sidebar icon (mobile) */}
-      <button
-        className={`get-app-card ${activeApp ? 'get-app-card--hidden' : ''}`}
-        onClick={handleGetApp}
-        title="Get StudyMate App"
-        aria-label="Get StudyMate App on Play Store"
-      >
-        <div className="get-app-card-inner">
-          <img src="/black.svg" alt="StudyMate" className="get-app-logo" />
-          <div className="get-app-text">
-            <span className="get-app-title">Get StudyMate</span>
-            <span className="get-app-sub">Available on Android</span>
-          </div>
-          <span className="get-app-badge">Play Store</span>
-        </div>
-      </button>
-
       {/* Desktop shortcuts (non-invasive) */}
       <div className="desktop-shortcuts" aria-hidden={false}>
         <button
@@ -331,6 +331,16 @@ const Desktop = () => {
         >
           <div className="desktop-shortcut-png"><img src="/icons/notes.webp" alt="Draw" className="desktop-shortcut-img"/></div>
           <div className="desktop-shortcut-label">Draw</div>
+        </button>
+
+        <button
+          className="desktop-shortcut"
+          title="Spotify"
+          aria-label="Open Spotify"
+          onClick={openSpotify}
+        >
+          <div className="desktop-shortcut-png"><img src="/icons/spotify.webp" alt="Spotify" className="desktop-shortcut-img"/></div>
+          <div className="desktop-shortcut-label">Spotify</div>
         </button>
         
         <button className="desktop-shortcut" onClick={() => openApp('contact')} title="Contact Me" aria-label="Open Contact">
@@ -367,7 +377,17 @@ const Desktop = () => {
         onNotesClick={() => openApp('notes')}
         onSettingsClick={() => openApp('settings')}
         onContactClick={() => openApp('contact')}
+        onSpotifyClick={openSpotify}
       />
+
+      {/* Spotify (stays mounted so music continues in the background) */}
+      {spotifyMounted && (
+        <SpotifyApp
+          open={showSpotify}
+          onClose={closeSpotify}
+          onReopen={openSpotify}
+        />
+      )}
 
       {/* Quick Look Modal */}
       {quickLookFile && (
@@ -382,24 +402,6 @@ const Desktop = () => {
         <Settings onClose={closeSettings} />
       )}
 
-      {/* iOS not-available dialog */}
-      {iosDialogOpen && (
-        <div className="ios-dialog-overlay" onClick={() => setIosDialogOpen(false)}>
-          <div className="ios-dialog" onClick={(e) => e.stopPropagation()}>
-            <div className="ios-dialog-icon">📱</div>
-            <h3 className="ios-dialog-title">StudyMate is not on the App Store</h3>
-            <p className="ios-dialog-text">
-              StudyMate is currently available only on Android. We're working on bringing it to iOS soon!
-            </p>
-            <p className="ios-dialog-text ios-dialog-hint">
-              If you have an Android device, you can download it on the Play Store.
-            </p>
-            <button className="ios-dialog-btn" onClick={() => setIosDialogOpen(false)}>
-              Got it
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

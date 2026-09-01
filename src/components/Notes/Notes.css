@@ -1,6 +1,7 @@
 .notes-app {
   position: relative; /* create stacking context so z-index applies */
   z-index: 2000; /* make sure Notes sits above the Dock */
+  pointer-events: auto;
   display: flex;
   flex-direction: column;
   width: 90%;

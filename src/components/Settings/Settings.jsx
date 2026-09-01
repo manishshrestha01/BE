@@ -14,11 +14,78 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   const router = useRouter()
   const { backgrounds, currentBg, changeBackground, customBg, setCustomBackground, removeCustomBackground } = useBackground()
   const { mode, resolvedTheme, setTheme } = useTheme()
+
+    // Resolve wallpaper preview based on current theme
+  const getPreviewValue = (bg) => {
+    if (bg.type === 'video') return bg.thumbnail || bg[resolvedTheme] || bg.dark
+    return bg[resolvedTheme] || bg.dark
+  }
+
+  const CATEGORY_LABELS = {
+    classic: 'Solid & Classic',
+    minimalist: 'Minimalist',
+    anime: 'Anime',
+    movies: 'Movies',
+    car: 'Car',
+    animals: 'Animals',
+  }
+
+  // Render the whole wallpaper picker grouped by category.
+  const renderBackgroundGrid = () => {
+    const ordered = ['classic', 'minimalist', 'anime', 'movies', 'car', 'animals']
+    const groups = {}
+    const query = wallpaperSearch.trim().toLowerCase()
+    backgrounds.forEach(bg => {
+      if (query && !bg.name.toLowerCase().includes(query)) return
+      const cat = bg.category || 'classic'
+      if (!groups[cat]) groups[cat] = []
+      groups[cat].push(bg)
+    })
+    const orderedKeys = [...ordered, ...Object.keys(groups).filter(k => !ordered.includes(k))]
+    return orderedKeys.map(cat => {
+      const items = groups[cat]
+      if (!items) return null
+      return (
+        <div className="background-category" key={cat}>
+          <p className="background-category-label">{CATEGORY_LABELS[cat] || cat}</p>
+          <div className="background-grid">
+            {items.map(bg => (
+              <div
+                key={bg.id}
+                className={`background-option ${currentBg.id === bg.id ? 'active' : ''}`}
+                style={bg.type === 'video' ? {} : { background: getPreviewValue(bg) }}
+                onClick={() => changeBackground(bg.id)}
+              >
+                {bg.type === 'video' && (
+                  <video
+                    className="bg-video-preview"
+                    src={bg.thumbnail || getPreviewValue(bg)}
+                    preload="metadata"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    disablePictureInPicture
+                    controls={false}
+                  />
+                )}
+                {bg.live && <span className="bg-live">Live</span>}
+                <span className="bg-name">{bg.name}</span>
+                {currentBg.id === bg.id && <span className="bg-check">✓</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    })
+  }
+
   const { profile, updateProfile, getInitials, error: profileError } = useUserProfile()
   const { user, signOut, isAuthenticated } = useAuth()
   const [activeSection, setActiveSection] = useState(initialSection)
   const [mobileView, setMobileView] = useState(null) // null | 'profile' | 'wallpaper' | 'about'
   const [windowState, setWindowState] = useState('normal') // 'normal', 'maximized', 'minimized'
+  const [wallpaperSearch, setWallpaperSearch] = useState('')
   const [formData, setFormData] = useState({
     full_name: profile.full_name || '',
     semester: profile.semester || '',
@@ -39,15 +106,15 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
   const [openFaq, setOpenFaq] = useState(null)
 
   const settingsFaqs = [
-    { id: 'q1', question: 'How do I change my wallpaper?', answer: 'Open Settings → Wallpaper. Choose from 14 built-in backgrounds or upload a custom image (max 100 MB).' },
+    { id: 'q1', question: 'How do I change my wallpaper?', answer: 'Open Settings → Wallpaper. Choose from 13 built-in backgrounds — each has a light and dark variant that switches automatically with your appearance. Live wallpapers (Aurora, Nebula, Tide, Ember, Big Sur) have animated effects.' },
     { id: 'q2', question: 'How do I update my profile?', answer: 'Go to Settings → Profile. Update your full name, semester, and college, then click Save.' },
     { id: 'q3', question: 'How do I sign out?', answer: 'Open Settings → Profile → Account and click Sign Out, or use the Sign Out row in mobile Settings.' },
-    { id: 'q4', question: 'Can I upload my own background image?', answer: 'Yes — use the Wallpaper section to upload or drag & drop an image. Supported files are images only.' },
+    { id: 'q4', question: 'Can I upload my own background image?', answer: 'Yes — use the Wallpaper section to upload or drag & drop an image. Custom images do not auto-switch with appearance.' },
     { id: 'q5', question: 'Where can I find the app version?', answer: 'Open Settings → About to see the current version (now 2.0.0).' },
     { id: 'q6', question: 'What is the Dashboard?', answer: 'The Dashboard is the main hub of StudyMate — it surfaces curated semester-wise resources, featured notes, and quick links (Draw, Contact, and other apps) so you can quickly find study materials.' },
     { id: 'q7', question: 'How can I upload notes or report bugs?', answer: 'Use the Contact app (accessible from the Dashboard) to upload study materials. If you need to report bugs, request features, or share files directly, use the Contact app — attach screenshots or files (common formats supported) and send a message. Contact attachments are limited to ~25 MB per file.' },
-    { id: 'q8', question: "What's new in version 2.0?", answer: 'Version 2.0 adds 14 built-in wallpapers, polished window controls across Finder, Draw, Settings, and Contact, plus refreshed About and FAQ sections.' },
-    { id: 'q9', question: 'How do I switch between light and dark mode?', answer: 'Open Settings → Appearance. Pick Dark, Light, or Auto (System) to follow your device preference.' }
+    { id: 'q8', question: "What's new in version 2.0?", answer: 'Version 2.0 adds 13 built-in wallpapers with light/dark pairs, 5 live animated wallpapers (4 CSS gradients + Big Sur video), polished window controls across Finder, Draw, Settings, and Contact, plus refreshed About and FAQ sections.' },
+    { id: 'q9', question: 'How do I switch between light and dark mode?', answer: 'Open Settings → Appearance. Pick Dark, Light, or Auto (System) to follow your device preference. Your wallpaper automatically switches to match.' }
   ]
 
   const toggleFaq = (id) => setOpenFaq(prev => prev === id ? null : id)
@@ -426,19 +493,16 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                     {mobileView === 'wallpaper' && (
                       <div className="wallpaper-section">
                         <p className="section-description">Choose a wallpaper for your desktop</p>
-                        <div className="background-grid">
-                          {backgrounds.map(bg => (
-                            <div
-                              key={bg.id}
-                              className={`background-option ${currentBg.id === bg.id ? 'active' : ''}`}
-                              style={{ background: bg.value }}
-                              onClick={() => changeBackground(bg.id)}
-                            >
-                              <span className="bg-name">{bg.name}</span>
-                              {currentBg.id === bg.id && <span className="bg-check">✓</span>}
-                            </div>
-                          ))}
+                        <div className="wallpaper-search-wrap">
+                          <input
+                            type="search"
+                            className="wallpaper-search"
+                            placeholder="Search wallpapers... e.g. Doraemon"
+                            value={wallpaperSearch}
+                            onChange={(e) => setWallpaperSearch(e.target.value)}
+                          />
                         </div>
+                        {renderBackgroundGrid()}
                         <div className="custom-bg-section">
                           <div
                             className={`custom-bg-dropzone ${dropActive ? 'active' : ''}`}
@@ -673,19 +737,16 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
             {activeSection === 'wallpaper' && (
               <div className="wallpaper-section">
                 <p className="section-description">Choose a wallpaper for your desktop</p>
-                <div className="background-grid">
-                  {backgrounds.map(bg => (
-                    <div
-                      key={bg.id}
-                      className={`background-option ${currentBg.id === bg.id ? 'active' : ''}`}
-                      style={{ background: bg.value }}
-                      onClick={() => changeBackground(bg.id)}
-                    >
-                      <span className="bg-name">{bg.name}</span>
-                      {currentBg.id === bg.id && <span className="bg-check">✓</span>}
-                    </div>
-                  ))}
+                <div className="wallpaper-search-wrap">
+                  <input
+                    type="search"
+                    className="wallpaper-search"
+                    placeholder="Search wallpapers... e.g. Doraemon"
+                    value={wallpaperSearch}
+                    onChange={(e) => setWallpaperSearch(e.target.value)}
+                  />
                 </div>
+                {renderBackgroundGrid()}
 
                 {/* Custom Background Upload */}
                 <div className="custom-bg-section">

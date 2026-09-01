@@ -13,8 +13,69 @@
   background-size: cover;
 }
 
+/* Video wallpaper background */
+.desktop-video-bg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ==================== LIVE WALLPAPER LAYERS ==================== */
+.desktop-live::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  transform-origin: center center;
+  animation: none;
+}
+
+.desktop-live.desktop-live-aurora::before {
+  background: linear-gradient(135deg, rgba(67,233,123,0.35) 0%, rgba(56,249,215,0.35) 30%, transparent 60%, rgba(67,233,123,0.2) 100%);
+  animation: live-drift 12s ease-in-out infinite;
+}
+
+.desktop-live.desktop-live-nebula::before {
+  background: linear-gradient(135deg, rgba(189,52,254,0.35) 0%, rgba(71,202,255,0.35) 30%, transparent 60%, rgba(189,52,254,0.2) 100%);
+  animation: live-drift 18s ease-in-out infinite reverse;
+}
+
+.desktop-live.desktop-live-tide::before {
+  background: linear-gradient(135deg, rgba(0,92,151,0.4) 0%, rgba(54,55,149,0.35) 30%, transparent 60%, rgba(0,92,151,0.2) 100%);
+  animation: live-drift 15s ease-in-out infinite;
+}
+
+.desktop-live.desktop-live-ember::before {
+  background: linear-gradient(135deg, rgba(250,112,154,0.35) 0%, rgba(254,225,64,0.35) 30%, transparent 60%, rgba(250,112,154,0.2) 100%);
+  animation: live-drift 14s ease-in-out infinite reverse;
+}
+
+@keyframes live-drift {
+  0%   { transform: scale(1.2) translate(0, 0) rotate(0deg); }
+  25%  { transform: scale(1.35) translate(5%, -4%) rotate(2deg); }
+  50%  { transform: scale(1.25) translate(-3%, -6%) rotate(-1deg); }
+  75%  { transform: scale(1.4) translate(4%, -2%) rotate(1deg); }
+  100% { transform: scale(1.2) translate(0, 0) rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop-live::before { animation: none !important; }
+}
+
 /* Desktop Content */
 .desktop-content {
+  position: relative;
+  z-index: 700;
+  pointer-events: none;
   height: calc(100vh - 80px);
   height: calc(100dvh - 80px);
   display: flex;
