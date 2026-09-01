@@ -362,8 +362,25 @@
 }
 
 .college-about p {
-  margin: 0;
+  margin: 0 0 10px 0;
   color: #555;
+  line-height: 1.7;
+}
+
+.college-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 4px 0 12px;
+  padding: 10px 14px;
+  background: #f4f7fb;
+  border: 1px solid #e3e9f2;
+  border-radius: 10px;
+}
+
+.college-facts span {
+  font-size: 14px;
+  color: #444;
 }
 
 /* Responsive */

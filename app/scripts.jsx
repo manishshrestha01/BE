@@ -93,7 +93,7 @@ export default function Scripts() {
       </Script>
       <Script
         id="aclib-cdn"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         src="https://acscdn.com/script/aclib.js"
       />
       <Script

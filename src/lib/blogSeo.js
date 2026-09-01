@@ -4,6 +4,11 @@ import { BLOG_BASE_URL } from "./blogCurriculum";
 
 const DEFAULT_IMAGE = `${BLOG_BASE_URL}/logo-512.png`;
 
+export function dynamicOgImage({ title, subtitle, badge = "StudyMate" }) {
+  const params = new URLSearchParams({ title: title || "", sub: subtitle || "", badge });
+  return `${BLOG_BASE_URL}/api/og?${params.toString()}`;
+}
+
 export function buildMetadata({
   title,
   description,
@@ -26,9 +31,11 @@ export function buildMetadata({
       images: [
         {
           url: image,
-          width: 512,
-          height: 512,
-          alt: "StudyMate logo — Pokhara University Computer Engineering Notes",
+          width: type === "article" ? 1200 : 512,
+          height: type === "article" ? 630 : 512,
+          alt: image.includes("/api/og")
+            ? `${title} - StudyMate Pokhara University Notes`
+            : "StudyMate logo — Pokhara University Computer Engineering Notes",
         },
       ],
     },

@@ -4,7 +4,7 @@ import {
   buildSemesterDescription,
   getSemesterByNumber,
 } from '@/lib/blogCurriculum'
-import { buildMetadata } from '@/lib/blogSeo'
+import { buildMetadata, dynamicOgImage } from '@/lib/blogSeo'
 import BlogSemester from '@/components/Blog/BlogSemester'
 
 export const dynamicParams = true
@@ -22,6 +22,12 @@ export async function generateMetadata({ params }) {
     title: `PU Semester ${semester.semester} Syllabus & Notes - Computer Engineering`,
     description: buildSemesterDescription(semester),
     canonicalPath: semester.urlPath,
+    type: 'article',
+    image: dynamicOgImage({
+      title: `PU Semester ${semester.semester} Syllabus`,
+      subtitle: 'Computer Engineering Notes',
+      badge: 'StudyMate',
+    }),
   })
 }
 

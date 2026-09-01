@@ -1,14 +1,61 @@
 'use client'
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { COLLEGES } from '../lib/colleges'
 import './College.css'
 import SiteNav from './SiteNav'
 import Footer from './Footer'
+import { setJSONLD } from '../lib/seo'
+
+const SITE_URL = 'https://www.manishshrestha012.com.np'
 
 const makeSlugFromLabel = (label) => {
   const match = label.match(/\(([^)]+)\)/)
   if (match && match[1]) return match[1].toLowerCase()
   return label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+}
+
+const CollegeJSONLD = ({ college }) => {
+  const slug = makeSlugFromLabel(college.label)
+  const abbr = (college.label.match(/\(([^)]+)\)/) || [])[1] || college.label
+
+  useEffect(() => {
+    const graph = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'CollegeOrUniversity',
+          '@id': `${SITE_URL}/college/${slug}#educationalorg`,
+          name: college.label,
+          alternateName: abbr,
+          url: `${SITE_URL}/college/${slug}`,
+          logo: `${SITE_URL}${college.logo || '/logo-512.png'}`,
+          location: college.location ? { '@type': 'Place', name: college.location } : undefined,
+          disambiguatingDescription: college.description,
+          sameAs: [],
+          hasCourse: [
+            {
+              '@type': 'Course',
+              name: 'BE Computer Engineering',
+              provider: { '@id': `${SITE_URL}/college/${slug}#educationalorg` },
+              url: `${SITE_URL}/college/${slug}`,
+            },
+          ],
+        },
+        {
+          '@type': 'EducationalOccupationalCredential',
+          '@id': `${SITE_URL}/college/${slug}#degree`,
+          credentialCategory: 'bachelorDegree',
+          name: 'BE Computer Engineering',
+          educationalLevel: "Bachelor's Degree",
+          recognizedBy: { '@id': `${SITE_URL}/college/${slug}#educationalorg` },
+        },
+      ],
+    }
+    setJSONLD(graph, 'json-ld-college')
+  }, [college, slug, abbr])
+
+  return null
 }
 
 const findCollegeBySlug = (slug) => {
@@ -38,6 +85,7 @@ const College = ({ slug }) => {
 
   return (
     <div className="landing college-page">
+      <CollegeJSONLD college={college} />
       <SiteNav />
       <section className="college-hero">
         <div className="college-hero-inner">
@@ -101,7 +149,19 @@ const College = ({ slug }) => {
 
           <div className="college-about" style={{ marginTop: 20 }}>
             <h3>About {college.label}</h3>
-            <p>StudyMate provides organized BE Computer Engineering notes for {college.label} students, aligned with the Pokhara University curriculum. You can find lecture notes, PDF resources, and create personal notes while studying.</p>
+            <p>{college.description || `StudyMate provides organized BE Computer Engineering notes for ${college.label} students, aligned with the Pokhara University curriculum. You can find lecture notes, PDF resources, and create personal notes while studying.`}</p>
+            <div className="college-facts">
+              {college.established ? <span><strong>Established:</strong> {college.established}</span> : null}
+              {college.location ? <span><strong>Location:</strong> {college.location}</span> : null}
+              {college.program ? <span><strong>Program:</strong> {college.program}</span> : null}
+            </div>
+            <p>
+              We update these notes against the official Pokhara University 2022 curriculum so the
+              syllabus topics, unit weights, and past-paper patterns match what your department
+              actually teaches at {college.label}. Open the{' '}
+              <Link href="/dashboard">StudyMate dashboard</Link> to access the notes and previous
+              past papers for each subject, semester by semester.
+            </p>
           </div>
         </div>
 

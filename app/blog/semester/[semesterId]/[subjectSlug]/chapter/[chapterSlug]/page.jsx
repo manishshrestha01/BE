@@ -3,7 +3,7 @@ import {
   getSubjectBySlug,
 } from '@/lib/blogCurriculum'
 import { getChapterBySlug, getSubjectChapters, getAllChapterPaths } from '@/lib/subjectChapters'
-import { buildMetadata } from '@/lib/blogSeo'
+import { buildMetadata, dynamicOgImage } from '@/lib/blogSeo'
 import BlogChapter from '@/components/Blog/BlogChapter'
 
 export const dynamicParams = true
@@ -29,6 +29,12 @@ export async function generateMetadata({ params }) {
     title: `${subject.name} Chapter ${chapter.number}: ${chapter.title} Notes - PU Semester ${semester.semester} Computer Engineering`,
     description,
     canonicalPath: chapter.urlPath,
+    type: 'article',
+    image: dynamicOgImage({
+      title: `${subject.name} Ch ${chapter.number}: ${chapter.title}`,
+      subtitle: `PU Semester ${semester.semester} Computer Engineering`,
+      badge: subject.courseCode || 'StudyNotes',
+    }),
   })
 }
 

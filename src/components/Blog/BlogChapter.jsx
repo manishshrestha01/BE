@@ -7,7 +7,7 @@ import Footer from "../Footer";
 import SiteNav from "../SiteNav";
 import Breadcrumbs from "./Breadcrumbs";
 import { setJSONLD } from "../../lib/seo";
-import { BLOG_BASE_URL, BLOG_LAST_UPDATED, getSubjectBySlug } from "../../lib/blogCurriculum";
+import { BLOG_BASE_URL, BLOG_LAST_UPDATED, getSubjectBySlug, formatUpdatedDate } from "../../lib/blogCurriculum";
 import { getSubjectArticle } from "../../data/subjectArticles";
 import "./Blog.css";
 
@@ -16,6 +16,7 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
   const subjectLabel = subjectData.courseCode
     ? `${subjectData.name} (${subjectData.courseCode})`
     : subjectData.name;
+  const updatedDate = formatUpdatedDate(article?.updatedAt || BLOG_LAST_UPDATED);
 
   const topicCount = chapter.bullets.length;
 
@@ -83,6 +84,7 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
           <div className="subject-meta-row">
             <span>Chapter {chapter.number} of {topicCount} topics</span>
             {chapter.hours ? <span>Syllabus Hours: {chapter.hours}</span> : null}
+            <span>Updated: {updatedDate}</span>
             <span>Pokhara University BE Computer Engineering • Semester {semesterData.semester}</span>
           </div>
 

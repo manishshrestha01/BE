@@ -4,7 +4,7 @@ import {
   buildSubjectDescription,
   getSubjectBySlug,
 } from '@/lib/blogCurriculum'
-import { buildMetadata } from '@/lib/blogSeo'
+import { buildMetadata, dynamicOgImage } from '@/lib/blogSeo'
 import BlogSubject from '@/components/Blog/BlogSubject'
 
 export const dynamicParams = true
@@ -28,6 +28,12 @@ export async function generateMetadata({ params }) {
     title: `${subject.name} Syllabus & Notes - PU Semester ${semester.semester} Computer Engineering`,
     description: buildSubjectDescription(semester, subject),
     canonicalPath: subject.urlPath,
+    type: 'article',
+    image: dynamicOgImage({
+      title: `${subject.name} Notes`,
+      subtitle: `PU Semester ${semester.semester} Computer Engineering`,
+      badge: `Course ${subject.courseCode || 'Syllabus'}`,
+    }),
   })
 }
 
