@@ -169,7 +169,7 @@
 .desktop-shortcuts {
   position: fixed;
   right: 18px;
-  top: 90px;
+  top: max(10px, env(safe-area-inset-top));
   display: flex;
   flex-direction: column;
   gap: 18px;
