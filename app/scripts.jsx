@@ -92,13 +92,18 @@ export default function Scripts() {
         `}
       </Script>
       <Script
+        id="aclib-cdn"
+        strategy="beforeInteractive"
+        src="https://acscdn.com/script/aclib.js"
+      />
+      <Script
         id="aclib"
         strategy="afterInteractive"
         src="/aclib-anti-adblock.js"
         onReady={() => {
           try {
             if (typeof window !== 'undefined' && window.aclib?.runAutoTag) {
-              window.aclib.runAutoTag({ zoneId: 'sp6bdgcx0c' })
+              window.aclib.runAutoTag({ zoneId: 'jkmtltfnmd' })
             }
           } catch (err) {
             // Third-party ad libs (Adcash/aclib) can throw on some browsers
