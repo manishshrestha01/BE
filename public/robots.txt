@@ -9,6 +9,7 @@ Allow: /
 Allow: /about
 Allow: /blogs
 Allow: /blog
+Allow: /pu-exam
 Allow: /contact
 Allow: /dashboard
 Allow: /faq

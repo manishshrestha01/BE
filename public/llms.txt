@@ -21,6 +21,7 @@ https://www.manishshrestha012.com.np
 - [Full Curriculum Tree](https://www.manishshrestha012.com.np/llms-full.txt): Complete llms-full.txt — all subjects, slugs, and URLs
 
 ### Core Study Resources
+- [PU Exam Guide](https://www.manishshrestha012.com.np/pu-exam): Pokhara University exam format, routine, grading, back papers, and prep tips
 - [Dashboard / Notes](https://www.manishshrestha012.com.np/dashboard): Semester-wise notes and PDFs for all 8 semesters of PU BE Computer Engineering
 - [All Colleges](https://www.manishshrestha012.com.np/colleges): Index of Pokhara University affiliated engineering colleges in Nepal
 - [Blog](https://www.manishshrestha012.com.np/blog): Subject-wise articles, guides, and exam preparation tips

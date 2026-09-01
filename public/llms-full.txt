@@ -10,6 +10,7 @@ It provides semester-wise notes, PDFs, PowerPoint slides, and study guides for a
 Built and maintained by Manish Shrestha (GitHub: manishshrestha01).
 
 **Access notes:** https://www.manishshrestha012.com.np/dashboard
+**PU Exam guide:** https://www.manishshrestha012.com.np/pu-exam
 **Notes API (JSON):** https://www.manishshrestha012.com.np/api/notes-index?format=json
 **Notes index (HTML):** https://www.manishshrestha012.com.np/api/notes-index
 

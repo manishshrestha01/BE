@@ -1,5 +1,5 @@
 'use client'
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 
@@ -7,8 +7,10 @@ import Footer from "../Footer";
 import SiteNav from "../SiteNav";
 import Breadcrumbs from "./Breadcrumbs";
 import TableOfContents from "./TableOfContents";
+import { setJSONLD } from "../../lib/seo";
 import { getSubjectArticle } from "../../data/subjectArticles";
 import {
+  BLOG_BASE_URL,
   BLOG_LAST_UPDATED,
   buildImportantTopics,
   buildLearningOutcomes,
@@ -171,6 +173,25 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
   const description = enrichDescriptionWithCourseCode(rawDescription, subjectCourseCode);
   const updatedDate = formatUpdatedDate(article.updatedAt || BLOG_LAST_UPDATED);
   const neighborInfo = getSubjectNeighbors(semesterData.semester, subjectData.slug);
+
+  useEffect(() => {
+    const articlePath = subjectData.absoluteUrl || `/blog/${semesterData.semesterSlug}/${subjectData.slug}`;
+    const articleSchema = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: article.title || subjectData.name,
+      description: description || article.description,
+      image: `${BLOG_BASE_URL}/logo-512.png`,
+      author: { "@id": `${BLOG_BASE_URL}/#author` },
+      publisher: { "@id": `${BLOG_BASE_URL}/#organization` },
+      mainEntityOfPage: { "@type": "WebPage", "@id": articlePath },
+      datePublished: article.updatedAt || BLOG_LAST_UPDATED,
+      dateModified: article.updatedAt || BLOG_LAST_UPDATED,
+      inLanguage: "en-US",
+    };
+    setJSONLD(articleSchema, "json-ld-blog-article");
+    return () => {};
+  }, [article, subjectData, description, semesterData]);
 
   const tocItems = useMemo(() => {
     const items = [];
