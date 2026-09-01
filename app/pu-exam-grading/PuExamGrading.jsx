@@ -103,7 +103,7 @@ export default function PuExamGrading() {
             </thead>
             <tbody>
               <tr>
-                <td>Undergraduate (BE)</td>
+                <td>Undergraduate (Bachelor)</td>
                 <td>50%</td>
                 <td>50%</td>
               </tr>
@@ -133,7 +133,7 @@ export default function PuExamGrading() {
             </thead>
             <tbody>
               <tr>
-                <td>Undergraduate (BE)</td>
+                <td>Undergraduate (Bachelor)</td>
                 <td>45%</td>
                 <td>45%</td>
               </tr>
@@ -153,10 +153,10 @@ export default function PuExamGrading() {
         </section>
 
         <section className="pu-exam-grading-section">
-          <h2>PU Letter Grade System (Undergraduate / BE)</h2>
+          <h2>PU Letter Grade System (Undergraduate / Bachelor)</h2>
           <p>
             Pokhara University follows a <strong>four-point letter grade system</strong>. The final letter grade
-            in each BE subject is awarded on the cumulative total score (0&ndash;100) as follows:
+            in each <strong>Bachelor</strong> (BE Computer Engineering) subject is awarded on the cumulative total score (0&ndash;100) as follows:
           </p>
           <table className="pu-exam-grading-table">
             <thead>
@@ -281,8 +281,8 @@ export default function PuExamGrading() {
         <section className="pu-exam-grading-section">
           <h2>Free Exam Revision for Every Semester</h2>
           <p>
-            Pair the grading rules above with free, syllabus-aligned notes for every PU BE Computer
-            Engineering semester to score the highest grade band in your end-semester exam.
+            Pair the grading rules above with free, syllabus-aligned notes for every PU Bachelor (BE Computer
+            Engineering) semester to score the highest grade band in your end-semester exam.
           </p>
           <div className="pu-exam-grading-sem-grid">
             {semesters.map((s) => (
