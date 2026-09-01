@@ -10,6 +10,7 @@ Allow: /about
 Allow: /blogs
 Allow: /blog
 Allow: /pu-exam
+Allow: /pu-exam-grading
 Allow: /contact
 Allow: /dashboard
 Allow: /faq

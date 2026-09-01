@@ -42,7 +42,7 @@ const faqs = [
   {
     question: 'How are PU BE Computer Engineering exams graded?',
     answer:
-      'Each theory subject combines internal (continuous/internal assessment) and end-semester marks. Pokhara University uses a letter-grade system (A+, A, B+, B, C+, C, D, NG) for results across all 8 semesters.',
+      'Each theory subject combines internal (continuous/internal assessment) and end-semester marks. Pokhara University uses a 4-point letter-grade system (A, A-, B+, B, B-, C+, C, C-, D+, D, and F for fail) for results across all 8 semesters. There is no A+ and no NG grade in bachelor\'s results.',
   },
   {
     question: 'What is a back paper in PU exams?',
@@ -121,8 +121,9 @@ export default function PuExam() {
           <ul className="pu-exam-list">
             <li>End-semester theory exams are held for all subjects in each semester.</li>
             <li>Marks combine internal (assignments, attendance, internal tests) and end-semester theory.</li>
-            <li>Pokhara University grades on an A+ to NG letter scale; passing requires the minimum per subject.</li>
+            <li>Pokhara University grades on a 4-point A to F letter scale; passing requires the minimum per subject.</li>
             <li>Back (backlog) papers are offered in the following term for any failed subject.</li>
+            <li>See the full <Link className="pu-exam-inline-link" href="/pu-exam-grading">letter grade &amp; marking scheme</Link> for SGPA/CGPA details.</li>
           </ul>
         </section>
 

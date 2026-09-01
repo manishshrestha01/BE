@@ -30,6 +30,7 @@ const SiteNav = () => {
           <Link href="/colleges">Colleges</Link>
           <Link href="/blog">Blog</Link>
           <Link href="/pu-exam">PU Exam</Link>
+          <Link href="/pu-exam-grading">Grading & Marking</Link>
           <Link href="/login" className="nav-login">Login</Link>
           <Link href="/dashboard" className="nav-cta">Open Dashboard</Link>
           <button
@@ -57,6 +58,7 @@ const SiteNav = () => {
             <Link href="/colleges" onClick={() => setMobileMenuOpen(false)}>Colleges</Link>
             <Link href="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
             <Link href="/pu-exam" onClick={() => setMobileMenuOpen(false)}>PU Exam</Link>
+            <Link href="/pu-exam-grading" onClick={() => setMobileMenuOpen(false)}>Grading & Marking</Link>
             <Link href="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
             <Link href="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
             <button
