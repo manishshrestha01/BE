@@ -10,50 +10,6 @@ import { X, Minus, Plus, Sun, Moon, Monitor, User, Image as ImageIcon, Palette, 
 import './Settings.css'
 import { COLLEGES } from '../../lib/colleges'
 
-const LazyWallpaperVideo = ({ src }) => {
-  const ref = useRef(null)
-  const [inView, setInView] = useState(false)
-
-  useEffect(() => {
-    const node = ref.current
-    if (!node) return undefined
-    if (!('IntersectionObserver' in window)) {
-      const id = requestAnimationFrame(() => setInView(true))
-      return () => cancelAnimationFrame(id)
-    }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setInView(true)
-            observer.disconnect()
-          }
-        })
-      },
-      { rootMargin: '300px 0px' }
-    )
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [])
-
-  return (
-    <div ref={ref} className="bg-video-preview">
-      {inView ? (
-        <video
-          src={src}
-          preload="metadata"
-          autoPlay
-          loop
-          muted
-          playsInline
-          disablePictureInPicture
-          controls={false}
-        />
-      ) : null}
-    </div>
-  )
-}
-
 const Settings = ({ onClose, initialSection = 'profile' }) => {
   const router = useRouter()
   const { backgrounds, currentBg, changeBackground, customBg, setCustomBackground, removeCustomBackground } = useBackground()
@@ -101,7 +57,13 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                 onClick={() => changeBackground(bg.id)}
               >
                 {bg.type === 'video' && (
-                  <LazyWallpaperVideo src={bg.thumbnail || getPreviewValue(bg)} />
+                  <img
+                    className="bg-video-preview"
+                    src={bg.thumbnail || getPreviewValue(bg)}
+                    alt={bg.name}
+                    loading="lazy"
+                    draggable="false"
+                  />
                 )}
                 {bg.live && <span className="bg-live">Live</span>}
                 <span className="bg-name">{bg.name}</span>
