@@ -626,8 +626,8 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                           >
                             <span className="download-guide-icon"><FileText size={20} /></span>
                             <div className="download-guide-info">
-                              <span className="download-guide-title">PPTX Download Guide</span>
-                              <span className="download-guide-sub">Watch how to download PowerPoint (.pptx) study files</span>
+                              <span className="download-guide-title">DOCX Download Guide</span>
+                              <span className="download-guide-sub">Watch how to download Word (.docx) study files</span>
                             </div>
                             <span className="download-guide-arrow">→</span>
                           </a>
@@ -639,8 +639,8 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                           >
                             <span className="download-guide-icon"><FileText size={20} /></span>
                             <div className="download-guide-info">
-                              <span className="download-guide-title">DOCX Download Guide</span>
-                              <span className="download-guide-sub">Watch how to download Word (.docx) study files</span>
+                              <span className="download-guide-title">PPTX Download Guide</span>
+                              <span className="download-guide-sub">Watch how to download PowerPoint (.pptx) study files</span>
                             </div>
                             <span className="download-guide-arrow">→</span>
                           </a>
@@ -936,8 +936,8 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                   >
                     <span className="download-guide-icon"><FileText size={22} /></span>
                     <div className="download-guide-info">
-                      <span className="download-guide-title">PPTX Download Guide</span>
-                      <span className="download-guide-sub">Watch how to download PowerPoint (.pptx) study files</span>
+                      <span className="download-guide-title">DOCX Download Guide</span>
+                      <span className="download-guide-sub">Watch how to download Word (.docx) study files</span>
                     </div>
                     <span className="download-guide-arrow">→</span>
                   </a>
@@ -949,8 +949,8 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                   >
                     <span className="download-guide-icon"><FileText size={22} /></span>
                     <div className="download-guide-info">
-                      <span className="download-guide-title">DOCX Download Guide</span>
-                      <span className="download-guide-sub">Watch how to download Word (.docx) study files</span>
+                      <span className="download-guide-title">PPTX Download Guide</span>
+                      <span className="download-guide-sub">Watch how to download PowerPoint (.pptx) study files</span>
                     </div>
                     <span className="download-guide-arrow">→</span>
                   </a>
