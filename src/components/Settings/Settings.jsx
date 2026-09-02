@@ -67,7 +67,7 @@ const WallpaperThumb = ({ src }) => {
   )
 }
 
-const Settings = ({ onClose, initialSection = 'profile' }) => {
+const Settings = ({ onClose, initialSection = 'profile', showShortcuts = true, onToggleShortcuts }) => {
   const router = useRouter()
   const { backgrounds, currentBg, changeBackground, customBg, setCustomBackground, removeCustomBackground } = useBackground()
   const { mode, resolvedTheme, setTheme } = useTheme()
@@ -611,6 +611,21 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                             )
                           })}
                         </div>
+                        <div className="shortcuts-toggle-row">
+                          <div className="shortcuts-toggle-info">
+                            <span className="shortcuts-toggle-title">Show Desktop Shortcuts</span>
+                            <span className="shortcuts-toggle-desc">Hide the app icons so your wallpaper stays clearly visible.</span>
+                          </div>
+                          <button
+                            type="button"
+                            role="switch"
+                            aria-checked={showShortcuts}
+                            className={`shortcuts-toggle ${showShortcuts ? 'on' : ''}`}
+                            onClick={() => onToggleShortcuts && onToggleShortcuts()}
+                          >
+                            <span className="shortcuts-toggle-knob" />
+                          </button>
+                        </div>
                       </div>
                     )}
                     {mobileView === 'download-guide' && (
@@ -916,6 +931,21 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                 <p className="section-description" style={{ marginTop: 16 }}>
                   Your choice is saved automatically and synced across pages.
                 </p>
+                <div className="shortcuts-toggle-row">
+                  <div className="shortcuts-toggle-info">
+                    <span className="shortcuts-toggle-title">Show Desktop Shortcuts</span>
+                    <span className="shortcuts-toggle-desc">Hide the app icons so your wallpaper stays clearly visible.</span>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={showShortcuts}
+                    className={`shortcuts-toggle ${showShortcuts ? 'on' : ''}`}
+                    onClick={() => onToggleShortcuts && onToggleShortcuts()}
+                  >
+                    <span className="shortcuts-toggle-knob" />
+                  </button>
+                </div>
               </div>
             )}
 

@@ -47,6 +47,7 @@ function buildInitialPathFromParams(searchParams) {
 
 const DASHBOARD_UI_STATE_KEY = 'studymate:dashboard-ui:v1'
 const QUICKLOOK_STATE_KEY = 'studymate:quicklook:v1'
+const SHOW_SHORTCUTS_KEY = 'studymate:show-shortcuts:v1'
 const VALID_ACTIVE_APPS = ['finder', 'notes', 'settings', 'contact', 'spotify']
 const DEFAULT_NOTES_VIEW_STATE = {
   noteId: null,
@@ -100,6 +101,14 @@ const persistQuickLookState = (file) => {
   }
 }
 
+const readShowShortcuts = () => {
+  try {
+    return localStorage.getItem(SHOW_SHORTCUTS_KEY) !== '0'
+  } catch {
+    return true
+  }
+}
+
 const readDashboardUiState = () => {
   try {
     const raw = localStorage.getItem(DASHBOARD_UI_STATE_KEY)
@@ -139,6 +148,17 @@ const Desktop = () => {
   const quickLookFileRef = useRef(quickLookFile)
   const [spotifyMounted, setSpotifyMounted] = useState(restoredState.activeApp === 'spotify')
   const [settingsInitialSection, setSettingsInitialSection] = useState('profile')
+  const [showShortcuts, setShowShortcuts] = useState(() => readShowShortcuts())
+
+  const toggleShowShortcuts = () => {
+    setShowShortcuts(prev => {
+      const next = !prev
+      try {
+        localStorage.setItem(SHOW_SHORTCUTS_KEY, next ? '1' : '0')
+      } catch { /* ignore */ }
+      return next
+    })
+  }
 
   const openTips = () => {
     setSettingsInitialSection('download-guide')
@@ -323,6 +343,7 @@ const Desktop = () => {
       </div>
 
       {/* Desktop shortcuts (non-invasive) */}
+      {showShortcuts && (
       <div className="desktop-shortcuts" aria-hidden={false}>
         <button
           className="desktop-shortcut desktop-shortcut--finder"
@@ -371,16 +392,6 @@ const Desktop = () => {
 
         <button
           className="desktop-shortcut"
-          title="Tips"
-          aria-label="Open Tips (Download Guide)"
-          onClick={openTips}
-        >
-          <div className="desktop-shortcut-png"><img src="/icons/tips.webp" alt="Tips" className="desktop-shortcut-img"/></div>
-          <div className="desktop-shortcut-label">Tips</div>
-        </button>
-
-        <button
-          className="desktop-shortcut"
           title="Banner"
           aria-label="View Banner"
           onClick={() => router.push('/banner')}
@@ -390,6 +401,18 @@ const Desktop = () => {
         </button>
 
       </div>
+      )}
+
+      {/* Tips shortcut (top-left) */}
+      <button
+        className="desktop-tips-shortcut"
+        title="Tips"
+        aria-label="Open Tips (Download Guide)"
+        onClick={openTips}
+      >
+        <div className="desktop-shortcut-png"><img src="/icons/tips.webp" alt="Tips" className="desktop-shortcut-img"/></div>
+        <div className="desktop-shortcut-label">Tips</div>
+      </button>
 
       {/* Dock */}
       <Dock 
@@ -420,7 +443,12 @@ const Desktop = () => {
 
       {/* Settings Modal */}
       {showSettings && (
-        <Settings onClose={closeSettings} initialSection={settingsInitialSection} />
+        <Settings
+          onClose={closeSettings}
+          initialSection={settingsInitialSection}
+          showShortcuts={showShortcuts}
+          onToggleShortcuts={toggleShowShortcuts}
+        />
       )}
 
     </div>
