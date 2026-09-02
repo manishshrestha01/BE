@@ -61,6 +61,10 @@ const DashboardManual = () => {
   }, [isAuthenticated, isSetupComplete, profileInitialized, profile, user, router])
 
   // If devtools is open on dashboard, force-exit the dashboard session.
+  // Detection is only run while the tab is visible and focused, and it must
+  // persist across consecutive checks before locking. This avoids a spurious
+  // redirect when the user simply returns to the tab (which would otherwise
+  // interrupt background audio such as Spotify).
   useEffect(() => {
     if (!isAuthenticated || !isAuthRequired || !user) return undefined
 
@@ -69,8 +73,12 @@ const DashboardManual = () => {
     if (isMobileDevice) return undefined
 
     const DEVTOOLS_THRESHOLD = 170
+    const REQUIRED_CONSECUTIVE_STRIKES = 3
+
+    let strikeCount = 0
 
     const isDevToolsOpen = () => {
+      if (document.visibilityState !== 'visible' || !document.hasFocus()) return false
       const widthGap = Math.abs(window.outerWidth - window.innerWidth)
       const heightGap = Math.abs(window.outerHeight - window.innerHeight)
       return widthGap > DEVTOOLS_THRESHOLD || heightGap > DEVTOOLS_THRESHOLD
@@ -89,21 +97,37 @@ const DashboardManual = () => {
       window.location.replace('/login')
     }
 
+    const resetStrikes = () => {
+      strikeCount = 0
+    }
+
     const checkDevTools = () => {
+      // Ignore transient readings right after regaining focus (e.g. returning
+      // from another tab); only lock after the reading is consistently present.
       if (isDevToolsOpen()) {
-        lockDashboard()
+        strikeCount += 1
+        if (strikeCount >= REQUIRED_CONSECUTIVE_STRIKES) {
+          lockDashboard()
+        }
+      } else {
+        resetStrikes()
       }
+    }
+
+    const onFocus = () => {
+      // Give the browser a settling period after refocusing the tab.
+      resetStrikes()
     }
 
     checkDevTools()
     const intervalId = window.setInterval(checkDevTools, 800)
     window.addEventListener('resize', checkDevTools)
-    window.addEventListener('focus', checkDevTools)
+    window.addEventListener('focus', onFocus)
 
     return () => {
       window.clearInterval(intervalId)
       window.removeEventListener('resize', checkDevTools)
-      window.removeEventListener('focus', checkDevTools)
+      window.removeEventListener('focus', onFocus)
     }
   }, [isAuthenticated, isAuthRequired, user])
 
