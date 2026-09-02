@@ -119,17 +119,25 @@
   }
 }
 
-/* Mobile portrait: only the Tips app is shown; hide the rest */
+/* Mobile portrait: shortcuts on the right, Tips parallel to Finder on the left */
 @media (max-width: 480px) and (orientation: portrait) {
   .desktop-shortcuts {
-    display: none;
+    position: fixed;
+    right: max(10px, env(safe-area-inset-right));
+    top: max(12px, env(safe-area-inset-top));
+    left: auto;
+    bottom: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
   }
 
   .desktop-tips-shortcut {
     position: fixed;
     top: max(12px, env(safe-area-inset-top));
-    left: 50%;
-    transform: translateX(-50%);
+    left: max(10px, env(safe-area-inset-left));
+    transform: none;
     width: 64px;
     padding: 3px 6px;
     gap: 4px;
@@ -587,7 +595,15 @@
   }
 
   .desktop-shortcuts {
-    display: none;
+    position: fixed;
+    right: max(8px, env(safe-area-inset-right));
+    top: max(4px, env(safe-area-inset-top));
+    left: auto;
+    bottom: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
   }
 
   .desktop-tips-shortcut {
@@ -647,13 +663,21 @@
   }
 
   .desktop-shortcuts {
-    display: none;
+    position: fixed;
+    right: max(6px, env(safe-area-inset-right));
+    top: max(14px, env(safe-area-inset-top));
+    left: auto;
+    bottom: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
   }
 
   .desktop-tips-shortcut {
-    top: max(10px, env(safe-area-inset-top));
-    left: 50%;
-    transform: translateX(-50%);
+    top: max(14px, env(safe-area-inset-top));
+    left: max(6px, env(safe-area-inset-left));
+    transform: none;
     width: 54px;
     padding: 2px;
     gap: 2px;
