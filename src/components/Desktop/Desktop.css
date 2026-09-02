@@ -129,9 +129,10 @@
     left: 50%;
     transform: translateX(-50%);
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px 24px;
-    width: max(260px, calc(100vw - 48px));
+    grid-template-columns: repeat(4, 1fr);
+    row-gap: 20px;
+    column-gap: 22px;
+    width: max(280px, calc(100vw - 40px));
     justify-items: center;
     align-items: start;
   }

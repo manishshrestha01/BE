@@ -138,6 +138,17 @@ const Desktop = () => {
   const [quickLookFile, setQuickLookFile] = useState(() => readQuickLookState())
   const quickLookFileRef = useRef(quickLookFile)
   const [spotifyMounted, setSpotifyMounted] = useState(restoredState.activeApp === 'spotify')
+  const [settingsInitialSection, setSettingsInitialSection] = useState('profile')
+
+  const openTips = () => {
+    setSettingsInitialSection('download-guide')
+    openApp('settings')
+  }
+
+  const openSettings = () => {
+    setSettingsInitialSection('profile')
+    openApp('settings')
+  }
 
   const showFinder = activeApp === 'finder'
   const showNotes = activeApp === 'notes'
@@ -352,10 +363,20 @@ const Desktop = () => {
           className="desktop-shortcut desktop-shortcut--finder"
           title="Settings"
           aria-label="Open Settings"
-          onClick={() => openApp('settings')}
+          onClick={openSettings}
         >
           <div className="desktop-shortcut-png"><img src="/icons/settings.webp" alt="Settings" className="desktop-shortcut-img"/></div>
           <div className="desktop-shortcut-label">Settings</div>
+        </button>
+
+        <button
+          className="desktop-shortcut"
+          title="Tips"
+          aria-label="Open Tips (Download Guide)"
+          onClick={openTips}
+        >
+          <div className="desktop-shortcut-png"><img src="/icons/tips.webp" alt="Tips" className="desktop-shortcut-img"/></div>
+          <div className="desktop-shortcut-label">Tips</div>
         </button>
 
         <button
@@ -399,7 +420,7 @@ const Desktop = () => {
 
       {/* Settings Modal */}
       {showSettings && (
-        <Settings onClose={closeSettings} />
+        <Settings onClose={closeSettings} initialSection={settingsInitialSection} />
       )}
 
     </div>
