@@ -94,7 +94,10 @@ const orgGraphJson = {
       alternateName: 'Manish Shrestha StudyMate',
       url: SITE_URL,
       logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo-512.png` },
-      sameAs: ['https://github.com/manishshrestha01'],
+      sameAs: [
+        'https://github.com/manishshrestha01',
+        'https://www.shresthamanish.info.np/',
+      ],
       description: 'PU notes for BE Computer Engineering students.',
     },
     {
@@ -136,7 +139,10 @@ const personJson = {
   '@id': `${SITE_URL}/#author`,
   name: 'Manish Shrestha',
   url: `${SITE_URL}/about`,
-  sameAs: ['https://github.com/manishshrestha01'],
+  sameAs: [
+        'https://github.com/manishshrestha01',
+        'https://www.shresthamanish.info.np/',
+      ],
   jobTitle: 'Developer & Content Curator',
   knowsAbout: [
     'Pokhara University BE Computer Engineering',
