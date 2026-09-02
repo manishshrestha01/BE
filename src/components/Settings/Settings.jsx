@@ -10,6 +10,63 @@ import { X, Minus, Plus, Sun, Moon, Monitor, User, Image as ImageIcon, Palette, 
 import './Settings.css'
 import { COLLEGES } from '../../lib/colleges'
 
+const WallpaperThumb = ({ src }) => {
+  const ref = useRef(null)
+  const videoRef = useRef(null)
+  const [inView, setInView] = useState(false)
+
+  // Only attach videos that are near the viewport; each stays paused on frame 0.1
+  useEffect(() => {
+    const node = ref.current
+    if (!node) return undefined
+    if (!('IntersectionObserver' in window)) {
+      const id = requestAnimationFrame(() => setInView(true))
+      return () => cancelAnimationFrame(id)
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setInView(true)
+            observer.disconnect()
+          }
+        })
+      },
+      { rootMargin: '300px 0px' }
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
+  // Seek to frame 0.1 and stay paused → renders a single static wallpaper frame
+  useEffect(() => {
+    if (!inView) return
+    const video = videoRef.current
+    if (!video) return undefined
+    const onLoaded = () => {
+      video.currentTime = 0.1
+    }
+    video.addEventListener('loadedmetadata', onLoaded)
+    return () => video.removeEventListener('loadedmetadata', onLoaded)
+  }, [inView])
+
+  return (
+    <div ref={ref} className="bg-video-preview">
+      {inView ? (
+        <video
+          ref={videoRef}
+          src={src}
+          preload="metadata"
+          muted
+          playsInline
+          disablePictureInPicture
+          controls={false}
+        />
+      ) : null}
+    </div>
+  )
+}
+
 const Settings = ({ onClose, initialSection = 'profile' }) => {
   const router = useRouter()
   const { backgrounds, currentBg, changeBackground, customBg, setCustomBackground, removeCustomBackground } = useBackground()
@@ -57,13 +114,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                 onClick={() => changeBackground(bg.id)}
               >
                 {bg.type === 'video' && (
-                  <img
-                    className="bg-video-preview"
-                    src={bg.thumbnail || getPreviewValue(bg)}
-                    alt={bg.name}
-                    loading="lazy"
-                    draggable="false"
-                  />
+                  <WallpaperThumb src={bg.thumbnail || getPreviewValue(bg)} alt={bg.name} />
                 )}
                 {bg.live && <span className="bg-live">Live</span>}
                 <span className="bg-name">{bg.name}</span>
