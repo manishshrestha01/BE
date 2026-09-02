@@ -591,23 +591,26 @@ const Settings = ({ onClose, initialSection = 'profile', showShortcuts = true, o
                     {mobileView === 'appearance' && (
                       <div className="appearance-section">
                         <p className="section-description">Choose the look of your interface</p>
-                        <div className="theme-option-grid theme-option-grid-mobile">
+                        <div className="theme-toggle-group">
                           {themeOptions.map(opt => {
                             const Icon = opt.icon
                             const active = mode === opt.id
                             return (
-                              <button
-                                key={opt.id}
-                                className={`theme-option ${active ? 'active' : ''}`}
-                                onClick={() => setTheme(opt.id)}
-                                aria-pressed={active}
-                              >
-                                <span className="theme-preview" style={{ background: opt.preview }}>
-                                  <Icon size={20} strokeWidth={2} />
-                                </span>
-                                <span className="theme-label">{opt.label}</span>
-                                {active && <span className="bg-check">✓</span>}
-                              </button>
+                              <div key={opt.id} className="shortcuts-toggle-row">
+                                <div className="shortcuts-toggle-info">
+                                  <span className="theme-toggle-row-title"><Icon size={16} strokeWidth={2} style={{ verticalAlign: '-3px', marginRight: 8 }} /> {opt.label}</span>
+                                  <span className="shortcuts-toggle-desc">{opt.id === 'dark' ? 'Use the dark interface.' : opt.id === 'light' ? 'Use the light interface.' : 'Follow your device appearance setting.'}</span>
+                                </div>
+                                <button
+                                  type="button"
+                                  role="switch"
+                                  aria-checked={active}
+                                  className={`shortcuts-toggle ${active ? 'on' : ''}`}
+                                  onClick={() => setTheme(opt.id)}
+                                >
+                                  <span className="shortcuts-toggle-knob" />
+                                </button>
+                              </div>
                             )
                           })}
                         </div>

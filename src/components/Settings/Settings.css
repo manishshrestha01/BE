@@ -1179,6 +1179,48 @@
   margin-top: 20px;
 }
 
+.theme-toggle-group {
+  margin-top: 20px;
+  padding-top: 6px;
+}
+
+.theme-toggle-group .shortcuts-toggle-row {
+  margin-top: 0;
+  padding: 12px 4px;
+  border-top: none;
+}
+
+.theme-toggle-group .shortcuts-toggle-row + .shortcuts-toggle-row {
+  border-top: 1px solid;
+}
+
+[data-theme="dark"] .theme-toggle-group .shortcuts-toggle-row + .shortcuts-toggle-row {
+  border-top-color: rgba(255, 255, 255, 0.07);
+}
+
+[data-theme="light"] .theme-toggle-group .shortcuts-toggle-row + .shortcuts-toggle-row {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.theme-toggle-row-title {
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+}
+
+[data-theme="dark"] .theme-toggle-row-title {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .theme-toggle-row-title {
+  color: #1d1f27;
+}
+
+.theme-toggle-row-title svg {
+  flex-shrink: 0;
+}
+
 .about-section {
   text-align: center;
   padding: 20px;
