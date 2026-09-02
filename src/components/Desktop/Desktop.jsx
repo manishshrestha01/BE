@@ -404,6 +404,7 @@ const Desktop = () => {
       )}
 
       {/* Tips shortcut (top-left) */}
+      {showShortcuts && (
       <button
         className="desktop-tips-shortcut"
         title="Tips"
@@ -413,6 +414,7 @@ const Desktop = () => {
         <div className="desktop-shortcut-png"><img src="/icons/tips.webp" alt="Tips" className="desktop-shortcut-img"/></div>
         <div className="desktop-shortcut-label">Tips</div>
       </button>
+      )}
 
       {/* Dock */}
       <Dock 
