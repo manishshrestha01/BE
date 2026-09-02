@@ -966,11 +966,15 @@ const backgrounds = [
 
 export const BackgroundProvider = ({ children }) => {
   const { resolvedTheme } = useTheme()
-  // Rollout default: King of Night applies once for every user who hasn't
-  // explicitly chosen a wallpaper after this deploy (guarded by the
-  // "customized" flag set in changeBackground).
-  const DEFAULT_BG_ID = '4c39d64d-5f33-4989-963e-dde95c6c3879' // King of Night
-  const defaultBg = backgrounds.find(bg => bg.id === DEFAULT_BG_ID) || backgrounds[0]
+  // Device-aware defaults (applies to users who haven't explicitly chosen a
+  // wallpaper after rollout, guarded by the "customized" flag set in
+  // changeBackground):
+  //   - Mobile (< 1024px): Lycoris Recoil
+  //   - Desktop / large screen (> 1023px): King of Night
+  const MOBILE_DEFAULT_BG_ID = 'anime-lycoris' // Lycoris Recoil
+  const DESKTOP_DEFAULT_BG_ID = '4c39d64d-5f33-4989-963e-dde95c6c3879' // King of Night
+  // Static SSR-safe fallback; the effect below swaps to the device default.
+  const defaultBg = backgrounds.find(bg => bg.id === DESKTOP_DEFAULT_BG_ID) || backgrounds[0]
   const [currentBg, setCurrentBg] = useState(defaultBg)
   const [customBg, setCustomBg] = useState(null)
 
@@ -996,11 +1000,17 @@ export const BackgroundProvider = ({ children }) => {
         const saved = localStorage.getItem('notesAppBackground')
 
         if (!customized) {
-          // First run after the King of Night rollout (or user never chose
-          // one): force the new default once, then persist it so it sticks.
-          setCurrentBg(defaultBg)
+          // First run after rollout (or the user never chose one): force the
+          // device-appropriate default once, then persist it so it sticks.
+          const deviceDefaultId =
+            typeof window !== 'undefined' && window.innerWidth <= 1023
+              ? MOBILE_DEFAULT_BG_ID
+              : DESKTOP_DEFAULT_BG_ID
+          const deviceDefault =
+            backgrounds.find(bg => bg.id === deviceDefaultId) || defaultBg
+          setCurrentBg(deviceDefault)
           try {
-            localStorage.setItem('notesAppBackground', defaultBg.id)
+            localStorage.setItem('notesAppBackground', deviceDefault.id)
             localStorage.setItem('notesAppBackgroundCustomized', '1')
           } catch { /* ignore */ }
           return
