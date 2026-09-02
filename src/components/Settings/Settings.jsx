@@ -6,7 +6,7 @@ import { useUserProfile } from '../../hooks/useUserProfile'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
 import SettingRow from './SettingRow'
-import { X, Minus, Plus, Sun, Moon, Monitor, User, Image as ImageIcon, Palette, Info, HelpCircle, LogOut, FileText, Lightbulb } from 'lucide-react'
+import { X, Minus, Plus, Sun, Moon, Monitor, User, Image as ImageIcon, Palette, Info, HelpCircle, LogOut, FileText, Lightbulb, Smartphone, ExternalLink } from 'lucide-react'
 import './Settings.css'
 import { COLLEGES } from '../../lib/colleges'
 
@@ -306,6 +306,7 @@ const Settings = ({ onClose, initialSection = 'profile', showShortcuts = true, o
     { id: 'wallpaper', icon: ImageIcon, label: 'Wallpaper' },
     { id: 'appearance', icon: Palette, label: 'Appearance' },
     { id: 'download-guide', icon: Lightbulb, label: 'Tips' },
+    { id: 'mobile-app', icon: Smartphone, label: 'Try our app' },
     { id: 'about', icon: Info, label: 'About' },
     { id: 'faq', icon: HelpCircle, label: 'FAQ' }
   ]
@@ -454,6 +455,12 @@ const Settings = ({ onClose, initialSection = 'profile', showShortcuts = true, o
                       icon={<Info size={17} />}
                       title="About"
                       onClick={() => setMobileView('about')}
+                    />
+                    <SettingRow
+                      icon={<Smartphone size={17} />}
+                      title="Try our app"
+                      subtitle="Get StudyMate on Google Play"
+                      onClick={() => window.open('https://play.google.com/store/apps/details?id=com.manish.studymate', '_blank', 'noopener,noreferrer')}
                     />
                     <SettingRow
                       icon={<HelpCircle size={17} />}
@@ -1001,6 +1008,38 @@ const Settings = ({ onClose, initialSection = 'profile', showShortcuts = true, o
                     <span className="download-guide-arrow">→</span>
                   </a>
                 </div>
+              </div>
+            )}
+
+            {/* Try our app Section (desktop) */}
+            {activeSection === 'mobile-app' && (
+              <div className="mobile-app-section">
+                <div className="mobile-app-icon">
+                  <img
+                    src={resolvedTheme === 'dark' ? '/white.svg' : '/black.svg'}
+                    alt="StudyMate"
+                    className="about-app-icon-img"
+                  />
+                </div>
+                <h4 className="mobile-app-title">Try our app</h4>
+                <p className="section-description">
+                  Get StudyMate on your phone. Download notes offline, view PDFs, and access your study materials anytime — even without internet.
+                </p>
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.manish.studymate"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="play-store-badge"
+                >
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style={{ marginRight: 10 }}>
+                    <path d="M3.609 1.814L13.792 12 3.609 22.186a.996.996 0 01-.609-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302c.812.812.812 2.143 0 2.954l-2.302 2.302L15.396 12l2.302-2.492zM5.864 2.658L16.8 9.99l-2.302 2.302-8.634-8.634z" />
+                  </svg>
+                  <div className="play-store-text">
+                    <span className="play-store-small">GET IT ON</span>
+                    <span className="play-store-big">Google Play</span>
+                  </div>
+                  <ExternalLink size={18} style={{ marginLeft: 10, opacity: 0.8 }} />
+                </a>
               </div>
             )}
 

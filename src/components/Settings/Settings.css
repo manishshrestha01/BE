@@ -1226,6 +1226,73 @@
   padding: 20px;
 }
 
+.mobile-app-section {
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mobile-app-icon {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.mobile-app-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.mobile-app-section .play-store-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px 28px;
+  background: #1d1f27;
+  color: #ffffff;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: none;
+  cursor: pointer;
+}
+
+[data-theme="dark"] .mobile-app-section .play-store-badge {
+  background: #ffffff;
+  color: #1d1f27;
+}
+
+.mobile-app-section .play-store-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.mobile-app-section .play-store-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.mobile-app-section .play-store-small {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+  line-height: 1.2;
+}
+
+.mobile-app-section .play-store-big {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
 .about-app-icon {
   margin-bottom: 16px;
   display: flex;
