@@ -6,7 +6,7 @@ import { useUserProfile } from '../../hooks/useUserProfile'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
 import SettingRow from './SettingRow'
-import { X, Minus, Plus, Sun, Moon, Monitor, User, Image as ImageIcon, Palette, Info, HelpCircle, LogOut } from 'lucide-react'
+import { X, Minus, Plus, Sun, Moon, Monitor, User, Image as ImageIcon, Palette, Info, HelpCircle, LogOut, Download, FileText } from 'lucide-react'
 import './Settings.css'
 import { COLLEGES } from '../../lib/colleges'
 
@@ -305,6 +305,7 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     { id: 'profile', icon: User, label: profile.full_name || 'Profile' },
     { id: 'wallpaper', icon: ImageIcon, label: 'Wallpaper' },
     { id: 'appearance', icon: Palette, label: 'Appearance' },
+    { id: 'download-guide', icon: Download, label: 'Download Guide' },
     { id: 'about', icon: Info, label: 'About' },
     { id: 'faq', icon: HelpCircle, label: 'FAQ' }
   ]
@@ -442,6 +443,12 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                       title="Appearance"
                       subtitle={themeLabel}
                       onClick={() => setMobileView('appearance')}
+                    />
+                    <SettingRow
+                      icon={<Download size={17} />}
+                      title="Download Guide"
+                      subtitle="PPTX, DOCX & PDF download tutorials"
+                      onClick={() => setMobileView('download-guide')}
                     />
                     <SettingRow
                       icon={<Info size={17} />}
@@ -603,6 +610,53 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                               </button>
                             )
                           })}
+                        </div>
+                      </div>
+                    )}
+                    {mobileView === 'download-guide' && (
+                      <div className="download-guide-section">
+                        <h4>Download Guide</h4>
+                        <p className="section-description">Step-by-step video tutorials on how to download study files in different formats.</p>
+                        <div className="download-guide-list">
+                          <a
+                            className="download-guide-item"
+                            href="https://youtu.be/XeynMlsPZLM"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span className="download-guide-icon"><FileText size={20} /></span>
+                            <div className="download-guide-info">
+                              <span className="download-guide-title">PPTX Download Guide</span>
+                              <span className="download-guide-sub">Watch how to download PowerPoint (.pptx) study files</span>
+                            </div>
+                            <span className="download-guide-arrow">→</span>
+                          </a>
+                          <a
+                            className="download-guide-item"
+                            href="https://youtu.be/PawcIrmfEec"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span className="download-guide-icon"><FileText size={20} /></span>
+                            <div className="download-guide-info">
+                              <span className="download-guide-title">DOCX Download Guide</span>
+                              <span className="download-guide-sub">Watch how to download Word (.docx) study files</span>
+                            </div>
+                            <span className="download-guide-arrow">→</span>
+                          </a>
+                          <a
+                            className="download-guide-item"
+                            href="https://youtu.be/sYyU9xKB5Yk"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span className="download-guide-icon"><FileText size={20} /></span>
+                            <div className="download-guide-info">
+                              <span className="download-guide-title">PDF Download Guide</span>
+                              <span className="download-guide-sub">Watch how to download PDF study files</span>
+                            </div>
+                            <span className="download-guide-arrow">→</span>
+                          </a>
                         </div>
                       </div>
                     )}
@@ -862,6 +916,58 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                 <p className="section-description" style={{ marginTop: 16 }}>
                   Your choice is saved automatically and synced across pages.
                 </p>
+              </div>
+            )}
+
+            {/* Download Guide Section (desktop) */}
+            {activeSection === 'download-guide' && (
+              <div className="download-guide-section">
+                <h4>Download Guide</h4>
+                <p className="section-description">
+                  Step-by-step video tutorials on how to download study files in different formats —
+                  PowerPoint (.pptx), Word (.docx), and PDF.
+                </p>
+                <div className="download-guide-list">
+                  <a
+                    className="download-guide-item"
+                    href="https://youtu.be/XeynMlsPZLM"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="download-guide-icon"><FileText size={22} /></span>
+                    <div className="download-guide-info">
+                      <span className="download-guide-title">PPTX Download Guide</span>
+                      <span className="download-guide-sub">Watch how to download PowerPoint (.pptx) study files</span>
+                    </div>
+                    <span className="download-guide-arrow">→</span>
+                  </a>
+                  <a
+                    className="download-guide-item"
+                    href="https://youtu.be/PawcIrmfEec"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="download-guide-icon"><FileText size={22} /></span>
+                    <div className="download-guide-info">
+                      <span className="download-guide-title">DOCX Download Guide</span>
+                      <span className="download-guide-sub">Watch how to download Word (.docx) study files</span>
+                    </div>
+                    <span className="download-guide-arrow">→</span>
+                  </a>
+                  <a
+                    className="download-guide-item"
+                    href="https://youtu.be/sYyU9xKB5Yk"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="download-guide-icon"><FileText size={22} /></span>
+                    <div className="download-guide-info">
+                      <span className="download-guide-title">PDF Download Guide</span>
+                      <span className="download-guide-sub">Watch how to download PDF study files</span>
+                    </div>
+                    <span className="download-guide-arrow">→</span>
+                  </a>
+                </div>
               </div>
             )}
 

@@ -993,6 +993,111 @@
   background: rgba(235, 235, 240, 0.95);
 }
 
+.download-guide-section {
+  padding: 4px 6px 20px;
+}
+
+.download-guide-section h4 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+[data-theme="dark"] .download-guide-list,
+.download-guide-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+[data-theme="dark"] .download-guide-item,
+.download-guide-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-theme="dark"] .download-guide-item:hover,
+.download-guide-item:hover {
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .download-guide-icon,
+.download-guide-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  color: #df6a3a;
+}
+
+[data-theme="dark"] .download-guide-info,
+.download-guide-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.download-guide-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.download-guide-sub {
+  font-size: 12px;
+  opacity: 0.65;
+  margin-top: 2px;
+}
+
+.download-guide-arrow {
+  font-size: 16px;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .download-guide-item,
+[data-theme="dark"] .download-guide-icon {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .download-guide-item {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .download-guide-title {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .download-guide-sub {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .download-guide-item {
+  background: rgba(0, 0, 0, 0.025);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .download-guide-icon {
+  background: rgba(223, 106, 58, 0.12);
+  color: #b24b1f;
+}
+
+[data-theme="light"] .download-guide-title {
+  color: #1d1f27;
+}
+
+[data-theme="light"] .download-guide-sub {
+  color: #5a6270;
+}
+
 .about-section {
   text-align: center;
   padding: 20px;
