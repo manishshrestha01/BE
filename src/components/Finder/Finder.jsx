@@ -13,7 +13,7 @@ import useFolderColors from '../../hooks/useFolderColors'
 import FolderIcon from '../FolderIcon'
 import { toggleFavorite, getUserFavorites, getUserRecents, upsertRecentTab, removeFavorite } from '../../lib/database'
 import { COLLEGES } from '../../lib/colleges'
-import { folderNameToSlug } from '../../lib/subjectMap'
+import { folderNameToSlug, fileToSlug } from '../../lib/subjectMap'
 import './Finder.css'
 
 // File type icons - returns emoji or JSX for custom icons
@@ -51,7 +51,7 @@ const getColorFromMap = (colorMap, normalizedColorMap, candidate) => {
   )
 }
 
-const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
+const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null, initialFileSlug = null }) => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const {
@@ -75,6 +75,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
   const [activeTab, setActiveTab] = useState('all')
   const [favorites, setFavorites] = useState([])
   const [recents, setRecents] = useState([])
+  const [openFileSlug, setOpenFileSlug] = useState(null)
   const longPressTimeoutRef = useRef(null)
   const longPressActiveRef = useRef(false)
   const longPressStartPos = useRef({ x: 0, y: 0 })
@@ -125,57 +126,94 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
     }
   }, [])
 
-  // Sync URL params as user navigates folders inside Finder.
-  // folderPath = [root, college, semester, subject, ...]
-  // We map back to ?college=pec&semester=3&subject=operating-systems
+  // Sync URL params as user navigates folders (and opens files) inside Finder.
+  // We keep the legacy ?college&?semester&?subject params for old shared links,
+  // and ALSO encode the full breadcrumb chain into ?path= so every subfolder is
+  // deep-linkable. Opened files are appended as ?file=<name-slug>.<type-marker>.
   useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString())
+    let dirty = false
+
+    // --- Legacy params (college/semester/subject) for backward compatibility.
     if (folderPath.length <= 1) {
-      // Back at root — clear params without full reload
-      const params = new URLSearchParams(searchParams.toString())
-      if (params.has('college') || params.has('semester') || params.has('subject')) {
-        router.replace('/dashboard')
+      if (params.has('college') || params.has('semester') || params.has('subject') || params.has('path')) {
+        params.delete('college')
+        params.delete('semester')
+        params.delete('subject')
+        params.delete('path')
+        dirty = true
       }
-      return
-    }
+    } else {
+      const segments = folderPath.slice(1) // drop ROOT
+      const firstSeg = segments[0]
+      const firstSegName = firstSeg?.name?.toLowerCase() || ''
+      const isCollege = COLLEGES.some(c => c.value.toLowerCase() === firstSegName)
 
-    const segments = folderPath.slice(1) // drop ROOT
-    const params = new URLSearchParams()
-
-    const firstSeg = segments[0]
-    const firstSegName = firstSeg?.name?.toLowerCase() || ''
-    const isCollege = COLLEGES.some(c => c.value.toLowerCase() === firstSegName)
-
-    if (isCollege) {
-      params.set('college', firstSegName)
-      const semesterSeg = segments[1]
-      if (semesterSeg) {
-        const semNum = semesterSeg.name.replace(/semester\s*/i, '').trim()
-        if (semNum) params.set('semester', semNum)
+      // Full chain slug (every folder level).
+      const pathSlug = segments.map(seg => folderNameToSlug(seg.name)).join('/')
+      if (params.get('path') !== pathSlug) {
+        params.set('path', pathSlug)
+        dirty = true
       }
-      const subjectSeg = segments[2]
-      if (subjectSeg) {
-        params.set('subject', folderNameToSlug(subjectSeg.name))
-      }
-    } else if (firstSeg) {
-      // No college — check if this segment is a semester folder
-      const semNum = firstSeg.name.replace(/semester\s*/i, '').trim()
-      if (/^\d+$/.test(semNum)) {
-        params.set('semester', semNum)
-        const subjectSeg = segments[1]
+
+      // Legacy college/semester/subject (first 3 levels).
+      if (isCollege) {
+        params.set('college', firstSegName)
+        const semesterSeg = segments[1]
+        if (semesterSeg) {
+          const semNum = semesterSeg.name.replace(/semester\s*/i, '').trim()
+          if (semNum) params.set('semester', semNum)
+          else params.delete('semester')
+        } else params.delete('semester')
+        const subjectSeg = segments[2]
         if (subjectSeg) {
           params.set('subject', folderNameToSlug(subjectSeg.name))
+        } else params.delete('subject')
+      } else if (firstSeg) {
+        // No college — check if this segment is a semester folder
+        const semNum = firstSeg.name.replace(/semester\s*/i, '').trim()
+        if (/^\d+$/.test(semNum)) {
+          params.set('semester', semNum)
+          const subjectSeg = segments[1]
+          if (subjectSeg) {
+            params.set('subject', folderNameToSlug(subjectSeg.name))
+          } else params.delete('subject')
+          params.delete('college')
+        } else if (semNum) {
+          // First segment doesn't look like a semester — treat it as subject
+          params.set('subject', folderNameToSlug(firstSeg.name))
+          params.delete('college')
+          params.delete('semester')
+        } else {
+          params.delete('college')
+          params.delete('semester')
+          params.delete('subject')
         }
-      } else if (semNum) {
-        // First segment doesn't look like a semester — treat it as subject
-        params.set('subject', folderNameToSlug(firstSeg.name))
+      } else {
+        params.delete('college')
+        params.delete('semester')
+        params.delete('subject')
       }
     }
+
+    // --- Opened file param (only meaningful when inside a folder).
+    if (openFileSlug && folderPath.length > 1) {
+      if (params.get('file') !== openFileSlug) {
+        params.set('file', openFileSlug)
+        dirty = true
+      }
+    } else if (params.has('file')) {
+      params.delete('file')
+      dirty = true
+    }
+
+    if (!dirty) return
 
     const newSearch = `?${params.toString()}`
     if (searchParams.toString() !== newSearch) {
       router.replace(`/dashboard${newSearch}`)
     }
-  }, [folderPath, searchParams])
+  }, [folderPath, searchParams, openFileSlug])
 
   // Derive displayed items from the active tab
   const displayedItems = useMemo(() => {
@@ -233,6 +271,26 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
       Promise.resolve().then(fetchFavoritesAndRecents)
     }
   }, [user?.id])
+
+  // Auto-open a file deep-linked via ?file=<name-slug>.<type-marker> once its
+  // folder contents have loaded. Matches by slugified name.
+  useEffect(() => {
+    if (!initialFileSlug || loading || items.length === 0) return
+    const match = items.find(item => {
+      if ((item.type || item.item_type) === 'folder') return false
+      const slug = fileToSlug(item.name || item.item_name, item.fileType || item.file_type)
+      return slug === initialFileSlug
+    })
+    if (match) {
+      const itemWithUrl = {
+        ...match,
+        name: match.name || match.item_name,
+        fileType: match.fileType || match.file_type || match.item_type,
+        url: match.url || getFileUrl(match),
+      }
+      onQuickLook?.(itemWithUrl)
+    }
+  }, [initialFileSlug, loading, items, onQuickLook, getFileUrl])
 
   const showToast = (msg, type = 'default') => {
     const opts = { showTimestamp: false, spring: false, timing: { displayDuration: 1600 } }
@@ -404,6 +462,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
     }
     setSelectedItem(item.id)
     if ((item.type || item.item_type) !== 'folder') {
+      setOpenFileSlug(fileToSlug(item.name || item.item_name, item.fileType || item.file_type))
       onFileSelect?.(item)
     }
   }
@@ -461,6 +520,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
         fileType: itemToProcess.fileType || item.fileType || item.file_type,
         url: itemToProcess.url || getFileUrl(itemToProcess) 
       }
+      setOpenFileSlug(fileToSlug(itemWithUrl.name, itemWithUrl.fileType))
       onQuickLook?.(itemWithUrl)
     }
   }

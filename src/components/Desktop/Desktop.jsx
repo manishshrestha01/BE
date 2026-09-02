@@ -12,10 +12,22 @@ import ContactApp from '../Contact/ContactApp'
 import SpotifyApp from '../Spotify/SpotifyApp'
 import './Desktop.css'
 
-// Convert ?semester=3&subject=operating-systems&college=pec into a GitHub folder path.
-// Mirrors the folder structure in the manishshrestha01/BE-Computer repo.
+// Convert search params into a GitHub folder path for the Finder.
+// Supports:
+//  - Legacy ?college=pec&semester=3&subject=operating-systems
+//  - Full-chain ?path=semester-3/operating-systems/unit-1 (every folder level)
+// Both are also honored with an optional ?file=<name-slug>.<type-marker> so a
+// deep link can open a specific file.
 function buildInitialPathFromParams(searchParams) {
   if (!searchParams) return null
+
+  const fullPath = searchParams.get('path')
+  if (fullPath) {
+    // Generic full-chain param — reverse each slug to a folder name.
+    const parts = fullPath.split('/').filter(Boolean).map(seg => slugToFolderName(seg))
+    return parts.length > 0 ? parts.join('/') : null
+  }
+
   const college = searchParams.get('college')
   const semester = searchParams.get('semester')
   const subject = searchParams.get('subject')
@@ -43,6 +55,15 @@ function buildInitialPathFromParams(searchParams) {
   }
 
   return parts.length > 0 ? parts.join('/') : null
+}
+
+// Extract the ?file=<name-slug>.<type-marker> param into a coarse fileType.
+function parseFileParam(searchParams) {
+  const fileSlug = searchParams && searchParams.get('file')
+  if (!fileSlug) return { fileSlug: null, fileType: null }
+  const lastDot = fileSlug.lastIndexOf('.')
+  if (lastDot === -1) return { fileSlug, fileType: null }
+  return { fileSlug, fileType: fileSlug.slice(lastDot + 1) }
 }
 
 const DASHBOARD_UI_STATE_KEY = 'studymate:dashboard-ui:v1'
@@ -133,10 +154,13 @@ const Desktop = () => {
   const searchParams = useSearchParams()
   const restoredState = useMemo(() => readDashboardUiState(), [])
 
-  // Derive initial Finder path from URL params (?college=pec&semester=3&subject=operating-systems)
+  // Derive initial Finder path from URL params (?college=pec&semester=3&subject=operating-systems or ?path=...)
   const initialFinderPath = useMemo(() => {
     return buildInitialPathFromParams(searchParams)
   }, [searchParams])
+
+  // ?file=<slug> deep-link — Finder resolves the file once its folder loads.
+  const initialFileSlug = useMemo(() => parseFileParam(searchParams).fileSlug, [searchParams])
 
   // If URL has navigation params, open Finder immediately; otherwise restore last state
   const [activeApp, setActiveApp] = useState(() => {
@@ -328,6 +352,7 @@ const Desktop = () => {
             onQuickLook={handleQuickLook}
             onClose={closeFinder}
             initialPath={initialFinderPath}
+            initialFileSlug={initialFileSlug}
           />
         )}
         {showNotes && (
