@@ -6,7 +6,7 @@ import { useUserProfile } from '../../hooks/useUserProfile'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
 import SettingRow from './SettingRow'
-import { X, Minus, Plus, Sun, Moon, Monitor, User, Image as ImageIcon, Palette, Info, HelpCircle, LogOut, Download, FileText } from 'lucide-react'
+import { X, Minus, Plus, Sun, Moon, Monitor, User, Image as ImageIcon, Palette, Info, HelpCircle, LogOut, FileText, Lightbulb } from 'lucide-react'
 import './Settings.css'
 import { COLLEGES } from '../../lib/colleges'
 
@@ -305,7 +305,7 @@ const Settings = ({ onClose, initialSection = 'profile', showShortcuts = true, o
     { id: 'profile', icon: User, label: profile.full_name || 'Profile' },
     { id: 'wallpaper', icon: ImageIcon, label: 'Wallpaper' },
     { id: 'appearance', icon: Palette, label: 'Appearance' },
-    { id: 'download-guide', icon: Download, label: 'Download Guide' },
+    { id: 'download-guide', icon: Lightbulb, label: 'Tips' },
     { id: 'about', icon: Info, label: 'About' },
     { id: 'faq', icon: HelpCircle, label: 'FAQ' }
   ]
@@ -445,8 +445,8 @@ const Settings = ({ onClose, initialSection = 'profile', showShortcuts = true, o
                       onClick={() => setMobileView('appearance')}
                     />
                     <SettingRow
-                      icon={<Download size={17} />}
-                      title="Download Guide"
+                      icon={<Lightbulb size={17} />}
+                      title="Tips"
                       subtitle="PPTX, DOCX & PDF download tutorials"
                       onClick={() => setMobileView('download-guide')}
                     />
@@ -630,7 +630,7 @@ const Settings = ({ onClose, initialSection = 'profile', showShortcuts = true, o
                     )}
                     {mobileView === 'download-guide' && (
                       <div className="download-guide-section">
-                        <h4>Download Guide</h4>
+                        <h4>Tips</h4>
                         <p className="section-description">Step-by-step video tutorials on how to download study files in different formats.</p>
                         <div className="download-guide-list">
                           <a
@@ -949,10 +949,10 @@ const Settings = ({ onClose, initialSection = 'profile', showShortcuts = true, o
               </div>
             )}
 
-            {/* Download Guide Section (desktop) */}
+            {/* Tips Section (desktop) */}
             {activeSection === 'download-guide' && (
               <div className="download-guide-section">
-                <h4>Download Guide</h4>
+                <h4>Tips</h4>
                 <p className="section-description">
                   Step-by-step video tutorials on how to download study files in different formats —
                   PowerPoint (.pptx), Word (.docx), and PDF.
