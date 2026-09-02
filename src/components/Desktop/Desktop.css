@@ -119,51 +119,26 @@
   }
 }
 
-/* Mobile portrait: iPhone-style grid layout (4 across, top of screen) */
+/* Mobile portrait: only the Tips app is shown; hide the rest */
 @media (max-width: 480px) and (orientation: portrait) {
   .desktop-shortcuts {
+    display: none;
+  }
+
+  .desktop-tips-shortcut {
     position: fixed;
     top: max(12px, env(safe-area-inset-top));
-    right: auto;
-    bottom: auto;
     left: 50%;
     transform: translateX(-50%);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    row-gap: 20px;
-    column-gap: 22px;
-    width: max(280px, calc(100vw - 40px));
-    justify-items: center;
-    align-items: start;
-    pointer-events: auto;
+    width: 64px;
+    padding: 3px 6px;
+    gap: 4px;
   }
 
-  .desktop-shortcut {
-    width: auto;
-    padding: 4px;
-    gap: 6px;
-  }
-
-  .desktop-shortcut:hover {
-    transform: none;
-    background: transparent;
-  }
-
-  .desktop-shortcut-icon,
-  .desktop-shortcut-png {
-    width: 52px;
-    height: 52px;
-    font-size: 40px;
-  }
-
-  .desktop-shortcut-img {
-    width: 52px;
-    height: 52px;
-  }
-
-  .desktop-shortcut-label {
-    font-size: 11px;
-    line-height: 1.2;
+  .desktop-tips-shortcut .desktop-shortcut-png,
+  .desktop-tips-shortcut .desktop-shortcut-img {
+    width: 46px;
+    height: 46px;
   }
 }
 
@@ -612,15 +587,22 @@
   }
 
   .desktop-shortcuts {
+    display: none;
+  }
+
+  .desktop-tips-shortcut {
     top: max(4px, env(safe-area-inset-top));
     left: max(8px, env(safe-area-inset-left));
-    right: max(8px, env(safe-area-inset-right));
-    width: auto;
     transform: none;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 6px;
+    width: 54px;
+    padding: 1px 2px;
+    gap: 2px;
+  }
+
+  .desktop-tips-shortcut .desktop-shortcut-png,
+  .desktop-tips-shortcut .desktop-shortcut-img {
+    width: 44px;
+    height: 44px;
   }
 
   .desktop-shortcut {
@@ -665,19 +647,22 @@
   }
 
   .desktop-shortcuts {
-    position: fixed;
+    display: none;
+  }
+
+  .desktop-tips-shortcut {
     top: max(10px, env(safe-area-inset-top));
-    right: auto;
-    bottom: auto;
     left: 50%;
     transform: translateX(-50%);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    row-gap: 14px;
-    column-gap: 20px;
-    width: max(264px, calc(100vw - 32px));
-    justify-items: center;
-    align-items: start;
+    width: 54px;
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .desktop-tips-shortcut .desktop-shortcut-png,
+  .desktop-tips-shortcut .desktop-shortcut-img {
+    width: 44px;
+    height: 44px;
   }
 
   .desktop-shortcut {
