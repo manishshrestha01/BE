@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import {
   getSubjectBySlug,
 } from '@/lib/blogCurriculum'
-import { getChapterBySlug, getSubjectChapters, getAllChapterPaths } from '@/lib/subjectChapters'
+import { getChapterBySlug, getSubjectChapters, getAllChapterPaths, buildSubjectKeywords } from '@/lib/subjectChapters'
 import { buildMetadata, dynamicOgImage } from '@/lib/blogSeo'
 import BlogChapter from '@/components/Blog/BlogChapter'
 
@@ -29,6 +29,7 @@ export async function generateMetadata({ params }) {
   return buildMetadata({
     title: `${subject.name}${subject.courseCode ? ` (${subject.courseCode})` : ''} Chapter ${chapter.number}: ${chapter.title} Notes - PU Semester ${semester.semester} Computer Engineering`,
     description,
+    keywords: buildSubjectKeywords(String(semester.semester), subject.slug, subject),
     canonicalPath: chapter.urlPath,
     type: 'article',
     image: dynamicOgImage({

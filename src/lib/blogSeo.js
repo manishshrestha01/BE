@@ -15,12 +15,14 @@ export function buildMetadata({
   canonicalPath,
   image = DEFAULT_IMAGE,
   type = "website",
+  keywords,
 }) {
   const canonical = `${BLOG_BASE_URL}${canonicalPath}`;
   return {
     title,
     description,
     alternates: { canonical },
+    ...(keywords && keywords.length ? { keywords } : {}),
     openGraph: {
       title,
       description,

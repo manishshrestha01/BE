@@ -97,6 +97,39 @@ function extractHours(title = "") {
   return match ? match[1] : null;
 }
 
+export function buildSubjectKeywords(semesterId, subjectSlug, subject) {
+  const keywords = [];
+
+  if (subject?.courseCode) keywords.push(subject.courseCode);
+  if (subject?.name) keywords.push(subject.name);
+
+  const chapters = getSubjectChapters(semesterId, subjectSlug);
+  chapters.forEach((chapter) => {
+    keywords.push(chapter.title);
+    (chapter.bullets || [])
+      .slice(0, 4)
+      .forEach((bullet) => keywords.push(bullet));
+  });
+
+  const seen = new Set();
+  const compact = subject?.courseCode
+    ? subject.courseCode.replace(/\s+/g, "")
+    : null;
+  if (compact) keywords.push(compact);
+
+  const unique = keywords
+    .map((k) => (k || "").trim())
+    .filter(Boolean)
+    .filter((k) => {
+      const lower = k.toLowerCase();
+      if (seen.has(lower)) return false;
+      seen.add(lower);
+      return true;
+    });
+
+  return unique.slice(0, 25);
+}
+
 export function getChapterBySlug(semesterId, subjectSlug, chapterSlug) {
   const chapters = getSubjectChapters(semesterId, subjectSlug);
   return chapters.find((chapter) => chapter.slug === chapterSlug) || null;
