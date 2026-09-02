@@ -119,13 +119,13 @@
   }
 }
 
-/* Mobile portrait: iPhone-style grid layout */
+/* Mobile portrait: iPhone-style grid layout (4 across, top of screen) */
 @media (max-width: 480px) and (orientation: portrait) {
   .desktop-shortcuts {
     position: fixed;
-    top: auto;
+    top: max(12px, env(safe-area-inset-top));
     right: auto;
-    bottom: max(80px, calc(env(safe-area-inset-bottom) + 72px));
+    bottom: auto;
     left: 50%;
     transform: translateX(-50%);
     display: grid;
@@ -135,6 +135,7 @@
     width: max(280px, calc(100vw - 40px));
     justify-items: center;
     align-items: start;
+    pointer-events: auto;
   }
 
   .desktop-shortcut {
@@ -266,8 +267,8 @@
 @media (max-width: 480px) and (orientation: portrait) {
   .desktop-tips-shortcut {
     top: max(8px, env(safe-area-inset-top));
-    left: 50%;
-    transform: translateX(-50%);
+    left: max(8px, env(safe-area-inset-left));
+    transform: none;
     width: 64px;
     padding: 3px 6px;
     gap: 4px;
@@ -664,15 +665,23 @@
   }
 
   .desktop-shortcuts {
-    top: max(66px, calc(env(safe-area-inset-top) + 58px));
-    right: max(4px, env(safe-area-inset-right));
-    bottom: max(84px, calc(env(safe-area-inset-bottom) + 74px));
-    gap: 6px;
-    justify-content: space-between;
+    position: fixed;
+    top: max(10px, env(safe-area-inset-top));
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    row-gap: 14px;
+    column-gap: 20px;
+    width: max(264px, calc(100vw - 32px));
+    justify-items: center;
+    align-items: start;
   }
 
   .desktop-shortcut {
-    width: 56px;
+    width: auto;
     padding: 2px;
     gap: 2px;
   }
