@@ -22,11 +22,12 @@ export async function generateMetadata({ params }) {
   if (!chapter) return {}
 
   const topicPreview = chapter.bullets.slice(0, 3).join(', ')
-  const description = `${subject.name} Chapter ${chapter.number} — ${chapter.title}: PU ${semester.semester} ${subject.name} notes. Syllabus topics: ${topicPreview}. ` +
+  const courseLabel = subject.courseCode ? `${subject.name} (${subject.courseCode})` : subject.name
+  const description = `${courseLabel} Chapter ${chapter.number} — ${chapter.title}: PU ${semester.semester} ${subject.name} notes. Syllabus topics: ${topicPreview}. ` +
     `Study ${chapter.title} inside the StudyMate dashboard with notes and past papers.`
 
   return buildMetadata({
-    title: `${subject.name} Chapter ${chapter.number}: ${chapter.title} Notes - PU Semester ${semester.semester} Computer Engineering`,
+    title: `${subject.name}${subject.courseCode ? ` (${subject.courseCode})` : ''} Chapter ${chapter.number}: ${chapter.title} Notes - PU Semester ${semester.semester} Computer Engineering`,
     description,
     canonicalPath: chapter.urlPath,
     type: 'article',
