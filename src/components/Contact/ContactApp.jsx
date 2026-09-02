@@ -244,7 +244,7 @@ export default function ContactApp ({ onClose }) {
                   className="contact-textarea"
                   value={message}
                   onChange={e => setMessage(e.target.value)}
-                  placeholder="Write your message..."
+                  placeholder="Write your message to send notes, question papers, or report a problem or bug with the website."
                   aria-label="Message"
                   aria-required={true}
                 />
