@@ -382,8 +382,9 @@ const Landing = () => {
             </p>
             <p className="about-text">
               Our materials are carefully organized by semester and subject, making it easy to find 
-              exactly what you're looking for. StudyMate 2.0 adds a personalized Dashboard with 14 
-              built-in wallpapers, custom uploads, and a polished window experience.
+              exactly what you're looking for. StudyMate 2.1 ships a King of Night wallpaper as the
+              default, snappier Wallpaper settings with lightweight video previews, and a personalized
+              Dashboard with built-in wallpapers, custom uploads, and a polished window experience.
             </p>
             <div className="about-features">
               <div className="about-feature">

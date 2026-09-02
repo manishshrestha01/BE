@@ -966,7 +966,11 @@ const backgrounds = [
 
 export const BackgroundProvider = ({ children }) => {
   const { resolvedTheme } = useTheme()
-  const defaultBg = backgrounds.find(bg => bg.id === 'anime-lycoris') || backgrounds[0]
+  // Rollout default: King of Night applies once for every user who hasn't
+  // explicitly chosen a wallpaper after this deploy (guarded by the
+  // "customized" flag set in changeBackground).
+  const DEFAULT_BG_ID = '4c39d64d-5f33-4989-963e-dde95c6c3879' // King of Night
+  const defaultBg = backgrounds.find(bg => bg.id === DEFAULT_BG_ID) || backgrounds[0]
   const [currentBg, setCurrentBg] = useState(defaultBg)
   const [customBg, setCustomBg] = useState(null)
 
@@ -988,7 +992,21 @@ export const BackgroundProvider = ({ children }) => {
           return
         }
 
+        const customized = localStorage.getItem('notesAppBackgroundCustomized')
         const saved = localStorage.getItem('notesAppBackground')
+
+        if (!customized) {
+          // First run after the King of Night rollout (or user never chose
+          // one): force the new default once, then persist it so it sticks.
+          setCurrentBg(defaultBg)
+          try {
+            localStorage.setItem('notesAppBackground', defaultBg.id)
+            localStorage.setItem('notesAppBackgroundCustomized', '1')
+          } catch { /* ignore */ }
+          return
+        }
+
+        // User has customized after rollout → honor their stored choice.
         const found = saved ? backgrounds.find(bg => bg.id === saved) : undefined
         if (found) setCurrentBg(found)
       } catch {
@@ -1004,6 +1022,10 @@ export const BackgroundProvider = ({ children }) => {
     const found = backgrounds.find(bg => bg.id === bgId)
     if (found) {
       setCurrentBg(found)
+      try {
+        // User explicitly chose this wallpaper → respect it from now on.
+        localStorage.setItem('notesAppBackgroundCustomized', '1')
+      } catch { /* ignore */ }
       // clearing any custom background when user selects a built-in
       setCustomBg(prev => {
         try {
@@ -1035,6 +1057,7 @@ export const BackgroundProvider = ({ children }) => {
     if (typeof url === 'string' && !url.startsWith('blob:')) {
       try {
         localStorage.setItem('notesAppCustomBackground', url)
+        localStorage.setItem('notesAppBackgroundCustomized', '1')
       } catch (err) {
         // localStorage may fail on some browsers for large images; ignore
         console.warn('Failed to persist custom background', err)

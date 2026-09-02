@@ -157,10 +157,10 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
     { id: 'q2', question: 'How do I update my profile?', answer: 'Go to Settings → Profile. Update your full name, semester, and college, then click Save.' },
     { id: 'q3', question: 'How do I sign out?', answer: 'Open Settings → Profile → Account and click Sign Out, or use the Sign Out row in mobile Settings.' },
     { id: 'q4', question: 'Can I upload my own background image?', answer: 'Yes — use the Wallpaper section to upload or drag & drop an image. Custom images do not auto-switch with appearance.' },
-    { id: 'q5', question: 'Where can I find the app version?', answer: 'Open Settings → About to see the current version (now 2.0.0).' },
+    { id: 'q5', question: 'Where can I find the app version?', answer: 'Open Settings → About to see the current version (now 2.1.0).' },
     { id: 'q6', question: 'What is the Dashboard?', answer: 'The Dashboard is the main hub of StudyMate — it surfaces curated semester-wise resources, featured notes, and quick links (Draw, Contact, and other apps) so you can quickly find study materials.' },
     { id: 'q7', question: 'How can I upload notes or report bugs?', answer: 'Use the Contact app (accessible from the Dashboard) to upload study materials. If you need to report bugs, request features, or share files directly, use the Contact app — attach screenshots or files (common formats supported) and send a message. Contact attachments are limited to ~25 MB per file.' },
-    { id: 'q8', question: "What's new in version 2.0?", answer: 'Version 2.0 adds 13 built-in wallpapers with light/dark pairs, 5 live animated wallpapers (4 CSS gradients + Big Sur video), polished window controls across Finder, Draw, Settings, and Contact, plus refreshed About and FAQ sections.' },
+    { id: 'q8', question: "What's new in version 2.1?", answer: 'Version 2.1 ships a new King of Night wallpaper as the default for every user, adds lighter video-preview thumbnails so the Wallpaper settings feel instant, removes a couple of redundant anime wallpapers, and carries over all the classic wallpapers and window polish from 2.0.' },
     { id: 'q9', question: 'How do I switch between light and dark mode?', answer: 'Open Settings → Appearance. Pick Dark, Light, or Auto (System) to follow your device preference. Your wallpaper automatically switches to match.' }
   ]
 
@@ -616,9 +616,9 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                           />
                         </div>
                         <h4>StudyMate</h4>
-                        <p className="about-version">Version 2.0.0</p>
+                        <p className="about-version">Version 2.1.0</p>
                         <div className="about-details">
-                          <p>StudyMate 2.0 — your study companion with organized notes, past papers, and semester-wise resources for PU Computer Engineering students.</p>
+                          <p>StudyMate 2.1 — your study companion with organized notes, past papers, and semester-wise resources for PU Computer Engineering students.</p>
                           <p>Personalize your dashboard with 14 built-in wallpapers, custom uploads, and a polished window experience.</p>
                         </div>
                       </div>
@@ -876,9 +876,9 @@ const Settings = ({ onClose, initialSection = 'profile' }) => {
                   />
                 </div>
                 <h4>StudyMate</h4>
-                <p className="about-version">Version 2.0.0</p>
+                <p className="about-version">Version 2.1.0</p>
                 <div className="about-details">
-                  <p>StudyMate 2.0 — your study companion with organized notes, past papers, and semester-wise resources for PU Computer Engineering students.</p>
+                  <p>StudyMate 2.1 — your study companion with organized notes, past papers, and semester-wise resources for PU Computer Engineering students.</p>
                   <p>Personalize your dashboard with 14 built-in wallpapers, custom uploads, and a polished window experience.</p>
                 </div>
                 <div className="about-credits">

@@ -12,15 +12,16 @@ const AboutPage = () => {
           <h1 className="terms-title">About StudyMate</h1>
           <p className="terms-subtitle">
             StudyMate is a student-focused learning platform for Pokhara University BE Computer Engineering.
-            Current version: 2.0.0.
+            Current version: 2.1.0.
           </p>
           <p className="legal-meta">Last updated: August 2026</p>
 
           <p>
             StudyMate organizes semester-wise study materials, subject guides, and quick references so
-            students can find resources without searching across multiple sources. Version 2.0 adds a
-            personalized Dashboard with 14 built-in wallpapers, custom wallpaper uploads, and a polished
-            window experience.
+            students can find resources without searching across multiple sources. Version 2.1 sets a
+            fresh King of Night wallpaper as the default for every user, makes the Wallpaper settings
+            snappier with lightweight video previews, and keeps the personalized Dashboard with its
+            built-in wallpapers, custom uploads, and polished window experience.
           </p>
 
           <h2>What we provide</h2>

@@ -28,8 +28,8 @@ const FAQ = () => {
       answer: 'Yes! StudyMate is completely free for all students. We believe education resources should be accessible to everyone.'
     },
     {
-      question: "What's new in version 2.0?",
-      answer: 'StudyMate 2.0 brings 14 built-in wallpapers, custom wallpaper uploads, and a polished window experience across the Dashboard. You also get refreshed About and FAQ pages so it\'s easier to get help.'
+      question: "What's new in version 2.1?",
+      answer: 'StudyMate 2.1 sets a fresh King of Night wallpaper as the default for everyone, makes the Wallpaper settings snappier with lightweight video previews, and keeps all the built-in wallpapers, custom uploads, and window polish from 2.0.'
     },
     {
       question: 'Can I access the syllabus for each subject?',
