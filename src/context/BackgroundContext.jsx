@@ -183,26 +183,6 @@ const backgrounds = [
     thumbnail: 'https://cdn.wallper.app/wallper-user-generated/79145d59-7c10-476b-87a4-4ad089e1b60b.mp4#t=0.1'
   },
   {
-    id: '6de008c1-5b79-4a02-a38e-12450a2e95b8',
-    name: 'Anime Girl 2',
-    type: 'video',
-    category: 'anime',
-    live: true,
-    light: 'https://cdn.wallper.app/wallper-user-generated/6de008c1-5b79-4a02-a38e-12450a2e95b8.mp4',
-    dark: 'https://cdn.wallper.app/wallper-user-generated/6de008c1-5b79-4a02-a38e-12450a2e95b8.mp4',
-    thumbnail: 'https://cdn.wallper.app/wallper-user-generated/6de008c1-5b79-4a02-a38e-12450a2e95b8.mp4#t=0.1'
-  },
-  {
-    id: '57007B18-A28F-419F-BBF3-3D9ADC89D32A',
-    name: 'Anime Goth Girl',
-    type: 'video',
-    category: 'anime',
-    live: true,
-    light: 'https://cdn.wallper.app/wallper-user-generated/57007B18-A28F-419F-BBF3-3D9ADC89D32A.mp4',
-    dark: 'https://cdn.wallper.app/wallper-user-generated/57007B18-A28F-419F-BBF3-3D9ADC89D32A.mp4',
-    thumbnail: 'https://cdn.wallper.app/wallper-user-generated/57007B18-A28F-419F-BBF3-3D9ADC89D32A.mp4#t=0.1'
-  },
-  {
     id: '87e0fbf7-8a1d-4345-a194-1152f34065b9',
     name: 'Anime Girl Eyes Rose Bloom',
     type: 'video',
