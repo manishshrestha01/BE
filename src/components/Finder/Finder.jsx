@@ -13,7 +13,7 @@ import useFolderColors from '../../hooks/useFolderColors'
 import FolderIcon from '../FolderIcon'
 import { toggleFavorite, getUserFavorites, getUserRecents, upsertRecentTab, removeFavorite } from '../../lib/database'
 import { COLLEGES } from '../../lib/colleges'
-import { folderNameToSlug, fileToSlug } from '../../lib/subjectMap'
+import { folderNameToSlug } from '../../lib/subjectMap'
 import './Finder.css'
 
 // File type icons - returns emoji or JSX for custom icons
@@ -51,7 +51,7 @@ const getColorFromMap = (colorMap, normalizedColorMap, candidate) => {
   )
 }
 
-const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null, initialFileSlug = null }) => {
+const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null }) => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const {
@@ -75,7 +75,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null, initia
   const [activeTab, setActiveTab] = useState('all')
   const [favorites, setFavorites] = useState([])
   const [recents, setRecents] = useState([])
-  const [openFileSlug, setOpenFileSlug] = useState(null)
   const longPressTimeoutRef = useRef(null)
   const longPressActiveRef = useRef(false)
   const longPressStartPos = useRef({ x: 0, y: 0 })
@@ -126,10 +125,10 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null, initia
     }
   }, [])
 
-  // Sync URL params as user navigates folders (and opens files) inside Finder.
+  // Sync URL params as user navigates folders inside Finder.
   // We keep the legacy ?college&?semester&?subject params for old shared links,
   // and ALSO encode the full breadcrumb chain into ?path= so every subfolder is
-  // deep-linkable. Opened files are appended as ?file=<name-slug>.<type-marker>.
+  // deep-linkable.
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString())
     let dirty = false
@@ -196,16 +195,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null, initia
       }
     }
 
-    // --- Opened file param (only meaningful when inside a folder).
-    if (openFileSlug && folderPath.length > 1) {
-      if (params.get('file') !== openFileSlug) {
-        params.set('file', openFileSlug)
-        dirty = true
-      }
-    } else if (params.has('file')) {
-      params.delete('file')
-      dirty = true
-    }
+    // --- Opened file param removed (file deep-linking removed).
 
     if (!dirty) return
 
@@ -213,7 +203,7 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null, initia
     if (searchParams.toString() !== newSearch) {
       router.replace(`/dashboard${newSearch}`)
     }
-  }, [folderPath, searchParams, openFileSlug])
+  }, [folderPath, searchParams])
 
   // Derive displayed items from the active tab
   const displayedItems = useMemo(() => {
@@ -271,26 +261,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null, initia
       Promise.resolve().then(fetchFavoritesAndRecents)
     }
   }, [user?.id])
-
-  // Auto-open a file deep-linked via ?file=<name-slug>.<type-marker> once its
-  // folder contents have loaded. Matches by slugified name.
-  useEffect(() => {
-    if (!initialFileSlug || loading || items.length === 0) return
-    const match = items.find(item => {
-      if ((item.type || item.item_type) === 'folder') return false
-      const slug = fileToSlug(item.name || item.item_name, item.fileType || item.file_type)
-      return slug === initialFileSlug
-    })
-    if (match) {
-      const itemWithUrl = {
-        ...match,
-        name: match.name || match.item_name,
-        fileType: match.fileType || match.file_type || match.item_type,
-        url: match.url || getFileUrl(match),
-      }
-      onQuickLook?.(itemWithUrl)
-    }
-  }, [initialFileSlug, loading, items, onQuickLook, getFileUrl])
 
   const showToast = (msg, type = 'default') => {
     const opts = { showTimestamp: false, spring: false, timing: { displayDuration: 1600 } }
@@ -462,7 +432,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null, initia
     }
     setSelectedItem(item.id)
     if ((item.type || item.item_type) !== 'folder') {
-      setOpenFileSlug(fileToSlug(item.name || item.item_name, item.fileType || item.file_type))
       onFileSelect?.(item)
     }
   }
@@ -520,7 +489,6 @@ const Finder = ({ onFileSelect, onQuickLook, onClose, initialPath = null, initia
         fileType: itemToProcess.fileType || item.fileType || item.file_type,
         url: itemToProcess.url || getFileUrl(itemToProcess) 
       }
-      setOpenFileSlug(fileToSlug(itemWithUrl.name, itemWithUrl.fileType))
       onQuickLook?.(itemWithUrl)
     }
   }
