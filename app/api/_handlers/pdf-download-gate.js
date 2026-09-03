@@ -10,6 +10,7 @@ import {
   sendJson,
   sendMethodNotAllowed,
 } from './_lib/http.js'
+import { rateLimitClientIp } from './_lib/rate-limit.js'
 
 function readProvidedAdminToken(req) {
   const directHeaders = [
@@ -51,6 +52,13 @@ function parsePdfDownloadEnabledFromBody(body, currentState) {
 export default async function handler(req, res) {
   if (req.method !== 'GET' && req.method !== 'POST') {
     sendMethodNotAllowed(res, ['GET', 'POST'])
+    return
+  }
+
+  const limiter = rateLimitClientIp(req, { keyPrefix: 'pdg', limit: 30 })
+  if (!limiter.ok) {
+    res.setHeader('retry-after', String(limiter.retryAfterSeconds))
+    sendJson(res, 429, { error: 'Too Many Requests' })
     return
   }
 
