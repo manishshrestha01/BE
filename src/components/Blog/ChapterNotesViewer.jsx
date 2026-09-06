@@ -10,6 +10,7 @@ import {
   FolderOpen,
 } from "lucide-react";
 import { getFeaturedNoteForSubject, getNoteFolderForSubject, getNoteChapterConfig } from "../../lib/chapterNotesConfig";
+import PdfPageReader from "./PdfPageReader";
 
 const FILE_TYPE_LABELS = {
   pdf: "PDF",
@@ -35,11 +36,6 @@ function formatSize(bytes = 0) {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-function getViewerUrl(url) {
-  // View-only PDF.js embed — toolbar hidden, no download affordance.
-  return `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(url)}#toolbar=0&navpanes=0&scrollbar=1`;
 }
 
 const NotesList = ({ files, featuredName, chapterActive, onOpen }) => {
@@ -100,7 +96,7 @@ const NotesList = ({ files, featuredName, chapterActive, onOpen }) => {
   );
 };
 
-const AutoRenderedViewer = ({ active, subjectName, file }) => (
+const AutoRenderedViewer = ({ active, subjectName, file, onClose }) => (
   <div className="chapter-notes-embedded">
     <div className="chapter-notes-embedded-head">
       <span className="chapter-notes-viewer-title" title={file?.name}>
@@ -117,12 +113,7 @@ const AutoRenderedViewer = ({ active, subjectName, file }) => (
       </a>
     </div>
     {active?.type === "pdf" ? (
-      <iframe
-        src={getViewerUrl(active.url)}
-        title={file?.name || subjectName}
-        className="chapter-notes-pdf-frame chapter-notes-embedded-frame"
-        sandbox="allow-scripts allow-same-origin"
-      />
+      <PdfPageReader url={active.url} fileName={file?.name || subjectName} onClose={onClose} />
     ) : (
       // eslint-disable-next-line @next/next/no-img-element
       <img src={active.url} alt={file?.name || subjectName} className="chapter-notes-image-viewer" />
@@ -252,7 +243,12 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
       )}
 
       {!loading && !error && inlineActive && autoFile && (
-        <AutoRenderedViewer active={active} subjectName={subjectName} file={autoFile} />
+        <AutoRenderedViewer
+          active={active}
+          subjectName={subjectName}
+          file={autoFile}
+          onClose={() => setActive(null)}
+        />
       )}
 
       {!loading && !error && active && !inlineActive && (
@@ -271,12 +267,7 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
             </div>
             <div className="chapter-notes-viewer-body">
               {active.type === "pdf" ? (
-                <iframe
-                  src={getViewerUrl(active.url)}
-                  title={active.name}
-                  className="chapter-notes-pdf-frame"
-                  sandbox="allow-scripts allow-same-origin"
-                />
+                <PdfPageReader url={active.url} fileName={active.name} onClose={() => setActive(null)} />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={active.url} alt={active.name} className="chapter-notes-image-viewer" />

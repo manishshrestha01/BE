@@ -1535,12 +1535,6 @@
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
-.chapter-notes-embedded-frame {
-  height: min(70vh, 640px);
-  width: 100%;
-  border: 0;
-  display: block;
-}
 .chapter-notes {
   margin-bottom: 24px;
 }
@@ -1686,13 +1680,7 @@
 .chapter-notes-viewer-body {
   flex: 1;
   min-height: 0;
-}
-
-.chapter-notes-pdf-frame {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
+  background: #e8eaf0;
 }
 
 .chapter-notes-image-viewer {
@@ -1705,4 +1693,157 @@
 
 [data-theme="dark"] .chapter-notes-file-icon {
   color: rgba(255,255,255,0.55);
+}
+
+/* ── Studocu-style page-image PDF reader ── */
+.studocu-reader {
+  display: flex;
+  flex-direction: column;
+  background: #e8eaf0;
+  border-top: 1px solid var(--blog-border);
+}
+
+[data-theme="dark"] .studocu-reader {
+  background: #131419;
+}
+
+.studocu-reader-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #fff;
+  border-bottom: 1px solid var(--blog-border);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+[data-theme="dark"] .studocu-reader-toolbar {
+  background: #1d1f27;
+  border-color: rgba(255,255,255,0.08);
+}
+
+.studocu-reader-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studocu-reader-title .studocu-reader-pages {
+  color: var(--text-secondary);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.studocu-reader-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.studocu-reader-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--blog-border);
+  border-radius: 7px;
+  background: var(--landing-bg, #fff);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.studocu-reader-controls button:hover {
+  background: var(--landing-gray-200, #eef1f6);
+}
+
+.studocu-reader-zoom-pct {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  min-width: 42px;
+  text-align: center;
+}
+
+.studocu-reader-close-btn {
+  margin-left: 6px;
+}
+
+.studocu-reader-body {
+  overflow-y: auto;
+  max-height: min(70vh, 680px);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(120,130,160,0.06), transparent 40%),
+    #e8eaf0;
+  padding: 24px 12px;
+}
+
+[data-theme="dark"] .studocu-reader-body {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(120,130,160,0.08), transparent 40%),
+    #131419;
+}
+
+.studocu-reader-page-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  transform: scale(var(--stage-zoom, 1));
+  transform-origin: top center;
+  transition: transform 0.15s ease;
+}
+
+.studocu-reader-page-card {
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(30, 35, 60, 0.18), 0 1px 2px rgba(30, 35, 60, 0.1);
+  padding: 6px;
+}
+
+[data-theme="dark"] .studocu-reader-page-card {
+  background: #fff;
+}
+
+.studocu-reader-canvas {
+  display: block;
+  border-radius: 4px;
+  max-width: 100%;
+  height: auto;
+}
+
+.studocu-reader-page-label {
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.studocu-reader-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 48px 0;
+  color: var(--text-secondary);
+}
+
+.studocu-reader-error {
+  padding: 48px 20px;
+  text-align: center;
+  color: #b00020;
 }

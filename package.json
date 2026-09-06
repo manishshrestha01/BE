@@ -19,6 +19,7 @@
     "lucide-react": "^0.574.0",
     "motion": "^12.42.2",
     "next": "^16.0.0",
+    "pdfjs-dist": "^6.3.289",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-zoom-pan-pinch": "^3.7.0",
