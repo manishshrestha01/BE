@@ -136,6 +136,7 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
                 semesterId={semesterData.semester}
                 subjectSlug={subjectData.slug}
                 subjectName={subjectLabel}
+                chapterNumber={chapter.number}
               />
               <div className="chapter-notes-dashboard">
                 <p>

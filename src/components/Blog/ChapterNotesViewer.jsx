@@ -9,7 +9,7 @@ import {
   Image as ImageIcon,
   FolderOpen,
 } from "lucide-react";
-import { getFeaturedNoteForSubject, getNoteFolderForSubject } from "../../lib/chapterNotesConfig";
+import { getFeaturedNoteForSubject, getNoteFolderForSubject, getNoteChapterConfig } from "../../lib/chapterNotesConfig";
 
 const FILE_TYPE_LABELS = {
   pdf: "PDF",
@@ -42,13 +42,18 @@ function getViewerUrl(url) {
   return `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(url)}#toolbar=0&navpanes=0&scrollbar=1`;
 }
 
-const NotesList = ({ files, featuredName, onOpen }) => {
+const NotesList = ({ files, featuredName, chapterActive, onOpen }) => {
   const visible = featuredName
     ? files.filter((file) => file.name !== featuredName)
     : files;
 
   if (!visible.length) {
-    return (
+    return chapterActive ? (
+      <p className="chapter-notes-empty">
+        No notes are linked to this chapter yet. Try the StudyMate dashboard to
+        browse the full subject folder.
+      </p>
+    ) : (
       <p className="chapter-notes-empty">
         No notes are published for this subject yet. Check back soon.
       </p>
@@ -57,7 +62,11 @@ const NotesList = ({ files, featuredName, onOpen }) => {
 
   return (
     <>
-      <p className="chapter-notes-subheader">More files for this subject:</p>
+      {chapterActive ? (
+        <p className="chapter-notes-subheader">Notes for this chapter:</p>
+      ) : (
+        <p className="chapter-notes-subheader">More files for this subject:</p>
+      )}
       <ul className="chapter-notes-list">
         {visible.map((file, index) => {
           const type = getFileType(file.name);
@@ -126,7 +135,7 @@ const FeaturedNotesViewer = ({ active, subjectName, file }) => {
   );
 };
 
-const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName }) => {
+const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumber }) => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -134,15 +143,20 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName }) => {
 
   const featuredName = getFeaturedNoteForSubject(subjectSlug);
   const noteFolder = getNoteFolderForSubject(subjectSlug);
+  const chapterConfig = getNoteChapterConfig(subjectSlug);
+  const chapterAllowlist = chapterConfig
+    ? chapterConfig.chapters[chapterNumber] || null
+    : null;
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
 
     const params = new URLSearchParams({ resource: "subject", format: "json" });
     if (noteFolder) {
       // Folder mode: list files directly from the configured subfolder.
       params.set("path", noteFolder);
+    } else if (chapterConfig) {
+      params.set("path", chapterConfig.folder);
     } else {
       params.set("semester", semesterId);
       params.set("subject", subjectSlug);
@@ -155,13 +169,19 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName }) => {
       })
       .then((json) => {
         if (cancelled) return;
-        const list = (json?.files || []).map((file) => ({
+        let list = (json?.files || []).map((file) => ({
           name: file.name,
           path: file.path,
           size: file.size || 0,
           url: file.rawUrl || file.downloadUrl || file.url || "",
           type: getFileType(file.name),
         }));
+
+        // Per-chapter mode: keep only this chapter's linked files.
+        if (chapterAllowlist) {
+          list = list.filter((file) => chapterAllowlist.includes(file.name));
+        }
+
         setFiles(list);
 
         // If this subject has a single master note, auto-render it inline.
@@ -183,7 +203,6 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName }) => {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [semesterId, subjectSlug]);
 
   const open = useCallback((file, type) => {
@@ -261,7 +280,12 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName }) => {
       )}
 
       {!loading && !error && (
-        <NotesList files={files} featuredName={featuredName} onOpen={open} />
+        <NotesList
+          files={files}
+          featuredName={featuredName}
+          chapterActive={Boolean(chapterAllowlist)}
+          onOpen={open}
+        />
       )}
     </section>
   );
