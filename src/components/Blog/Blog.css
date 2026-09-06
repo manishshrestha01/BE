@@ -1500,3 +1500,177 @@
 [data-theme="dark"] .blog-page .subject-cta {
   background: rgba(255,255,255,0.04);
 }
+
+/* ── Public Chapter Notes Viewer (view-only, GeeksforGeeks-style) ── */
+@keyframes chapter-notes-spin {
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: chapter-notes-spin 0.9s linear infinite;
+}
+.chapter-notes {
+  margin-bottom: 24px;
+}
+
+.chapter-notes-loading,
+.chapter-notes-empty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  padding: 8px 0;
+  margin: 0 0 12px;
+}
+
+.chapter-notes-error {
+  color: #b00020;
+  margin: 0 0 12px;
+}
+
+.chapter-notes-list {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.chapter-notes-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--blog-border);
+  border-radius: 10px;
+  background: var(--landing-bg, #fff);
+}
+
+[data-theme="dark"] .chapter-notes-item {
+  background: rgba(255,255,255,0.04);
+}
+
+.chapter-notes-file-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--landing-gray-600, #64748b);
+}
+
+.chapter-notes-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-word;
+  min-width: 0;
+  flex: 1;
+}
+
+.chapter-notes-meta {
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.chapter-notes-open-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+[data-theme="dark"] .chapter-notes-open-btn {
+  background: var(--landing-accent, #2563eb);
+  color: #fff;
+}
+
+.chapter-notes-dashboard {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--blog-border);
+}
+
+.chapter-notes-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(8, 10, 18, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.chapter-notes-viewer-panel {
+  width: min(1100px, 100%);
+  height: min(90vh, 900px);
+  background: #1d1f27;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+}
+
+.chapter-notes-viewer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #15161c;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.chapter-notes-viewer-title {
+  color: #f1f2f6;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chapter-notes-viewer-close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.1);
+  color: #f1f2f6;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.chapter-notes-viewer-close:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.chapter-notes-viewer-body {
+  flex: 1;
+  min-height: 0;
+}
+
+.chapter-notes-pdf-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.chapter-notes-image-viewer {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #14151b;
+}
+
+[data-theme="dark"] .chapter-notes-file-icon {
+  color: rgba(255,255,255,0.55);
+}

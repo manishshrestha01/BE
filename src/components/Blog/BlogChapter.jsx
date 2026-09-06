@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, BookOpen, GraduationCap, FolderOpen, ListChecks 
 import Footer from "../Footer";
 import SiteNav from "../SiteNav";
 import Breadcrumbs from "./Breadcrumbs";
+import ChapterNotesViewer from "./ChapterNotesViewer";
 import { setJSONLD } from "../../lib/seo";
 import { BLOG_BASE_URL, BLOG_LAST_UPDATED, getSubjectBySlug, formatUpdatedDate } from "../../lib/blogCurriculum";
 import { getSubjectArticle } from "../../data/subjectArticles";
@@ -99,7 +100,7 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
               Open in StudyMate Dashboard
             </Link>
             <Link href={subjectData.urlPath} className="blog-btn blog-btn-muted">
-              Full {subjectLabel} Guide
+              Full {subjectLabel} Syllabus
             </Link>
           </div>
         </div>
@@ -131,15 +132,21 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
             </section>
 
             <section className="subject-cta">
-              <h2 className="subject-heading">Get Chapter {chapter.number} Notes in StudyMate Dashboard</h2>
-              <p>
-                Open the StudyMate dashboard to browse semester-wise folders, download the full
-                {chapter.title} notes, and view previous PU past papers for {subjectData.name}.
-              </p>
-              <Link href="/dashboard" className="blog-btn subject-cta-btn">
-                Open StudyMate Dashboard
-                <BookOpen className="subject-nav-icon" aria-hidden="true" />
-              </Link>
+              <ChapterNotesViewer
+                semesterId={semesterData.semester}
+                subjectSlug={subjectData.slug}
+                subjectName={subjectLabel}
+              />
+              <div className="chapter-notes-dashboard">
+                <p>
+                  Want to download these notes or browse past papers? Open the StudyMate
+                  dashboard for the full file browser.
+                </p>
+                <Link href="/dashboard" className="blog-btn subject-cta-btn">
+                  Open StudyMate Dashboard
+                  <FolderOpen className="subject-nav-icon" aria-hidden="true" />
+                </Link>
+              </div>
             </section>
 
             <nav className="subject-nav" aria-label="Chapter navigation">
@@ -162,7 +169,7 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
                 href={subjectData.urlPath}
               >
                 <BookOpen className="subject-nav-icon" aria-hidden="true" />
-                Full {subjectLabel} Guide
+                Full {subjectLabel} Syllabus
               </Link>
 
               {nextChapter ? (
