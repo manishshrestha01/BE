@@ -36,6 +36,7 @@ const PdfPageReader = ({ url, fileName, onClose }) => {
   const [numPages, setNumPages] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [error, setError] = useState(null);
+  const pdfDocRef = useRef(null);
   const stageRef = useRef(null);
   const canvasRefs = useRef([]);
 
@@ -46,7 +47,12 @@ const PdfPageReader = ({ url, fileName, onClose }) => {
     getPdfApi()
       .then(async (pdfjs) => {
         const doc = await pdfjs.getDocument({ url }).promise;
-        if (cancelled) return;
+        if (cancelled) {
+          doc?.destroy?.();
+          return;
+        }
+        pdfDocRef.current?.destroy?.();
+        pdfDocRef.current = doc;
         setPdfDoc(doc);
         setNumPages(doc.numPages);
         canvasRefs.current = Array.from({ length: doc.numPages }, () => null);
@@ -57,7 +63,8 @@ const PdfPageReader = ({ url, fileName, onClose }) => {
 
     return () => {
       cancelled = true;
-      pdfDoc?.destroy?.();
+      pdfDocRef.current?.destroy?.();
+      pdfDocRef.current = null;
       canvasRefs.current = [];
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

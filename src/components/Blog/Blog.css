@@ -1681,6 +1681,18 @@
   flex: 1;
   min-height: 0;
   background: #e8eaf0;
+  display: flex;
+}
+
+/* The study-notes reader fills the modal body (no nested scrollbar). */
+.chapter-notes-viewer-body .studocu-reader {
+  flex: 1;
+  min-height: 0;
+}
+
+.chapter-notes-viewer-body .studocu-reader-body {
+  max-height: none;
+  flex: 1;
 }
 
 .chapter-notes-image-viewer {
