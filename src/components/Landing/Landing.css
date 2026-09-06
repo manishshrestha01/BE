@@ -430,7 +430,8 @@
   color: var(--landing-dark);
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
-  overflow-x: hidden;
+  /* `clip` (not `hidden`) so fixed navbar backdrop-filter keeps working on Safari */
+  overflow-x: clip;
 }
 
 /* ==================== NAVIGATION ==================== */
@@ -2216,10 +2217,11 @@
 .footer::before { background: var(--landing-dark); }
 .app-download-banner::before { background: var(--landing-dark); }
 
-/* Prevent tiny horizontal gaps caused by subpixel rounding on some browsers */
+/* Prevent tiny horizontal gaps caused by subpixel rounding on some browsers.
+   `clip` (not `hidden`) so the fixed navbar's backdrop-filter isn't disabled. */
 @media (min-width: 0px) {
   html, body, #root {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 }
 
