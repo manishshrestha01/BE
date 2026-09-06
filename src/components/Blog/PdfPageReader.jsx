@@ -14,10 +14,9 @@ function getPdfApi() {
 }
 
 // Render a single PDF page into an offscreen canvas for one of our on-page canvases.
-async function renderPageIntoCanvas(pdfjs, pdfDoc, pageNo, canvas) {
+async function renderPageIntoCanvas(pdfjs, pdfDoc, pageNo, canvas, cssWidth) {
   const page = await pdfDoc.getPage(pageNo);
   const baseViewport = page.getViewport({ scale: 1 });
-  const cssWidth = 900;
   const scale = cssWidth / baseViewport.width;
   const viewport = page.getViewport({ scale });
   const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -37,10 +36,27 @@ const PdfPageReader = ({ url, fileName, onClose, embedded = false }) => {
   const [zoom, setZoom] = useState(1);
   const [error, setError] = useState(null);
   const [isFullscreen, setFullscreen] = useState(false);
+  const [displayWidth, setDisplayWidth] = useState(900);
   const pdfDocRef = useRef(null);
   const stageRef = useRef(null);
+  const bodyRef = useRef(null);
   const canvasRefs = useRef([]);
   const rootRef = useRef(null);
+
+  // Fit the pages to the reader width (desktop caps at 900px, mobile shrinks
+  // to the viewport) and re-render on resize/rotation.
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return undefined;
+    const updateWidth = () => {
+      const width = Math.max(280, Math.min(900, el.clientWidth - 8));
+      setDisplayWidth(width);
+    };
+    updateWidth();
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const toggleFullscreen = useCallback(async () => {
     const el = rootRef.current;
@@ -91,7 +107,7 @@ const PdfPageReader = ({ url, fileName, onClose, embedded = false }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
 
-  // Render all pages once the doc is ready.
+  // Render all pages once the doc is ready (re-renders at the fitted width).
   useEffect(() => {
     if (!pdfDoc) return;
     let cancelled = false;
@@ -104,7 +120,7 @@ const PdfPageReader = ({ url, fileName, onClose, embedded = false }) => {
         const canvas = canvasRefs.current[i - 1];
         if (!canvas) continue;
         try {
-          await renderPageIntoCanvas(pdfjs, pdfDoc, i, canvas);
+          await renderPageIntoCanvas(pdfjs, pdfDoc, i, canvas, displayWidth);
         } catch {
           // Ignore per-page failures; keep the rest readable.
         }
@@ -114,7 +130,7 @@ const PdfPageReader = ({ url, fileName, onClose, embedded = false }) => {
     return () => {
       cancelled = true;
     };
-  }, [pdfDoc]);
+  }, [pdfDoc, displayWidth]);
 
   const fullscreenLabel = isFullscreen ? "Exit full screen" : "View in full screen";
 
@@ -147,7 +163,7 @@ const PdfPageReader = ({ url, fileName, onClose, embedded = false }) => {
         </div>
       )}
 
-      <div className="studocu-reader-body">
+      <div className="studocu-reader-body" ref={bodyRef}>
         {error && (
           <div className="studocu-reader-error">
             <strong>Could not render the note:</strong> {error}
