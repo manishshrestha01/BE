@@ -1,7 +1,7 @@
 'use client'
 import { useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, BookOpen, GraduationCap } from "lucide-react";
+import { ArrowLeft, ArrowRight, GraduationCap } from "lucide-react";
 
 import Footer from "../Footer";
 import SiteNav from "../SiteNav";
@@ -120,14 +120,6 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
                   Start of {subjectData.name}
                 </span>
               )}
-
-              <Link
-                className="blog-btn subject-nav-btn subject-nav-center"
-                href={subjectData.urlPath}
-              >
-                <BookOpen className="subject-nav-icon" aria-hidden="true" />
-                Full {subjectLabel} Syllabus
-              </Link>
 
               {nextChapter ? (
                 <Link className="blog-btn subject-nav-btn" href={nextChapter.urlPath}>

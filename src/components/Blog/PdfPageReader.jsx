@@ -1,6 +1,6 @@
 'use client'
-import { useEffect, useRef, useState } from "react";
-import { Loader2, X, ZoomIn, ZoomOut, FileText } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Loader2, X, ZoomIn, ZoomOut, FileText, Maximize, Minimize } from "lucide-react";
 
 const PDF_WORKER_SRC = "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.worker.min.mjs";
 
@@ -36,9 +36,30 @@ const PdfPageReader = ({ url, fileName, onClose, embedded = false }) => {
   const [numPages, setNumPages] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [error, setError] = useState(null);
+  const [isFullscreen, setFullscreen] = useState(false);
   const pdfDocRef = useRef(null);
   const stageRef = useRef(null);
   const canvasRefs = useRef([]);
+  const rootRef = useRef(null);
+
+  const toggleFullscreen = useCallback(async () => {
+    const el = rootRef.current;
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else if (el?.requestFullscreen) {
+        await el.requestFullscreen();
+      }
+    } catch {
+      // Fullscreen can be rejected by the browser; ignore.
+    }
+  }, []);
+
+  useEffect(() => {
+    const onChange = () => setFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, []);
 
   // Load the document once per URL.
   useEffect(() => {
@@ -95,8 +116,10 @@ const PdfPageReader = ({ url, fileName, onClose, embedded = false }) => {
     };
   }, [pdfDoc]);
 
+  const fullscreenLabel = isFullscreen ? "Exit full screen" : "View in full screen";
+
   return (
-    <div className={`studocu-reader${embedded ? " studocu-reader--embedded" : ""}`} style={{ ["--reader-zoom" ]: zoom }}>
+    <div className={`studocu-reader${embedded ? " studocu-reader--embedded" : ""}`} style={{ ["--reader-zoom" ]: zoom }} ref={rootRef}>
       {!embedded && (
         <div className="studocu-reader-toolbar">
           <div className="studocu-reader-title">
@@ -112,6 +135,9 @@ const PdfPageReader = ({ url, fileName, onClose, embedded = false }) => {
               <ZoomOut size={16} aria-hidden="true" />
             </button>
             <span className="studocu-reader-zoom-pct">{Math.round(zoom * 100)}%</span>
+            <button type="button" className="studocu-reader-fullscreen-btn" onClick={toggleFullscreen} aria-label={fullscreenLabel}>
+              {isFullscreen ? <Minimize size={16} aria-hidden="true" /> : <Maximize size={16} aria-hidden="true" />}
+            </button>
             {onClose ? (
               <button type="button" className="studocu-reader-close-btn" onClick={onClose} aria-label="Close notes reader">
                 <X size={16} aria-hidden="true" />
@@ -149,6 +175,17 @@ const PdfPageReader = ({ url, fileName, onClose, embedded = false }) => {
           ))}
         </div>
       </div>
+
+      {embedded && !error && (
+        <button
+          type="button"
+          className="studocu-reader-fullscreen-btn studocu-reader-fullscreen-btn--float"
+          onClick={toggleFullscreen}
+          aria-label={fullscreenLabel}
+        >
+          {isFullscreen ? <Minimize size={18} aria-hidden="true" /> : <Maximize size={18} aria-hidden="true" />}
+        </button>
+      )}
     </div>
   );
 };
