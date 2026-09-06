@@ -130,41 +130,6 @@ const AutoRenderedViewer = ({ active, subjectName, file }) => (
   </div>
 );
 
-const FeaturedNotesViewer = ({ active, subjectName, file }) => {
-  const isPdf = active?.type === "pdf";
-  const isImg = active?.type === "img";
-
-  return (
-    <div className="chapter-notes-embedded">
-      <div className="chapter-notes-embedded-head">
-        <span className="chapter-notes-viewer-title" title={file?.name}>
-          {file?.name || subjectName}
-        </span>
-        <a
-          href="/dashboard"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="blog-btn chapter-notes-open-btn"
-        >
-          <FolderOpen size={14} aria-hidden="true" />
-          Open in Dashboard
-        </a>
-      </div>
-      {isPdf ? (
-        <iframe
-          src={getViewerUrl(active.url)}
-          title={file?.name || subjectName}
-          className="chapter-notes-pdf-frame chapter-notes-embedded-frame"
-          sandbox="allow-scripts allow-same-origin"
-        />
-      ) : isImg ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={active.url} alt={file?.name || subjectName} className="chapter-notes-image-viewer" />
-      ) : null}
-    </div>
-  );
-};
-
 const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumber }) => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -214,12 +179,16 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
 
         setFiles(list);
 
-        // If this subject has a single master note, auto-render it inline.
-        if (featuredName) {
-          const featured = list.find((file) => file.name === featuredName);
-          if (featured && (featured.type === "pdf" || featured.type === "img")) {
-            setActive(featured);
-          }
+        // Auto-render a single inline note when:
+        //   - this subject has a featured master note, OR
+        //   - this chapter is linked to exactly one file.
+        const autoCandidate =
+          list.find((file) => file.name === featuredName) ||
+          (chapterAllowlist?.length === 1
+            ? list.find((file) => file.name === chapterAllowlist[0])
+            : null);
+        if (autoCandidate && (autoCandidate.type === "pdf" || autoCandidate.type === "img")) {
+          setActive(autoCandidate);
         }
       })
       .catch((err) => {
@@ -246,8 +215,16 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
   const featuredFile = featuredName
     ? files.find((file) => file.name === featuredName)
     : null;
+  const singleChapterFile = chapterAllowlist?.length === 1
+    ? files.find((file) => file.name === chapterAllowlist[0])
+    : null;
 
-  const isFeaturedActive = Boolean(active && featuredFile && active.name === featuredName);
+  const inlineActive =
+    Boolean(active) && (featuredFile && active.name === featuredName || singleChapterFile && active.name === singleChapterFile.name);
+  const autoFile = featuredFile || singleChapterFile || null;
+  const showList =
+    !chapterAllowlist ||          // folder-mode (BEE, others) or no config
+    chapterAllowlist.length > 1;  // multi-file chapters (E.D.C)
 
   return (
     <section className="chapter-notes" id="chapter-notes">
@@ -274,11 +251,11 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
         </p>
       )}
 
-      {!loading && !error && active && featuredFile && isFeaturedActive && (
-        <FeaturedNotesViewer active={active} subjectName={subjectName} file={featuredFile} />
+      {!loading && !error && inlineActive && autoFile && (
+        <AutoRenderedViewer active={active} subjectName={subjectName} file={autoFile} />
       )}
 
-      {!loading && !error && active && !isFeaturedActive && (
+      {!loading && !error && active && !inlineActive && (
         <div className="chapter-notes-viewer-overlay" role="dialog" aria-modal="true" aria-label={`${subjectName} notes viewer`}>
           <div className="chapter-notes-viewer-panel">
             <div className="chapter-notes-viewer-head">
@@ -309,7 +286,7 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
         </div>
       )}
 
-      {!loading && !error && (
+      {!loading && !error && showList && (
         <NotesList
           files={files}
           featuredName={featuredName}
