@@ -95,7 +95,7 @@ const BlogSemester = ({ semesterId }) => {
                     and practice set.
                   </p>
                   <Link href={subject.urlPath} className="blog-btn">
-                    Read Article
+                    Read Notes
                   </Link>
                 </article>
               ))}
