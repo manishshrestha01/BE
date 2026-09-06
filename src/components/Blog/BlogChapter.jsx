@@ -97,6 +97,30 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
       <section className="blog-section">
         <div className="blog-shell chapter-shell">
           <article className="blog-card subject-article chapter-article">
+            {subjectData.slug === "computer-workshop" ? (
+              <section className="chapter-topic-section">
+                <h2 className="subject-heading">
+                  <GraduationCap className="blog-inline-icon" aria-hidden="true" />
+                  {subjectData.name} Chapter {chapter.number} Topics
+                </h2>
+                <p className="chapter-lead">
+                  Everything you need to study {chapter.title} for Pokhara University BE Computer
+                  Engineering Semester {semesterData.semester}. Master these topics, then read the
+                  full notes below.
+                </p>
+
+                {topicCount ? (
+                  <ol className="subject-topic-list">
+                    {chapter.bullets.map((topic, index) => (
+                      <li key={`${chapter.id}-topic-${index}`}>{topic}</li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p className="chapter-lead">No topic breakdown is stored for this chapter yet.</p>
+                )}
+              </section>
+            ) : null}
+
             <section className="chapter-notes-section">
               <ChapterNotesViewer
                 semesterId={semesterData.semester}

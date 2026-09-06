@@ -1,11 +1,8 @@
 import type { MetadataRoute } from 'next'
-
-export const dynamic = 'force-static'
+import { headers } from 'next/headers'
 import { COLLEGES } from '@/lib/colleges'
 import { BLOG_CURRICULUM, BLOG_LAST_UPDATED } from '@/lib/blogCurriculum'
 import { getAllChapterPaths } from '@/lib/subjectChapters'
-
-const SITE_URL = 'https://www.manishshrestha012.com.np'
 
 const makeSlugFromLabel = (label: string): string => {
   const match = label.match(/\(([^)]+)\)/)
@@ -13,7 +10,11 @@ const makeSlugFromLabel = (label: string): string => {
   return label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const h = await headers()
+  const host = h.get('host') || 'www.manishshrestha012.com.np'
+  const SITE_URL = `https://${host}`
+
   const lastModified = new Date(BLOG_LAST_UPDATED)
 
   const staticRoutes: MetadataRoute.Sitemap = [
