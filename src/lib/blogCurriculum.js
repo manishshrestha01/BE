@@ -388,7 +388,7 @@ function makeSemesterPayload(semesterInfo) {
 }
 
 export const BLOG_BASE_URL = BASE_URL;
-export const BLOG_LAST_UPDATED = "2026-02-19";
+export const BLOG_LAST_UPDATED = "2026-09-07";
 export { SUBJECT_ABBREVIATIONS };
 
 export const BLOG_CURRICULUM = CURRICULUM.map(makeSemesterPayload);
