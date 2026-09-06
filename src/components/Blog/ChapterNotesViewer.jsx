@@ -125,9 +125,9 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
     <section className="chapter-notes" id="chapter-notes">
       <h2 className="subject-heading">
         <BookOpen className="blog-inline-icon" aria-hidden="true" />
-        Read {subjectName} Notes
+        Read {subjectName} Syllabus
       </h2>
-      <p className="chapter-lead">Read the full notes for this chapter right here — no login required.</p>
+      <p className="chapter-lead">Read the full syllabus notes for this chapter right here.</p>
 
       {loading && (
         <div className="chapter-notes-loading">

@@ -86,7 +86,7 @@ const BlogHome = () => {
             </div>
             <div className="blog-why-card">
               <span className="blog-why-icon" aria-hidden="true">🔄</span>
-              <h3>Read Notes Online</h3>
+              <h3>Read Syllabus Online</h3>
               <p>Every note opens directly on the page as a clean, scrollable reader — no downloads required.</p>
             </div>
           </div>

@@ -251,7 +251,7 @@ function buildIndexHtml(params) {
   <div class="info-box">
     <strong>How to access notes:</strong> Open the <a href="${BASE_URL}/dashboard">StudyMate Dashboard</a>,
     select your college and semester, then click any file to view or download PDF/PPT notes.
-    All notes are free — no login required to browse.
+    All notes are free.
   </div>
 
   ${collegeInfo ? `<p>Showing notes for: <strong>${collegeInfo.name}</strong> — <a href="${BASE_URL}/college/${college}">College page</a></p>` : ""}
