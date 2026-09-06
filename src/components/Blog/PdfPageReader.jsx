@@ -31,7 +31,7 @@ async function renderPageIntoCanvas(pdfjs, pdfDoc, pageNo, canvas) {
   page.cleanup();
 }
 
-const PdfPageReader = ({ url, fileName, onClose }) => {
+const PdfPageReader = ({ url, fileName, onClose, embedded = false }) => {
   const [pdfDoc, setPdfDoc] = useState(null);
   const [numPages, setNumPages] = useState(0);
   const [zoom, setZoom] = useState(1);
@@ -96,26 +96,30 @@ const PdfPageReader = ({ url, fileName, onClose }) => {
   }, [pdfDoc]);
 
   return (
-    <div className="studocu-reader" style={{ ["--reader-zoom" ]: zoom }}>
-      <div className="studocu-reader-toolbar">
-        <div className="studocu-reader-title">
-          <FileText size={15} aria-hidden="true" />
-          <span>{fileName}</span>
-          {numPages ? <span className="studocu-reader-pages">{numPages} pages</span> : null}
+    <div className={`studocu-reader${embedded ? " studocu-reader--embedded" : ""}`} style={{ ["--reader-zoom" ]: zoom }}>
+      {!embedded && (
+        <div className="studocu-reader-toolbar">
+          <div className="studocu-reader-title">
+            <FileText size={15} aria-hidden="true" />
+            <span>{fileName}</span>
+            {numPages ? <span className="studocu-reader-pages">{numPages} pages</span> : null}
+          </div>
+          <div className="studocu-reader-controls">
+            <button type="button" onClick={() => setZoom((z) => Math.min(2.5, z + 0.15))} aria-label="Zoom in">
+              <ZoomIn size={16} aria-hidden="true" />
+            </button>
+            <button type="button" onClick={() => setZoom((z) => Math.max(0.6, z - 0.15))} aria-label="Zoom out">
+              <ZoomOut size={16} aria-hidden="true" />
+            </button>
+            <span className="studocu-reader-zoom-pct">{Math.round(zoom * 100)}%</span>
+            {onClose ? (
+              <button type="button" className="studocu-reader-close-btn" onClick={onClose} aria-label="Close notes reader">
+                <X size={16} aria-hidden="true" />
+              </button>
+            ) : null}
+          </div>
         </div>
-        <div className="studocu-reader-controls">
-          <button type="button" onClick={() => setZoom((z) => Math.min(2.5, z + 0.15))} aria-label="Zoom in">
-            <ZoomIn size={16} aria-hidden="true" />
-          </button>
-          <button type="button" onClick={() => setZoom((z) => Math.max(0.6, z - 0.15))} aria-label="Zoom out">
-            <ZoomOut size={16} aria-hidden="true" />
-          </button>
-          <span className="studocu-reader-zoom-pct">{Math.round(zoom * 100)}%</span>
-          <button type="button" className="studocu-reader-close-btn" onClick={onClose} aria-label="Close notes reader">
-            <X size={16} aria-hidden="true" />
-          </button>
-        </div>
-      </div>
+      )}
 
       <div className="studocu-reader-body">
         {error && (

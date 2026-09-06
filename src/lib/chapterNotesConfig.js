@@ -1,16 +1,16 @@
 /**
  * Chapter notes data source config.
  *
- * Two modes per subject:
- *   1. `chapterFiles`  — a folder plus a per-chapter allowlist of exact file
- *      names, so each chapter page shows only the notes linked to that chapter
- *      (and auto-renders the note inline when a chapter has a single file).
- *   2. No config      — falls back to the public subject listing endpoint.
+ * Default chapter mapping rule (applies to every subject): the leading number
+ * in a file name is the chapter number — so `1. Introduction.pdf` → chapter 1,
+ * `2.1 PU-BEE.pdf` / `2.2 PU-BEE_all.pdf` / `2.3 …` → chapter 2 and its parts.
+ * Unnumbered files (e.g. `Syllabus.pdf`) are never shown on chapter pages.
  *
- * File/folder names must match the BE-Computer repo exactly (e.g.
- * `Semester 1/E.D.C/ch 2 BJT.pdf`).
+ * `SUBJECT_NOTE_CHAPTER_FILES` overrides that rule for subjects whose notes
+ * don't follow the default (e.g. Programming in C where `9. File Handling.pdf`
+ * belongs to chapter 8, not chapter 9). File/folder names must match the
+ * BE-Computer repo exactly (e.g. `Semester 1/E.D.C/ch 2 BJT.pdf`).
  */
-export const FEATURED_SUBJECT_NOTES = {};
 
 export const SUBJECT_NOTE_CHAPTER_FILES = {
   "calculus-i": {
@@ -65,10 +65,21 @@ export const SUBJECT_NOTE_CHAPTER_FILES = {
   },
 };
 
-export function getFeaturedNoteForSubject(subjectSlug) {
-  return FEATURED_SUBJECT_NOTES[subjectSlug] || null;
-}
-
 export function getNoteChapterConfig(subjectSlug) {
   return SUBJECT_NOTE_CHAPTER_FILES[subjectSlug] || null;
+}
+
+/**
+ * The leading number in a file name is its chapter number, supporting parts:
+ *   "1. Introduction.pdf"                → 1
+ *   "2.1 PU-BEE.pdf", "2.2 …", "2.3 …"   → 2
+ *   "9. File Handling.pdf"               → 9
+ * Unnumbered names (e.g. "Syllabus.pdf") → null (never shown on a chapter).
+ */
+export function getChapterNumberFromFileName(name = "") {
+  const base = String(name)
+    .replace(/\.[a-z0-9]+$/i, "")
+    .trim();
+  const match = base.match(/^(\d+)/);
+  return match ? Number(match[1]) : null;
 }

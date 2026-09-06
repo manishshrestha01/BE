@@ -1,14 +1,7 @@
 'use client'
-import { useCallback, useEffect, useState } from "react";
-import {
-  FileText,
-  BookOpen,
-  Eye,
-  X,
-  Loader2,
-  Image as ImageIcon,
-} from "lucide-react";
-import { getFeaturedNoteForSubject, getNoteChapterConfig } from "../../lib/chapterNotesConfig";
+import { useEffect, useState } from "react";
+import { BookOpen, FileText, Loader2, Image as ImageIcon } from "lucide-react";
+import { getNoteChapterConfig, getChapterNumberFromFileName } from "../../lib/chapterNotesConfig";
 import PdfPageReader from "./PdfPageReader";
 
 const FILE_TYPE_LABELS = {
@@ -30,118 +23,54 @@ function getFileType(name = "") {
   return "other";
 }
 
-function formatSize(bytes = 0) {
-  if (!bytes) return "";
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-const NotesList = ({ files, featuredName, chapterActive, onOpen }) => {
-  const visible = featuredName
-    ? files.filter((file) => file.name !== featuredName)
-    : files;
-
-  if (!visible.length) {
-    return chapterActive ? (
-      <p className="chapter-notes-empty">No notes are linked to this chapter yet.</p>
-    ) : (
-      <p className="chapter-notes-empty">No notes are published for this subject yet. Check back soon.</p>
-    );
-  }
-
+const EmbeddedFile = ({ file }) => {
+  const type = getFileType(file.name);
   return (
-    <>
-      {chapterActive ? (
-        <p className="chapter-notes-subheader">Notes for this chapter:</p>
+    <div className="chapter-notes-embedded">
+      <div className="chapter-notes-embedded-head">
+        <span className="chapter-notes-viewer-title" title={file.name}>
+          {type === "img" ? (
+            <ImageIcon size={15} aria-hidden="true" />
+          ) : (
+            <FileText size={15} aria-hidden="true" />
+          )}
+          {file.name}
+        </span>
+        <span className="chapter-notes-embedded-type">{FILE_TYPE_LABELS[type]}</span>
+      </div>
+      {type === "pdf" ? (
+        <PdfPageReader url={file.url} fileName={file.name} embedded />
+      ) : type === "img" ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={file.url} alt={file.name} className="chapter-notes-image-viewer" />
       ) : (
-        <p className="chapter-notes-subheader">More files for this subject:</p>
+        <p className="chapter-notes-empty">This file type can't be previewed in the browser.</p>
       )}
-      <ul className="chapter-notes-list">
-        {visible.map((file, index) => {
-          const type = getFileType(file.name);
-          return (
-            <li key={`${file.path}-${index}`} className="chapter-notes-item">
-              <span className="chapter-notes-file-icon">
-                {type === "img" ? (
-                  <ImageIcon size={18} aria-hidden="true" />
-                ) : (
-                  <FileText size={18} aria-hidden="true" />
-                )}
-              </span>
-              <span className="chapter-notes-name">{file.name}</span>
-              <span className="chapter-notes-meta">
-                {FILE_TYPE_LABELS[type]}
-                {file.size ? ` • ${formatSize(file.size)}` : ""}
-              </span>
-              <button
-                type="button"
-                className="blog-btn chapter-notes-open-btn"
-                onClick={() => onOpen(file, type)}
-              >
-                <Eye size={14} aria-hidden="true" />
-                {type === "pdf" || type === "img" ? "Read Online" : "Open in Dashboard"}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </>
+    </div>
   );
 };
-
-const AutoRenderedViewer = ({ active, subjectName, file, onClose }) => (
-  <div className="chapter-notes-embedded">
-    <div className="chapter-notes-embedded-head">
-      <span className="chapter-notes-viewer-title" title={file?.name}>
-        <FileText size={15} aria-hidden="true" />
-        {file?.name || subjectName}
-      </span>
-      {onClose ? (
-        <button
-          type="button"
-          className="chapter-notes-viewer-close"
-          onClick={onClose}
-          aria-label="Close notes reader"
-        >
-          <X size={16} aria-hidden="true" />
-        </button>
-      ) : null}
-    </div>
-    {active?.type === "pdf" ? (
-      <PdfPageReader url={active.url} fileName={file?.name || subjectName} onClose={onClose} />
-    ) : (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src={active.url} alt={file?.name || subjectName} className="chapter-notes-image-viewer" />
-    )}
-  </div>
-);
 
 const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumber }) => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [active, setActive] = useState(null);
 
-  const featuredName = getFeaturedNoteForSubject(subjectSlug);
   const chapterConfig = getNoteChapterConfig(subjectSlug);
-  const chapterAllowlist = chapterConfig
-    ? chapterConfig.chapters[chapterNumber] || null
-    : null;
+  const hasNotes = Boolean(chapterConfig);
 
   useEffect(() => {
+    if (!chapterConfig) {
+      setLoading(false);
+      setFiles([]);
+      return;
+    }
+
     let cancelled = false;
+    setLoading(true);
 
     const params = new URLSearchParams({ resource: "subject", format: "json" });
-    if (chapterConfig) {
-      // Per-chapter mode: list files from the subject's notes folder.
-      params.set("path", chapterConfig.folder);
-    } else {
-      params.set("semester", semesterId);
-      params.set("subject", subjectSlug);
-    }
-    const url = `/api/notes?${params.toString()}`;
-    fetch(url, { headers: { Accept: "application/json" } })
+    params.set("path", chapterConfig.folder);
+    fetch(`/api/notes?${params.toString()}`, { headers: { Accept: "application/json" } })
       .then((res) => {
         if (!res.ok) throw new Error(`Unable to load notes (${res.status})`);
         return res.json();
@@ -153,27 +82,17 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
           path: file.path,
           size: file.size || 0,
           url: file.rawUrl || file.downloadUrl || file.url || "",
-          type: getFileType(file.name),
         }));
 
-        // Per-chapter mode: keep only this chapter's linked files.
-        if (chapterAllowlist) {
-          list = list.filter((file) => chapterAllowlist.includes(file.name));
+        // Explicit per-chapter list (curriculum-accurate) overrides the default
+        // "leading number = chapter number" rule.
+        const allowlist = chapterConfig.chapters?.[chapterNumber];
+        if (allowlist?.length) {
+          list = list.filter((file) => allowlist.includes(file.name));
+        } else {
+          list = list.filter((file) => getChapterNumberFromFileName(file.name) === chapterNumber);
         }
-
         setFiles(list);
-
-        // Auto-render a single inline note when:
-        //   - this subject has a featured master note, OR
-        //   - this chapter is linked to exactly one file.
-        const autoCandidate =
-          list.find((file) => file.name === featuredName) ||
-          (chapterAllowlist?.length === 1
-            ? list.find((file) => file.name === chapterAllowlist[0])
-            : null);
-        if (autoCandidate && (autoCandidate.type === "pdf" || autoCandidate.type === "img")) {
-          setActive(autoCandidate);
-        }
       })
       .catch((err) => {
         if (cancelled) return;
@@ -186,29 +105,8 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
     return () => {
       cancelled = true;
     };
-  }, [semesterId, subjectSlug]);
-
-  const open = useCallback((file, type) => {
-    if (type !== "pdf" && type !== "img") {
-      window.open("/dashboard", "_blank", "noopener,noreferrer");
-      return;
-    }
-    setActive({ ...file, type });
-  }, []);
-
-  const featuredFile = featuredName
-    ? files.find((file) => file.name === featuredName)
-    : null;
-  const singleChapterFile = chapterAllowlist?.length === 1
-    ? files.find((file) => file.name === chapterAllowlist[0])
-    : null;
-
-  const inlineActive =
-    Boolean(active) && (featuredFile && active.name === featuredName || singleChapterFile && active.name === singleChapterFile.name);
-  const autoFile = featuredFile || singleChapterFile || null;
-  const showList =
-    !chapterAllowlist ||          // subjects without a chapter config
-    chapterAllowlist.length > 1;  // multi-file chapters (Programming in C unit 2, E.D.C, BEE)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [semesterId, subjectSlug, chapterNumber, chapterConfig?.folder]);
 
   return (
     <section className="chapter-notes" id="chapter-notes">
@@ -231,48 +129,20 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
         </p>
       )}
 
-      {!loading && !error && inlineActive && autoFile && (
-        <AutoRenderedViewer
-          active={active}
-          subjectName={subjectName}
-          file={autoFile}
-          onClose={() => setActive(null)}
-        />
+      {!loading && !error && !hasNotes && (
+        <p className="chapter-notes-empty">No notes are published for this subject yet.</p>
       )}
 
-      {!loading && !error && active && !inlineActive && (
-        <div className="chapter-notes-viewer-overlay" role="dialog" aria-modal="true" aria-label={`${subjectName} notes viewer`}>
-          <div className="chapter-notes-viewer-panel">
-            <div className="chapter-notes-viewer-head">
-              <span className="chapter-notes-viewer-title">{active.name}</span>
-              <button
-                type="button"
-                className="chapter-notes-viewer-close"
-                onClick={() => setActive(null)}
-                aria-label="Close notes viewer"
-              >
-                <X size={18} aria-hidden="true" />
-              </button>
-            </div>
-            <div className="chapter-notes-viewer-body">
-              {active.type === "pdf" ? (
-                <PdfPageReader url={active.url} fileName={active.name} onClose={() => setActive(null)} />
-              ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={active.url} alt={active.name} className="chapter-notes-image-viewer" />
-              )}
-            </div>
-          </div>
+      {!loading && !error && hasNotes && files.length === 0 && (
+        <p className="chapter-notes-empty">No notes are linked to this chapter yet.</p>
+      )}
+
+      {!loading && !error && files.length > 0 && (
+        <div className="chapter-notes-embeds">
+          {files.map((file, index) => (
+            <EmbeddedFile key={`${file.path}-${index}`} file={file} />
+          ))}
         </div>
-      )}
-
-      {!loading && !error && showList && (
-        <NotesList
-          files={files}
-          featuredName={featuredName}
-          chapterActive={Boolean(chapterAllowlist)}
-          onOpen={open}
-        />
       )}
     </section>
   );
