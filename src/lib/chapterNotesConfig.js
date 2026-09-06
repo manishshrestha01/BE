@@ -12,9 +12,7 @@
  * File/folder names must match the BE-Computer repo exactly (e.g.
  * `Semester 1/E.D.C/ch 2 BJT.pdf`).
  */
-export const FEATURED_SUBJECT_NOTES = {
-  "calculus-i": "Math (Calculus) Complete Note [Most Compressed one].pdf",
-};
+export const FEATURED_SUBJECT_NOTES = {};
 
 export const SUBJECT_NOTE_FOLDERS = {
   "basic-electrical-engineering": "Semester 1/BEE - Class Materials/Lectures",
@@ -22,6 +20,19 @@ export const SUBJECT_NOTE_FOLDERS = {
 };
 
 export const SUBJECT_NOTE_CHAPTER_FILES = {
+  "calculus-i": {
+    folder: "Semester 1/Calculus I",
+    chapters: {
+      1: ["Unit 1.pdf"],
+      2: ["Unit 2.pdf"],
+      3: ["Unit 3.pdf"],
+      4: ["Unit 4.pdf"],
+      5: ["Unit 5.pdf"],
+      6: ["Unit 6.pdf"],
+      7: ["Unit 7.pdf"],
+      8: ["Unit 8.pdf"],
+    },
+  },
   "electronics-devices-and-circuits": {
     folder: "Semester 1/E.D.C",
     chapters: {

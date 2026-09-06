@@ -113,7 +113,7 @@ const BlogSemester = ({ semesterId }) => {
                 className="blog-btn semester-nav-btn"
               >
                 <ArrowLeft className="semester-nav-icon" aria-hidden="true" />
-                Semester {previousSemester} guides
+                Semester {previousSemester} syllabus
               </Link>
             ) : null}
             {nextSemester ? (
@@ -121,7 +121,7 @@ const BlogSemester = ({ semesterId }) => {
                 href={`/blog/semester/${nextSemester}`}
                 className="blog-btn semester-nav-btn"
               >
-                Semester {nextSemester} guides
+                Semester {nextSemester} syllabus
                 <ArrowRight className="semester-nav-icon" aria-hidden="true" />
               </Link>
             ) : null}

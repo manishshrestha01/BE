@@ -100,6 +100,36 @@ const NotesList = ({ files, featuredName, chapterActive, onOpen }) => {
   );
 };
 
+const AutoRenderedViewer = ({ active, subjectName, file }) => (
+  <div className="chapter-notes-embedded">
+    <div className="chapter-notes-embedded-head">
+      <span className="chapter-notes-viewer-title" title={file?.name}>
+        {file?.name || subjectName}
+      </span>
+      <a
+        href="/dashboard"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="blog-btn chapter-notes-open-btn"
+      >
+        <FolderOpen size={14} aria-hidden="true" />
+        Open in Dashboard
+      </a>
+    </div>
+    {active?.type === "pdf" ? (
+      <iframe
+        src={getViewerUrl(active.url)}
+        title={file?.name || subjectName}
+        className="chapter-notes-pdf-frame chapter-notes-embedded-frame"
+        sandbox="allow-scripts allow-same-origin"
+      />
+    ) : (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={active.url} alt={file?.name || subjectName} className="chapter-notes-image-viewer" />
+    )}
+  </div>
+);
+
 const FeaturedNotesViewer = ({ active, subjectName, file }) => {
   const isPdf = active?.type === "pdf";
   const isImg = active?.type === "img";

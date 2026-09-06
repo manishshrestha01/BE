@@ -203,7 +203,7 @@ function makeSubjectKeywords(semester, subject, courseCode) {
     subject.name,
     `${subject.name} notes`,
     `${subject.name} syllabus`,
-    `${subject.name} study guide`,
+    `${subject.name} syllabus`,
     `${subject.name} important topics`,
     `${subject.name} practice questions`,
     `${subject.name} pdf notes`,
@@ -249,7 +249,7 @@ function makeSubjectKeywords(semester, subject, courseCode) {
       `${abbr} semester ${sem} notes`,
       `${abbr} free notes PU`,
       `${abbr} topper notes`,
-      `${abbr} study guide`,
+      `${abbr} syllabus`,
       `${abbr} notes free download`,
       `PU topper notes ${abbr}`,
       `free ${abbr} notes PU`,
@@ -346,7 +346,7 @@ function makeSpeakableSchema(url) {
   return {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Study Guide",
+    name: "Syllabus",
     url,
     speakable: { "@type": "SpeakableSpecification", cssSelector: [".prerendered-content h1", ".prerendered-content h2"] },
   };
@@ -374,7 +374,7 @@ function buildSubjectNotesHtml(semesterNum, subjectSlug, subjectName) {
 <h2>${escapeHtml(subjectName)}${abbr ? ` (${abbr})` : ""} Notes &amp; Study Materials</h2>
 <p>Access free <strong>${escapeHtml(subjectName)}${abbr ? ` (${abbr})` : ""} notes</strong> for Pokhara University BE Computer Engineering Semester ${semesterNum}. These study materials include PDF notes, important questions, and syllabus breakdown curated for PU students.${escapeHtml(abbrLine)}</p>
 <p><a href="${escapeHtml(apiUrl)}" target="_blank" rel="noopener noreferrer">Download ${escapeHtml(subjectName)} Notes</a></p>
-<p>For all subjects in this semester, visit the <a href="/blog/semester/${semesterNum}">Semester ${semesterNum} study guide</a>.</p>
+<p>For all subjects in this semester, visit the <a href="/blog/semester/${semesterNum}">Semester ${semesterNum} syllabus</a>.</p>
 </section>`;
 }
 
@@ -545,9 +545,9 @@ async function generateBlogPages() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     url: toAbsolute("/blog"),
-    name: "StudyMate Blog - PU Computer Engineering Guides",
+    name: "StudyMate Blog - PU Computer Engineering Syllabus",
     description:
-      "Semester-wise static tutorial guides for Pokhara University BE Computer Engineering.",
+      "Semester-wise static syllabus for Pokhara University BE Computer Engineering.",
     isPartOf: { "@id": `${BLOG_BASE_URL}/#website` },
     mainEntity: {
       "@type": "ItemList",
@@ -565,8 +565,8 @@ async function generateBlogPages() {
     { name: "Blog", url: `${BLOG_BASE_URL}/blog` },
   ]);
 
-  const blogIndexHtml = `<h1>StudyMate Blog &mdash; PU Computer Engineering Guides</h1>
-<p class="prerendered-description">Semester-wise tutorial guides for Pokhara University BE Computer Engineering students. Browse by semester below.</p>
+  const blogIndexHtml = `<h1>StudyMate Blog &mdash; PU Computer Engineering Syllabus</h1>
+<p class="prerendered-description">Semester-wise syllabus for Pokhara University BE Computer Engineering students. Browse by semester below.</p>
 <h2>Semesters</h2>
 <ul>
 ${BLOG_CURRICULUM.map(
@@ -576,11 +576,11 @@ ${BLOG_CURRICULUM.map(
 </ul>`;
 
   await writePage("/blog", {
-    title: "StudyMate Blog - PU Computer Engineering Guides",
+    title: "StudyMate Blog - PU Computer Engineering Syllabus",
     description:
-      "Semester-wise static tutorial guides for Pokhara University BE Computer Engineering students.",
+      "Semester-wise static syllabus for Pokhara University BE Computer Engineering students.",
     keywords:
-      "Pokhara University blog, BE Computer Engineering notes, semester guides, StudyMate blog",
+      "Pokhara University blog, BE Computer Engineering notes, semester syllabus, StudyMate blog",
     jsonLd: [blogBreadcrumbLd, blogCollectionLd],
     noscriptLinks: BLOG_CURRICULUM.map((semester) => ({
       href: semester.urlPath,
@@ -590,7 +590,7 @@ ${BLOG_CURRICULUM.map(
   });
 
   for (const semester of BLOG_CURRICULUM) {
-    const semesterTitle = `Semester ${semester.semester} Guides - Pokhara University BE Computer Engineering | StudyMate`;
+    const semesterTitle = `Semester ${semester.semester} Syllabus - Pokhara University BE Computer Engineering | StudyMate`;
     const semesterDescription = buildSemesterDescription(semester);
     const semesterBreadcrumbLd = buildBreadcrumbList([
       { name: "Home", url: `${BLOG_BASE_URL}/` },
@@ -641,7 +641,7 @@ ${semesterSubjectListHtml}`;
     await writePage(semester.urlPath, {
       title: semesterTitle,
       description: semesterDescription,
-      keywords: `Pokhara University semester ${semester.semester}, BE Computer Engineering semester ${semester.semester}, StudyMate semester guide`,
+      keywords: `Pokhara University semester ${semester.semester}, BE Computer Engineering semester ${semester.semester}, StudyMate semester syllabus`,
       jsonLd: [semesterBreadcrumbLd, semesterCollectionLd],
       noscriptLinks: semester.subjects.map((subject) => ({
         href: subject.urlPath,
@@ -662,10 +662,10 @@ ${semesterSubjectListHtml}`;
       const subjectDescriptionBare = buildSubjectDescription(semester, subject);
       const subjectTitle = subjectAbbr
         ? `${subjectAbbr} Notes - ${subject.name} (${subjectCourseCode || subjectAbbr}) | PU BE Computer Engineering Semester ${semester.semester} | StudyMate`
-        : `${subjectLabel} — Notes, Syllabus & Study Guide — PU BE Computer Engineering Semester ${semester.semester} | StudyMate`;
+        : `${subjectLabel} — Notes & Syllabus — PU BE Computer Engineering Semester ${semester.semester} | StudyMate`;
       const subjectDescription = subjectAbbr
-        ? `${subjectAbbr} (${subject.name}) notes for Pokhara University BE Computer Engineering Semester ${semester.semester}. Free PDF notes, syllabus, important topics, practice questions, and topper study materials — complete PU ${subjectAbbr} study guide.`
-        : `Free ${subjectLabel} notes for Pokhara University BE Computer Engineering Semester ${semester.semester}. Download PDF notes, get syllabus breakdown, important topics, practice questions, and topper study materials — a complete free study guide for PU students.`;
+        ? `${subjectAbbr} (${subject.name}) notes for Pokhara University BE Computer Engineering Semester ${semester.semester}. Free PDF notes, syllabus, important topics, practice questions, and topper study materials — complete PU ${subjectAbbr} syllabus.`
+        : `Free ${subjectLabel} notes for Pokhara University BE Computer Engineering Semester ${semester.semester}. Download PDF notes, get syllabus breakdown, important topics, practice questions, and topper study materials — a complete free syllabus for PU students.`;
       const subjectKeywords = [
         ...makeSubjectKeywords(semester, subject, subjectCourseCode),
         ...makeUnitKeywords(semester.semester, subjectArticle, subject.name),
@@ -704,7 +704,7 @@ ${semesterSubjectListHtml}`;
         "@context": "https://schema.org",
         "@type": "Article",
         mainEntityOfPage: subjectUrl,
-        headline: `${subjectLabel} — Semester ${semester.semester} Study Guide`,
+        headline: `${subjectLabel} — Semester ${semester.semester} Syllabus`,
         description: subjectDescription,
         inLanguage: "en-US",
         about: [

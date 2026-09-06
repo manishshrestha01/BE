@@ -1,0 +1,65 @@
+{
+  "summary": {
+    "health_score": 68,
+    "business_type": "Education / Publisher (university study-notes platform)",
+    "top_findings": [
+      "14 college detail pages are near-duplicate thin content with identical generic titles",
+      "Every page reuses the same global H1 - no unique per-page H1",
+      "No Article schema or publication dates on blog posts (hurts E-E-A-T and GEO recency)",
+      "Viewport user-scalable=no disables pinch-to-zoom on mobile",
+      "All blog posts share the same logo OG image"
+    ],
+    "quick_wins": [
+      "Unique per-page titles + H1s",
+      "Add Article schema with dates + author",
+      "Remove user-scalable=no",
+      "Unique OG images per article",
+      "Add missing security headers"
+    ]
+  },
+  "categories": [
+    { "name": "Technical SEO", "score": 82, "what_works": ["fast TTFB ~150ms", "valid robots.txt with AI crawlers allowed", "valid 82-URL sitemap", "self-referencing canonicals"], "findings": [
+      { "title": "Thin/near-duplicate college pages", "severity": "High", "description": "14 /college/ pages share an identical generic title and ~2.2KB unique SSR text", "recommendation": "SSR unique content, unique titles/H1, or noindex" },
+      { "title": "Missing security headers", "severity": "Medium", "description": "Only HSTS present", "recommendation": "Add X-Content-Type-Options, Referrer-Policy, Permissions-Policy, CSP frame-ancestors" },
+      { "title": "IndexNow not configured", "severity": "Medium", "description": "No IndexNow key", "recommendation": "Add IndexNow for Bing/Yandex/Naver" },
+      { "title": "College body client-rendered", "severity": "Medium", "description": "College content mostly injected by JS", "recommendation": "SSR deterministic content" }
+    ]},
+    { "name": "Content Quality", "score": 60, "what_works": ["substantive ~3.4KB blog article bodies with good H2/H3"], "findings": [
+      { "title": "No Article schema or visible dates", "severity": "High", "description": "No datePublished/dateModified, hurts E-E-A-T and GEO recency", "recommendation": "Add Article schema + visible dates" },
+      { "title": "Thin college pages", "severity": "High", "description": "Low unique content per college page", "recommendation": "Enrich or noindex" },
+      { "title": "Sparse brand authority", "severity": "Low", "description": "Organization sameAs only GitHub; no YouTube/LinkedIn/Wikipedia", "recommendation": "Expand external brand presence" }
+    ]},
+    { "name": "On-Page SEO", "score": 62, "what_works": ["good unique titles on article pages", "good meta descriptions"], "findings": [
+      { "title": "Global template H1", "severity": "High", "description": "All pages emit the same H1", "recommendation": "Use page-specific H1" },
+      { "title": "Generic college titles", "severity": "High", "description": "All college pages share one generic title", "recommendation": "Unique descriptive titles" },
+      { "title": "Reused logo OG image", "severity": "Medium", "description": "All blog posts use /logo-512.png with mismatched alt", "recommendation": "Unique per-article OG images" },
+      { "title": "og:type=website on articles", "severity": "Low", "description": "Should be article", "recommendation": "Set og:type=article for posts" }
+    ]},
+    { "name": "Schema / Structured Data", "score": 75, "what_works": ["Organization, WebSite, Person, WebPage, SpeakableSpecification server-rendered"], "findings": [
+      { "title": "Missing Article schema", "severity": "High", "description": "Blog posts use WebPage, no Article/dates/author", "recommendation": "Add Article schema" },
+      { "title": "WebPage.url points to homepage", "severity": "High", "description": "Incorrect canonical URL in WebPage schema on featured pages", "recommendation": "Set to page canonical URL" },
+      { "title": "No education-specific schema", "severity": "Medium", "description": "Missing CollegeOrUniversity/Course for college pages", "recommendation": "Add EducationalOrganization/Course schema" },
+      { "title": "FAQPage no longer a rich result", "severity": "Info", "description": "Google retired FAQ rich results May 7 2026", "recommendation": "Keep as-is; not a rich-result strategy" }
+    ]},
+    { "name": "Performance (CWV)", "score": 85, "what_works": ["TTFB ~150ms", "small HTML payloads"], "findings": [
+      { "title": "Third-party ad script weight", "severity": "Medium", "description": "625KB aclib-anti-adblock.js + Adsense + Adcash loaded", "recommendation": "Lazy-load or trim ad libs; monitor INP" }
+    ]},
+    { "name": "AI Search Readiness", "score": 70, "what_works": ["AI crawlers allowed", "llms.txt + llms-full.txt + notes-index live", "SSR article content"], "findings": [
+      { "title": "No dates/Article schema for recency", "severity": "High", "description": "Blocks GEO recency + entity wiring", "recommendation": "Add dates + Article schema" },
+      { "title": "Weak external brand mentions", "severity": "Medium", "description": "No YouTube/LinkedIn/Wikipedia presence", "recommendation": "Build brand presence on authoritative platforms" },
+      { "title": "Citability improvements", "severity": "Medium", "description": "No answer-first 134-167 word blocks", "recommendation": "Add definition-first passages" }
+    ]},
+    { "name": "Images", "score": 45, "what_works": ["no broken/missing alt on SSR shell"], "findings": [
+      { "title": "No unique article/social images", "severity": "High", "description": "All posts reuse site logo as OG image", "recommendation": "Create + serve unique per-article OG/hero images" }
+    ]}
+  ],
+  "action_plan": {
+    "phases": [
+      { "name": "Phase 1: Critical Fixes", "timeframe": "Week 1", "items": ["Fix thin/duplicate college pages (SSR unique content + titles or noindex)"] },
+      { "name": "Phase 2: High-Impact Improvements", "timeframe": "Weeks 2-3", "items": ["Unique per-page H1", "Add Article schema with dates + author", "Remove user-scalable=no", "Show publication dates"] },
+      { "name": "Phase 3: Content & Authority", "timeframe": "Month 2", "items": ["Unique OG images", "Security headers", "EducationalOrganization/Course schema", "IndexNow", "Re-evaluate heavy ad libs", "SSR college content"] },
+      { "name": "Phase 4: Monitoring & Iteration", "timeframe": "Ongoing", "items": ["Expand sameAs + external brand presence", "Definition-first citable passages", "Content refresh schedule", "Monitor field CWV"] }
+    ]
+  },
+  "artifacts": { "findings_dir": "findings/", "screenshots_dir": "screenshots/" }
+}

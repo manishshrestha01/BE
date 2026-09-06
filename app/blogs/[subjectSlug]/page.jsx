@@ -13,7 +13,7 @@ export async function generateMetadata({ params }) {
   const subject = match.subjects.find((item) => item.slug === subjectSlug)
   return buildMetadata({
     title: `${subject.name} Notes - PU Computer Engineering`,
-    description: `Redirecting to the ${subject.name} notes guide for PU BE Computer Engineering semester ${match.semester}.`,
+    description: `Redirecting to the ${subject.name} notes syllabus for PU BE Computer Engineering semester ${match.semester}.`,
     canonicalPath: `/blogs/${subjectSlug}`,
   })
 }

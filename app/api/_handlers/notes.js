@@ -167,7 +167,7 @@ function buildIndexHtml(params) {
           <strong>${name}</strong>
           <span class="links">
             [<a href="${BASE_URL}/dashboard?semester=${sem.semester}&subject=${slug}">📂 Open in Dashboard</a>]
-            [<a href="${BASE_URL}/blog/semester/${sem.semester}/${slug}">📖 Study Guide</a>]
+            [<a href="${BASE_URL}/blog/semester/${sem.semester}/${slug}">📖 Syllabus</a>]
             [<a href="${BASE_URL}/api/notes-subject?semester=${sem.semester}&subject=${slug}">📄 Files</a>]
           </span>
         </li>`;
