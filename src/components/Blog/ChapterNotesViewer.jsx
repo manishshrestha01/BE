@@ -1,7 +1,9 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BookOpen, FileText, Loader2, Image as ImageIcon } from "lucide-react";
 import { getNoteChapterConfig, getChapterNumberFromFileName } from "../../lib/chapterNotesConfig";
+import { getSubjectArticle } from "../../data/subjectArticles";
+import { parseUnitNumber } from "../../lib/subjectChapters";
 import PdfPageReader from "./PdfPageReader";
 
 const FILE_TYPE_LABELS = {
@@ -58,8 +60,19 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
   const chapterConfig = getNoteChapterConfig(subjectSlug);
   const hasNotes = Boolean(chapterConfig);
 
+  const inlineNotes = useMemo(() => {
+    if (hasNotes) return null;
+    const article = getSubjectArticle(semesterId, subjectSlug);
+    if (!article) return null;
+    const syllabus = article.sections.find((section) => section.id === "syllabus-overview");
+    const units = syllabus?.units || [];
+    const unit = units.find((item, index) => parseUnitNumber(item.title, index) === Number(chapterNumber));
+    if (!unit?.content?.length && !unit?.bullets?.length) return null;
+    return unit;
+  }, [chapterNumber, hasNotes, semesterId, subjectSlug]);
+
   useEffect(() => {
-    if (!chapterConfig) {
+    if (!chapterConfig || inlineNotes) {
       setLoading(false);
       setFiles([]);
       return;
@@ -129,12 +142,29 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
         </p>
       )}
 
-      {!loading && !error && !hasNotes && (
+      {!loading && !error && !hasNotes && !inlineNotes && (
         <p className="chapter-notes-empty">No notes are published for this subject yet.</p>
       )}
 
       {!loading && !error && hasNotes && files.length === 0 && (
         <p className="chapter-notes-empty">No notes are linked to this chapter yet.</p>
+      )}
+
+      {!loading && !error && inlineNotes && (
+        <div className="chapter-notes-inline">
+          {inlineNotes.content?.length
+            ? inlineNotes.content.map((paragraph, index) => (
+                <p key={`inline-p-${index}`}>{paragraph}</p>
+              ))
+            : null}
+          {inlineNotes.bullets?.length ? (
+            <ul className="chapter-notes-inline-bullets">
+              {inlineNotes.bullets.map((bullet, index) => (
+                <li key={`inline-b-${index}`}>{bullet}</li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
       )}
 
       {!loading && !error && files.length > 0 && (

@@ -1633,6 +1633,29 @@
   margin: 0 0 12px;
 }
 
+.chapter-notes-inline {
+  display: grid;
+  gap: 14px;
+}
+
+.chapter-notes-inline p {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.chapter-notes-inline-bullets {
+  margin: 0;
+  padding-left: 1.4rem;
+  display: grid;
+  gap: 8px;
+}
+
+.chapter-notes-inline-bullets > li {
+  line-height: 1.6;
+}
+
 .chapter-notes-error {
   color: #b00020;
   margin: 0 0 12px;
