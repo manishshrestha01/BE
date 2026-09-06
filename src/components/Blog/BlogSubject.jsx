@@ -97,6 +97,21 @@ const renderNumbered = (items = [], keyPrefix) =>
     </ol>
   ) : null;
 
+const renderQA = (items = [], keyPrefix) =>
+  items.length ? (
+    <div className="subject-faq-list">
+      {items.map((item, index) => (
+        <details className="subject-faq-item" key={`${keyPrefix}-qa-${index}`} open={index === 0}>
+          <summary className="subject-faq-question">
+            <span>{item.question}</span>
+            <span className="subject-faq-toggle" aria-hidden="true">+</span>
+          </summary>
+          <div className="subject-faq-answer">{item.answer}</div>
+        </details>
+      ))}
+    </div>
+  ) : null;
+
 const formatUnitTitle = (title = "", unitNumber) => {
   const cleanedTitle = title.replace(/^unit\s*[ivxlcdm0-9]+\s*[:.-]?\s*/i, "").trim();
   return `Unit ${unitNumber}: ${cleanedTitle || title}`;
@@ -206,6 +221,14 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
         });
       }
 
+      if (section.qa?.length) {
+        items.push({
+          id: section.id,
+          text: "Questions & Answers",
+          level: 3,
+        });
+      }
+
       const isSyllabusOverview = section.id === "syllabus-overview";
 
       (section.units || []).forEach((unit, unitIndex) => {
@@ -289,6 +312,7 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
                   {renderParagraphs(section.content || [], section.id)}
                   {renderBullets(section.bullets || [], section.id)}
                   {renderNumbered(section.numbered || [], section.id)}
+                  {renderQA(section.qa || [], section.id)}
 
                   {(section.units || []).map((unit, unitIndex) => {
                     const isSyllabusOverview = section.id === "syllabus-overview";

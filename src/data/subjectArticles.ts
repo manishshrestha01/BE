@@ -13,6 +13,7 @@ export type SubjectArticleSection = {
   content?: string[];
   bullets?: string[];
   numbered?: string[];
+  qa?: { question: string; answer: string }[];
   units?: SubjectArticleUnit[];
 };
 
@@ -644,6 +645,73 @@ export const subjectArticles: SubjectArticlesStore = {
             "Design a maintenance routine for software updates, antivirus scan, and backup.",
             "Explain how you would isolate whether a no-display issue is hardware or software related.",
             "Document a troubleshooting report format suitable for workshop practical submission.",
+          ],
+        },
+        {
+          id: "unit-qa",
+          title: "Computer Workshop Notes – Questions & Answers",
+          level: 2,
+          qa: [
+            {
+              question: "What is the role of the SMPS in a desktop system and which connectors does it provide?",
+              answer:
+                "The SMPS (Switched Mode Power Supply) converts AC power from the mains into the DC voltages a computer needs. Modern units provide three voltage rails (+12V, +5V, +3.3V) and include a 24-pin ATX connector for the motherboard, an 8-pin CPU connector for processor power, PCIe power connectors for graphics cards, and SATA power for storage. Always check total wattage and the 80 Plus efficiency rating before assembly.",
+            },
+            {
+              question: "How do you choose compatible components when assembling a desktop workstation?",
+              answer:
+                "Start with the processor and motherboard — the CPU socket must match the motherboard socket and chipset. Then match memory to the slot type (DDR4/DDR5 DIMM), storage to the connector (SATA or M.2/NVMe), the SMPS to total wattage draw, and the case to the motherboard form factor (ATX, Micro-ATX, Mini-ITX). Compatibility checking first avoids wasted effort during assembly.",
+            },
+            {
+              question: "What safety precautions should you follow before and during laptop disassembly?",
+              answer:
+                "Power down, remove the battery, and ground yourself (anti-static wrist strap or mat) to prevent ESD damage to sensitive circuits. Use the correct screwdriver size, keep screws organized by layer, and gently lift ribbon cables at their clips rather than pulling on the connectors. Never force components apart and track the removal order so reassembly is reversible.",
+            },
+            {
+              question: "What is the difference between BIOS and UEFI, and where do they appear during OS installation?",
+              answer:
+                "BIOS is the older firmware interface that uses the MBR partitioning scheme, must run in legacy mode, and supports drives only up to smaller sizes. UEFI is the modern firmware that uses GPT partitioning, supports Secure Boot, faster boot times, and larger disks. During OS installation both control boot device selection, such as choosing the USB/DVD installer, and firmware/enablement options like virtualization (VT-x/AMD-V) or the boot mode.",
+            },
+            {
+              question: "Why is partitioning important when installing Windows or Linux, and how should it be done?",
+              answer:
+                "Partitioning creates separate logical regions on the drive so the OS, user data, and recovery data do not interfere. Reserve a small ESP (EFI System Partition) for UEFI boot, a primary partition for the OS, and optionally separate partitions for home/data. Linux also commonly uses a swap partition. Creating partitions first keeps installations clean and simplifies later reinstallation or backups.",
+            },
+            {
+              question: "What steps are involved in a basic wired and wireless network setup?",
+              answer:
+                "Wired setup: connect the router to the modem, run an Ethernet (RJ-45, Cat5e/Cat6) cable to each device, and confirm link lights. Wireless setup: enable the WiFi adapter, connect to the SSID, and enter the correct security key/Password (preferably WPA2/WPA3). Afterwards verify connectivity by checking the IP is received (DHCP), pinging the gateway, and testing internet access; static IPs are only needed for servers or devices that must keep a fixed address.",
+            },
+            {
+              question: "What should a software installation and maintenance routine include?",
+              answer:
+                "Download software only from official/vendor sites, check for bundled installers during setup, install drivers in the correct order, and verify version/platform compatibility. For maintenance, schedule OS and application updates, run regular antivirus scans, review installed programs, and uninstall unneeded software. Keep firmware (BIOS and device firmware) updated and document all installed versions.",
+            },
+            {
+              question: "What are the key differences between client and server, workgroup and domain, sharing and direct connection?",
+              answer:
+                "A client requests services while a server provides them (file, print, web). In a workgroup every machine manages its own users and devices are treated equally, while in a domain a central server (e.g., Active Directory/LDAP) controls authentication and policy. Sharing means making files/printers available to others over the network, whereas a direct connection links two specific devices (e.g., crossover cable or USB link) without a central server.",
+            },
+            {
+              question: "What backup types are commonly used and why is a backup schedule important?",
+              answer:
+                "Common backup types are full backups (copy everything), incremental backups (changes since the last incremental), and differential backups (changes since the last full). A backup schedule (daily auto backups, weekly full, off-site copies) matters because system failures, malware, and accidental deletion happen without warning. Verified restores should be tested regularly to guarantee the backups actually work.",
+            },
+            {
+              question: "How do you troubleshoot common hardware/software issues?",
+              answer:
+                "Follow a diagnostic-first flow: identify the symptom, isolate the cause, test the fix, and verify. For no-display check power and video cable/port first, then RAM reseating, then the GPU. For boot problems confirm boot device priority and partition setup. For connectivity isolate router, cable, IP, and DNS. Use tools like Device Manager, Task Manager, event logs, and diagnostics utilities, and document each step and result in a report.",
+            },
+            {
+              question: "How do you isolate whether a no-display problem is hardware or software?",
+              answer:
+                "Start with the cheapest/quickest checks: monitor power and signal source, and reseating the GPU/RAM. Try a known-good monitor/cable and check the graphics output port. Test whether the machine boots (POST beeps, fans, keyboard LEDs). If POST fails it is likely hardware; if the system boots but shows no desktop/output, the cause could be driver/resolution software issues or failing GPU drivers — safe mode or switching to integrated graphics can help separate the two.",
+            },
+            {
+              question: "Why is it important to understand computer workshop concepts for later semesters?",
+              answer:
+                "The practical lab skills — assembly, OS installation, network setup, software maintenance, and troubleshooting — map directly to engineering labs and projects and to system-level coursework in later semesters. Diagnosing instead of guessing, documenting work, and following repeatable checklists build the technical discipline that future subjects (embedded systems, computer networks, operating systems) build on.",
+            },
           ],
         },
       ],

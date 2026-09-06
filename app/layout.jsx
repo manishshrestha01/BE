@@ -27,7 +27,10 @@ export const metadata = {
     googleBot: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large', 'max-video-preview': -1 },
   },
   verification: {
-    google: process.env.GOOGLE_SITE_VERIFICATION,
+    google: [
+        ...(process.env.GOOGLE_SITE_VERIFICATION ? [process.env.GOOGLE_SITE_VERIFICATION] : ['8nQaKyJ7kheXufG3mrmYjgVcdq51Rq5ienW7BbsGG6g']),
+        'FVQpvz41NKoB0pkDmY1YmcQUranenapoMPR-pydAK9E',
+      ],
     yandex: process.env.YANDEX_SITE_VERIFICATION || '464a14ed2069c072',
     other: {
       'msvalidate.01': process.env.BING_SITE_VERIFICATION,
