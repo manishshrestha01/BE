@@ -19,7 +19,6 @@ import {
   buildSubjectDescription,
   buildSubjectIntro,
   buildSyllabusOverview,
-  formatUpdatedDate,
   getSubjectBySlug,
   getSubjectNeighbors,
 } from "../../lib/blogCurriculum";
@@ -172,7 +171,6 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
     : subjectData.name;
   const rawDescription = article.description || buildSubjectDescription(semesterData, subjectData);
   const description = enrichDescriptionWithCourseCode(rawDescription, subjectCourseCode);
-  const updatedDate = formatUpdatedDate(article.updatedAt || BLOG_LAST_UPDATED);
   const neighborInfo = getSubjectNeighbors(semesterData.semester, subjectData.slug);
 
   useEffect(() => {
@@ -256,7 +254,6 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
           <div className="subject-meta-row">
             <span>Semester {semesterData.semester}</span>
             {subjectCourseCode ? <span>Course Code: {subjectCourseCode}</span> : null}
-            <span>Updated: {updatedDate}</span>
             <span>Pokhara University BE Computer Engineering</span>
           </div>
         </div>
@@ -329,15 +326,6 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
                 </section>
               );
             })}
-
-            <section className="subject-cta">
-              {renderHeading("dashboard-cta", "Get Notes in StudyMate Dashboard", 2)}
-              <p>Notes are organized inside the dashboard.</p>
-              <Link href="/dashboard" className="blog-btn subject-cta-btn">
-                Open Dashboard
-                <ArrowRight className="subject-nav-icon" aria-hidden="true" />
-              </Link>
-            </section>
 
             <nav className="subject-nav" aria-label="Subject navigation">
               <Link

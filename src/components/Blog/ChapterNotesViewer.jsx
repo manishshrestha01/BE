@@ -7,9 +7,8 @@ import {
   X,
   Loader2,
   Image as ImageIcon,
-  FolderOpen,
 } from "lucide-react";
-import { getFeaturedNoteForSubject, getNoteFolderForSubject, getNoteChapterConfig } from "../../lib/chapterNotesConfig";
+import { getFeaturedNoteForSubject, getNoteChapterConfig } from "../../lib/chapterNotesConfig";
 import PdfPageReader from "./PdfPageReader";
 
 const FILE_TYPE_LABELS = {
@@ -45,14 +44,9 @@ const NotesList = ({ files, featuredName, chapterActive, onOpen }) => {
 
   if (!visible.length) {
     return chapterActive ? (
-      <p className="chapter-notes-empty">
-        No notes are linked to this chapter yet. Try the StudyMate dashboard to
-        browse the full subject folder.
-      </p>
+      <p className="chapter-notes-empty">No notes are linked to this chapter yet.</p>
     ) : (
-      <p className="chapter-notes-empty">
-        No notes are published for this subject yet. Check back soon.
-      </p>
+      <p className="chapter-notes-empty">No notes are published for this subject yet. Check back soon.</p>
     );
   }
 
@@ -100,17 +94,19 @@ const AutoRenderedViewer = ({ active, subjectName, file, onClose }) => (
   <div className="chapter-notes-embedded">
     <div className="chapter-notes-embedded-head">
       <span className="chapter-notes-viewer-title" title={file?.name}>
+        <FileText size={15} aria-hidden="true" />
         {file?.name || subjectName}
       </span>
-      <a
-        href="/dashboard"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="blog-btn chapter-notes-open-btn"
-      >
-        <FolderOpen size={14} aria-hidden="true" />
-        Open in Dashboard
-      </a>
+      {onClose ? (
+        <button
+          type="button"
+          className="chapter-notes-viewer-close"
+          onClick={onClose}
+          aria-label="Close notes reader"
+        >
+          <X size={16} aria-hidden="true" />
+        </button>
+      ) : null}
     </div>
     {active?.type === "pdf" ? (
       <PdfPageReader url={active.url} fileName={file?.name || subjectName} onClose={onClose} />
@@ -128,7 +124,6 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
   const [active, setActive] = useState(null);
 
   const featuredName = getFeaturedNoteForSubject(subjectSlug);
-  const noteFolder = getNoteFolderForSubject(subjectSlug);
   const chapterConfig = getNoteChapterConfig(subjectSlug);
   const chapterAllowlist = chapterConfig
     ? chapterConfig.chapters[chapterNumber] || null
@@ -138,10 +133,8 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
     let cancelled = false;
 
     const params = new URLSearchParams({ resource: "subject", format: "json" });
-    if (noteFolder) {
-      // Folder mode: list files directly from the configured subfolder.
-      params.set("path", noteFolder);
-    } else if (chapterConfig) {
+    if (chapterConfig) {
+      // Per-chapter mode: list files from the subject's notes folder.
       params.set("path", chapterConfig.folder);
     } else {
       params.set("semester", semesterId);
@@ -214,8 +207,8 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
     Boolean(active) && (featuredFile && active.name === featuredName || singleChapterFile && active.name === singleChapterFile.name);
   const autoFile = featuredFile || singleChapterFile || null;
   const showList =
-    !chapterAllowlist ||          // folder-mode (BEE, others) or no config
-    chapterAllowlist.length > 1;  // multi-file chapters (E.D.C)
+    !chapterAllowlist ||          // subjects without a chapter config
+    chapterAllowlist.length > 1;  // multi-file chapters (Programming in C unit 2, E.D.C, BEE)
 
   return (
     <section className="chapter-notes" id="chapter-notes">
@@ -223,11 +216,7 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
         <BookOpen className="blog-inline-icon" aria-hidden="true" />
         Read {subjectName} Notes
       </h2>
-      <p className="chapter-lead">
-        Read the complete {subjectName} notes right on this page — no login required.
-        Built for researchers and students. Downloads are available in the StudyMate
-        dashboard.
-      </p>
+      <p className="chapter-lead">Read the full notes for this chapter right here — no login required.</p>
 
       {loading && (
         <div className="chapter-notes-loading">

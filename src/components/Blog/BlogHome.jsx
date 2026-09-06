@@ -23,17 +23,13 @@ const BlogHome = () => {
             <span className="hero-highlight">PU Computer Engineering Syllabus &amp; Notes</span>
           </h1>
           <p className="hero-subtitle blog-subtitle">
-            Full Pokhara University BE Computer Engineering syllabus, subject-by-subject notes,
-            important topics, and practice questions. Open the StudyMate dashboard to access every
-            note and previous past paper in one place.
+            Full Pokhara University BE Computer Engineering syllabus and subject-by-subject
+            notes, important topics, and practice questions — all readable right on the page.
           </p>
           <div className="hero-cta blog-hero-cta">
-            <Link href="/dashboard" className="btn-primary">
-              Open StudyMate Dashboard
-              <span className="btn-arrow">→</span>
-            </Link>
-            <a href="#semester-syllabus" className="btn-secondary">
+            <a href="#semester-syllabus" className="btn-primary">
               Browse Syllabus
+              <span className="btn-arrow">→</span>
             </a>
           </div>
 
@@ -90,8 +86,8 @@ const BlogHome = () => {
             </div>
             <div className="blog-why-card">
               <span className="blog-why-icon" aria-hidden="true">🔄</span>
-              <h3>Notes &amp; Past Papers in One Dashboard</h3>
-              <p>Use the StudyMate dashboard to open every note and previous past paper directly — all in one place.</p>
+              <h3>Read Notes Online</h3>
+              <p>Every note opens directly on the page as a clean, scrollable reader — no downloads required.</p>
             </div>
           </div>
         </div>
@@ -103,8 +99,7 @@ const BlogHome = () => {
             <span className="section-badge">Syllabus</span>
             <h2 className="section-title">Semester-wise Syllabus</h2>
             <p className="section-subtitle">
-              Pick your semester, open the subject syllabus, notes, and past papers — or jump
-              straight into the StudyMate dashboard.
+              Pick your semester and open the subject syllabus and notes to start studying.
             </p>
           </div>
           <div className="semester-grid">

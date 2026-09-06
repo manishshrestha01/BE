@@ -658,6 +658,43 @@
   gap: 20px;
 }
 
+/* Chapter pages: single centered column, GeeksforGeeks-style note reading. */
+.chapter-shell {
+  max-width: 980px;
+}
+
+.chapter-article {
+  padding: 32px 40px;
+}
+
+.chapter-page .blog-hero {
+  padding: 132px 0 40px;
+}
+
+.chapter-page .blog-title {
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.15;
+  max-width: 800px;
+}
+
+.chapter-page .blog-subtitle {
+  max-width: 780px;
+}
+
+.chapter-page .subject-meta-row {
+  flex-wrap: wrap;
+}
+
+.chapter-notes-section > .chapter-notes {
+  margin-bottom: 0;
+}
+
+@media (max-width: 720px) {
+  .chapter-article {
+    padding: 22px 18px;
+  }
+}
+
 .subject-article {
   padding: 28px;
 }
@@ -1794,11 +1831,11 @@
 
 .studocu-reader-body {
   overflow-y: auto;
-  max-height: min(70vh, 680px);
+  max-height: min(82vh, 900px);
   background:
     radial-gradient(circle at 20% 20%, rgba(120,130,160,0.06), transparent 40%),
     #e8eaf0;
-  padding: 24px 12px;
+  padding: 28px 16px 40px;
 }
 
 [data-theme="dark"] .studocu-reader-body {

@@ -1,23 +1,16 @@
 /**
  * Chapter notes data source config.
  *
- * Three modes per subject:
- *   1. `featuredFile`  — a single master-note file that covers the whole
- *      subject. Chapter pages auto-render it inline for reading.
- *   2. `folder`        — a subfolder whose files are listed and read inline on
- *      every chapter page (no login, no download).
- *   3. `chapterFiles`  — a folder plus a per-chapter allowlist of exact file
- *      names, so each chapter page shows only the notes linked to that chapter.
+ * Two modes per subject:
+ *   1. `chapterFiles`  — a folder plus a per-chapter allowlist of exact file
+ *      names, so each chapter page shows only the notes linked to that chapter
+ *      (and auto-renders the note inline when a chapter has a single file).
+ *   2. No config      — falls back to the public subject listing endpoint.
  *
  * File/folder names must match the BE-Computer repo exactly (e.g.
  * `Semester 1/E.D.C/ch 2 BJT.pdf`).
  */
 export const FEATURED_SUBJECT_NOTES = {};
-
-export const SUBJECT_NOTE_FOLDERS = {
-  "basic-electrical-engineering": "Semester 1/BEE - Class Materials/Lectures",
-  "programming-in-c": "Semester 1/C Programming/PEC 2023 (Sanjish KC)",
-};
 
 export const SUBJECT_NOTE_CHAPTER_FILES = {
   "calculus-i": {
@@ -31,6 +24,29 @@ export const SUBJECT_NOTE_CHAPTER_FILES = {
       6: ["Unit 6.pdf"],
       7: ["Unit 7.pdf"],
       8: ["Unit 8.pdf"],
+    },
+  },
+  "basic-electrical-engineering": {
+    folder: "Semester 1/BEE - Class Materials/Lectures",
+    chapters: {
+      1: ["1PU-BEE.pdf"],
+      2: ["2.1 PU-BEE.pdf", "2.2 PU-BEE_all.pdf", "2.2 PU-BEE-Nodal+Mesh.pdf"],
+      3: ["3.1 PU-BEE.pdf"],
+      4: ["4 PU-BEE.pdf"],
+      5: ["5.1 PU-BEE - 1 & 2.pdf", "5.2 PU-BEE.pdf", "5.3 PU-BEE.pdf"],
+    },
+  },
+  "programming-in-c": {
+    folder: "Semester 1/C Programming/PEC 2023 (Sanjish KC)",
+    chapters: {
+      1: ["1. Introduction.pdf"],
+      2: ["2. Programming Logic.pdf", "3. Variables and Data Types.pdf"],
+      3: ["4. Control Structures.pdf"],
+      4: ["5. Arrays and Strings.pdf"],
+      5: ["6. Functions.pdf"],
+      6: ["7. Pointers.pdf"],
+      7: ["8. Structures and Unions.pdf"],
+      8: ["9. File Handling.pdf"],
     },
   },
   "electronics-devices-and-circuits": {
@@ -51,10 +67,6 @@ export const SUBJECT_NOTE_CHAPTER_FILES = {
 
 export function getFeaturedNoteForSubject(subjectSlug) {
   return FEATURED_SUBJECT_NOTES[subjectSlug] || null;
-}
-
-export function getNoteFolderForSubject(subjectSlug) {
-  return SUBJECT_NOTE_FOLDERS[subjectSlug] || null;
 }
 
 export function getNoteChapterConfig(subjectSlug) {

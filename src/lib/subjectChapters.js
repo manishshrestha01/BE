@@ -23,29 +23,32 @@ const romanToNumber = (roman = "") => {
   return total;
 };
 
+const UNIT_PREFIX = /^unit\s+(?:\d+|[ivxlcdmIVXLCDM]+)\s*[:.-]?\s*/i;
+
 export const cleanUnitTitle = (title = "") => {
   const cleaned = title
-    .replace(/^unit\s+[ivxlcdmIVXLCDM]+\s*[:.-]?\s*/i, "")
+    .replace(UNIT_PREFIX, "")
     .replace(/\s*\(.*?hrs?.*?\)\s*$/i, "")
     .trim();
   return cleaned || title;
 };
 
 export const parseUnitNumber = (title = "", fallbackIndex = 1) => {
-  const match = title.match(/^unit\s+([ivxlcdm]+)\s*[:.-]?\s*/i);
+  const match = title.match(/^unit\s+(\d+|[ivxlcdm]+)\s*[:.-]?\s*/i);
   if (match) {
-    const number = romanToNumber(match[1]);
+    const raw = match[1];
+    const number = /^\d+$/.test(raw) ? Number(raw) : romanToNumber(raw);
     if (number) return number;
   }
   return fallbackIndex + 1;
 };
 
 export const unitTitleToSlug = (unitId = "", title = "") => {
-  const idMatch = unitId.match(/^unit-[ivxlcdm]+-(.+)$/i);
+  const idMatch = unitId.match(/^unit-(?:\d+|[ivxlcdm]+)-(.+)$/i);
   if (idMatch) return idMatch[1].replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-  const cleaned = cleanUnitTitle(title);
-  return subjectToSlug(cleaned);
+  // Keep the raw title so URLs stay stable for pre-existing chapter slugs.
+  return subjectToSlug(title);
 };
 
 export function getSubjectChapters(semesterId, subjectSlug) {

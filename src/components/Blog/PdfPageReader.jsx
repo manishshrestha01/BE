@@ -17,7 +17,7 @@ function getPdfApi() {
 async function renderPageIntoCanvas(pdfjs, pdfDoc, pageNo, canvas) {
   const page = await pdfDoc.getPage(pageNo);
   const baseViewport = page.getViewport({ scale: 1 });
-  const cssWidth = 760;
+  const cssWidth = 900;
   const scale = cssWidth / baseViewport.width;
   const viewport = page.getViewport({ scale });
   const ratio = Math.min(window.devicePixelRatio || 1, 2);

@@ -1,14 +1,14 @@
 'use client'
 import { useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, BookOpen, GraduationCap, FolderOpen, ListChecks } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 
 import Footer from "../Footer";
 import SiteNav from "../SiteNav";
 import Breadcrumbs from "./Breadcrumbs";
 import ChapterNotesViewer from "./ChapterNotesViewer";
 import { setJSONLD } from "../../lib/seo";
-import { BLOG_BASE_URL, BLOG_LAST_UPDATED, getSubjectBySlug, formatUpdatedDate } from "../../lib/blogCurriculum";
+import { BLOG_BASE_URL, BLOG_LAST_UPDATED, getSubjectBySlug } from "../../lib/blogCurriculum";
 import { getSubjectArticle } from "../../data/subjectArticles";
 import "./Blog.css";
 
@@ -17,8 +17,6 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
   const subjectLabel = subjectData.courseCode
     ? `${subjectData.name} (${subjectData.courseCode})`
     : subjectData.name;
-  const updatedDate = formatUpdatedDate(article?.updatedAt || BLOG_LAST_UPDATED);
-
   const topicCount = chapter.bullets.length;
 
   const breadcrumbItems = [
@@ -64,7 +62,7 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
   }, [chapter, subjectData, semesterData.semesterSlug, article]);
 
   return (
-    <div className="landing blog-page">
+    <div className="landing blog-page chapter-page">
       <SiteNav />
 
       <section className="blog-hero subject-hero">
@@ -85,21 +83,11 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
           <div className="subject-meta-row">
             <span>Chapter {chapter.number} of {topicCount} topics</span>
             {chapter.hours ? <span>Syllabus Hours: {chapter.hours}</span> : null}
-            <span>Updated: {updatedDate}</span>
             <span>Pokhara University BE Computer Engineering • Semester {semesterData.semester}</span>
           </div>
 
           <div className="subject-cta subject-hero-cta">
-            <Link
-              href="/dashboard"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="blog-btn subject-cta-btn"
-            >
-              <FolderOpen className="subject-nav-icon" aria-hidden="true" />
-              Open in StudyMate Dashboard
-            </Link>
-            <Link href={subjectData.urlPath} className="blog-btn blog-btn-muted">
+            <Link href={subjectData.urlPath} className="blog-btn subject-cta-btn">
               Full {subjectLabel} Syllabus
             </Link>
           </div>
@@ -107,47 +95,15 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
       </section>
 
       <section className="blog-section">
-        <div className="blog-shell subject-layout">
-          <article className="blog-card subject-article">
-            <section className="chapter-topic-section">
-              <h2 className="subject-heading">
-                <ListChecks className="blog-inline-icon" aria-hidden="true" />
-                {subjectData.name} Chapter {chapter.number} Topics
-              </h2>
-              <p className="chapter-lead">
-                Everything you need to study {chapter.title} for Pokhara University BE Computer
-                Engineering Semester {semesterData.semester}. Master these topics, then open the
-                full notes and previous past papers in the StudyMate dashboard.
-              </p>
-
-              {chapter.bullets.length ? (
-                <ol className="subject-topic-list">
-                  {chapter.bullets.map((topic, index) => (
-                    <li key={`${chapter.id}-topic-${index}`}>{topic}</li>
-                  ))}
-                </ol>
-              ) : (
-                <p className="chapter-lead">No topic breakdown is stored for this chapter yet.</p>
-              )}
-            </section>
-
-            <section className="subject-cta">
+        <div className="blog-shell chapter-shell">
+          <article className="blog-card subject-article chapter-article">
+            <section className="chapter-notes-section">
               <ChapterNotesViewer
                 semesterId={semesterData.semester}
                 subjectSlug={subjectData.slug}
                 subjectName={subjectLabel}
                 chapterNumber={chapter.number}
               />
-              <div className="chapter-notes-dashboard">
-                <p>
-                  Want to download these notes or browse past papers? Open the StudyMate
-                  dashboard for the full file browser.
-                </p>
-                <Link href="/dashboard" className="blog-btn subject-cta-btn">
-                  Open StudyMate Dashboard
-                  <FolderOpen className="subject-nav-icon" aria-hidden="true" />
-                </Link>
-              </div>
             </section>
 
             <nav className="subject-nav" aria-label="Chapter navigation">
@@ -188,20 +144,6 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
               )}
             </nav>
           </article>
-
-          <aside className="toc-sidebar">
-            <div className="toc-card">
-              <h2>In This Chapter</h2>
-              <ol className="chapter-mini-toc">
-                {chapter.bullets.slice(0, 12).map((topic, index) => (
-                  <li key={`mini-${index}`}>{topic}</li>
-                ))}
-              </ol>
-              <Link href="/dashboard" className="blog-btn subject-cta-btn chapter-back-btn">
-                Full {subjectData.name} notes
-              </Link>
-            </div>
-          </aside>
         </div>
       </section>
 
