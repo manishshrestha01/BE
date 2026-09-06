@@ -196,7 +196,7 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
                   <li key={`mini-${index}`}>{topic}</li>
                 ))}
               </ol>
-              <Link href={subjectData.urlPath} className="blog-btn subject-cta-btn chapter-back-btn">
+              <Link href="/dashboard" className="blog-btn subject-cta-btn chapter-back-btn">
                 Full {subjectData.name} notes
               </Link>
             </div>
