@@ -17,6 +17,11 @@ const nextConfig = {
   async headers() {
     return [
       {
+        // JSON/text API responses are thin indexes; keep them out of Google.
+        source: '/api/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }],
+      },
+      {
         source: '/:path*',
         headers: [
           { key: 'X-Content-Type-Options', value: 'nosniff' },

@@ -23,8 +23,11 @@ https://www.manishshrestha012.com.np
 ### Core Study Resources
 - [PU Exam Guide](https://www.manishshrestha012.com.np/pu-exam): Pokhara University exam format, routine, grading, back papers, and prep tips
 - [Dashboard / Notes](https://www.manishshrestha012.com.np/dashboard): Semester-wise notes and PDFs for all 8 semesters of PU BE Computer Engineering
+- [Question Papers](https://www.manishshrestha012.com.np/question-paper): PU question papers by exam year — new-syllabus board & final papers and the old-syllabus archive, browsable without login
 - [All Colleges](https://www.manishshrestha012.com.np/colleges): Index of Pokhara University affiliated engineering colleges in Nepal
 - [Blog](https://www.manishshrestha012.com.np/blog): Subject-wise articles, guides, and exam preparation tips
+- [Complete Syllabus](https://www.manishshrestha012.com.np/syllabus): Full PU BE Computer Engineering syllabus, semester by semester, unit-wise
+- [Notes](https://www.manishshrestha012.com.np/notes): PU BE Computer Engineering notes, readable chapter by chapter on the page
 
 ### Blog Subject Study Guides (detailed article per subject)
 - [Full Blog Index](https://www.manishshrestha012.com.np/blog): Browse all semester guides
@@ -103,6 +106,15 @@ Full chapter sitemap: https://www.manishshrestha012.com.np/sitemap.xml
 
 ### PU Exam Grading
 - [PU Exam Grading & Marking](https://www.manishshrestha012.com.np/pu-exam-grading): Pokhara University letter grades, SGPA/CGPA, 45% pass marks
+
+### Question Papers (by exam year)
+- [All Question Papers](https://www.manishshrestha012.com.np/question-paper): index of PU BE Computer Engineering question papers
+- [New Syllabus Question Papers](https://www.manishshrestha012.com.np/question-paper/new-syllabus): current program's board & final papers, by exam year
+- [Old Syllabus Question Papers](https://www.manishshrestha012.com.np/question-paper/old-syllabus): previous course's question archive, by exam year
+
+Example paper pages:
+- [Calculus I — Fall 2013](https://www.manishshrestha012.com.np/question-paper/old-syllabus/calculus-i/fall-2013)
+- [Digital Signal Analysis and Processing — Fall 2025](https://www.manishshrestha012.com.np/question-paper/new-syllabus/digital-signal-analysis-and-processing/fall-2025)
 
 ### Per-College Pages (AI may cite these for college-specific queries)
 - [PEC Notes](https://www.manishshrestha012.com.np/college/pec): Pokhara Engineering College BE Computer Engineering notes

@@ -1,0 +1,63 @@
+import { FileText, Images } from "lucide-react";
+
+import PdfPageReader from "../Blog/PdfPageReader";
+
+const PaperCard = ({ card }) => {
+  if (card.kind === "pdf" && card.url) {
+    return (
+      <div className="oldq-paper-card">
+        <div className="oldq-paper-head">
+          <span className="chapter-notes-viewer-title" title={card.name}>
+            <FileText size={15} aria-hidden="true" />
+            {card.name}
+          </span>
+          <span className="chapter-notes-embedded-type">PDF</span>
+        </div>
+        <PdfPageReader url={card.url} fileName={card.name} embedded />
+      </div>
+    );
+  }
+
+  if (card.kind === "image") {
+    return (
+      <div className="oldq-paper-card oldq-image-card">
+        <div className="oldq-paper-head">
+          <span className="chapter-notes-viewer-title" title={card.name}>
+            <Images size={15} aria-hidden="true" />
+            {card.name}
+          </span>
+          <span className="chapter-notes-embedded-type">
+            {card.urls.length} image{card.urls.length > 1 ? "s" : ""}
+          </span>
+        </div>
+        <div className="oldq-image-stack">
+          {card.urls.map((url, index) => (
+            <img
+              key={`${card.name}-${index}`}
+              src={url}
+              alt={`${card.name} — page ${index + 1}`}
+              loading="lazy"
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="oldq-paper-card">
+      <div className="oldq-paper-head">
+        <span className="chapter-notes-viewer-title" title={card.name}>
+          <FileText size={15} aria-hidden="true" />
+          {card.name}
+        </span>
+        <span className="chapter-notes-embedded-type">File</span>
+      </div>
+      <p className="chapter-notes-empty">
+        This question paper file can&apos;t be previewed in the browser yet.
+      </p>
+    </div>
+  );
+};
+
+export default PaperCard;

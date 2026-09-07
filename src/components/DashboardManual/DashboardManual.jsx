@@ -13,7 +13,6 @@ import DashboardOnlyProtection from './DashboardOnlyProtection'
 import './DashboardManual.css'
 
 const DashboardManual = () => {
-  const { mode, setTheme, resolvedTheme } = useTheme()
   const { user, isAuthenticated, isAuthRequired, loading } = useAuth()
   const { profile, isSetupComplete, loading: profileLoading, profileInitialized } = useUserProfile()
   const router = useRouter()

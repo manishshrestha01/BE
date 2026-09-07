@@ -407,6 +407,32 @@ export function getSubjectBySlug(semesterNumber, subjectSlug) {
   return { semester, subject };
 }
 
+export const SCOPE_META = {
+  blog: { home: "/blog", label: "Study Materials" },
+  syllabus: { home: "/syllabus", label: "Syllabus" },
+  notes: { home: "/notes", label: "Notes" },
+};
+
+// Builds a route URL for a given scope ("blog" | "syllabus" | "notes").
+// semesterId/subjectSlug are optional; each adds a path segment.
+export function scopeHref(scope, semesterId, subjectSlug) {
+  const prefix = scope === "blog" ? "/blog" : `/${scope}`;
+  if (subjectSlug) return `${prefix}/semester/${semesterId}/${subjectSlug}`;
+  if (semesterId) return `${prefix}/semester/${semesterId}`;
+  return prefix;
+}
+
+// All indexable paths for a scope (home + semester + subject pages).
+export function getAllScopePaths(scope) {
+  return [
+    scopeHref(scope),
+    ...BLOG_CURRICULUM.map((semester) => scopeHref(scope, semester.semester)),
+    ...BLOG_CURRICULUM.flatMap((semester) =>
+      semester.subjects.map((subject) => scopeHref(scope, semester.semester, subject.slug))
+    ),
+  ];
+}
+
 export function getSubjectNeighbors(semesterNumber, subjectSlug) {
   const semester = getSemesterByNumber(semesterNumber);
   if (!semester) return { previous: null, next: null };

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import {
   BLOG_BASE_URL,
   getSubjectBySlug,
+  scopeHref,
 } from '@/lib/blogCurriculum'
 import { getChapterBySlug, getSubjectChapters, getAllChapterPaths, buildSubjectKeywords } from '@/lib/subjectChapters'
 import { buildMetadata, dynamicOgImage, buildBreadcrumbList, buildCourseSchema } from '@/lib/blogSeo'
@@ -19,13 +20,12 @@ export async function generateMetadata({ params }) {
   if (!found) return {}
 
   const { semester, subject } = found
-  const chapter = getChapterBySlug(semesterId, subjectSlug, chapterSlug)
+  const chapter = getChapterBySlug(semesterId, subjectSlug, chapterSlug, 'notes')
   if (!chapter) return {}
 
   const topicPreview = chapter.bullets.slice(0, 3).join(', ')
   const courseLabel = subject.courseCode ? `${subject.name} (${subject.courseCode})` : subject.name
-  const description = `${courseLabel} Chapter ${chapter.number} — ${chapter.title}: PU ${semester.semester} ${subject.name} notes. Syllabus topics: ${topicPreview}. ` +
-    `Study ${chapter.title} inside the StudyMate dashboard with notes and past papers.`
+  const description = `${courseLabel} Chapter ${chapter.number} — ${chapter.title}: PU ${semester.semester} ${subject.name} notes. Syllabus topics: ${topicPreview}. Read the full chapter notes right here on StudyMate.`
 
   return buildMetadata({
     title: `${subject.name}${subject.courseCode ? ` (${subject.courseCode})` : ''} Chapter ${chapter.number}: ${chapter.title} Notes - PU Semester ${semester.semester} Computer Engineering`,
@@ -47,10 +47,10 @@ export default async function Page({ params }) {
   if (!found) notFound()
   const { semester, subject } = found
 
-  const chapter = getChapterBySlug(semesterId, subjectSlug, chapterSlug)
+  const chapter = getChapterBySlug(semesterId, subjectSlug, chapterSlug, 'notes')
   if (!chapter) notFound()
 
-  const allChapters = getSubjectChapters(semesterId, subjectSlug)
+  const allChapters = getSubjectChapters(semesterId, subjectSlug, 'notes')
   const chapterIndex = allChapters.findIndex((item) => item.slug === chapterSlug)
   const previousChapter = chapterIndex > 0 ? allChapters[chapterIndex - 1] : null
   const nextChapter = chapterIndex >= 0 && chapterIndex < allChapters.length - 1
@@ -73,9 +73,12 @@ export default async function Page({ params }) {
       }),
       buildBreadcrumbList([
         { name: 'Home', url: `${BLOG_BASE_URL}/` },
-        { name: 'Study Materials', url: `${BLOG_BASE_URL}/blog` },
-        { name: `Semester ${semester.semester}`, url: `${BLOG_BASE_URL}${semester.urlPath}` },
-        { name: subjectLabel, url: `${BLOG_BASE_URL}${subject.urlPath}` },
+        { name: 'Notes', url: `${BLOG_BASE_URL}/notes` },
+        {
+          name: `Semester ${semester.semester}`,
+          url: `${BLOG_BASE_URL}${scopeHref('notes', semester.semester)}`,
+        },
+        { name: subjectLabel, url: `${BLOG_BASE_URL}${scopeHref('notes', semester.semester, subject.slug)}` },
         { name: `Chapter ${chapter.number}: ${chapter.title}` },
       ]),
     ],
@@ -93,6 +96,7 @@ export default async function Page({ params }) {
         chapter={chapter}
         previousChapter={previousChapter}
         nextChapter={nextChapter}
+        scope="notes"
       />
     </>
   )

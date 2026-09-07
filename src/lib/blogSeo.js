@@ -122,3 +122,19 @@ export function buildBreadcrumbList(items) {
   };
 }
 
+export function buildCourseSchema({ name, courseCode, semesterNumber, url, teaches = [] }) {
+  const label = courseCode ? `${name} (${courseCode})` : name;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "@id": `${url}#course`,
+    name: label,
+    description: `PU Semester ${semesterNumber} ${name} syllabus and notes for BE Computer Engineering${courseCode ? ` (${courseCode})` : ""}.`,
+    url,
+    isAccessibleForFree: true,
+    courseMode: "online",
+    provider: { "@id": `${BLOG_BASE_URL}/#organization` },
+    ...(teaches?.length ? { teaches: teaches.slice(0, 50) } : {}),
+  };
+}
+

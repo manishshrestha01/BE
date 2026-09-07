@@ -13,6 +13,7 @@ import { getSubjectChapters } from "../../lib/subjectChapters";
 import {
   BLOG_BASE_URL,
   BLOG_LAST_UPDATED,
+  SCOPE_META,
   buildImportantTopics,
   buildLearningOutcomes,
   buildPracticeQuestions,
@@ -21,6 +22,7 @@ import {
   buildSyllabusOverview,
   getSubjectBySlug,
   getSubjectNeighbors,
+  scopeHref,
 } from "../../lib/blogCurriculum";
 import "./Blog.css";
 
@@ -149,7 +151,7 @@ const renderSyllabusSubpoints = (items = [], keyPrefix, unitNumber) =>
     </ol>
   ) : null;
 
-const BlogSubject = ({ semesterId, subjectSlug }) => {
+const BlogSubject = ({ semesterId, subjectSlug, scope = "blog" }) => {
   const semesterNumber = Number(semesterId);
   const result = getSubjectBySlug(semesterNumber, subjectSlug || "");
 
@@ -161,8 +163,8 @@ const BlogSubject = ({ semesterId, subjectSlug }) => {
           <div className="blog-shell">
             <h1 className="blog-title">Subject not found</h1>
             <p className="blog-subtitle">The requested subject is not available in this semester.</p>
-            <Link className="blog-btn" href="/blog">
-              Back to Blog
+            <Link className="blog-btn" href={scopeHref(scope)}>
+              Back to {SCOPE_META[scope].label}
             </Link>
           </div>
         </section>
@@ -171,10 +173,17 @@ const BlogSubject = ({ semesterId, subjectSlug }) => {
     );
   }
 
-  return <BlogSubjectContent semesterData={result.semester} subjectData={result.subject} />;
+  return (
+    <BlogSubjectContent
+      semesterData={result.semester}
+      subjectData={result.subject}
+      scope={scope}
+    />
+  );
 };
 
-const BlogSubjectContent = ({ semesterData, subjectData }) => {
+const BlogSubjectContent = ({ semesterData, subjectData, scope = "blog" }) => {
+  const scopeMeta = SCOPE_META[scope] || SCOPE_META.blog;
   const [mobileTocOpen, setMobileTocOpen] = useState(false);
 
   const storedArticle = getSubjectArticle(semesterData.semester, subjectData.slug);
@@ -250,8 +259,8 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
 
   const breadcrumbItems = [
     { label: "Home", to: "/" },
-    { label: "Blog", to: "/blog" },
-    { label: `Semester ${semesterData.semester}`, to: semesterData.urlPath },
+    { label: scopeMeta.label, to: scopeHref(scope) },
+    { label: `Semester ${semesterData.semester}`, to: scopeHref(scope, semesterData.semester) },
     { label: subjectLabel },
   ];
 
@@ -323,9 +332,11 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
 
                     const isSyllabusUnit = isSyllabusOverview;
                     const unitChapterLink = isSyllabusOverview
-                      ? getSubjectChapters(semesterData.semester, subjectData.slug).find(
-                          (item) => item.id === unit.id
-                        ) || null
+                      ? getSubjectChapters(
+                          semesterData.semester,
+                          subjectData.slug,
+                          scope === "syllabus" ? "notes" : scope
+                        ).find((item) => item.id === unit.id) || null
                       : null;
 
                     return (
@@ -356,7 +367,11 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
                 className={`blog-btn subject-nav-btn ${
                   !neighborInfo.previous ? "blog-btn-muted disabled-link" : ""
                 }`}
-                href={neighborInfo.previous ? neighborInfo.previous.urlPath : "#"}
+                href={
+                  neighborInfo.previous
+                    ? scopeHref(scope, semesterData.semester, neighborInfo.previous.slug)
+                    : "#"
+                }
               >
                 <ArrowLeft className="subject-nav-icon" aria-hidden="true" />
                 Previous Subject
@@ -364,7 +379,7 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
 
               <Link
                 className="blog-btn subject-nav-btn subject-nav-center"
-                href={semesterData.urlPath}
+                href={scopeHref(scope, semesterData.semester)}
               >
                 <BookOpen className="subject-nav-icon" aria-hidden="true" />
                 Back to Semester
@@ -374,7 +389,11 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
                 className={`blog-btn subject-nav-btn ${
                   !neighborInfo.next ? "blog-btn-muted disabled-link" : ""
                 }`}
-                href={neighborInfo.next ? neighborInfo.next.urlPath : "#"}
+                href={
+                  neighborInfo.next
+                    ? scopeHref(scope, semesterData.semester, neighborInfo.next.slug)
+                    : "#"
+                }
               >
                 Next Subject
                 <ArrowRight className="subject-nav-icon" aria-hidden="true" />

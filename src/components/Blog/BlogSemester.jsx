@@ -5,10 +5,37 @@ import Footer from "../Footer";
 import SiteNav from "../SiteNav";
 import {
   getSemesterByNumber,
+  SCOPE_META,
+  scopeHref,
 } from "../../lib/blogCurriculum";
 import "./Blog.css";
 
-const BlogSemester = ({ semesterId }) => {
+const SCOPE_COPY = {
+  blog: {
+    crumbLabel: "Study Materials",
+    title: (semester) => `Semester ${semester} Syllabus`,
+    cardText: (semester) =>
+      `Semester ${semester} tutorial with syllabus, concept breakdown, and practice set.`,
+    cta: "Read Syllabus",
+  },
+  syllabus: {
+    crumbLabel: "Syllabus",
+    title: (semester) => `Semester ${semester} Syllabus`,
+    cardText: (semester) =>
+      `The full PU Semester ${semester} syllabus: chapters, marks scheme, and question pattern, all readable on the page.`,
+    cta: "Read Syllabus",
+  },
+  notes: {
+    crumbLabel: "Notes",
+    title: (semester) => `Semester ${semester} Notes`,
+    cardText: (semester) =>
+      `PU Semester ${semester} subject notes, readable chapter by chapter right on the page — no downloads.`,
+    cta: "Open Notes",
+  },
+};
+
+const BlogSemester = ({ semesterId, scope = "blog" }) => {
+  const copy = SCOPE_COPY[scope] || SCOPE_COPY.blog;
   const semesterNumber = Number(semesterId);
   const semesterData = getSemesterByNumber(semesterNumber);
 
@@ -22,8 +49,8 @@ const BlogSemester = ({ semesterId }) => {
             <p className="blog-subtitle">
               The selected semester does not exist in the PU 2022 curriculum dataset.
             </p>
-            <Link className="blog-btn" href="/blog">
-              Back to Blog
+            <Link className="blog-btn" href={scopeHref(scope)}>
+              Back to {copy.crumbLabel}
             </Link>
           </div>
         </section>
@@ -44,7 +71,7 @@ const BlogSemester = ({ semesterId }) => {
           <nav className="blog-breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link>
             <span>/</span>
-            <Link href="/blog">Blog</Link>
+            <Link href={scopeHref(scope)}>{copy.crumbLabel}</Link>
             <span>/</span>
             <span>Semester {semesterData.semester}</span>
           </nav>
@@ -53,7 +80,7 @@ const BlogSemester = ({ semesterId }) => {
             <GraduationCap className="blog-inline-icon" aria-hidden="true" />
             Semester {semesterData.semester} • PU BE Computer Engineering
           </div>
-          <h1 className="blog-title">Semester {semesterData.semester} Syllabus</h1>
+          <h1 className="blog-title">{copy.title(semesterData.semester)}</h1>
           <p className="blog-subtitle">{semesterData.overview}</p>
         </div>
       </section>
@@ -90,12 +117,12 @@ const BlogSemester = ({ semesterId }) => {
               {semesterData.subjects.map((subject) => (
                 <article key={subject.slug} className="topic-item-card">
                   <h3>{subject.name}</h3>
-                  <p>
-                    Semester {semesterData.semester} tutorial with syllabus, concept breakdown,
-                    and practice set.
-                  </p>
-                  <Link href={subject.urlPath} className="blog-btn">
-                    Read Syllabus
+                  <p>{copy.cardText(semesterData.semester)}</p>
+                  <Link
+                    href={scopeHref(scope, semesterData.semester, subject.slug)}
+                    className="blog-btn"
+                  >
+                    {copy.cta}
                   </Link>
                 </article>
               ))}
@@ -103,13 +130,13 @@ const BlogSemester = ({ semesterId }) => {
           </section>
 
           <div className="semester-internal-links">
-            <Link href="/blog" className="blog-btn semester-nav-btn">
+            <Link href={scopeHref(scope)} className="blog-btn semester-nav-btn">
               <ArrowLeft className="semester-nav-icon" aria-hidden="true" />
               Back to all semesters
             </Link>
             {previousSemester ? (
               <Link
-                href={`/blog/semester/${previousSemester}`}
+                href={scopeHref(scope, previousSemester)}
                 className="blog-btn semester-nav-btn"
               >
                 <ArrowLeft className="semester-nav-icon" aria-hidden="true" />
@@ -118,7 +145,7 @@ const BlogSemester = ({ semesterId }) => {
             ) : null}
             {nextSemester ? (
               <Link
-                href={`/blog/semester/${nextSemester}`}
+                href={scopeHref(scope, nextSemester)}
                 className="blog-btn semester-nav-btn"
               >
                 Semester {nextSemester} syllabus

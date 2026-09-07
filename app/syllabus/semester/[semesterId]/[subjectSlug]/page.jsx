@@ -4,9 +4,10 @@ import {
   BLOG_BASE_URL,
   buildSubjectDescription,
   getSubjectBySlug,
+  scopeHref,
 } from '@/lib/blogCurriculum'
 import { buildMetadata, dynamicOgImage, buildBreadcrumbList, buildCourseSchema } from '@/lib/blogSeo'
-import { buildSubjectKeywords, getSubjectChapters } from '@/lib/subjectChapters'
+import { buildSubjectKeywords } from '@/lib/subjectChapters'
 import BlogSubject from '@/components/Blog/BlogSubject'
 
 export const dynamicParams = true
@@ -27,15 +28,15 @@ export async function generateMetadata({ params }) {
 
   const { semester, subject } = found
   return buildMetadata({
-    title: `${subject.name}${subject.courseCode ? ` (${subject.courseCode})` : ''} Syllabus & Notes - PU Semester ${semester.semester} Computer Engineering`,
+    title: `${subject.name}${subject.courseCode ? ` (${subject.courseCode})` : ''} Syllabus - PU Semester ${semester.semester} Computer Engineering`,
     description: buildSubjectDescription(semester, subject),
     keywords: buildSubjectKeywords(String(semester.semester), subject.slug, subject),
-    canonicalPath: subject.urlPath,
+    canonicalPath: scopeHref('syllabus', semester.semester, subject.slug),
     type: 'article',
     image: dynamicOgImage({
-      title: `${subject.name} Notes`,
+      title: `${subject.name} Syllabus`,
       subtitle: `PU Semester ${semester.semester} Computer Engineering`,
-      badge: `Course ${subject.courseCode || 'Syllabus'}`,
+      badge: subject.courseCode || 'Syllabus',
     }),
   })
 }
@@ -46,10 +47,10 @@ export default async function Page({ params }) {
   if (!found) notFound()
 
   const { semester, subject } = found
-
   const subjectLabel = subject.courseCode
     ? `${subject.name} (${subject.courseCode})`
     : subject.name
+  const syllabusPath = scopeHref('syllabus', semester.semester, subject.slug)
 
   const schemaGraph = {
     '@context': 'https://schema.org',
@@ -58,15 +59,16 @@ export default async function Page({ params }) {
         name: subject.name,
         courseCode: subject.courseCode,
         semesterNumber: semester.semester,
-        url: `${BLOG_BASE_URL}${subject.urlPath}`,
-        teaches: getSubjectChapters(semesterId, subjectSlug).flatMap(
-          (chapter) => chapter.bullets
-        ),
+        url: `${BLOG_BASE_URL}${syllabusPath}`,
+        teaches: [],
       }),
       buildBreadcrumbList([
         { name: 'Home', url: `${BLOG_BASE_URL}/` },
-        { name: 'Study Materials', url: `${BLOG_BASE_URL}/blog` },
-        { name: `Semester ${semester.semester}`, url: `${BLOG_BASE_URL}${semester.urlPath}` },
+        { name: 'Syllabus', url: `${BLOG_BASE_URL}/syllabus` },
+        {
+          name: `Semester ${semester.semester}`,
+          url: `${BLOG_BASE_URL}${scopeHref('syllabus', semester.semester)}`,
+        },
         { name: subjectLabel },
       ]),
     ],
@@ -78,7 +80,7 @@ export default async function Page({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaGraph) }}
       />
-      <BlogSubject semesterId={semesterId} subjectSlug={subjectSlug} />
+      <BlogSubject semesterId={semesterId} subjectSlug={subjectSlug} scope="syllabus" />
     </>
   )
 }

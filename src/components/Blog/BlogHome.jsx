@@ -3,10 +3,53 @@ import { BookOpen } from "lucide-react";
 
 import Footer from "../Footer";
 import SiteNav from "../SiteNav";
-import { BLOG_CURRICULUM } from "../../lib/blogCurriculum";
+import { BLOG_CURRICULUM, scopeHref } from "../../lib/blogCurriculum";
 import "./Blog.css";
 
-const BlogHome = () => {
+const SCOPE_COPY = {
+  blog: {
+    heroTitle: "StudyMate Blog",
+    heroHighlight: "PU Computer Engineering Syllabus & Notes",
+    heroSubtitle:
+      "Full Pokhara University BE Computer Engineering syllabus and subject-by-subject notes, important topics, and practice questions — all readable right on the page.",
+    browseLabel: "Browse Syllabus",
+    statLabel: "Notes & Past Papers",
+    sectionBadge: "Syllabus",
+    sectionTitle: "Semester-wise Syllabus",
+    sectionSubtitle:
+      "Pick your semester and open the subject syllabus and notes to start studying.",
+    buttonLabel: "Browse Semester",
+  },
+  syllabus: {
+    heroTitle: "PU Complete Syllabus",
+    heroHighlight: "Pokhara University BE Computer Engineering",
+    heroSubtitle:
+      "The full Pokhara University BE Computer Engineering syllabus, semester by semester. Pick a subject to read its unit-wise syllabus, important topics, and question patterns.",
+    browseLabel: "Browse Syllabus",
+    statLabel: "Subjects Covered",
+    sectionBadge: "Syllabus",
+    sectionTitle: "Semester-wise Syllabus",
+    sectionSubtitle:
+      "Pick your semester and open the subject syllabus to start preparing.",
+    buttonLabel: "Open Syllabus",
+  },
+  notes: {
+    heroTitle: "PU Notes",
+    heroHighlight: "Pokhara University BE Computer Engineering",
+    heroSubtitle:
+      "Free Pokhara University BE Computer Engineering notes, readable right on the page. Pick a semester and subject to open its chapter notes without downloading anything.",
+    browseLabel: "Browse Notes",
+    statLabel: "Notes & Past Papers",
+    sectionBadge: "Notes",
+    sectionTitle: "Semester-wise Notes",
+    sectionSubtitle:
+      "Pick your semester and open the subject notes to start studying.",
+    buttonLabel: "Open Notes",
+  },
+};
+
+const BlogHome = ({ scope = "blog" }) => {
+  const copy = SCOPE_COPY[scope] || SCOPE_COPY.blog;
   return (
     <div className="landing blog-page blog-home-page">
       <SiteNav />
@@ -18,17 +61,14 @@ const BlogHome = () => {
             Pokhara University • BE Computer Engineering
           </div>
           <h1 className="hero-title blog-title">
-            StudyMate Blog
+            {copy.heroTitle}
             <br />
-            <span className="hero-highlight">PU Computer Engineering Syllabus &amp; Notes</span>
+            <span className="hero-highlight">{copy.heroHighlight}</span>
           </h1>
-          <p className="hero-subtitle blog-subtitle">
-            Full Pokhara University BE Computer Engineering syllabus and subject-by-subject
-            notes, important topics, and practice questions — all readable right on the page.
-          </p>
+          <p className="hero-subtitle blog-subtitle">{copy.heroSubtitle}</p>
           <div className="hero-cta blog-hero-cta">
             <a href="#semester-syllabus" className="btn-primary">
-              Browse Syllabus
+              {copy.browseLabel}
               <span className="btn-arrow">→</span>
             </a>
           </div>
@@ -62,7 +102,7 @@ const BlogHome = () => {
           </div>
           <div className="stat-item">
             <span className="stat-value">500+</span>
-            <span className="stat-label">Notes &amp; Past Papers</span>
+            <span className="stat-label">{copy.statLabel}</span>
           </div>
           <div className="stat-item">
             <span className="stat-value">24 / 7</span>
@@ -96,11 +136,9 @@ const BlogHome = () => {
       <section className="blog-section" id="semester-syllabus">
         <div className="blog-shell">
           <div className="section-header blog-section-header">
-            <span className="section-badge">Syllabus</span>
-            <h2 className="section-title">Semester-wise Syllabus</h2>
-            <p className="section-subtitle">
-              Pick your semester and open the subject syllabus and notes to start studying.
-            </p>
+            <span className="section-badge">{copy.sectionBadge}</span>
+            <h2 className="section-title">{copy.sectionTitle}</h2>
+            <p className="section-subtitle">{copy.sectionSubtitle}</p>
           </div>
           <div className="semester-grid">
             {BLOG_CURRICULUM.map((semester) => (
@@ -113,10 +151,10 @@ const BlogHome = () => {
                   {semester.subjectCount} Subjects
                 </span>
                 <Link
-                  href={semester.urlPath}
+                  href={scopeHref(scope, semester.semester)}
                   className="blog-btn semester-card-btn"
                 >
-                  Browse Semester
+                  {copy.buttonLabel}
                   <span className="semester-btn-arrow">→</span>
                 </Link>
               </article>

@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next'
 import { headers } from 'next/headers'
 import { COLLEGES } from '@/lib/colleges'
-import { BLOG_CURRICULUM, BLOG_LAST_UPDATED } from '@/lib/blogCurriculum'
+import { BLOG_CURRICULUM, BLOG_LAST_UPDATED, getAllScopePaths } from '@/lib/blogCurriculum'
 import { getAllChapterPaths } from '@/lib/subjectChapters'
+import { QUESTION_PAPER_VARIANTS, getAllQuestionPaperSubjectPaths } from '@/lib/oldQuestionConfig'
 
 const makeSlugFromLabel = (label: string): string => {
   const match = label.match(/\(([^)]+)\)/)
@@ -19,12 +20,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: SITE_URL, lastModified, changeFrequency: 'weekly', priority: 1 },
-    { url: `${SITE_URL}/dashboard`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${SITE_URL}/dashboard`, lastModified, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/colleges`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${SITE_URL}/blog`, lastModified, changeFrequency: 'weekly', priority: 1 },
+    { url: `${SITE_URL}/question-paper`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${SITE_URL}/pu-exam`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${SITE_URL}/pu-exam-grading`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${SITE_URL}/blogs`, lastModified, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/about`, lastModified, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE_URL}/contact`, lastModified, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE_URL}/faq`, lastModified, changeFrequency: 'monthly', priority: 0.5 },
@@ -66,5 +67,50 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  return [...staticRoutes, ...collegeRoutes, ...blogRoutes, ...chapterRoutes]
+  const questionPaperRoutes: MetadataRoute.Sitemap = [
+    ...QUESTION_PAPER_VARIANTS.map((variant): MetadataRoute.Sitemap[number] => ({
+      url: `${SITE_URL}/question-paper/${variant.slug}`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    })),
+    ...getAllQuestionPaperSubjectPaths().map(({ variant, subjectSlug }): MetadataRoute.Sitemap[number] => ({
+      url: `${SITE_URL}/question-paper/${variant}/${subjectSlug}`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    })),
+  ]
+
+  const syllabusRoutes: MetadataRoute.Sitemap = getAllScopePaths('syllabus').map((path) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified,
+    changeFrequency: 'monthly',
+    priority: 0.8,
+  }))
+
+  const notesRoutes: MetadataRoute.Sitemap = [
+    ...getAllScopePaths('notes').map((path): MetadataRoute.Sitemap[number] => ({
+      url: `${SITE_URL}${path}`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    })),
+    ...getAllChapterPaths().map(({ semesterId, subjectSlug, chapterSlug }): MetadataRoute.Sitemap[number] => ({
+      url: `${SITE_URL}/notes/semester/${semesterId}/${subjectSlug}/chapter/${chapterSlug}`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    })),
+  ]
+
+  return [
+    ...staticRoutes,
+    ...collegeRoutes,
+    ...blogRoutes,
+    ...chapterRoutes,
+    ...questionPaperRoutes,
+    ...syllabusRoutes,
+    ...notesRoutes,
+  ]
 }

@@ -1,4 +1,4 @@
-import { getSubjectBySlug, subjectToSlug, BLOG_BASE_URL } from "./blogCurriculum";
+import { getSubjectBySlug, subjectToSlug, BLOG_BASE_URL, scopeHref } from "./blogCurriculum";
 import { getSubjectArticle, subjectArticles } from "../data/subjectArticles";
 
 const ROMAN_MAP = {
@@ -51,7 +51,7 @@ export const unitTitleToSlug = (unitId = "", title = "") => {
   return subjectToSlug(title);
 };
 
-export function getSubjectChapters(semesterId, subjectSlug) {
+export function getSubjectChapters(semesterId, subjectSlug, scope = "blog") {
   const semesterNumber = Number(semesterId);
   const found = getSubjectBySlug(semesterNumber, subjectSlug || "");
   if (!found?.semester?.subjects?.length) return [];
@@ -66,7 +66,7 @@ export function getSubjectChapters(semesterId, subjectSlug) {
   const semester = found.semester;
   const subject = found.subject;
   const semesterSlug = semester.semesterSlug || `semester/${semester.semester}`;
-  const baseUrl = `/blog/${semesterSlug}/${subject.slug}/chapter`;
+  const baseUrl = `/${scope}/${semesterSlug}/${subject.slug}/chapter`;
 
   return units.map((unit, index) => {
     const number = parseUnitNumber(unit.title, index);
@@ -82,12 +82,12 @@ export function getSubjectChapters(semesterId, subjectSlug) {
       hours: extractHours(unit.title),
       semester: semester.semester,
       semesterSlug,
-      semesterUrlPath: semester.urlPath,
+      semesterUrlPath: scopeHref(scope, semester.semester),
       subject: {
         name: subject.name,
         slug: subject.slug,
         courseCode: subject.courseCode || null,
-        urlPath: subject.urlPath,
+        urlPath: scopeHref(scope, semester.semester, subject.slug),
       },
       urlPath,
       absoluteUrl: `${BLOG_BASE_URL}${urlPath}`,
@@ -133,8 +133,8 @@ export function buildSubjectKeywords(semesterId, subjectSlug, subject) {
   return unique.slice(0, 25);
 }
 
-export function getChapterBySlug(semesterId, subjectSlug, chapterSlug) {
-  const chapters = getSubjectChapters(semesterId, subjectSlug);
+export function getChapterBySlug(semesterId, subjectSlug, chapterSlug, scope = "blog") {
+  const chapters = getSubjectChapters(semesterId, subjectSlug, scope);
   return chapters.find((chapter) => chapter.slug === chapterSlug) || null;
 }
 

@@ -29,8 +29,10 @@ const SiteNav = () => {
           <Link href="/">Home</Link>
           <Link href="/colleges">Colleges</Link>
           <Link href="/blog">Blog</Link>
+          <Link href="/syllabus">Syllabus</Link>
+          <Link href="/notes">Notes</Link>
+          <Link href="/question-paper">Question Papers</Link>
           <Link href="/pu-exam">PU Exam</Link>
-          <Link href="/pu-exam-grading">Grading & Marking</Link>
           <Link href="/login" className="nav-login">Login</Link>
           <Link href="/dashboard" className="nav-cta">Open Dashboard</Link>
           <button
@@ -57,8 +59,10 @@ const SiteNav = () => {
             <Link href="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
             <Link href="/colleges" onClick={() => setMobileMenuOpen(false)}>Colleges</Link>
             <Link href="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
+            <Link href="/syllabus" onClick={() => setMobileMenuOpen(false)}>Syllabus</Link>
+            <Link href="/notes" onClick={() => setMobileMenuOpen(false)}>Notes</Link>
+            <Link href="/question-paper" onClick={() => setMobileMenuOpen(false)}>Question Papers</Link>
             <Link href="/pu-exam" onClick={() => setMobileMenuOpen(false)}>PU Exam</Link>
-            <Link href="/pu-exam-grading" onClick={() => setMobileMenuOpen(false)}>Grading & Marking</Link>
             <Link href="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
             <Link href="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
             <button

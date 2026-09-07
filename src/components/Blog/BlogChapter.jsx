@@ -8,11 +8,17 @@ import SiteNav from "../SiteNav";
 import Breadcrumbs from "./Breadcrumbs";
 import ChapterNotesViewer from "./ChapterNotesViewer";
 import { setJSONLD } from "../../lib/seo";
-import { BLOG_BASE_URL, BLOG_LAST_UPDATED, getSubjectBySlug } from "../../lib/blogCurriculum";
+import {
+  BLOG_BASE_URL,
+  BLOG_LAST_UPDATED,
+  SCOPE_META,
+  getSubjectBySlug,
+  scopeHref,
+} from "../../lib/blogCurriculum";
 import { getSubjectArticle } from "../../data/subjectArticles";
 import "./Blog.css";
 
-const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapter, nextChapter }) => {
+const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapter, nextChapter, scope = "blog" }) => {
   const article = getSubjectArticle(semesterData.semester, subjectData.slug);
   const subjectLabel = subjectData.courseCode
     ? `${subjectData.name} (${subjectData.courseCode})`
@@ -21,9 +27,9 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
 
   const breadcrumbItems = [
     { label: "Home", to: "/" },
-    { label: "Blog", to: "/blog" },
-    { label: `Semester ${semesterData.semester}`, to: semesterData.urlPath },
-    { label: subjectLabel, to: subjectData.urlPath },
+    { label: SCOPE_META[scope].label, to: scopeHref(scope) },
+    { label: `Semester ${semesterData.semester}`, to: scopeHref(scope, semesterData.semester) },
+    { label: subjectLabel, to: scopeHref(scope, semesterData.semester, subjectData.slug) },
     { label: `Chapter ${chapter.number}: ${chapter.title}` },
   ];
 
@@ -86,7 +92,10 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
           </div>
 
           <div className="subject-cta subject-hero-cta">
-            <Link href={subjectData.urlPath} className="blog-btn subject-cta-btn">
+            <Link
+              href={scopeHref(scope === "notes" ? "syllabus" : scope, semesterData.semester, subjectData.slug)}
+              className="blog-btn subject-cta-btn"
+            >
               Full {subjectLabel} Syllabus
             </Link>
           </div>
@@ -96,29 +105,27 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
       <section className="blog-section">
         <div className="blog-shell chapter-shell">
           <article className="blog-card subject-article chapter-article">
-            {subjectData.slug === "computer-workshop" ? (
-              <section className="chapter-topic-section">
-                <h2 className="subject-heading">
-                  <GraduationCap className="blog-inline-icon" aria-hidden="true" />
-                  {subjectData.name} Chapter {chapter.number} Topics
-                </h2>
-                <p className="chapter-lead">
-                  Everything you need to study {chapter.title} for Pokhara University BE Computer
-                  Engineering Semester {semesterData.semester}. Master these topics, then read the
-                  full notes below.
-                </p>
+            <section className="chapter-topic-section">
+              <h2 className="subject-heading">
+                <GraduationCap className="blog-inline-icon" aria-hidden="true" />
+                {subjectData.name} Chapter {chapter.number} Topics
+              </h2>
+              <p className="chapter-lead">
+                Everything you need to study {chapter.title} for Pokhara University BE Computer
+                Engineering Semester {semesterData.semester}. Master these topics, then read the
+                full notes below.
+              </p>
 
-                {topicCount ? (
-                  <ol className="subject-topic-list">
-                    {chapter.bullets.map((topic, index) => (
-                      <li key={`${chapter.id}-topic-${index}`}>{topic}</li>
-                    ))}
-                  </ol>
-                ) : (
-                  <p className="chapter-lead">No topic breakdown is stored for this chapter yet.</p>
-                )}
-              </section>
-            ) : null}
+              {topicCount ? (
+                <ol className="subject-topic-list">
+                  {chapter.bullets.map((topic, index) => (
+                    <li key={`${chapter.id}-topic-${index}`}>{topic}</li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="chapter-lead">No topic breakdown is stored for this chapter yet.</p>
+              )}
+            </section>
 
             <section className="chapter-notes-section">
               <ChapterNotesViewer
@@ -167,7 +174,7 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
   );
 };
 
-const BlogChapter = ({ semesterId, subjectSlug, chapter, previousChapter, nextChapter }) => {
+const BlogChapter = ({ semesterId, subjectSlug, chapter, previousChapter, nextChapter, scope = "blog" }) => {
   const semesterNumber = Number(semesterId);
   const result = getSubjectBySlug(semesterNumber, subjectSlug || "");
 
@@ -179,8 +186,8 @@ const BlogChapter = ({ semesterId, subjectSlug, chapter, previousChapter, nextCh
           <div className="blog-shell">
             <h1 className="blog-title">Chapter not found</h1>
             <p className="blog-subtitle">The requested chapter is not available.</p>
-            <Link className="blog-btn" href="/blog">
-              Back to Blog
+            <Link className="blog-btn" href={scopeHref(scope)}>
+              Back to {SCOPE_META[scope].label}
             </Link>
           </div>
         </section>
@@ -201,6 +208,7 @@ const BlogChapter = ({ semesterId, subjectSlug, chapter, previousChapter, nextCh
       chapter={{ ...chapter, description }}
       previousChapter={previousChapter}
       nextChapter={nextChapter}
+      scope={scope}
     />
   );
 };

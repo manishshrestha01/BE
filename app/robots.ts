@@ -16,6 +16,12 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
           '/about',
           '/blogs',
           '/blog',
+          '/syllabus',
+          '/syllabus/',
+          '/notes',
+          '/notes/',
+          '/question-paper',
+          '/question-paper/',
           '/pu-exam',
           '/pu-exam-grading',
           '/contact',
@@ -29,7 +35,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
           '/disclaimer',
         ],
         // Block non-public / internal pages
-        disallow: ['/admin', '/user-info', '/manifest.json'],
+        disallow: ['/admin', '/user-info', '/manifest.json', '/api'],
       },
       // ── AI Search Bots (ALLOW — required for GEO citations) ──────
       { userAgent: 'GPTBot', allow: '/' },

@@ -1,9 +1,7 @@
 'use client'
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { FileText, Loader2, Image as ImageIcon } from "lucide-react";
 import { getNoteChapterConfig, getChapterNumberFromFileName } from "../../lib/chapterNotesConfig";
-import { getSubjectArticle } from "../../data/subjectArticles";
-import { parseUnitNumber } from "../../lib/subjectChapters";
 import PdfPageReader from "./PdfPageReader";
 
 const FILE_TYPE_LABELS = {
@@ -91,27 +89,24 @@ const EmbeddedFile = ({ file }) => {
   );
 };
 
-const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumber }) => {
+const ChapterNotesViewer = ({
+  semesterId,
+  subjectSlug,
+  subjectName,
+  chapterNumber,
+  chapterId = "chapter-notes",
+  heading,
+  lead,
+}) => {
   const [files, setFiles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => Boolean(getNoteChapterConfig(subjectSlug)));
   const [error, setError] = useState(null);
 
   const chapterConfig = getNoteChapterConfig(subjectSlug);
   const hasNotes = Boolean(chapterConfig);
 
-  const inlineNotes = useMemo(() => {
-    if (hasNotes) return null;
-    const article = getSubjectArticle(semesterId, subjectSlug);
-    if (!article) return null;
-    const syllabus = article.sections.find((section) => section.id === "syllabus-overview");
-    const units = syllabus?.units || [];
-    const unit = units.find((item, index) => parseUnitNumber(item.title, index) === Number(chapterNumber));
-    if (!unit?.content?.length && !unit?.bullets?.length) return null;
-    return unit;
-  }, [chapterNumber, hasNotes, semesterId, subjectSlug]);
-
   useEffect(() => {
-    if (!chapterConfig || inlineNotes) {
+    if (!chapterConfig) {
       setLoading(false);
       setFiles([]);
       return;
@@ -210,11 +205,13 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
   }, [semesterId, subjectSlug, chapterNumber, chapterConfig?.folder]);
 
   return (
-    <section className="chapter-notes" id="chapter-notes">
+    <section className="chapter-notes" id={chapterId}>
       <h2 className="subject-heading">
-        Read {subjectName} Syllabus
+        {heading ?? `Read ${subjectName} Syllabus`}
       </h2>
-      <p className="chapter-lead">Read the full syllabus notes for this chapter right here.</p>
+      <p className="chapter-lead">
+        {lead ?? "Read the full syllabus notes for this chapter right here."}
+      </p>
 
       {loading && (
         <div className="chapter-notes-loading">
@@ -229,24 +226,15 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
         </p>
       )}
 
-      {!loading && !error && !hasNotes && !inlineNotes && (
-        <p className="chapter-notes-empty">No notes are published for this subject yet.</p>
+      {!loading && !error && !hasNotes && (
+        <p className="chapter-notes-empty">
+          This chapter is covered by the syllabus topics above. Downloadable note files aren&apos;t
+          published for this subject on the web — find them in the StudyMate app.
+        </p>
       )}
 
       {!loading && !error && hasNotes && files.length === 0 && (
         <p className="chapter-notes-empty">No notes are linked to this chapter yet.</p>
-      )}
-
-      {!loading && !error && inlineNotes && (
-        <div className="chapter-notes-inline">
-          {inlineNotes.bullets?.length ? (
-            <ul className="chapter-notes-inline-bullets">
-              {inlineNotes.bullets.map((bullet, index) => (
-                <li key={`inline-b-${index}`}>{bullet}</li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
       )}
 
       {!loading && !error && files.length > 0 && (
