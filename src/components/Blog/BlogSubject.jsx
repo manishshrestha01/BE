@@ -339,7 +339,7 @@ const BlogSubjectContent = ({ semesterData, subjectData }) => {
                             </Link>
                           </div>
                         ) : null}
-                        {renderParagraphs(unit.content || [], unit.id)}
+                        {!isSyllabusOverview ? renderParagraphs(unit.content || [], unit.id) : null}
                         {isSyllabusOverview
                           ? renderSyllabusSubpoints(unit.bullets || [], unit.id, unitNumber)
                           : renderBullets(unit.bullets || [], unit.id)}

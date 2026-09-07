@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, FileText, Loader2, Image as ImageIcon } from "lucide-react";
+import { FileText, Loader2, Image as ImageIcon } from "lucide-react";
 import { getNoteChapterConfig, getChapterNumberFromFileName } from "../../lib/chapterNotesConfig";
 import { getSubjectArticle } from "../../data/subjectArticles";
 import { parseUnitNumber } from "../../lib/subjectChapters";
@@ -25,6 +25,39 @@ function getFileType(name = "") {
   return "other";
 }
 
+const DRIVE_FILE_RE = /drive\.google\.com\/file\/d\/([^/]+)/;
+
+const ExternalLink = ({ file }) => {
+  const driveMatch = DRIVE_FILE_RE.test(file.url || "") ? file.url.match(DRIVE_FILE_RE) : null;
+  const driveId = driveMatch ? driveMatch[1] : null;
+  return (
+    <div className="chapter-notes-embedded">
+      <div className="chapter-notes-embedded-head">
+        <span className="chapter-notes-viewer-title" title={file.name}>
+          <FileText size={15} aria-hidden="true" />
+          {file.name}
+        </span>
+        <span className="chapter-notes-embedded-type">Link</span>
+      </div>
+      <div style={{ padding: "10px 14px" }}>
+        <a href={file.url} target="_blank" rel="noopener noreferrer" style={{ color: "#6ea8fe", fontWeight: 500 }}>
+          Open document →
+        </a>
+      </div>
+      {driveId ? (
+        <div className="chapter-notes-drive-wrap">
+          <iframe
+            src={`https://drive.google.com/file/d/${driveId}/preview`}
+            title={file.name}
+            className="chapter-notes-drive-frame"
+            allow="autoplay"
+          />
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
 const EmbeddedFile = ({ file }) => {
   const type = getFileType(file.name);
   return (
@@ -45,6 +78,12 @@ const EmbeddedFile = ({ file }) => {
       ) : type === "img" ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={file.url} alt={file.name} className="chapter-notes-image-viewer" />
+      ) : type === "docx" || type === "pptx" ? (
+        <iframe
+          src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(file.url)}`}
+          title={file.name}
+          className="chapter-notes-office-frame"
+        />
       ) : (
         <p className="chapter-notes-empty">This file type can't be previewed in the browser.</p>
       )}
@@ -88,22 +127,71 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
         if (!res.ok) throw new Error(`Unable to load notes (${res.status})`);
         return res.json();
       })
-      .then((json) => {
+      .then(async (json) => {
         if (cancelled) return;
-        let list = (json?.files || []).map((file) => ({
+
+        // Allowlist entries may be repo file names, external-URL entries
+        // ({ name, url }), or repo file paths in subfolders ({ name, path }).
+        const allowlist = chapterConfig.chapters?.[chapterNumber] || [];
+
+        const repoFiles = (json?.files || []).map((file) => ({
           name: file.name,
           path: file.path,
           size: file.size || 0,
           url: file.rawUrl || file.downloadUrl || file.url || "",
         }));
 
-        // Explicit per-chapter list (curriculum-accurate) overrides the default
-        // "leading number = chapter number" rule.
-        const allowlist = chapterConfig.chapters?.[chapterNumber];
-        if (allowlist?.length) {
-          list = list.filter((file) => allowlist.includes(file.name));
-        } else {
-          list = list.filter((file) => getChapterNumberFromFileName(file.name) === chapterNumber);
+        const hasAllowlist = Boolean(chapterConfig.chapters?.[chapterNumber]);
+        const resolved = await Promise.all(
+          allowlist.map(async (entry) => {
+            if (typeof entry === "string") {
+              if (hasAllowlist) {
+                return repoFiles.find((file) => file.name === entry) || null;
+              }
+              return null;
+            }
+            if (entry?.path) {
+              const params = new URLSearchParams({
+                resource: "subject",
+                format: "json",
+                path: entry.path,
+              });
+              try {
+                const res = await fetch(`/api/notes?${params.toString()}`, {
+                  headers: { Accept: "application/json" },
+                });
+                if (!res.ok) return null;
+                const subJson = await res.json();
+                const file = subJson?.files?.[0];
+                return file
+                  ? {
+                      name: file.name,
+                      path: file.path,
+                      size: file.size || 0,
+                      url: file.rawUrl || file.downloadUrl || file.url || "",
+                    }
+                  : null;
+              } catch {
+                return null;
+              }
+            }
+            if (entry?.url) {
+              return {
+                name: entry.name,
+                url: entry.url,
+                _external: true,
+                path: `external-${chapterNumber}`,
+              };
+            }
+            return null;
+          })
+        );
+
+        let list = resolved.filter(Boolean);
+        if (!hasAllowlist) {
+          list = repoFiles.filter(
+            (file) => getChapterNumberFromFileName(file.name) === chapterNumber
+          );
         }
         setFiles(list);
       })
@@ -124,7 +212,6 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
   return (
     <section className="chapter-notes" id="chapter-notes">
       <h2 className="subject-heading">
-        <BookOpen className="blog-inline-icon" aria-hidden="true" />
         Read {subjectName} Syllabus
       </h2>
       <p className="chapter-lead">Read the full syllabus notes for this chapter right here.</p>
@@ -152,11 +239,6 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
 
       {!loading && !error && inlineNotes && (
         <div className="chapter-notes-inline">
-          {inlineNotes.content?.length
-            ? inlineNotes.content.map((paragraph, index) => (
-                <p key={`inline-p-${index}`}>{paragraph}</p>
-              ))
-            : null}
           {inlineNotes.bullets?.length ? (
             <ul className="chapter-notes-inline-bullets">
               {inlineNotes.bullets.map((bullet, index) => (
@@ -169,9 +251,13 @@ const ChapterNotesViewer = ({ semesterId, subjectSlug, subjectName, chapterNumbe
 
       {!loading && !error && files.length > 0 && (
         <div className="chapter-notes-embeds">
-          {files.map((file, index) => (
-            <EmbeddedFile key={`${file.path}-${index}`} file={file} />
-          ))}
+          {files.map((file, index) =>
+            file._external ? (
+              <ExternalLink key={file.path} file={file} />
+            ) : (
+              <EmbeddedFile key={`${file.path}-${index}`} file={file} />
+            )
+          )}
         </div>
       )}
     </section>

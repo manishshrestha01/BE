@@ -1692,6 +1692,22 @@
   background: #14151b;
 }
 
+.chapter-notes-office-frame {
+  width: 100%;
+  height: 70vh;
+  display: block;
+  border: none;
+  background: #fff;
+}
+
+.chapter-notes-drive-frame {
+  width: 100%;
+  height: 70vh;
+  display: block;
+  border: none;
+  background: #fff;
+}
+
 /* ── Studocu-style page-image PDF reader ── */
 .studocu-reader {
   display: flex;

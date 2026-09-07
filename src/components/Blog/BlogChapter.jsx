@@ -81,7 +81,6 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
           <p className="blog-subtitle">{chapter.description}</p>
 
           <div className="subject-meta-row">
-            <span>Chapter {chapter.number} of {topicCount} topics</span>
             {chapter.hours ? <span>Syllabus Hours: {chapter.hours}</span> : null}
             <span>Pokhara University BE Computer Engineering • Semester {semesterData.semester}</span>
           </div>
