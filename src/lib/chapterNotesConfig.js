@@ -43,6 +43,19 @@ export const SUBJECT_NOTE_CHAPTER_FILES = {
       9: [{ name: "Complete Solution — Logic Circuit", url: DIGITAL_LOGIC_DRIVE_URL }],
     },
   },
+  "computer-workshop": {
+    folder: "Semester 1/Computer Workshop",
+    chapters: {
+      1: ["Computer_Workshop_CMP122_Notes.pdf"],
+      2: ["Computer_Workshop_CMP122_Notes.pdf"],
+      3: ["Computer_Workshop_CMP122_Notes.pdf"],
+      4: ["Computer_Workshop_CMP122_Notes.pdf"],
+      5: ["Computer_Workshop_CMP122_Notes.pdf"],
+      6: ["Computer_Workshop_CMP122_Notes.pdf"],
+      7: ["Computer_Workshop_CMP122_Notes.pdf"],
+      8: ["Computer_Workshop_CMP122_Notes.pdf"],
+    },
+  },
   "basic-electrical-engineering": {
     folder: "Semester 1/BEE - Class Materials/Lectures",
     chapters: {
