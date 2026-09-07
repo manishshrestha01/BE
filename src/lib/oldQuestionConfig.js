@@ -234,7 +234,13 @@ const OLD_QUESTION_SOURCES = {
     old: { folders: ["Semester 4/Old Questions"], filter: "^nm|^- ?nm|nm[-_ .]" },
   },
   "4:theory-of-computation": {
-    board: { folders: ["Semester 4/Board Questions"], filter: "toc" },
+    // Season-dated papers use "Theory of Computation (New)" naming, so both
+    // "toc" and "theory of computation" must match; the undated "TOC board
+    // question.pdf" lands on the S4 fallback (Spring 2024).
+    board: {
+      folders: ["Semester 4/Board Questions"],
+      filter: "toc|theory of computation",
+    },
     old: { folders: ["Semester 4/Old Questions"], filter: "toc" },
   },
   "4:research-fundamentals": {
@@ -430,6 +436,77 @@ export function extractExamTerm(fileName) {
     year,
     season: season || "fall",
     sortKey: year * 10 + (SEASON_ORDER[season || "fall"] || 0),
+  };
+}
+
+// Slots papers into term buckets (shared by the client viewer and the sitemap
+// builder so year URLs always match what the pages actually render). Applies the
+// new-syllabus semester fallback, multi-year "combined" expansion and explicit
+// per-file "terms" overrides; unmatched leftovers go to `others`.
+export function classifyPapersToTerms(files, { other = [], combined = {}, terms = {} } = {}, isNewSyllabus = false, semesterId) {
+  const byTerm = new Map();
+  const others = [];
+  const fallbackTerm = isNewSyllabus ? semesterFallbackTerm(semesterId) : null;
+
+  const slot = (term, file) => {
+    if (!byTerm.has(term.label)) byTerm.set(term.label, { term, files: [] });
+    const bucket = byTerm.get(term.label);
+    if (!bucket.files.some((f) => f.name && file.name && f.name.toLowerCase() === file.name.toLowerCase())) {
+      bucket.files.push(file);
+    }
+  };
+
+  const expandCombined = (file, range) => {
+    const from = range.from ? slugToTerm(range.from) : fallbackTerm;
+    const to = range.to ? slugToTerm(range.to) : from;
+    if (!from || !to) return;
+    const seasonOrder = ["spring", "fall"];
+    for (let year = from.year; year <= to.year; year += 1) {
+      seasonOrder.forEach((season) => {
+        const key = year * 10 + (season === "fall" ? 1 : 0);
+        if (key < from.sortKey || key > to.sortKey) return;
+        slot({ label: `${season[0].toUpperCase()}${season.slice(1)} ${year}`, year, season, sortKey: key }, file);
+      });
+    }
+  };
+
+  files.forEach((file) => {
+    const name = String(file.name || "");
+    if (other.some((p) => {
+      try {
+        return new RegExp(p, "i").test(name);
+      } catch {
+        return false;
+      }
+    })) {
+      others.push(file);
+      return;
+    }
+
+    const stripped = name.replace(/\.[^.]+$/, "").toLowerCase();
+    const combinedMatch = combined ? Object.keys(combined).find((k) => k.toLowerCase() === stripped) : null;
+    if (combinedMatch && combined[combinedMatch]) {
+      expandCombined(file, combined[combinedMatch]);
+      return;
+    }
+
+    const termOverride = terms ? terms[stripped] : null;
+    if (termOverride) {
+      const t = slugToTerm(termOverride);
+      if (t) {
+        slot(t, file);
+        return;
+      }
+    }
+
+    const term = extractExamTerm(name) || fallbackTerm;
+    if (term) slot(term, file);
+    else others.push(file);
+  });
+
+  return {
+    entries: [...byTerm.values()].sort((a, b) => a.term.sortKey - b.term.sortKey),
+    others,
   };
 }
 

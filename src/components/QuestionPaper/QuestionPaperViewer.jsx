@@ -17,10 +17,9 @@ import Breadcrumbs from "../Blog/Breadcrumbs";
 import PaperCard from "./PaperCard";
 import { buildCards, loadQuestionPaperFiles } from "./questionPaperFiles";
 import {
-  extractExamTerm,
+  classifyPapersToTerms,
   QUESTION_PAPER_HOME,
   QUESTION_PAPER_VARIANTS,
-  semesterFallbackTerm,
   slugToTerm,
   subjectPaperHref,
   termToSlug,
@@ -31,94 +30,6 @@ import "../Blog/Blog.css";
 import "./QuestionPaper.css";
 
 const EMPTY_SOURCES = { folders: [], filter: null, other: [], combined: {} };
-
-const matchesAny = (name, patterns = []) => {
-  if (!patterns.length) return false;
-  return patterns.some((p) => {
-    try {
-      return new RegExp(p, "i").test(name);
-    } catch {
-      return false;
-    }
-  });
-};
-
-// Slots a paper into the right term/other buckets, applying the new-syllabus
-// semester fallback for undated files, multi-year "combined" handling, and
-// explicit per-file "terms" overrides (e.g. "DSA.pdf" -> spring-2023).
-function classifyPapers(files, { other = [], combined = {}, terms = {} }, isNewSyllabus, semesterId) {
-  const byTerm = new Map();
-  const others = [];
-  const fallbackTerm = isNewSyllabus ? semesterFallbackTerm(semesterId) : null;
-
-  const slot = (term, file) => {
-    const label = term.label;
-    if (!byTerm.has(label)) byTerm.set(label, { term, files: [] });
-    if (!byTerm.get(label).files.includes(file)) byTerm.get(label).files.push(file);
-  };
-
-  const expandCombined = (file, range) => {
-    const from = range.from ? slugToTerm(range.from) : fallbackTerm;
-    const to = range.to ? slugToTerm(range.to) : from;
-    if (!from || !to) return;
-    // Build the ordered season/year list within [from, to].
-    const seasonOrder = ["spring", "fall"];
-    for (let year = from.year; year <= to.year; year += 1) {
-      seasonOrder.forEach((season) => {
-        const key = year * 10 + (season === "fall" ? 1 : 0);
-        const fromKey = from.year * 10 + (from.season === "fall" ? 1 : 0);
-        const toKey = to.year * 10 + (to.season === "fall" ? 1 : 0);
-        if (key < fromKey || key > toKey) return;
-        slot(
-          {
-            label: `${season[0].toUpperCase()}${season.slice(1)} ${year}`,
-            year,
-            season,
-            sortKey: key,
-          },
-          file
-        );
-      });
-    }
-  };
-
-  files.forEach((file) => {
-    if (matchesAny(file.name, other)) {
-      others.push(file);
-      return;
-    }
-
-    const combinedMatch = combined
-      ? Object.keys(combined).find(
-          (k) => k.toLowerCase() === String(file.name).replace(/\.[^.]+$/, "").toLowerCase()
-        )
-      : null;
-    if (combinedMatch && combined[combinedMatch]) {
-      expandCombined(file, combined[combinedMatch]);
-      return;
-    }
-
-    const termOverride = terms
-      ? terms[String(file.name).replace(/\.[^.]+$/, "").toLowerCase()]
-      : null;
-    if (termOverride) {
-      const t = slugToTerm(termOverride);
-      if (t) {
-        slot(t, file);
-        return;
-      }
-    }
-
-    const term = extractExamTerm(file.name) || fallbackTerm;
-    if (term) slot(term, file);
-    else others.push(file);
-  });
-
-  return {
-    entries: [...byTerm.values()].sort((a, b) => a.term.sortKey - b.term.sortKey),
-    others,
-  };
-}
 
 const QuestionPaperViewer = ({ semesterData, subject, variant, sources = {}, yearSlug }) => {
   const currentVariant = QUESTION_PAPER_VARIANTS.find((item) => item.slug === variant) || QUESTION_PAPER_VARIANTS[0];
@@ -173,11 +84,11 @@ const QuestionPaperViewer = ({ semesterData, subject, variant, sources = {}, yea
   const isNewSyllabus = currentVariant.configKey === "board";
 
   const current = useMemo(
-    () => classifyPapers(currentFiles, currentSources, isNewSyllabus, semesterData.semester),
+    () => classifyPapersToTerms(currentFiles, currentSources, isNewSyllabus, semesterData.semester),
     [currentFiles, currentSources, isNewSyllabus, semesterData.semester]
   );
   const other = useMemo(
-    () => classifyPapers(otherFiles, otherSources, false, semesterData.semester),
+    () => classifyPapersToTerms(otherFiles, otherSources, false, semesterData.semester),
     [otherFiles, otherSources, semesterData.semester]
   );
 

@@ -2,10 +2,14 @@ import { FileText, Images } from "lucide-react";
 
 import PdfPageReader from "../Blog/PdfPageReader";
 
+// Keep the papers view-only: right-clicking a canvas (PDF page) or an image
+// normally offers "Copy image" / "Save image as…". Suppress that context menu.
+const blockContextMenu = (event) => event.preventDefault();
+
 const PaperCard = ({ card }) => {
   if (card.kind === "pdf" && card.url) {
     return (
-      <div className="oldq-paper-card">
+      <div className="oldq-paper-card" onContextMenu={blockContextMenu}>
         <div className="oldq-paper-head">
           <span className="chapter-notes-viewer-title" title={card.name}>
             <FileText size={15} aria-hidden="true" />
@@ -20,7 +24,7 @@ const PaperCard = ({ card }) => {
 
   if (card.kind === "image") {
     return (
-      <div className="oldq-paper-card oldq-image-card">
+      <div className="oldq-paper-card oldq-image-card" onContextMenu={blockContextMenu}>
         <div className="oldq-paper-head">
           <span className="chapter-notes-viewer-title" title={card.name}>
             <Images size={15} aria-hidden="true" />
@@ -37,6 +41,8 @@ const PaperCard = ({ card }) => {
               src={url}
               alt={`${card.name} — page ${index + 1}`}
               loading="lazy"
+              onContextMenu={blockContextMenu}
+              draggable={false}
             />
           ))}
         </div>
@@ -45,7 +51,7 @@ const PaperCard = ({ card }) => {
   }
 
   return (
-    <div className="oldq-paper-card">
+    <div className="oldq-paper-card" onContextMenu={blockContextMenu}>
       <div className="oldq-paper-head">
         <span className="chapter-notes-viewer-title" title={card.name}>
           <FileText size={15} aria-hidden="true" />

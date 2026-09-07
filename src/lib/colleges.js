@@ -13,11 +13,11 @@ export const COLLEGES = [
     value: 'Pokhara Engineering College (PEC)',
     label: 'Pokhara Engineering College (PEC)',
     logo: '/logo-college/pec.png',
-    location: 'Bhimkali Patan, Pokhara, Nepal',
+    location: 'Phirke-8, Pokhara, Nepal',
     established: '1997',
-    program: 'B.E. in Computer, Electronics & Communication, Civil, and Electrical Engineering',
+    program: 'B.E. in Computer, IT, Civil, and Architecture Engineering',
     description:
-      'Pokhara Engineering College (PEC) is located at Bhimkali Patan near the heart of Pokhara, Nepal’s tourism capital. Founded in 1997 and affiliated with Pokhara University, PEC offers the BE Computer Engineering program with a strong practical and lab-based emphasis. StudyMate provides PEC-aligned study material for all 8 semesters — covering Calculus, Digital Logic, DSA, DBMS, OS, Computer Networks, AI, ML, and the compulsory engineering subjects — so PEC students can revise from the exact PU 2022 syllabus.',
+      'Pokhara Engineering College (PEC) is located at Phirke-8 near the heart of Pokhara, Nepal’s tourism capital. Founded in 1997 and affiliated with Pokhara University, PEC offers the BE Computer Engineering program with a strong practical and lab-based emphasis. StudyMate provides PEC-aligned study material for all 8 semesters — covering Calculus, Digital Logic, DSA, DBMS, OS, Computer Networks, AI, ML, and the compulsory engineering subjects — so PEC students can revise from the exact PU 2022 syllabus.',
   },
   {
     value: 'Lumbini Engineering College (LEC)',
@@ -33,11 +33,11 @@ export const COLLEGES = [
     value: 'National Academy of Science and Technology (NAST)',
     label: 'National Academy of Science and Technology (NAST)',
     logo: '/logo-college/nast.jpeg',
-    location: 'Kathmandu, Nepal',
+    location: 'Kailali, Nepal',
     established: '',
     program: 'B.E. in Computer and Civil Engineering (Pokhara University affiliated)',
     description:
-      'The National Academy of Science and Technology (NAST) runs science and technology programmes in the Kathmandu Valley and is affiliated with Pokhara University for BE Computer Engineering. StudyMate keeps a complete set of PU curriculum study resources for NAST students — semester-wise PDF notes, syllabus overviews, important topics, and previous past papers organized by semester 1 through 8.',
+      'The National Academy of Science and Technology (NAST) runs science and technology programmes in Kailali and is affiliated with Pokhara University for BE Computer Engineering. StudyMate keeps a complete set of PU curriculum study resources for NAST students — semester-wise PDF notes, syllabus overviews, important topics, and previous past papers organized by semester 1 through 8.',
   },
   {
     value: 'Nepal College of Information Technology (NCIT)',
@@ -63,11 +63,11 @@ export const COLLEGES = [
     value: 'Everest Engineering College (EEC)',
     label: 'Everest Engineering College (EEC)',
     logo: '/logo-college/eec.png',
-    location: 'Balkumari, Lalitpur, Nepal',
-    established: '',
-    program: 'B.E. in Computer and Civil Engineering',
+    location: 'Sanepa-2, Lalitpur, Nepal',
+    established: '2001',
+    program: 'B.E. in Computer, Civil, IT, and Software Engineering',
     description:
-      'Everest Engineering College (EEC) in Balkumari, Lalitpur is affiliated with Pokhara University and offers BE Computer Engineering with a focus on practical engineering education. StudyMate provides EEC students with semester-wise study material for the complete PU Computer Engineering curriculum — academic notes, syllabus overviews, and previous past papers from Semester 1 through Semester 8.',
+      'Everest Engineering College (EEC) in Sanepa-2, Lalitpur is affiliated with Pokhara University and offers BE Computer, Civil, IT and Software engineering programs with a focus on practical engineering education. StudyMate provides EEC students with semester-wise study material for the complete PU Computer Engineering curriculum — academic notes, syllabus overviews, and previous past papers from Semester 1 through Semester 8.',
   },
   {
     value: 'School of Engineering (PU)',
@@ -85,7 +85,7 @@ export const COLLEGES = [
     logo: '/logo-college/gces.png',
     location: 'Lamachaur, Kaski (near Pokhara), Nepal',
     established: '2005',
-    program: 'B.E. in Computer, Electrical & Electronics, Software, Civil, and Architecture programmes',
+    program: 'B.E. in Computer and Software programmes',
     description:
       'Gandaki College of Engineering and Science (GCES) is located at Lamachaur on the outskirts of Pokhara, Kaski. Affiliated with Pokhara University, GCES offers BE Computer Engineering along with other engineering disciplines. StudyMate supplies GCES students with the exact PU semester syllabus breakdown, in-depth subject notes, and previous past papers to prepare for Pokhara University end-semester exams.',
   },
@@ -103,11 +103,11 @@ export const COLLEGES = [
     value: 'Madan Bhandari College of Engineering (MBCE)',
     label: 'Madan Bhandari College of Engineering (MBCE)',
     logo: '/logo-college/mbce.png',
-    location: 'Chitwan, Nepal',
+    location: 'Urlabari, Morang, Nepal',
     established: '',
-    program: 'B.E. in Computer and Civil Engineering',
+    program: 'B.E. in Computer, Civil, and Architecture Engineering',
     description:
-      'Madan Bhandari College of Engineering (MBCE) operates in Chitwan under Pokhara University affiliation and offers BE Computer Engineering. StudyMate helps MBCE students prepare for PU exams with organized semester-wise notes, syllabus breakdowns, and previous past papers covering every subject of the 2022 Computer Engineering curriculum.',
+      'Madan Bhandari College of Engineering (MBCE) is a joint constituent campus of Madan Bhandari Memorial Academy Nepal (MBMAN) and Pokhara University at Urlabari, Morang, and offers BE Computer, Civil and Architecture Engineering. StudyMate helps MBCE students prepare for PU exams with organized semester-wise notes, syllabus breakdowns, and previous past papers covering every subject of the 2022 Computer Engineering curriculum.',
   },
   {
     value: 'Oxford College of Engineering & Management (OXFORD)',
@@ -123,11 +123,11 @@ export const COLLEGES = [
     value: 'Universal Engineering & Science College (UESC)',
     label: 'Universal Engineering & Science College (UESC)',
     logo: '/logo-college/uesc.webp',
-    location: 'Chandranigahapur, Rautahat, Nepal',
-    established: '',
-    program: 'B.E. in Computer and Civil Engineering',
+    location: 'Chakupat, Lalitpur, Nepal',
+    established: '2000',
+    program: 'B.E. in Civil, Computer, and Architecture Engineering',
     description:
-      'Universal Engineering & Science College (UESC) is located at Chandranigahapur, Rautahat, and is affiliated with Pokhara University for its engineering programmes including BE Computer Engineering. UESC students can prepare for the PU end-semester exam using StudyMate’s semester-wise notes, syllabus overviews, important topics, and previous past papers for all 8 semesters.',
+      'Universal Engineering & Science College (UESC) is located at Chakupat-11, Lalitpur, and is affiliated with Pokhara University for its engineering programmes including BE Civil, Computer and Architecture Engineering. UESC students can prepare for the PU end-semester exam using StudyMate’s semester-wise notes, syllabus overviews, important topics, and previous past papers for all 8 semesters.',
   },
   {
     value: 'Rapti Engineering College (REC)',
