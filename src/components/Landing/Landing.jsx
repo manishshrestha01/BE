@@ -2,11 +2,12 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Sun, Moon, Monitor } from 'lucide-react'
+import { Sun, Moon, Monitor, BookOpen, FileText, BookOpenCheck, Archive } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
 import './Landing.css'
-import { COLLEGES } from '../../lib/colleges'
+import { BLOG_CURRICULUM, scopeHref } from '../../lib/blogCurriculum'
+import { QUESTION_PAPER_VARIANTS } from '../../lib/oldQuestionConfig'
 
 
 const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.manish.studymate'
@@ -170,7 +171,8 @@ const Landing = () => {
             <a href="#features">Features</a>
             <a href="#about">About</a>
             <a href="#testimonials">Reviews</a>
-            <Link href="/colleges">Colleges</Link>
+            <Link href="/notes">Notes</Link>
+            <Link href="/question-paper">Question Papers</Link>
             <Link href="/blog">Blog</Link>
             <Link href="/login" className="nav-login">Login</Link>
             <Link href="/dashboard" className="nav-cta">Open Dashboard</Link>
@@ -196,7 +198,8 @@ const Landing = () => {
               <a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
               <a href="#about" onClick={() => setMobileMenuOpen(false)}>About</a>
               <a href="#testimonials" onClick={() => setMobileMenuOpen(false)}>Reviews</a>
-              <Link href="/colleges" onClick={() => setMobileMenuOpen(false)}>Colleges</Link>
+              <Link href="/notes" onClick={() => setMobileMenuOpen(false)}>Notes</Link>
+              <Link href="/question-paper" onClick={() => setMobileMenuOpen(false)}>Question Papers</Link>
               <Link href="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
               <Link href="/login" className="nav-login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
               <Link href="/dashboard" className="nav-cta" onClick={() => setMobileMenuOpen(false)}>Open Dashboard</Link>
@@ -467,33 +470,66 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Supported Colleges Section */}
-      <section id="colleges" className="colleges-showcase">
-        <div className="colleges-container">
+      {/* Notes Section */}
+      <section id="notes" className="resource-showcase">
+        <div className="resource-container">
           <div className="section-header">
-            <span className="section-badge">Colleges</span>
-            <h2 className="section-title">Supported across 14+ colleges</h2>
+            <span className="section-badge">Notes</span>
+            <h2 className="section-title">Semester-wise Notes</h2>
             <p className="section-subtitle">
-              StudyMate covers all Pokhara University affiliated colleges notes offering BE Computer Engineering.
+              Chapter notes for every PU Computer Engineering subject, organized by semester. Pick a semester and start reading.
             </p>
           </div>
-          <div className="colleges-grid">
-            {COLLEGES.map((college, index) => {
-              const slug = (college.value.match(/\(([^)]+)\)/)?.[1] || '').toLowerCase()
+          <div className="resource-grid">
+            {BLOG_CURRICULUM.map((semester) => {
+              const href = scopeHref('notes', semester.semester);
               return (
-                <Link href={`/college/${slug}`} key={index} className="college-card">
-                  <img src={college.logo} alt={college.value} className="college-card-logo" onError={(e) => { e.target.style.display = 'none' }} />
-                  <div className="college-card-info">
-                    <span className="college-card-name">{college.value.split('(')[0].trim()}</span>
-                    <span className="college-card-abbr">({college.value.match(/\(([^)]+)\)/)?.[1]})</span>
+                <Link href={href} key={semester.semester} className="resource-card">
+                  <div className="resource-card-info">
+                    <span className="resource-card-title">
+                      <BookOpen size={16} aria-hidden="true" /> Semester {semester.semester}
+                    </span>
+                    <span className="resource-card-subtitle">{semester.subjectCount} Subjects</span>
                   </div>
                 </Link>
-              )
+              );
             })}
           </div>
-          <div className="colleges-cta">
-            <Link href="/colleges" className="btn-secondary">
-              View All Colleges
+          <div className="resource-cta">
+            <Link href="/notes" className="btn-secondary">
+              Browse All Notes
+              <span className="btn-arrow">→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Question Papers Section */}
+      <section id="question-papers" className="resource-showcase">
+        <div className="resource-container">
+          <div className="section-header">
+            <span className="section-badge">Question Papers</span>
+            <h2 className="section-title">Previous Question Papers</h2>
+            <p className="section-subtitle">
+              Board, final and old question papers for the current and previous syllabus, organized by exam year.
+            </p>
+          </div>
+          <div className="resource-grid">
+            {QUESTION_PAPER_VARIANTS.map((variant) => (
+              <Link href={`/question-paper/${variant.slug}`} key={variant.slug} className="resource-card">
+                <div className="resource-card-info">
+                  <span className="resource-card-title">
+                    {variant.slug === 'new-syllabus' ? <BookOpenCheck size={16} aria-hidden="true" /> : <Archive size={16} aria-hidden="true" />}{' '}
+                    {variant.label}
+                  </span>
+                  <span className="resource-card-subtitle">{variant.tagline}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="resource-cta">
+            <Link href="/question-paper" className="btn-secondary">
+              Browse All Papers
               <span className="btn-arrow">→</span>
             </Link>
           </div>
@@ -549,7 +585,7 @@ const Landing = () => {
             </a>
           </div>
           <div className="cta-trust">
-            <span>🎓 14+ colleges</span>
+            <span>🎓 8 Semesters</span>
             <span>📚 500+ materials</span>
             <span>📱 Available on Android</span>
           </div>
@@ -593,7 +629,8 @@ const Landing = () => {
               <div className="footer-column">
                 <h2>Quick Links</h2>
                 <Link href="/dashboard">Dashboard</Link>
-                <Link href="/colleges">Colleges</Link>
+                <Link href="/notes">Notes</Link>
+                <Link href="/question-paper">Question Papers</Link>
                 <Link href="/blog">Blog</Link>
                 <a href="#features">Features</a>
                 <a href="#about">About</a>

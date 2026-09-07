@@ -160,25 +160,25 @@
   margin: 0;
 }
 
-/* ==================== COLLEGES SHOWCASE SECTION ==================== */
-.colleges-showcase {
+/* ==================== NOTES & QUESTION PAPERS SHOWCASE SECTION ==================== */
+.resource-showcase {
   padding: 100px 24px;
 }
 
-.colleges-container {
+.resource-container {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Colleges Grid */
-.colleges-grid {
+/* Resource Grid */
+.resource-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 12px;
   margin-bottom: 40px;
 }
 
-.college-card {
+.resource-card {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -191,37 +191,36 @@
   transition: all 0.2s ease;
 }
 
-.college-card:hover {
+.resource-card:hover {
   border-color: var(--landing-gray-300);
   box-shadow: var(--landing-shadow);
   transform: translateY(-2px);
 }
 
-.college-card-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.college-card-info {
+.resource-card-info {
   display: flex;
   flex-direction: column;
 }
 
-.college-card-name {
+.resource-card-title {
   font-size: 13px;
   font-weight: 600;
   color: var(--landing-gray-800);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.college-card-abbr {
+.resource-card-title svg {
+  flex-shrink: 0;
+}
+
+.resource-card-subtitle {
   font-size: 12px;
   color: var(--landing-gray-500);
 }
 
-.colleges-cta {
+.resource-cta {
   text-align: center;
   margin-top: 32px;
 }
@@ -1649,16 +1648,16 @@
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
-[data-theme="dark"] .college-card {
+[data-theme="dark"] .resource-card {
   background: rgba(255,255,255,0.04);
   border-color: rgba(255,255,255,0.06);
 }
 
-[data-theme="dark"] .college-card:hover {
+[data-theme="dark"] .resource-card:hover {
   border-color: var(--landing-accent);
 }
 
-[data-theme="dark"] .college-card-name {
+[data-theme="dark"] .resource-card-title {
   color: var(--landing-white);
 }
 
@@ -1890,8 +1889,20 @@
     gap: 12px;
   }
   
-  .colleges-showcase {
+  .resource-showcase {
     padding: 60px 24px;
+  }
+
+  .resource-card {
+    padding: 10px 14px;
+  }
+
+  .resource-card-title {
+    font-size: 12px;
+  }
+
+  .resource-card-subtitle {
+    font-size: 11px;
   }
   
   .app-download-banner {
@@ -2037,19 +2048,19 @@
     font-size: 11px;
   }
   
-  .colleges-showcase {
+.resource-showcase {
     padding: 48px 16px;
   }
-  
-  .college-card {
+
+  .resource-card {
     padding: 10px 14px;
   }
-  
-  .college-card-name {
+
+  .resource-card-title {
     font-size: 12px;
   }
-  
-  .college-card-abbr {
+
+  .resource-card-subtitle {
     font-size: 11px;
   }
   
