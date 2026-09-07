@@ -1152,6 +1152,16 @@
   padding: 6px 12px;
 }
 
+[data-theme="dark"] .chapter-inline-btn {
+  background: #fff;
+  color: #111;
+}
+
+[data-theme="dark"] .chapter-inline-btn:hover {
+  background: #e6e6ea;
+  color: #111;
+}
+
 @media (max-width: 1100px) {
   .blog-home-page .blog-hero {
     padding: 144px 0 62px;
