@@ -28,7 +28,7 @@ export async function generateMetadata({ params }) {
     `Study ${chapter.title} inside the StudyMate dashboard with notes and past papers.`
 
   return buildMetadata({
-    title: `${subject.name}${subject.courseCode ? ` (${subject.courseCode})` : ''} Chapter ${chapter.number}: ${chapter.title} Notes - PU Semester ${semester.semester} Computer Engineering`,
+    title: `${subject.name}${subject.courseCode ? ` (${subject.courseCode})` : ''} ${/^(chapter|unit)\s+(\d+|[ivxlcdm]+)\s*[:.-]/i.test(chapter.title) ? chapter.title : `Ch ${chapter.number}: ${chapter.title}`} — PU Sem ${semester.semester}`,
     description,
     keywords: buildSubjectKeywords(String(semester.semester), subject.slug, subject),
     canonicalPath: chapter.urlPath,

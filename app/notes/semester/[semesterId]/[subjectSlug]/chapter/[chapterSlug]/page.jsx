@@ -25,10 +25,13 @@ export async function generateMetadata({ params }) {
 
   const topicPreview = chapter.bullets.slice(0, 3).join(', ')
   const courseLabel = subject.courseCode ? `${subject.name} (${subject.courseCode})` : subject.name
-  const description = `${courseLabel} Chapter ${chapter.number} — ${chapter.title}: PU ${semester.semester} ${subject.name} notes. Syllabus topics: ${topicPreview}. Read the full chapter notes right here on StudyMate.`
+  // Software Engineering unit titles already carry "Chapter N:" — avoid duplicating the prefix.
+  const hasChapterPrefix = /^(chapter|unit)\s+(\d+|[ivxlcdm]+)\s*[:.-]/i.test(chapter.title)
+  const titleLabel = hasChapterPrefix ? chapter.title : `Ch ${chapter.number}: ${chapter.title}`
+  const description = `${courseLabel} ${chapter.title}: PU ${semester.semester} ${subject.name} notes. Syllabus topics: ${topicPreview}. Read the full chapter notes right here on StudyMate.`
 
   return buildMetadata({
-    title: `${subject.name}${subject.courseCode ? ` (${subject.courseCode})` : ''} Chapter ${chapter.number}: ${chapter.title} Notes - PU Semester ${semester.semester} Computer Engineering`,
+    title: `${subject.name}${subject.courseCode ? ` (${subject.courseCode})` : ''} ${titleLabel} — PU Sem ${semester.semester}`,
     description,
     keywords: buildSubjectKeywords(String(semester.semester), subject.slug, subject),
     canonicalPath: chapter.urlPath,

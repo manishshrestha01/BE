@@ -593,8 +593,10 @@ export default async function handler(req, res) {
     format === "json" ||
     (req.headers.accept || "").includes("application/json");
 
+  // Serve HTML to ordinary crawlers (Bingbot sends `Accept: */*` or none) so the
+  // response always carries a <title>; frontend consumers pass format=json explicitly.
   if (resource === "subject") {
-    return handleSubject(req, res, params, wantsJson || !(req.headers.accept || "").includes("text/html"));
+    return handleSubject(req, res, params, wantsJson);
   }
 
   // default: resource=index
