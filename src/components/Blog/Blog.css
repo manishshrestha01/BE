@@ -521,6 +521,32 @@
   background: var(--landing-gray-800);
 }
 
+[data-theme="dark"] .blog-page .blog-btn:not(.blog-btn-muted) {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+}
+
+[data-theme="dark"] .blog-page .blog-btn:not(.blog-btn-muted):hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] .blog-page .blog-btn:not(.blog-btn-muted) {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #ffffff;
+  }
+
+  [data-theme="system"] .blog-page .blog-btn:not(.blog-btn-muted):hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+  }
+}
+
 .blog-btn-muted {
   cursor: not-allowed;
   background: var(--landing-gray-300);
@@ -1049,9 +1075,47 @@
   gap: 12px;
 }
 
-.subject-nav-btn {
+.subject-nav .subject-nav-btn {
+  background: var(--landing-dark, #0a0a0a);
+  color: var(--landing-white, #fff);
+  border: 1px solid var(--landing-dark, #0a0a0a);
   font-weight: 500;
   gap: 8px;
+}
+
+.subject-nav .subject-nav-btn:hover {
+  transform: translateY(-2px);
+  background: var(--landing-dark, #0a0a0a);
+  color: var(--landing-white, #fff);
+  border-color: var(--landing-dark, #0a0a0a);
+}
+
+[data-theme="dark"] .blog-page .subject-nav .subject-nav-btn {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+[data-theme="dark"] .blog-page .subject-nav .subject-nav-btn:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] .blog-page .subject-nav .subject-nav-btn {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+  }
+
+  [data-theme="system"] .blog-page .subject-nav .subject-nav-btn:hover {
+    transform: translateY(-2px);
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+  }
 }
 
 .subject-nav-center {
@@ -1121,6 +1185,80 @@
   background: transparent;
   border: none;
   padding: 0;
+}
+
+.chapter-hero-topics {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.chapter-hero-topics li {
+  position: relative;
+  padding-left: 18px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  text-align: justify;
+}
+
+.chapter-hero-topics li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.65em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--landing-accent, #0066ff);
+}
+
+.subject-hero-cta .subject-cta-btn,
+.subject-hero-cta .subject-cta-btn--secondary {
+  background: var(--landing-dark, #0a0a0a);
+  color: var(--landing-white, #fff);
+  border: 1px solid var(--landing-dark, #0a0a0a);
+}
+
+.subject-hero-cta .subject-cta-btn:hover,
+.subject-hero-cta .subject-cta-btn--secondary:hover {
+  transform: translateY(-2px);
+  background: var(--landing-dark, #0a0a0a);
+  color: var(--landing-white, #fff);
+  border-color: var(--landing-dark, #0a0a0a);
+}
+
+[data-theme="dark"] .blog-page .subject-hero-cta .subject-cta-btn,
+[data-theme="dark"] .blog-page .subject-hero-cta .subject-cta-btn--secondary {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+[data-theme="dark"] .blog-page .subject-hero-cta .subject-cta-btn:hover,
+[data-theme="dark"] .blog-page .subject-hero-cta .subject-cta-btn--secondary:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] .blog-page .subject-hero-cta .subject-cta-btn,
+  [data-theme="system"] .blog-page .subject-hero-cta .subject-cta-btn--secondary {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+  }
+
+  [data-theme="system"] .blog-page .subject-hero-cta .subject-cta-btn:hover,
+  [data-theme="system"] .blog-page .subject-hero-cta .subject-cta-btn--secondary:hover {
+    transform: translateY(-2px);
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+  }
 }
 
 .chapter-mini-toc {

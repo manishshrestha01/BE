@@ -84,7 +84,15 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
             Chapter {chapter.number}: {chapter.title}
             {subjectData.courseCode ? ` (${subjectData.courseCode})` : ""}
           </h1>
-          <p className="blog-subtitle">{chapter.description}</p>
+          {chapter.bullets?.length ? (
+            <ul className="chapter-hero-topics">
+              {chapter.bullets.map((topic, index) => (
+                <li key={`${chapter.id}-hero-topic-${index}`}>{topic}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="blog-subtitle">{chapter.description}</p>
+          )}
 
           <div className="subject-meta-row">
             {chapter.hours ? <span>Syllabus Hours: {chapter.hours}</span> : null}
@@ -92,9 +100,12 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
           </div>
 
           <div className="subject-cta subject-hero-cta">
+            <a href="#chapter-notes" className="blog-btn subject-cta-btn">
+              Open Chapter {chapter.number} Notes
+            </a>
             <Link
               href={scopeHref(scope === "notes" ? "syllabus" : scope, semesterData.semester, subjectData.slug)}
-              className="blog-btn subject-cta-btn"
+              className="blog-btn subject-cta-btn subject-cta-btn--secondary"
             >
               Full {subjectLabel} Syllabus
             </Link>

@@ -3,7 +3,12 @@ import { headers } from 'next/headers'
 import { COLLEGES } from '@/lib/colleges'
 import { BLOG_CURRICULUM, BLOG_LAST_UPDATED, getAllScopePaths } from '@/lib/blogCurriculum'
 import { getAllChapterPaths } from '@/lib/subjectChapters'
-import { QUESTION_PAPER_VARIANTS, getAllQuestionPaperSubjectPaths } from '@/lib/oldQuestionConfig'
+import {
+  QUESTION_PAPER_VARIANTS,
+  getAllQuestionPaperSubjectPaths,
+  subjectPaperHref,
+  yearPaperHref,
+} from '@/lib/oldQuestionConfig'
 import { getQuestionPaperYearPaths } from '@/lib/questionPaperSitemap'
 
 const makeSlugFromLabel = (label: string): string => {
@@ -76,13 +81,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     })),
     ...getAllQuestionPaperSubjectPaths().map(({ variant, subjectSlug }): MetadataRoute.Sitemap[number] => ({
-      url: `${SITE_URL}/question-paper/${variant}/${subjectSlug}`,
+      url: `${SITE_URL}${subjectPaperHref(variant, subjectSlug)}`,
       lastModified,
       changeFrequency: 'weekly',
       priority: 0.8,
     })),
     ...(await getQuestionPaperYearPaths()).map(({ variant, subjectSlug, yearSlug }): MetadataRoute.Sitemap[number] => ({
-      url: `${SITE_URL}/question-paper/${variant}/${subjectSlug}/${yearSlug}`,
+      url: `${SITE_URL}${yearPaperHref(variant, subjectSlug, yearSlug)}`,
       lastModified,
       changeFrequency: 'weekly',
       priority: 0.6,

@@ -113,8 +113,8 @@ Full chapter sitemap: https://www.manishshrestha012.com.np/sitemap.xml
 - [Old Syllabus Question Papers](https://www.manishshrestha012.com.np/question-paper/old-syllabus): previous course's question archive, by exam year
 
 Example paper pages:
-- [Calculus I — Fall 2013](https://www.manishshrestha012.com.np/question-paper/old-syllabus/calculus-i/fall-2013)
-- [Digital Signal Analysis and Processing — Fall 2025](https://www.manishshrestha012.com.np/question-paper/new-syllabus/digital-signal-analysis-and-processing/fall-2025)
+- [Calculus I — Fall 2013](https://www.manishshrestha012.com.np/be-computer-calculus-i-question-old-syllabus-fall-2013)
+- [Digital Signal Analysis and Processing — Fall 2025](https://www.manishshrestha012.com.np/be-computer-digital-signal-analysis-and-processing-question-new-syllabus-fall-2025)
 
 ### Per-College Pages (AI may cite these for college-specific queries)
 - [PEC Notes](https://www.manishshrestha012.com.np/college/pec): Pokhara Engineering College BE Computer Engineering notes

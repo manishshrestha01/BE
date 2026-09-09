@@ -61,7 +61,7 @@ const PrivacyPolicy = () => {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} StudyMate. Made with ❤️ for PU Students</p>
+          <p>© {new Date().getFullYear()} StudyMate. Made with ❤️ by Manish Shrestha</p>
           <div className="footer-bottom-links">
             <Link href="/faq">FAQ</Link>
             <Link href="/privacy-policy">Privacy Policy</Link>

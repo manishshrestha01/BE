@@ -8,6 +8,7 @@ import { useTheme } from '../../context/ThemeContext'
 import './Landing.css'
 import { BLOG_CURRICULUM, scopeHref } from '../../lib/blogCurriculum'
 import { QUESTION_PAPER_VARIANTS } from '../../lib/oldQuestionConfig'
+import { COLLEGES } from '../../lib/colleges'
 
 
 const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.manish.studymate'
@@ -168,9 +169,7 @@ const Landing = () => {
             <span className="logo-text">StudyMate</span>
           </Link>
           <div className="nav-links">
-            <a href="#features">Features</a>
-            <a href="#about">About</a>
-            <a href="#testimonials">Reviews</a>
+            <Link href="/blog">Syllabus</Link>
             <Link href="/notes">Notes</Link>
             <Link href="/question-paper">Question Papers</Link>
             <Link href="/blog">Blog</Link>
@@ -195,9 +194,7 @@ const Landing = () => {
           <div className="mobile-nav-overlay" onClick={() => setMobileMenuOpen(false)}>
             <div className="mobile-nav" onClick={e => e.stopPropagation()}>
               <button className="mobile-nav-close" onClick={() => setMobileMenuOpen(false)}>&times;</button>
-              <a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
-              <a href="#about" onClick={() => setMobileMenuOpen(false)}>About</a>
-              <a href="#testimonials" onClick={() => setMobileMenuOpen(false)}>Reviews</a>
+              <Link href="/blog" onClick={() => setMobileMenuOpen(false)}>Syllabus</Link>
               <Link href="/notes" onClick={() => setMobileMenuOpen(false)}>Notes</Link>
               <Link href="/question-paper" onClick={() => setMobileMenuOpen(false)}>Question Papers</Link>
               <Link href="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
@@ -474,8 +471,8 @@ const Landing = () => {
       <section id="notes" className="resource-showcase">
         <div className="resource-container">
           <div className="section-header">
-            <span className="section-badge">Notes</span>
-            <h2 className="section-title">Semester-wise Notes</h2>
+            <span className="section-badge"><BookOpen size={13} aria-hidden="true" /> Notes</span>
+            <h2 className="section-title">Semester-wise <span className="grad-text">Notes</span></h2>
             <p className="section-subtitle">
               Chapter notes for every PU Computer Engineering subject, organized by semester. Pick a semester and start reading.
             </p>
@@ -484,13 +481,17 @@ const Landing = () => {
             {BLOG_CURRICULUM.map((semester) => {
               const href = scopeHref('notes', semester.semester);
               return (
-                <Link href={href} key={semester.semester} className="resource-card">
+                <Link href={href} key={semester.semester} className="resource-card resource-card--notes">
+                  <span className="resource-tile" aria-hidden="true">
+                    <BookOpen size={20} strokeWidth={2.2} />
+                  </span>
                   <div className="resource-card-info">
                     <span className="resource-card-title">
-                      <BookOpen size={16} aria-hidden="true" /> Semester {semester.semester}
+                      Semester {semester.semester}
                     </span>
                     <span className="resource-card-subtitle">{semester.subjectCount} Subjects</span>
                   </div>
+                  <span className="resource-count" aria-hidden="true">{semester.semester}</span>
                 </Link>
               );
             })}
@@ -505,31 +506,68 @@ const Landing = () => {
       </section>
 
       {/* Question Papers Section */}
-      <section id="question-papers" className="resource-showcase">
+      <section id="question-papers" className="resource-showcase resource-showcase--qp">
         <div className="resource-container">
           <div className="section-header">
-            <span className="section-badge">Question Papers</span>
-            <h2 className="section-title">Previous Question Papers</h2>
+            <span className="section-badge"><Archive size={13} aria-hidden="true" /> Question Papers</span>
+            <h2 className="section-title">Previous <span className="grad-text grad-text--qp">Question Papers</span></h2>
             <p className="section-subtitle">
               Board, final and old question papers for the current and previous syllabus, organized by exam year.
             </p>
           </div>
           <div className="resource-grid">
-            {QUESTION_PAPER_VARIANTS.map((variant) => (
-              <Link href={`/question-paper/${variant.slug}`} key={variant.slug} className="resource-card">
-                <div className="resource-card-info">
-                  <span className="resource-card-title">
-                    {variant.slug === 'new-syllabus' ? <BookOpenCheck size={16} aria-hidden="true" /> : <Archive size={16} aria-hidden="true" />}{' '}
-                    {variant.label}
+            {QUESTION_PAPER_VARIANTS.map((variant, index) => {
+              const Icon = variant.slug === 'new-syllabus' ? BookOpenCheck : Archive;
+              return (
+                <Link href={`/question-paper/${variant.slug}`} key={variant.slug} className="resource-card resource-card--qp">
+                  <span className="resource-tile resource-tile--qp" aria-hidden="true">
+                    <Icon size={20} strokeWidth={2.2} />
                   </span>
-                  <span className="resource-card-subtitle">{variant.tagline}</span>
-                </div>
-              </Link>
-            ))}
+                  <div className="resource-card-info">
+                    <span className="resource-card-title">{variant.label}</span>
+                    <span className="resource-card-subtitle">{variant.tagline}</span>
+                  </div>
+                  <span className="resource-arrow" aria-hidden="true">→</span>
+                </Link>
+              );
+            })}
           </div>
           <div className="resource-cta">
             <Link href="/question-paper" className="btn-secondary">
               Browse All Papers
+              <span className="btn-arrow">→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Supported Colleges Section */}
+      <section id="colleges" className="colleges-showcase">
+        <div className="colleges-container">
+          <div className="section-header">
+            <span className="section-badge">Colleges</span>
+            <h2 className="section-title">Supported across 14+ colleges</h2>
+            <p className="section-subtitle">
+              StudyMate covers all Pokhara University affiliated colleges notes offering BE Computer Engineering.
+            </p>
+          </div>
+          <div className="colleges-grid">
+            {COLLEGES.map((college, index) => {
+              const slug = (college.value.match(/\(([^)]+)\)/)?.[1] || '').toLowerCase()
+              return (
+                <Link href={`/college/${slug}`} key={index} className="college-card">
+                  <img src={college.logo} alt={college.value} className="college-card-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                  <div className="college-card-info">
+                    <span className="college-card-name">{college.value.split('(')[0].trim()}</span>
+                    <span className="college-card-abbr">({college.value.match(/\(([^)]+)\)/)?.[1]})</span>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+          <div className="colleges-cta">
+            <Link href="/colleges" className="btn-secondary">
+              View All Colleges
               <span className="btn-arrow">→</span>
             </Link>
           </div>
@@ -632,6 +670,8 @@ const Landing = () => {
                 <Link href="/notes">Notes</Link>
                 <Link href="/question-paper">Question Papers</Link>
                 <Link href="/blog">Blog</Link>
+                <Link href="/blog">Syllabus</Link>
+                <Link href="/colleges">Colleges</Link>
                 <a href="#features">Features</a>
                 <a href="#about">About</a>
                 <a href="#testimonials">Reviews</a>
@@ -652,7 +692,7 @@ const Landing = () => {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>© {new Date().getFullYear()} StudyMate. Made with ❤️ for PU Students</p>
+            <p>© {new Date().getFullYear()} StudyMate. Made with ❤️ by Manish Shrestha</p>
             <div className="footer-bottom-links">
               <a href="/faq" target="_blank" rel="noopener noreferrer">FAQ</a>
               <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>

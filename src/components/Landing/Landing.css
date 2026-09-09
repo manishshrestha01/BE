@@ -165,20 +165,196 @@
   padding: 100px 24px;
 }
 
+.resource-showcase--qp {
+  background: var(--landing-bg);
+}
+
 .resource-container {
   max-width: 1200px;
   margin: 0 auto;
 }
 
+.resource-showcase .section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.resource-showcase .section-badge svg {
+  flex-shrink: 0;
+}
+
+.grad-text {
+  background: linear-gradient(135deg, var(--landing-accent), #00c6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.grad-text--qp {
+  background: linear-gradient(135deg, var(--landing-accent), #00c6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 /* Resource Grid */
 .resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.resource-showcase--qp .resource-grid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 420px));
+  justify-content: center;
+}
+
+.resource-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  background: var(--landing-white);
+  border: 1px solid var(--landing-gray-200);
+  border-radius: var(--landing-radius-lg);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.resource-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120px 120px at 50% 0%, rgba(0, 102, 255, 0.1), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.resource-card:hover {
+  border-color: var(--landing-accent);
+  box-shadow: 0 8px 30px rgba(0, 102, 255, 0.12);
+  transform: translateY(-4px);
+}
+
+.resource-card:hover::before {
+  opacity: 1;
+}
+
+.resource-tile {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--landing-accent), #00c6ff);
+  box-shadow: 0 6px 18px rgba(0, 102, 255, 0.28);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.resource-card:hover .resource-tile {
+  transform: scale(1.08) rotate(-4deg);
+  box-shadow: 0 10px 24px rgba(0, 102, 255, 0.36);
+}
+
+.resource-tile--qp {
+  background: linear-gradient(135deg, var(--landing-accent), #00c6ff);
+  box-shadow: 0 6px 18px rgba(0, 102, 255, 0.28);
+}
+
+.resource-card:hover .resource-tile--qp {
+  box-shadow: 0 10px 24px rgba(0, 102, 255, 0.36);
+}
+
+.resource-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.resource-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--landing-gray-900);
+  line-height: 1.25;
+}
+
+.resource-card-subtitle {
+  font-size: 12px;
+  color: var(--landing-gray-500);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resource-count {
+  margin-left: auto;
+  flex-shrink: 0;
+  min-width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--landing-gray-100);
+  border: 1px solid var(--landing-gray-200);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--landing-gray-600);
+}
+
+.resource-card--notes:hover .resource-count {
+  background: rgba(0, 102, 255, 0.1);
+  border-color: var(--landing-accent);
+  color: var(--landing-accent);
+}
+
+.resource-arrow {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--landing-gray-400);
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.resource-card:hover .resource-arrow {
+  transform: translateX(4px);
+  color: #a855f7;
+}
+
+.resource-cta {
+  text-align: center;
+  margin-top: 32px;
+}
+
+/* ==================== COLLEGES SHOWCASE SECTION ==================== */
+.colleges-showcase {
+  padding: 100px 24px;
+}
+
+.colleges-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Colleges Grid */
+.colleges-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 12px;
   margin-bottom: 40px;
 }
 
-.resource-card {
+.college-card {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -191,36 +367,37 @@
   transition: all 0.2s ease;
 }
 
-.resource-card:hover {
+.college-card:hover {
   border-color: var(--landing-gray-300);
   box-shadow: var(--landing-shadow);
   transform: translateY(-2px);
 }
 
-.resource-card-info {
+.college-card-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.college-card-info {
   display: flex;
   flex-direction: column;
 }
 
-.resource-card-title {
+.college-card-name {
   font-size: 13px;
   font-weight: 600;
   color: var(--landing-gray-800);
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
-.resource-card-title svg {
-  flex-shrink: 0;
-}
-
-.resource-card-subtitle {
+.college-card-abbr {
   font-size: 12px;
   color: var(--landing-gray-500);
 }
 
-.resource-cta {
+.colleges-cta {
   text-align: center;
   margin-top: 32px;
 }
@@ -1655,9 +1832,33 @@
 
 [data-theme="dark"] .resource-card:hover {
   border-color: var(--landing-accent);
+  box-shadow: 0 8px 30px rgba(0, 102, 255, 0.2);
 }
 
 [data-theme="dark"] .resource-card-title {
+  color: var(--landing-white);
+}
+
+[data-theme="dark"] .resource-card-subtitle {
+  color: var(--landing-gray-500);
+}
+
+[data-theme="dark"] .resource-count {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+  color: var(--landing-gray-400);
+}
+
+[data-theme="dark"] .college-card {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.06);
+}
+
+[data-theme="dark"] .college-card:hover {
+  border-color: var(--landing-accent);
+}
+
+[data-theme="dark"] .college-card-name {
   color: var(--landing-white);
 }
 
@@ -1894,15 +2095,30 @@
   }
 
   .resource-card {
-    padding: 10px 14px;
+    padding: 14px 16px;
   }
 
   .resource-card-title {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .resource-card-subtitle {
     font-size: 11px;
+  }
+
+  .resource-tile {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+
+  .resource-tile svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .colleges-showcase {
+    padding: 60px 24px;
   }
   
   .app-download-banner {
@@ -2053,11 +2269,11 @@
   }
 
   .resource-card {
-    padding: 10px 14px;
+    padding: 14px 14px;
   }
 
   .resource-card-title {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .resource-card-subtitle {
@@ -2066,6 +2282,18 @@
   
   .app-download-banner {
     padding: 48px 16px;
+  }
+  
+  .colleges-showcase {
+    padding: 48px 16px;
+  }
+  
+  .college-card {
+    padding: 10px 14px;
+  }
+  
+  .college-card-name {
+    font-size: 12px;
   }
   
   .app-download-title {

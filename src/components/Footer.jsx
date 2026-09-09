@@ -95,7 +95,7 @@ const Footer = () => {
         </div>
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} StudyMate. Made with ❤️ for PU Students</p>
+          <p>© {new Date().getFullYear()} StudyMate. Made with ❤️ by Manish Shrestha</p>
           <div className="footer-bottom-links">
             <a href="/faq" target="_blank" rel="noopener noreferrer">FAQ</a>
             <a href="/about" target="_blank" rel="noopener noreferrer">About</a>

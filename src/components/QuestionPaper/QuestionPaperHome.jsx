@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Archive, BookOpenCheck, ShieldCheck } from "lucide-react";
+import { Archive, BookOpenCheck } from "lucide-react";
 
 import Footer from "../Footer";
 import SiteNav from "../SiteNav";
@@ -27,9 +27,6 @@ const QuestionPaperHome = () => {
 
           <div className="subject-meta-row">
             <span>New &amp; old syllabus collections</span>
-            <span className="oldq-safe-badge">
-              <ShieldCheck size={14} aria-hidden="true" /> Free • No download needed
-            </span>
           </div>
         </div>
       </section>

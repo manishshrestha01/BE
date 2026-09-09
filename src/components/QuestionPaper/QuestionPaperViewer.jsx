@@ -7,7 +7,6 @@ import {
   FileText,
   GraduationCap,
   Loader2,
-  ShieldCheck,
   SlidersHorizontal,
 } from "lucide-react";
 
@@ -212,9 +211,6 @@ const QuestionPaperViewer = ({ semesterData, subject, variant, sources = {}, yea
 
           <div className="subject-meta-row">
             <span>Pokhara University BE Computer Engineering • Semester {semesterData.semester}</span>
-            <span className="oldq-safe-badge">
-              <ShieldCheck size={14} aria-hidden="true" /> Free • No download needed
-            </span>
           </div>
         </div>
       </section>

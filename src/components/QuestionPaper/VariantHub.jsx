@@ -68,21 +68,6 @@ const VariantHub = ({ variant }) => {
               See {otherMeta.shortLabel}
             </Link>
           </div>
-
-          <div className="qp-hero-stats">
-            <div className="qp-hero-stat">
-              <span className="qp-hero-stat-value">{sortedSemesters.length || "—"}</span>
-              <span className="qp-hero-stat-label">Semesters</span>
-            </div>
-            <div className="qp-hero-stat">
-              <span className="qp-hero-stat-value">{subjects.length}</span>
-              <span className="qp-hero-stat-label">Subjects</span>
-            </div>
-            <div className="qp-hero-stat">
-              <span className="qp-hero-stat-label qp-hero-stat-free">Free •</span>
-              <span className="qp-hero-stat-label">No download</span>
-            </div>
-          </div>
         </div>
       </section>
 

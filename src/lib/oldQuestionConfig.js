@@ -87,8 +87,26 @@ const OLD_QUESTION_SOURCES = {
     old: { folders: ["Semester 1/OLD QUESTIONS /CT"] },
   },
   "1:electronics-devices-and-circuits": {
-    board: { folders: ["Semester 1/Final Paper"], filter: "edc|electronics" },
-    old: { folders: ["Semester 1/OLD QUESTIONS /Electronics Devices & Circuits"] },
+    // "EDC_Back_Fall.pdf" = Fall 2023 back paper; "EDC_Back_Spring.pdf" =
+    // Spring 2024 back paper; "Electronics Devices and Circuits (New).pdf" =
+    // Fall 2024 — all new-syllabus. "EDC_OLD_2024Spring.pdf" is old syllabus
+    // (excluded from the board filter with the negative lookahead).
+    board: {
+      folders: ["Semester 1/Final Paper"],
+      filter: "^(?!.*old).*(edc|electronics)",
+      terms: {
+        "edc_back_fall": "fall-2023",
+        "edc_back_spring": "spring-2024",
+        "electronics devices and circuits (new)": "fall-2024",
+      },
+    },
+    old: {
+      folders: [
+        "Semester 1/OLD QUESTIONS /Electronics Devices & Circuits",
+        "Semester 1/Final Paper/Back",
+      ],
+      filter: "edc_old|^EDC-",
+    },
   },
 
   // Semester 2
@@ -369,12 +387,43 @@ export function variantHref(variantSlug) {
   return `${QUESTION_PAPER_HOME}/${variantSlug}`;
 }
 
+const FLAT_QP_PREFIX = "be-computer-";
+const FLAT_QP_MARKER = "-question-";
+const FLAT_QP_VARIANTS = ["new-syllabus", "old-syllabus"];
+
+// Flat, keyword-first URLs, e.g.:
+//   subject: /be-computer-electronics-devices-and-circuits-question-new-syllabus
+//   year:    /be-computer-electronics-devices-and-circuits-question-new-syllabus-spring-2024
 export function subjectPaperHref(variantSlug, subjectSlug) {
-  return `${variantHref(variantSlug)}/${subjectSlug}`;
+  return `/${FLAT_QP_PREFIX}${subjectSlug}${FLAT_QP_MARKER}${variantSlug}`;
 }
 
 export function yearPaperHref(variantSlug, subjectSlug, yearSlug) {
-  return `${subjectPaperHref(variantSlug, subjectSlug)}/${yearSlug}`;
+  return `${subjectPaperHref(variantSlug, subjectSlug)}-${yearSlug}`;
+}
+
+// Parse a flat question-paper slug (without leading slash) back into its parts:
+//   "be-computer-electronics-devices-and-circuits-question-new-syllabus-spring-2024"
+//     -> { variantSlug: "new-syllabus", subjectSlug: "electronics-devices-and-circuits", yearSlug: "spring-2024" }
+export function parseFlatPaperSlug(slug) {
+  const value = String(slug || "");
+  if (!value.startsWith(FLAT_QP_PREFIX)) return null;
+  const rest = value.slice(FLAT_QP_PREFIX.length);
+  const markerIndex = rest.indexOf(FLAT_QP_MARKER);
+  if (markerIndex < 0) return null;
+  const subjectSlug = rest.slice(0, markerIndex);
+  if (!subjectSlug) return null;
+  const suffix = rest.slice(markerIndex + FLAT_QP_MARKER.length);
+  const variantSlug = FLAT_QP_VARIANTS.find((v) => suffix === v || suffix.startsWith(`${v}-`));
+  if (!variantSlug) return null;
+  let yearSlug = null;
+  const tail = suffix.slice(variantSlug.length);
+  if (tail) {
+    if (!tail.startsWith("-")) return null;
+    yearSlug = tail.slice(1);
+    if (!slugToTerm(yearSlug)) return null;
+  }
+  return { variantSlug, subjectSlug, yearSlug };
 }
 
 // Exam-year slug: "Fall 2013" -> "fall-2013", "2013" -> "fall-2013" (fall default)

@@ -150,11 +150,6 @@ const College = ({ slug }) => {
           <div className="college-about" style={{ marginTop: 20 }}>
             <h3>About {college.label}</h3>
             <p>{college.description || `StudyMate provides organized BE Computer Engineering notes for ${college.label} students, aligned with the Pokhara University curriculum. You can find lecture notes, PDF resources, and create personal notes while studying.`}</p>
-            <div className="college-facts">
-              {college.established ? <span><strong>Established:</strong> {college.established}</span> : null}
-              {college.location ? <span><strong>Location:</strong> {college.location}</span> : null}
-              {college.program ? <span><strong>Program:</strong> {college.program}</span> : null}
-            </div>
             <p>
               We update these notes against the official Pokhara University 2022 curriculum so the
               syllabus topics, unit weights, and past-paper patterns match what your department
