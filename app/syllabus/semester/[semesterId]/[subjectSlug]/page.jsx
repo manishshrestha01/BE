@@ -2,12 +2,14 @@ import { notFound } from 'next/navigation'
 import {
   BLOG_CURRICULUM,
   BLOG_BASE_URL,
+  BLOG_LAST_UPDATED,
   buildSubjectDescription,
   getSubjectBySlug,
   scopeHref,
 } from '@/lib/blogCurriculum'
 import { buildMetadata, dynamicOgImage, buildBreadcrumbList, buildCourseSchema } from '@/lib/blogSeo'
 import { buildSubjectKeywords } from '@/lib/subjectChapters'
+import { getSubjectArticle } from '@/data/subjectArticles'
 import BlogSubject from '@/components/Blog/BlogSubject'
 
 export const dynamicParams = true
@@ -52,14 +54,29 @@ export default async function Page({ params }) {
     : subject.name
   const syllabusPath = scopeHref('syllabus', semester.semester, subject.slug)
 
+  const article = getSubjectArticle(semester.semester, subject.slug)
+  const articlePath = `${BLOG_BASE_URL}${syllabusPath}`
+
   const schemaGraph = {
     '@context': 'https://schema.org',
     '@graph': [
+      {
+        '@type': 'Article',
+        headline: `${subject.name} Syllabus`,
+        description: article?.description || buildSubjectDescription(semester, subject),
+        image: `${BLOG_BASE_URL}/logo-512.png`,
+        author: { '@id': `${BLOG_BASE_URL}/#author` },
+        publisher: { '@id': `${BLOG_BASE_URL}/#organization` },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': articlePath },
+        datePublished: article?.updatedAt || BLOG_LAST_UPDATED,
+        dateModified: article?.updatedAt || BLOG_LAST_UPDATED,
+        inLanguage: 'en-US',
+      },
       buildCourseSchema({
         name: subject.name,
         courseCode: subject.courseCode,
         semesterNumber: semester.semester,
-        url: `${BLOG_BASE_URL}${syllabusPath}`,
+        url: articlePath,
         teaches: [],
       }),
       buildBreadcrumbList([

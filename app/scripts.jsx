@@ -92,30 +92,6 @@ export default function Scripts() {
         `}
       </Script>
       <Script
-        id="aclib-cdn"
-        strategy="afterInteractive"
-        src="https://acscdn.com/script/aclib.js"
-      />
-      <Script
-        id="aclib"
-        strategy="afterInteractive"
-        src="/aclib-anti-adblock.js"
-        onReady={() => {
-          try {
-            if (typeof window !== 'undefined' && window.aclib?.runAutoTag) {
-              window.aclib.runAutoTag({ zoneId: 'jkmtltfnmd' })
-            }
-          } catch (err) {
-            // Third-party ad libs (Adcash/aclib) can throw on some browsers
-            // (e.g. navigator.userAgentData.getHighEntropyValues is missing).
-            // Never let an ad-network runtime error crash the page.
-            if (typeof console !== 'undefined' && typeof console.error === 'function') {
-              console.error('[aclib] runAutoTag failed:', err)
-            }
-          }
-        }}
-      />
-      <Script
         id="gtag"
         strategy="afterInteractive"
         src="https://www.googletagmanager.com/gtag/js?id=G-87XJ0JZSRN"

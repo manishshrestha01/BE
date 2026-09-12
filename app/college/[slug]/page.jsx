@@ -48,5 +48,54 @@ export function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { slug } = await params
-  return <College slug={slug} />
+  const college = COLLEGES.find((c) => makeSlugFromLabel(c.label) === slug)
+  if (!college) {
+    return <College slug={slug} />
+  }
+
+  const abbr = abbrFrom(college.label)
+  const canonical = `${SITE_URL}/college/${slug}`
+
+  const collegeGraph = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollegeOrUniversity',
+        '@id': `${canonical}#educationalorg`,
+        name: college.label,
+        alternateName: abbr,
+        url: canonical,
+        logo: `${SITE_URL}${college.logo || '/logo-512.png'}`,
+        location: college.location ? { '@type': 'Place', name: college.location } : undefined,
+        disambiguatingDescription: college.description,
+        sameAs: [],
+        hasCourse: [
+          {
+            '@type': 'Course',
+            name: 'BE Computer Engineering',
+            provider: { '@id': `${canonical}#educationalorg` },
+            url: canonical,
+          },
+        ],
+      },
+      {
+        '@type': 'EducationalOccupationalCredential',
+        '@id': `${canonical}#degree`,
+        credentialCategory: 'bachelorDegree',
+        name: 'BE Computer Engineering',
+        educationalLevel: "Bachelor's Degree",
+        recognizedBy: { '@id': `${canonical}#educationalorg` },
+      },
+    ],
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collegeGraph) }}
+      />
+      <College slug={slug} />
+    </>
+  )
 }

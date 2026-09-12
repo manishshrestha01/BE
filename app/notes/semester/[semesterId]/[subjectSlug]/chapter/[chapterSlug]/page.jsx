@@ -1,11 +1,13 @@
 import { notFound } from 'next/navigation'
 import {
   BLOG_BASE_URL,
+  BLOG_LAST_UPDATED,
   getSubjectBySlug,
   scopeHref,
 } from '@/lib/blogCurriculum'
 import { getChapterBySlug, getSubjectChapters, getAllChapterPaths, buildSubjectKeywords } from '@/lib/subjectChapters'
 import { buildMetadata, dynamicOgImage, buildBreadcrumbList, buildCourseSchema } from '@/lib/blogSeo'
+import { getSubjectArticle } from '@/data/subjectArticles'
 import BlogChapter from '@/components/Blog/BlogChapter'
 
 export const dynamicParams = true
@@ -64,14 +66,39 @@ export default async function Page({ params }) {
     ? `${subject.name} (${subject.courseCode})`
     : subject.name
 
+  const article = getSubjectArticle(semester.semester, subject.slug)
+  const chapterPath = `${BLOG_BASE_URL}${chapter.urlPath}`
+  const topicItems = (chapter.bullets || []).map((text, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: text,
+  }))
+
   const schemaGraph = {
     '@context': 'https://schema.org',
     '@graph': [
+      {
+        '@type': 'Article',
+        headline: `${subject.name} Chapter ${chapter.number}: ${chapter.title} Notes`,
+        description: chapter.description,
+        image: `${BLOG_BASE_URL}/logo-512.png`,
+        author: { '@id': `${BLOG_BASE_URL}/#author` },
+        publisher: { '@id': `${BLOG_BASE_URL}/#organization` },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': chapterPath },
+        datePublished: article?.updatedAt || BLOG_LAST_UPDATED,
+        dateModified: article?.updatedAt || BLOG_LAST_UPDATED,
+        inLanguage: 'en-US',
+      },
+      {
+        '@type': 'ItemList',
+        name: `${subject.name} Chapter ${chapter.number} topics`,
+        itemListElement: topicItems,
+      },
       buildCourseSchema({
         name: subject.name,
         courseCode: subject.courseCode,
         semesterNumber: semester.semester,
-        url: `${BLOG_BASE_URL}${chapter.urlPath}`,
+        url: chapterPath,
         teaches: chapter.bullets,
       }),
       buildBreadcrumbList([

@@ -1,5 +1,3 @@
-'use client'
-import { useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, GraduationCap } from "lucide-react";
 
@@ -7,19 +5,14 @@ import Footer from "../Footer";
 import SiteNav from "../SiteNav";
 import Breadcrumbs from "./Breadcrumbs";
 import ChapterNotesViewer from "./ChapterNotesViewer";
-import { setJSONLD } from "../../lib/seo";
 import {
-  BLOG_BASE_URL,
-  BLOG_LAST_UPDATED,
   SCOPE_META,
   getSubjectBySlug,
   scopeHref,
 } from "../../lib/blogCurriculum";
-import { getSubjectArticle } from "../../data/subjectArticles";
 import "./Blog.css";
 
 const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapter, nextChapter, scope = "blog" }) => {
-  const article = getSubjectArticle(semesterData.semester, subjectData.slug);
   const subjectLabel = subjectData.courseCode
     ? `${subjectData.name} (${subjectData.courseCode})`
     : subjectData.name;
@@ -32,40 +25,6 @@ const BlogChapterContent = ({ semesterData, subjectData, chapter, previousChapte
     { label: subjectLabel, to: scopeHref(scope, semesterData.semester, subjectData.slug) },
     { label: `Chapter ${chapter.number}: ${chapter.title}` },
   ];
-
-  useEffect(() => {
-    const chapterPath = chapter.absoluteUrl || `/blog/${semesterData.semesterSlug}/${subjectData.slug}/chapter/${chapter.slug}`;
-    const topicItems = (chapter.bullets || []).map((text, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: text,
-    }));
-
-    const graph = {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Article",
-          headline: `${subjectData.name} Chapter ${chapter.number}: ${chapter.title} Notes`,
-          description: chapter.description,
-          image: `${BLOG_BASE_URL}/logo-512.png`,
-          author: { "@id": `${BLOG_BASE_URL}/#author` },
-          publisher: { "@id": `${BLOG_BASE_URL}/#organization` },
-          mainEntityOfPage: { "@type": "WebPage", "@id": chapterPath },
-          datePublished: article?.updatedAt || BLOG_LAST_UPDATED,
-          dateModified: article?.updatedAt || BLOG_LAST_UPDATED,
-          inLanguage: "en-US",
-        },
-        {
-          "@type": "ItemList",
-          name: `${subjectData.name} Chapter ${chapter.number} topics`,
-          itemListElement: topicItems,
-        },
-      ],
-    };
-    setJSONLD(graph, "json-ld-blog-chapter");
-    return () => {};
-  }, [chapter, subjectData, semesterData.semesterSlug, article]);
 
   return (
     <div className="landing blog-page chapter-page">

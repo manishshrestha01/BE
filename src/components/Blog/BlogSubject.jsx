@@ -1,5 +1,3 @@
-'use client'
-import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 
@@ -7,12 +5,10 @@ import Footer from "../Footer";
 import SiteNav from "../SiteNav";
 import Breadcrumbs from "./Breadcrumbs";
 import TableOfContents from "./TableOfContents";
-import { setJSONLD } from "../../lib/seo";
+import SubjectTocToggle from "./SubjectTocToggle";
 import { getSubjectArticle } from "../../data/subjectArticles";
 import { getSubjectChapters } from "../../lib/subjectChapters";
 import {
-  BLOG_BASE_URL,
-  BLOG_LAST_UPDATED,
   SCOPE_META,
   buildImportantTopics,
   buildLearningOutcomes,
@@ -63,6 +59,47 @@ const buildFallbackSubjectArticle = (semesterData, subjectData) => ({
     },
   ],
 });
+
+const buildTocItems = (article) => {
+  const items = [];
+
+  article.sections.forEach((section, sectionIndex) => {
+    const sectionNumber = sectionIndex + 1;
+
+    if (section.level === 2) {
+      items.push({
+        id: section.id,
+        text: `${sectionNumber}. ${section.title}`,
+        level: 2,
+      });
+    }
+
+    if (section.qa?.length) {
+      items.push({
+        id: section.id,
+        text: "Questions & Answers",
+        level: 3,
+      });
+    }
+
+    const isSyllabusOverview = section.id === "syllabus-overview";
+
+    (section.units || []).forEach((unit, unitIndex) => {
+      const unitNumber = unitIndex + 1;
+      const unitLabel = isSyllabusOverview
+        ? formatUnitTitle(unit.title, unitNumber)
+        : `${sectionNumber}.${unitNumber} ${unit.title}`;
+
+      items.push({
+        id: unit.id,
+        text: unitLabel,
+        level: 3,
+      });
+    });
+  });
+
+  return items;
+};
 
 const renderHeading = (id, title, level = 2) => {
   const Tag = level === 3 ? "h3" : "h2";
@@ -184,7 +221,6 @@ const BlogSubject = ({ semesterId, subjectSlug, scope = "blog" }) => {
 
 const BlogSubjectContent = ({ semesterData, subjectData, scope = "blog" }) => {
   const scopeMeta = SCOPE_META[scope] || SCOPE_META.blog;
-  const [mobileTocOpen, setMobileTocOpen] = useState(false);
 
   const storedArticle = getSubjectArticle(semesterData.semester, subjectData.slug);
   const article = storedArticle || buildFallbackSubjectArticle(semesterData, subjectData);
@@ -197,65 +233,7 @@ const BlogSubjectContent = ({ semesterData, subjectData, scope = "blog" }) => {
   const description = enrichDescriptionWithCourseCode(rawDescription, subjectCourseCode);
   const neighborInfo = getSubjectNeighbors(semesterData.semester, subjectData.slug);
 
-  useEffect(() => {
-    const articlePath = subjectData.absoluteUrl || `/blog/${semesterData.semesterSlug}/${subjectData.slug}`;
-    const articleSchema = {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      headline: article.title || subjectData.name,
-      description: description || article.description,
-      image: `${BLOG_BASE_URL}/logo-512.png`,
-      author: { "@id": `${BLOG_BASE_URL}/#author` },
-      publisher: { "@id": `${BLOG_BASE_URL}/#organization` },
-      mainEntityOfPage: { "@type": "WebPage", "@id": articlePath },
-      datePublished: article.updatedAt || BLOG_LAST_UPDATED,
-      dateModified: article.updatedAt || BLOG_LAST_UPDATED,
-      inLanguage: "en-US",
-    };
-    setJSONLD(articleSchema, "json-ld-blog-article");
-    return () => {};
-  }, [article, subjectData, description, semesterData]);
-
-  const tocItems = useMemo(() => {
-    const items = [];
-
-    article.sections.forEach((section, sectionIndex) => {
-      const sectionNumber = sectionIndex + 1;
-
-      if (section.level === 2) {
-        items.push({
-          id: section.id,
-          text: `${sectionNumber}. ${section.title}`,
-          level: 2,
-        });
-      }
-
-      if (section.qa?.length) {
-        items.push({
-          id: section.id,
-          text: "Questions & Answers",
-          level: 3,
-        });
-      }
-
-      const isSyllabusOverview = section.id === "syllabus-overview";
-
-      (section.units || []).forEach((unit, unitIndex) => {
-        const unitNumber = unitIndex + 1;
-        const unitLabel = isSyllabusOverview
-          ? formatUnitTitle(unit.title, unitNumber)
-          : `${sectionNumber}.${unitNumber} ${unit.title}`;
-
-        items.push({
-          id: unit.id,
-          text: unitLabel,
-          level: 3,
-        });
-      });
-    });
-
-    return items;
-  }, [article.sections]);
+  const tocItems = buildTocItems(article);
 
   const breadcrumbItems = [
     { label: "Home", to: "/" },
@@ -294,22 +272,7 @@ const BlogSubjectContent = ({ semesterData, subjectData, scope = "blog" }) => {
       <section className="blog-section">
         <div className="blog-shell subject-layout">
           <article className="blog-card subject-article">
-            <div className="toc-mobile">
-              <button
-                type="button"
-                className="toc-mobile-toggle"
-                onClick={() => setMobileTocOpen((value) => !value)}
-                aria-expanded={mobileTocOpen}
-                aria-controls="subject-mobile-toc"
-              >
-                {mobileTocOpen ? "Hide Table of Contents" : "Show Table of Contents"}
-              </button>
-              {mobileTocOpen ? (
-                <div className="toc-card" id="subject-mobile-toc">
-                  <TableOfContents items={tocItems} />
-                </div>
-              ) : null}
-            </div>
+            <SubjectTocToggle items={tocItems} />
 
             {article.sections.map((section, sectionIndex) => {
               const sectionNumber = sectionIndex + 1;

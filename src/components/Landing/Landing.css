@@ -2550,3 +2550,64 @@
 [data-theme="dark"] .play-store-small {
   color: rgba(0,0,0,0.5);
 }
+/* ── Server-rendered editorial content (home) ─────────────────────── */
+.home-seo-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 56px 20px 80px;
+}
+
+.home-seo-section {
+  margin-bottom: 40px;
+}
+
+.home-seo-section h2 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.home-seo-section p {
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0 0 12px;
+  color: #444;
+}
+
+.home-seo-section ul {
+  margin: 0;
+  padding-left: 22px;
+  line-height: 1.8;
+  font-size: 1rem;
+  color: #444;
+}
+
+.home-seo-section a {
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.home-seo-college-list,
+.home-seo-semester-list {
+  max-width: 100%;
+}
+
+.home-seo-intro {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 44px;
+}
+
+[data-theme="dark"] .home-seo-section p,
+[data-theme="dark"] .home-seo-section ul {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+[data-theme="dark"] .home-seo-section a {
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .home-seo-intro {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}

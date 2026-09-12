@@ -1,6 +1,11 @@
-import { Suspense } from 'react'
 import Landing from '@/components/Landing/Landing'
+import HomeSeoContent from '@/components/Landing/HomeSeoContent'
 
 export default function Page() {
-  return <Landing />
+  return (
+    <>
+      <Landing />
+      <HomeSeoContent />
+    </>
+  )
 }

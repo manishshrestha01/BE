@@ -3,7 +3,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import useSiteAd from '../hooks/useSiteAd'
 import './RouteAdvertisement.css'
 
-const ROUTE_TARGETS = new Set(['/', '/dashboard'])
+const ROUTE_TARGETS = new Set(['/dashboard'])
 const DISMISS_PREFIX = 'studymate:site-ad:dismissed:'
 
 const buildDismissKey = (ad) => {
@@ -59,17 +59,6 @@ const RouteAdvertisement = () => {
   useEffect(() => {
     setDismissed(readDismissedState(dismissKey))
   }, [dismissKey])
-
-  useEffect(() => {
-    if (!isVisible) return undefined
-
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-    }
-  }, [isVisible])
 
   useEffect(() => {
     if (!isVisible) return undefined
