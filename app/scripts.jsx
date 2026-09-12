@@ -53,12 +53,6 @@ export default function Scripts() {
         </Script>
       )}
       <Script
-        id="adsense"
-        strategy="afterInteractive"
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3679310343847893"
-        crossOrigin="anonymous"
-      />
-      <Script
         id="ua-data-shim"
         strategy="beforeInteractive"
       >

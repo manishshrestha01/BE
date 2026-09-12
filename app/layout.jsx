@@ -257,6 +257,11 @@ export default function RootLayout({ children }) {
         <meta name="geo.placename" content="Nepal" />
         <meta name="msapplication-TileColor" content="#000000" />
         <meta name="msapplication-TileImage" content="/logo-512.png" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3679310343847893"
+          crossOrigin="anonymous"
+        />
         {schemaScripts.map((schemaJson, index) => (
           <script
             key={`site-schema-${index}`}
